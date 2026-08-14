@@ -6,6 +6,16 @@ const WOOCOMMERCE_API_URL =
 
 const METADATA_PER_PAGE = 100;
 
+const ACF_STATUS_OPTIONS = ['READY', 'DP', 'SOLD'] as const;
+const ACF_CONDITION_OPTIONS = ['BARU', 'BEKAS'] as const;
+const ACF_LOCATION_OPTIONS = [
+  'PAMULANG 2',
+  'KEDAUNG',
+  'SAWANGAN',
+  'SETU',
+  'PAMULANG BARAT',
+] as const;
+
 function getWooCommerceAuthHeader(): string | null {
   const consumerKey = process.env.WC_CONSUMER_KEY;
   const consumerSecret = process.env.WC_CONSUMER_SECRET;
@@ -116,11 +126,6 @@ async function buildWooCommerceParams(
   return params;
 }
 
-interface WooCommerceMetadataProduct {
-  categories?: Array<{ id?: number; name?: string; slug?: string }>;
-  meta_data?: Array<{ key?: string; value?: unknown }>;
-}
-
 interface WooCommerceMetadataCategory {
   id: number;
   name: string;
@@ -129,28 +134,9 @@ interface WooCommerceMetadataCategory {
   count?: number;
 }
 
-function getMetaValue(
-  product: WooCommerceMetadataProduct,
-  key: string,
-): string {
-  const entry = product.meta_data?.find((item) => normalizeText(String(item.key || '')) === normalizeText(key));
-  if (entry?.value === null || entry?.value === undefined) return '';
-  return String(entry.value).trim();
-}
-
-function addOption(target: Set<string>, value: string): void {
-  const normalized = value.trim();
-  if (normalized) target.add(normalized);
-}
-
-async function fetchWooCommerceMetadata(
+async function fetchWooCommerceCategories(
   authorization: string,
-): Promise<{
-  categories: WooCommerceMetadataCategory[];
-  conditionOptions: string[];
-  locationOptions: string[];
-  totalProducts: number | null;
-}> {
+): Promise<WooCommerceMetadataCategory[]> {
   const categoriesResponse = await fetch(
     `${WOOCOMMERCE_API_URL}/products/categories?per_page=${METADATA_PER_PAGE}&hide_empty=false&orderby=name&order=asc`,
     {
@@ -192,47 +178,24 @@ async function fetchWooCommerceMetadata(
     categories.push(...((await response.json()) as WooCommerceMetadataCategory[]));
   }
 
-  const conditionOptions = new Set<string>();
-  const locationOptions = new Set<string>();
-  let totalProducts: number | null = null;
-  let productPage = 1;
-  let productTotalPages = 1;
+  return categories;
+}
 
-  while (productPage <= productTotalPages) {
-    const response = await fetch(
-      `${WOOCOMMERCE_API_URL}/products?status=publish&per_page=${METADATA_PER_PAGE}&page=${productPage}&orderby=id&order=asc`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Authorization: authorization,
-        },
-        next: { revalidate: 300 },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        `WooCommerce metadata product page ${productPage} gagal: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const products = (await response.json()) as WooCommerceMetadataProduct[];
-    totalProducts = Number(response.headers.get('X-WP-Total') || totalProducts || products.length);
-    productTotalPages = Number(response.headers.get('X-WP-TotalPages') || productTotalPages);
-
-    for (const product of products) {
-      addOption(conditionOptions, getMetaValue(product, 'kondisi_unit'));
-      addOption(locationOptions, getMetaValue(product, 'lokasi_unit'));
-    }
-
-    productPage += 1;
-  }
+async function fetchWooCommerceMetadata(
+  authorization: string,
+): Promise<{
+  categories: WooCommerceMetadataCategory[];
+  conditionOptions: string[];
+  locationOptions: string[];
+  statusOptions: string[];
+}> {
+  const categories = await fetchWooCommerceCategories(authorization);
 
   return {
     categories,
-    conditionOptions: Array.from(conditionOptions).sort((a, b) => a.localeCompare(b, 'id')),
-    locationOptions: Array.from(locationOptions).sort((a, b) => a.localeCompare(b, 'id')),
-    totalProducts,
+    conditionOptions: [...ACF_CONDITION_OPTIONS],
+    locationOptions: [...ACF_LOCATION_OPTIONS],
+    statusOptions: [...ACF_STATUS_OPTIONS],
   };
 }
 

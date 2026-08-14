@@ -1,11 +1,4 @@
-import React, { useMemo } from 'react';
-import {
-  CATEGORIES,
-  CONDITION_OPTIONS,
-  LOCATION_OPTIONS,
-  POWER_TYPE_OPTIONS,
-} from '../data/products';
-import { EquipmentCategory, FilterState } from '../types';
+import React from 'react';
 import {
   Flame,
   Utensils,
@@ -20,7 +13,18 @@ import {
   LayoutGrid,
   SlidersHorizontal,
   RotateCcw,
+  ChevronDown,
 } from 'lucide-react';
+import { EquipmentCategory, FilterState } from '../types';
+
+export interface CategoryFilterOption {
+  id: number | string;
+  name: string;
+  icon?: string;
+  parentId?: number;
+  count?: number;
+  children?: CategoryFilterOption[];
+}
 
 interface CategoryFilterProps {
   filterState: FilterState;
@@ -28,7 +32,50 @@ interface CategoryFilterProps {
   onResetFilters: () => void;
   totalResultsCount: number;
   categoryCounts: Record<string, number>;
+  categories?: CategoryFilterOption[];
+  conditionOptions?: string[];
+  locationOptions?: string[];
+  powerTypeOptions?: string[];
 }
+
+const getCategoryIcon = (iconName?: string) => {
+  switch (iconName) {
+    case 'Flame':
+      return <Flame className="w-4 h-4" />;
+    case 'Utensils':
+      return <Utensils className="w-4 h-4" />;
+    case 'Layers':
+      return <Layers className="w-4 h-4" />;
+    case 'Snowflake':
+      return <Snowflake className="w-4 h-4" />;
+    case 'Maximize2':
+      return <Maximize2 className="w-4 h-4" />;
+    case 'Table':
+      return <Table className="w-4 h-4" />;
+    case 'Wind':
+      return <Wind className="w-4 h-4" />;
+    case 'Cpu':
+      return <Cpu className="w-4 h-4" />;
+    case 'Coffee':
+      return <Coffee className="w-4 h-4" />;
+    case 'Droplets':
+      return <Droplets className="w-4 h-4" />;
+    default:
+      return <LayoutGrid className="w-4 h-4" />;
+  }
+};
+
+const normalizeOptions = (options: string[] | undefined, currentValue: string) => {
+  const unique = Array.from(
+    new Set((options ?? []).map((option) => option.trim()).filter(Boolean)),
+  );
+
+  if (currentValue && !unique.includes(currentValue)) {
+    unique.unshift(currentValue);
+  }
+
+  return unique;
+};
 
 export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   filterState,
@@ -36,46 +83,19 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   onResetFilters,
   totalResultsCount,
   categoryCounts,
+  categories = [],
+  conditionOptions = [],
+  locationOptions = [],
+  powerTypeOptions = [],
 }) => {
-  const getCategoryIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Flame':
-        return <Flame className="w-4 h-4" />;
-      case 'Utensils':
-        return <Utensils className="w-4 h-4" />;
-      case 'Layers':
-        return <Layers className="w-4 h-4" />;
-      case 'Snowflake':
-        return <Snowflake className="w-4 h-4" />;
-      case 'Maximize2':
-        return <Maximize2 className="w-4 h-4" />;
-      case 'Table':
-        return <Table className="w-4 h-4" />;
-      case 'Wind':
-        return <Wind className="w-4 h-4" />;
-      case 'Cpu':
-        return <Cpu className="w-4 h-4" />;
-      case 'Coffee':
-        return <Coffee className="w-4 h-4" />;
-      case 'Droplets':
-        return <Droplets className="w-4 h-4" />;
-      case 'LayoutGrid':
-      default:
-        return <LayoutGrid className="w-4 h-4" />;
-    }
-  };
+  const visibleCategories = categories.filter((category) => {
+    if (category.name === 'Semua') return true;
+    return category.count !== undefined || (categoryCounts[category.name] || 0) > 0;
+  });
 
-  const visibleCategories = useMemo(() => {
-    return CATEGORIES.filter((category) => {
-      if (category.name === 'Semua') return true;
-      return (categoryCounts[category.name] || 0) > 0;
-    });
-  }, [categoryCounts]);
-
-  const totalCatalogCount = useMemo(
-    () => Object.values(categoryCounts).reduce((total, count) => total + count, 0),
-    [categoryCounts],
-  );
+  const conditionValues = normalizeOptions(conditionOptions, filterState.condition);
+  const locationValues = normalizeOptions(locationOptions, filterState.location);
+  const powerTypeValues = normalizeOptions(powerTypeOptions, filterState.powerType);
 
   const isFiltered =
     filterState.category !== 'Semua' ||
@@ -84,6 +104,18 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
     filterState.powerType !== 'Semua Sumber Daya' ||
     filterState.statusFilter !== 'READY_ONLY' ||
     filterState.searchQuery !== '';
+
+  const renderOptionList = (values: string[], emptyLabel: string) => {
+    if (values.length === 0) {
+      return <option value="">{emptyLabel}</option>;
+    }
+
+    return values.map((value) => (
+      <option key={value} value={value}>
+        {value}
+      </option>
+    ));
+  };
 
   return (
     <section className="bg-white border-b border-slate-200 py-6 px-4">
@@ -95,27 +127,40 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               <span>Kategori Peralatan Dapur Komersial</span>
             </h2>
             <span className="text-xs text-slate-500 font-medium">
-              Menampilkan{' '}
-              <strong className="text-slate-900">{totalResultsCount}</strong> unit cocok
+              Menampilkan <strong className="text-slate-900">{totalResultsCount}</strong> unit cocok
             </span>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
-            {visibleCategories.map((cat) => {
-              const count =
-                cat.name === 'Semua'
-                  ? totalCatalogCount
-                  : categoryCounts[cat.name] || 0;
-              const isActive = filterState.category === cat.name;
+            <button
+              type="button"
+              id="cat-btn-semua"
+              onClick={() => onFilterChange({ category: 'Semua' as EquipmentCategory })}
+              className={`shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
+                filterState.category === 'Semua'
+                  ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-sm'
+                  : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span>Semua</span>
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-600">
+                {totalResultsCount}
+              </span>
+            </button>
+
+            {visibleCategories.map((category) => {
+              const count = category.count ?? categoryCounts[category.name] ?? 0;
+              const isActive = filterState.category === category.name;
 
               return (
                 <button
-                  key={cat.name}
+                  key={category.id}
                   type="button"
-                  id={`cat-btn-${cat.name.replace(/\s+/g, '-').toLowerCase()}`}
+                  id={`cat-btn-${category.name.replace(/\s+/g, '-').toLowerCase()}`}
                   onClick={() =>
                     onFilterChange({
-                      category: cat.name as EquipmentCategory,
+                      category: category.name as EquipmentCategory,
                     })
                   }
                   className={`shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
@@ -125,9 +170,9 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                   }`}
                 >
                   <span className={isActive ? 'text-amber-400' : 'text-slate-500'}>
-                    {getCategoryIcon(cat.icon)}
+                    {getCategoryIcon(category.icon)}
                   </span>
-                  <span>{cat.name}</span>
+                  <span>{category.name}</span>
                   <span
                     className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
                       isActive
@@ -137,6 +182,9 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                   >
                     {count}
                   </span>
+                  {category.children && category.children.length > 0 && (
+                    <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+                  )}
                 </button>
               );
             })}
@@ -152,11 +200,8 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 onChange={(e) => onFilterChange({ condition: e.target.value })}
                 className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
               >
-                {CONDITION_OPTIONS.map((condition) => (
-                  <option key={condition} value={condition}>
-                    {condition}
-                  </option>
-                ))}
+                <option value="Semua Kondisi">Semua Kondisi</option>
+                {renderOptionList(conditionValues, 'Kondisi belum tersedia')}
               </select>
             </div>
 
@@ -167,11 +212,8 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 onChange={(e) => onFilterChange({ location: e.target.value })}
                 className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
               >
-                {LOCATION_OPTIONS.map((location) => (
-                  <option key={location} value={location}>
-                    {location}
-                  </option>
-                ))}
+                <option value="Semua Lokasi">Semua Lokasi</option>
+                {renderOptionList(locationValues, 'Lokasi belum tersedia')}
               </select>
             </div>
 
@@ -182,11 +224,8 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 onChange={(e) => onFilterChange({ powerType: e.target.value })}
                 className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
               >
-                {POWER_TYPE_OPTIONS.map((powerType) => (
-                  <option key={powerType} value={powerType}>
-                    {powerType}
-                  </option>
-                ))}
+                <option value="Semua Sumber Daya">Semua Sumber Daya</option>
+                {renderOptionList(powerTypeValues, 'Sumber daya belum tersedia')}
               </select>
             </div>
 

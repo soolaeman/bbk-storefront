@@ -14,14 +14,6 @@ interface LiveCategory {
   count?: number;
 }
 
-const FALLBACK_POPULAR_CATEGORIES = [
-  { name: 'Meja Stainless', label: 'Meja Stainless', icon: <Table className="w-3.5 h-3.5 text-slate-300" /> },
-  { name: 'Sink Stainless', label: 'Sink Stainless', icon: <Utensils className="w-3.5 h-3.5 text-blue-400" /> },
-  { name: 'Rak Stainless', label: 'Rak Stainless', icon: <Layers className="w-3.5 h-3.5 text-amber-400" /> },
-  { name: 'Kompor', label: 'Kompor', icon: <Flame className="w-3.5 h-3.5 text-amber-500" /> },
-  { name: 'Chiller', label: 'Chiller', icon: <Snowflake className="w-3.5 h-3.5 text-blue-500" /> },
-];
-
 function getCategoryIcon(name: string): React.ReactNode {
   const normalized = name.toLowerCase();
 
@@ -72,6 +64,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         if (!cancelled) setPopularCategories(ranked);
       } catch (error) {
         console.error('Failed to load popular catalog categories:', error);
+        if (!cancelled) setPopularCategories([]);
       }
     };
 
@@ -81,14 +74,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       cancelled = true;
     };
   }, []);
-
-  const displayedCategories = popularCategories.length > 0
-    ? popularCategories.map((category) => ({
-        name: category.name,
-        label: category.name,
-        icon: getCategoryIcon(category.name),
-      }))
-    : FALLBACK_POPULAR_CATEGORIES;
 
   return (
     <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-10 px-4 border-b border-slate-700/80">
@@ -159,15 +144,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span>Pencarian Populer:</span>
               </div>
               <div className="flex flex-wrap gap-2">
-                {displayedCategories.map((category) => (
+                {popularCategories.map((category) => (
                   <button
-                    key={category.name}
+                    key={category.id}
                     type="button"
                     onClick={() => onSelectCategory(category.name as EquipmentCategory)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-all hover:border-amber-400/40"
                   >
-                    {category.icon}
-                    <span>{category.label}</span>
+                    {getCategoryIcon(category.name)}
+                    <span>{category.name}</span>
                   </button>
                 ))}
               </div>

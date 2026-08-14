@@ -103,6 +103,9 @@ export async function getWooCommerceProductsResult(options?: WooCommerceProducts
   appendQueryParam(url, 'page', options?.page ?? 1);
   appendQueryParam(url, 'search', options?.search);
   appendQueryParam(url, 'category', options?.category);
+  appendQueryParam(url, 'condition', options?.condition);
+  appendQueryParam(url, 'location', options?.location);
+  appendQueryParam(url, 'power_type', options?.powerType);
   appendQueryParam(url, 'stock_status', options?.stockStatus ?? (options?.statusFilter === 'READY_ONLY' ? 'instock' : undefined));
   appendQueryParam(url, 'orderby', options?.orderby ?? (options?.sortBy === 'price_low' || options?.sortBy === 'price_high' ? 'price' : 'date'));
   appendQueryParam(url, 'order', options?.order ?? (options?.sortBy === 'price_low' ? 'asc' : 'desc'));

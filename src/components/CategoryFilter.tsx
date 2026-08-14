@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Flame,
   Utensils,
@@ -13,7 +13,6 @@ import {
   LayoutGrid,
   SlidersHorizontal,
   RotateCcw,
-  ChevronDown,
 } from 'lucide-react';
 import { EquipmentCategory, FilterState } from '../types';
 
@@ -86,8 +85,26 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   categories = [],
   conditionOptions = [],
   locationOptions = [],
-  powerTypeOptions = [],
 }) => {
+  // The public/SEO catalog no longer exposes inventory-status or power-source
+  // controls. Keep the underlying request state neutral so the hidden legacy
+  // fields cannot continue forcing the catalog to READY-only results.
+  useEffect(() => {
+    const updates: Partial<FilterState> = {};
+
+    if (filterState.statusFilter !== 'ALL') {
+      updates.statusFilter = 'ALL';
+    }
+
+    if (filterState.powerType !== 'Semua Sumber Daya') {
+      updates.powerType = 'Semua Sumber Daya';
+    }
+
+    if (Object.keys(updates).length > 0) {
+      onFilterChange(updates);
+    }
+  }, [filterState.statusFilter, filterState.powerType, onFilterChange]);
+
   const visibleCategories = categories.filter((category) => {
     if (category.name === 'Semua') return true;
     return category.count !== undefined || (categoryCounts[category.name] || 0) > 0;
@@ -95,14 +112,12 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
   const conditionValues = normalizeOptions(conditionOptions, filterState.condition);
   const locationValues = normalizeOptions(locationOptions, filterState.location);
-  const powerTypeValues = normalizeOptions(powerTypeOptions, filterState.powerType);
 
   const isFiltered =
     filterState.category !== 'Semua' ||
     filterState.condition !== 'Semua Kondisi' ||
     filterState.location !== 'Semua Lokasi' ||
-    filterState.powerType !== 'Semua Sumber Daya' ||
-    filterState.statusFilter !== 'READY_ONLY' ||
+    filterState.statusFilter !== 'ALL' ||
     filterState.searchQuery !== '';
 
   const renderOptionList = (values: string[], emptyLabel: string) => {
@@ -182,9 +197,6 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                   >
                     {count}
                   </span>
-                  {category.children && category.children.length > 0 && (
-                    <ChevronDown className="w-3.5 h-3.5 opacity-60" />
-                  )}
                 </button>
               );
             })}
@@ -217,55 +229,9 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               </select>
             </div>
 
-            <div className="relative">
-              <select
-                id="filter-powertype-select"
-                value={filterState.powerType}
-                onChange={(e) => onFilterChange({ powerType: e.target.value })}
-                className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
-              >
-                <option value="Semua Sumber Daya">Semua Sumber Daya</option>
-                {renderOptionList(powerTypeValues, 'Sumber daya belum tersedia')}
-              </select>
-            </div>
-
-            <div className="inline-flex rounded-lg border border-slate-300 bg-white p-0.5 text-xs font-medium">
-              <button
-                type="button"
-                id="filter-status-ready"
-                onClick={() => onFilterChange({ statusFilter: 'READY_ONLY' })}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
-                  filterState.statusFilter === 'READY_ONLY'
-                    ? 'bg-emerald-600 text-white font-semibold shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Hanya Ready
-              </button>
-              <button
-                type="button"
-                id="filter-status-all"
-                onClick={() => onFilterChange({ statusFilter: 'ALL' })}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
-                  filterState.statusFilter === 'ALL'
-                    ? 'bg-slate-800 text-white font-semibold shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Semua Unit
-              </button>
-              <button
-                type="button"
-                id="filter-status-sold"
-                onClick={() => onFilterChange({ statusFilter: 'INCLUDE_SOLD' })}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
-                  filterState.statusFilter === 'INCLUDE_SOLD'
-                    ? 'bg-slate-700 text-white font-semibold shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Unit Terjual / Archive
-              </button>
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
+              <span className="font-semibold text-slate-600">Kondisi:</span>
+              <span>Baru / Bekas</span>
             </div>
           </div>
 

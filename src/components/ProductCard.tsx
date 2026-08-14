@@ -16,6 +16,18 @@ interface ProductCardProps {
   onToggleStatus?: (productId: string, newStatus: 'READY' | 'SOLD') => void;
 }
 
+function getConditionLabel(condition: string | undefined): 'Baru' | 'Bekas' | null {
+  const normalized = condition?.trim().toUpperCase();
+
+  if (!normalized) return null;
+  if (normalized === 'BARU' || normalized.includes('BARU')) return 'Baru';
+  if (normalized === 'BEKAS' || normalized.includes('BEKAS') || normalized.includes('REKONDISI')) {
+    return 'Bekas';
+  }
+
+  return null;
+}
+
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onOpenDetail,
@@ -23,13 +35,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onToggleStatus
 }) => {
   const isSold = product.status === 'SOLD';
-
-  const conditionColors: Record<string, string> = {
-    'Bekas Original': 'bg-blue-50 text-blue-700 border-blue-200',
-    'Rekondisi Siap Pakai': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    'Like New / Ex-Display': 'bg-amber-50 text-amber-800 border-amber-200',
-    'Baru Sisa Proyek / Lelang': 'bg-purple-50 text-purple-700 border-purple-200'
-  };
+  const conditionLabel = getConditionLabel(product.condition);
 
   return (
     <div
@@ -87,13 +93,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
               {product.category || 'Kategori belum tercantum'}
             </span>
-            {product.condition && (
+            {conditionLabel && (
               <span
                 className={`shrink-0 px-2 py-0.5 rounded-full text-[11px] font-semibold border ${
-                  conditionColors[product.condition] || 'bg-slate-100 text-slate-700 border-slate-200'
+                  conditionLabel === 'Baru'
+                    ? 'bg-purple-50 text-purple-700 border-purple-200'
+                    : 'bg-blue-50 text-blue-700 border-blue-200'
                 }`}
               >
-                {product.condition}
+                {conditionLabel}
               </span>
             )}
           </div>

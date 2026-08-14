@@ -75,22 +75,26 @@ export default function App() {
         location: filterState.location !== 'Semua Lokasi' ? filterState.location : undefined,
         powerType: filterState.powerType !== 'Semua Sumber Daya' ? filterState.powerType : undefined,
         statusFilter: filterState.statusFilter,
-        minPrice: filterState.minPrice ?? undefined,
-        maxPrice: filterState.maxPrice ?? undefined,
+        minPriceNumber: filterState.minPrice,
+        maxPriceNumber: filterState.maxPrice,
         sortBy: filterState.sortBy,
       });
 
       setProducts(result.products);
       setTotalResults(result.total);
       setCatalogPage(page);
-      setHasNextPage(result.totalPages !== null ? page < result.totalPages : result.products.length === PRODUCTS_PER_PAGE);
+      setHasNextPage(
+        result.totalPages !== null
+          ? page < result.totalPages
+          : result.products.length === PRODUCTS_PER_PAGE,
+      );
     } catch (error) {
       console.error('Failed to load WooCommerce products:', error);
       setProducts([]);
       setTotalResults(null);
       setHasNextPage(false);
       setProductLoadError(
-        'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.'
+        'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.',
       );
     } finally {
       setIsLoadingProducts(false);
@@ -296,7 +300,6 @@ export default function App() {
       <KitchenConsultationBanner />
       <TrustSection />
       <FAQSection />
-
       <Footer onSelectCategory={(cat) => handleFilterChange({ category: cat })} />
 
       <div className="fixed bottom-5 right-5 z-40">
@@ -319,9 +322,7 @@ export default function App() {
         isAdminMode={isAdminMode}
         onToggleStatus={handleToggleStatus}
       />
-
       <RequestUnitModal isOpen={isRequestModalOpen} onClose={() => setIsRequestModalOpen(false)} />
-
       <AdminPanelModal
         isOpen={isAdminPanelOpen}
         onClose={() => setIsAdminPanelOpen(false)}

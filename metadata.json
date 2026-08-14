@@ -1,0 +1,6 @@
+{
+  "name": "BBKitchen - Katalog Peralatan Dapur Komersial",
+  "description": "Katalog dan pencarian peralatan dapur komersial bekas berkualitas dan rekondisi untuk restoran, kafe, katering, dan UMKM kuliner.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

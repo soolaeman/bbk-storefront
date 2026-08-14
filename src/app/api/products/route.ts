@@ -16,6 +16,19 @@ const ACF_LOCATION_OPTIONS = [
   'PAMULANG BARAT',
 ] as const;
 
+const TOP_LEVEL_CATEGORY_ORDER = [
+  'Meja Stainless',
+  'Sink Stainless',
+  'Rak Stainless',
+  'Hood Stainless',
+  'Kompor',
+  'Chiller',
+  'Ice System',
+  'Freezer',
+  'Showcase',
+  'Peralatan Dapur Bekas Lainnya',
+] as const;
+
 function getWooCommerceAuthHeader(): string | null {
   const consumerKey = process.env.WC_CONSUMER_KEY;
   const consumerSecret = process.env.WC_CONSUMER_SECRET;
@@ -190,12 +203,26 @@ async function fetchWooCommerceMetadata(
   statusOptions: string[];
 }> {
   const categories = await fetchWooCommerceCategories(authorization);
+  const topLevelCategories = categories.filter((category) => category.parent === 0);
+  const categoryOrder = new Map(
+    TOP_LEVEL_CATEGORY_ORDER.map((name, index) => [normalizeText(name), index]),
+  );
+
+  topLevelCategories.sort((a, b) => {
+    const aOrder = categoryOrder.get(normalizeText(a.name));
+    const bOrder = categoryOrder.get(normalizeText(b.name));
+
+    if (aOrder !== undefined && bOrder !== undefined) return aOrder - bOrder;
+    if (aOrder !== undefined) return -1;
+    if (bOrder !== undefined) return 1;
+    return a.name.localeCompare(b.name, 'id');
+  });
 
   return {
     // The catalog filter intentionally exposes only WooCommerce top-level
     // categories. Child categories remain in WooCommerce as source data but are
     // not presented as filter choices.
-    categories: categories.filter((category) => category.parent === 0),
+    categories: topLevelCategories,
     conditionOptions: [...ACF_CONDITION_OPTIONS],
     locationOptions: [...ACF_LOCATION_OPTIONS],
     statusOptions: [...ACF_STATUS_OPTIONS],

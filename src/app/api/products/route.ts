@@ -4,6 +4,8 @@ const WOOCOMMERCE_API_URL =
   process.env.WOOCOMMERCE_API_URL ||
   'https://www.bukanbarukitchen.com/wp-json/wc/v3';
 
+const METADATA_PER_PAGE = 100;
+
 function getWooCommerceAuthHeader(): string | null {
   const consumerKey = process.env.WC_CONSUMER_KEY;
   const consumerSecret = process.env.WC_CONSUMER_SECRET;
@@ -114,6 +116,126 @@ async function buildWooCommerceParams(
   return params;
 }
 
+interface WooCommerceMetadataProduct {
+  categories?: Array<{ id?: number; name?: string; slug?: string }>;
+  meta_data?: Array<{ key?: string; value?: unknown }>;
+}
+
+interface WooCommerceMetadataCategory {
+  id: number;
+  name: string;
+  slug: string;
+  parent: number;
+  count?: number;
+}
+
+function getMetaValue(
+  product: WooCommerceMetadataProduct,
+  key: string,
+): string {
+  const entry = product.meta_data?.find((item) => normalizeText(String(item.key || '')) === normalizeText(key));
+  if (entry?.value === null || entry?.value === undefined) return '';
+  return String(entry.value).trim();
+}
+
+function addOption(target: Set<string>, value: string): void {
+  const normalized = value.trim();
+  if (normalized) target.add(normalized);
+}
+
+async function fetchWooCommerceMetadata(
+  authorization: string,
+): Promise<{
+  categories: WooCommerceMetadataCategory[];
+  conditionOptions: string[];
+  locationOptions: string[];
+  totalProducts: number | null;
+}> {
+  const categoriesResponse = await fetch(
+    `${WOOCOMMERCE_API_URL}/products/categories?per_page=${METADATA_PER_PAGE}&hide_empty=false&orderby=name&order=asc`,
+    {
+      headers: {
+        Accept: 'application/json',
+        Authorization: authorization,
+      },
+      next: { revalidate: 300 },
+    },
+  );
+
+  if (!categoriesResponse.ok) {
+    throw new Error(
+      `WooCommerce metadata category lookup gagal: ${categoriesResponse.status} ${categoriesResponse.statusText}`,
+    );
+  }
+
+  const categories = (await categoriesResponse.json()) as WooCommerceMetadataCategory[];
+  const totalPages = Number(categoriesResponse.headers.get('X-WP-TotalPages') || '1');
+
+  for (let page = 2; page <= totalPages; page += 1) {
+    const response = await fetch(
+      `${WOOCOMMERCE_API_URL}/products/categories?per_page=${METADATA_PER_PAGE}&page=${page}&hide_empty=false&orderby=name&order=asc`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: authorization,
+        },
+        next: { revalidate: 300 },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `WooCommerce metadata category page ${page} gagal: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    categories.push(...((await response.json()) as WooCommerceMetadataCategory[]));
+  }
+
+  const conditionOptions = new Set<string>();
+  const locationOptions = new Set<string>();
+  let totalProducts: number | null = null;
+  let productPage = 1;
+  let productTotalPages = 1;
+
+  while (productPage <= productTotalPages) {
+    const response = await fetch(
+      `${WOOCOMMERCE_API_URL}/products?status=publish&per_page=${METADATA_PER_PAGE}&page=${productPage}&orderby=id&order=asc`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: authorization,
+        },
+        next: { revalidate: 300 },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `WooCommerce metadata product page ${productPage} gagal: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const products = (await response.json()) as WooCommerceMetadataProduct[];
+    totalProducts = Number(response.headers.get('X-WP-Total') || totalProducts || products.length);
+    productTotalPages = Number(response.headers.get('X-WP-TotalPages') || productTotalPages);
+
+    for (const product of products) {
+      addOption(conditionOptions, getMetaValue(product, 'kondisi_unit'));
+      addOption(locationOptions, getMetaValue(product, 'lokasi_unit'));
+    }
+
+    productPage += 1;
+  }
+
+  return {
+    categories,
+    conditionOptions: Array.from(conditionOptions).sort((a, b) => a.localeCompare(b, 'id')),
+    locationOptions: Array.from(locationOptions).sort((a, b) => a.localeCompare(b, 'id')),
+    totalProducts,
+  };
+}
+
 export async function GET(request: NextRequest) {
   const authorization = getWooCommerceAuthHeader();
 
@@ -125,6 +247,15 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    if (request.nextUrl.searchParams.get('metadata') === '1') {
+      const metadata = await fetchWooCommerceMetadata(authorization);
+      return NextResponse.json(metadata, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      });
+    }
+
     const incomingParams = request.nextUrl.searchParams;
     const params = await buildWooCommerceParams(request, authorization);
 

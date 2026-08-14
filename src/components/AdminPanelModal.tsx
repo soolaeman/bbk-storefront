@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Product, EquipmentCategory } from '../types';
+import { Product, EquipmentCategory, ProductCondition } from '../types';
 import { formatRupiah } from '../utils/formatters';
-import { Check, Lock, Plus, RefreshCw, Search, ShieldCheck, Wrench, X } from 'lucide-react';
+import { Check, Plus, RefreshCw, Search, Wrench, X } from 'lucide-react';
+
+type ProductPowerType = Product['powerType'];
 
 interface AdminPanelModalProps {
   isOpen: boolean;
@@ -30,9 +32,9 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   const [newBrand, setNewBrand] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [newLocation, setNewLocation] = useState('');
-  const [newCondition, setNewCondition] = useState('');
+  const [newCondition, setNewCondition] = useState<ProductCondition>('Bekas Original');
   const [newConditionRating, setNewConditionRating] = useState('');
-  const [newPowerType, setNewPowerType] = useState('');
+  const [newPowerType, setNewPowerType] = useState<ProductPowerType>('Gas');
   const [newWattage, setNewWattage] = useState('');
   const [newDimensions, setNewDimensions] = useState('');
   const [newMaterial, setNewMaterial] = useState('');
@@ -94,9 +96,9 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
     setNewBrand('');
     setNewPrice('');
     setNewLocation('');
-    setNewCondition('');
+    setNewCondition('Bekas Original');
     setNewConditionRating('');
-    setNewPowerType('');
+    setNewPowerType('Gas');
     setNewWattage('');
     setNewDimensions('');
     setNewMaterial('');
@@ -206,13 +208,23 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input value={newCondition} onChange={(event) => setNewCondition(event.target.value)} placeholder="Kondisi" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
+              <select value={newCondition} onChange={(event) => setNewCondition(event.target.value as ProductCondition)} className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2">
+                <option value="Bekas Original">Bekas Original</option>
+                <option value="Rekondisi Siap Pakai">Rekondisi Siap Pakai</option>
+                <option value="Like New / Ex-Display">Like New / Ex-Display</option>
+                <option value="Baru Sisa Proyek / Lelang">Baru Sisa Proyek / Lelang</option>
+              </select>
               <input value={newConditionRating} onChange={(event) => setNewConditionRating(event.target.value)} placeholder="Rating kondisi" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
               <input value={newLocation} onChange={(event) => setNewLocation(event.target.value)} placeholder="Lokasi" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input value={newPowerType} onChange={(event) => setNewPowerType(event.target.value)} placeholder="Sumber daya" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
+              <select value={newPowerType} onChange={(event) => setNewPowerType(event.target.value as ProductPowerType)} className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2">
+                <option value="Gas">Gas</option>
+                <option value="Listrik">Listrik</option>
+                <option value="Manual / Tanpa Daya">Manual / Tanpa Daya</option>
+                <option value="Gas & Listrik">Gas & Listrik</option>
+              </select>
               <input value={newWattage} onChange={(event) => setNewWattage(event.target.value)} placeholder="Watt / tekanan gas" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
               <input value={newDimensions} onChange={(event) => setNewDimensions(event.target.value)} placeholder="Dimensi" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
             </div>

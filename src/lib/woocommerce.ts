@@ -5,9 +5,6 @@ import type {
   ProductCondition,
 } from '../types';
 
-const WOOCOMMERCE_API_URL =
-  'https://www.bukanbarukitchen.com/wp-json/wc/v3';
-
 interface WooCommerceMeta {
   key: string;
   value: string | number | boolean | null;
@@ -80,10 +77,7 @@ function getProductField(
   metaKeys: string[],
   attributeKeys: string[] = metaKeys,
 ): string {
-  return (
-    getMeta(product, metaKeys) ||
-    getAttribute(product, attributeKeys)
-  );
+  return getMeta(product, metaKeys) || getAttribute(product, attributeKeys);
 }
 
 function stripHtml(value: string): string {
@@ -136,8 +130,6 @@ function mapCondition(value: string, name: string): ProductCondition {
     return 'Bekas Original';
   }
 
-  // Only use the product name as a secondary fallback when WooCommerce
-  // does not contain a kondisi_unit value/attribute.
   const nameFallback = name.toLowerCase();
   if (nameFallback.includes('rekondisi')) return 'Rekondisi Siap Pakai';
   if (nameFallback.includes('ex-display') || nameFallback.includes('ex display')) {
@@ -273,9 +265,7 @@ function mapProduct(product: WooCommerceProduct): Product {
     testedFunctions: [],
     images: (product.images || []).map((image) => image.src),
     dateAdded: product.date_created || new Date().toISOString(),
-    previousUsage: conditionValue
-      ? conditionValue
-      : undefined,
+    previousUsage: conditionValue ? conditionValue : undefined,
     featured: false,
   };
 }
@@ -287,23 +277,21 @@ export async function getWooCommerceProducts(options?: {
   const perPage = options?.perPage ?? 24;
   const page = options?.page ?? 1;
 
-  const url = new URL(`${WOOCOMMERCE_API_URL}/products`);
+  const url = new URL('/api/products', 'http://localhost');
   url.searchParams.set('status', 'publish');
   url.searchParams.set('per_page', String(perPage));
   url.searchParams.set('page', String(page));
 
-  const response = await fetch(url.toString(), {
+  const response = await fetch(url.toString().replace('http://localhost', ''), {
     headers: {
       Accept: 'application/json',
     },
-    next: {
-      revalidate: 60,
-    },
+    cache: 'no-store',
   });
 
   if (!response.ok) {
     throw new Error(
-      `WooCommerce API gagal: ${response.status} ${response.statusText}`,
+      `WooCommerce proxy gagal: ${response.status} ${response.statusText}`,
     );
   }
 
@@ -314,24 +302,7 @@ export async function getWooCommerceProducts(options?: {
 export async function getWooCommerceProductById(
   id: string | number,
 ): Promise<Product> {
-  const response = await fetch(
-    `${WOOCOMMERCE_API_URL}/products/${encodeURIComponent(String(id))}`,
-    {
-      headers: {
-        Accept: 'application/json',
-      },
-      next: {
-        revalidate: 60,
-      },
-    },
+  throw new Error(
+    `getWooCommerceProductById belum dipindahkan ke server-side proxy: ${id}`,
   );
-
-  if (!response.ok) {
-    throw new Error(
-      `WooCommerce product gagal diambil: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const product = (await response.json()) as WooCommerceProduct;
-  return mapProduct(product);
 }

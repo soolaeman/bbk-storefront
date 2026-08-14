@@ -192,7 +192,10 @@ async function fetchWooCommerceMetadata(
   const categories = await fetchWooCommerceCategories(authorization);
 
   return {
-    categories,
+    // The catalog filter intentionally exposes only WooCommerce top-level
+    // categories. Child categories remain in WooCommerce as source data but are
+    // not presented as filter choices.
+    categories: categories.filter((category) => category.parent === 0),
     conditionOptions: [...ACF_CONDITION_OPTIONS],
     locationOptions: [...ACF_LOCATION_OPTIONS],
     statusOptions: [...ACF_STATUS_OPTIONS],

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { CategoryFilter } from './components/CategoryFilter';
@@ -12,7 +12,7 @@ import { TrustSection } from './components/TrustSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { getWooCommerceProducts } from './lib/woocommerce';
-import { Product, EquipmentCategory, FilterState } from './types';
+import { Product, FilterState } from './types';
 import { PackageOpen, RotateCcw, PlusCircle, Phone, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from './utils/formatters';
 
@@ -24,33 +24,6 @@ export default function App() {
   const [productLoadError, setProductLoadError] = useState<string | null>(null);
   const [catalogPage, setCatalogPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
-
-  const loadProducts = async (page = catalogPage) => {
-    setIsLoadingProducts(true);
-    setProductLoadError(null);
-
-    try {
-      const liveProducts = await getWooCommerceProducts({
-        perPage: PRODUCTS_PER_PAGE,
-        page,
-      });
-      setProducts(liveProducts);
-      setCatalogPage(page);
-      setHasNextPage(liveProducts.length === PRODUCTS_PER_PAGE);
-    } catch (error) {
-      console.error('Failed to load WooCommerce products:', error);
-      setProductLoadError(
-        'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.'
-      );
-      setHasNextPage(false);
-    } finally {
-      setIsLoadingProducts(false);
-    }
-  };
-
-  useEffect(() => {
-    void loadProducts(1);
-  }, []);
 
   const [filterState, setFilterState] = useState<FilterState>({
     searchQuery: '',
@@ -87,6 +60,56 @@ export default function App() {
     });
   };
 
+  const loadProducts = async (page = 1) => {
+    setIsLoadingProducts(true);
+    setProductLoadError(null);
+
+    try {
+      const liveProducts = await getWooCommerceProducts({
+        perPage: PRODUCTS_PER_PAGE,
+        page,
+        search: filterState.searchQuery.trim() || undefined,
+        category: filterState.category !== 'Semua' ? filterState.category : undefined,
+        condition: filterState.condition !== 'Semua Kondisi' ? filterState.condition : undefined,
+        location: filterState.location !== 'Semua Lokasi' ? filterState.location : undefined,
+        powerType: filterState.powerType !== 'Semua Sumber Daya' ? filterState.powerType : undefined,
+        statusFilter: filterState.statusFilter,
+        minPrice: filterState.minPrice ?? undefined,
+        maxPrice: filterState.maxPrice ?? undefined,
+        sortBy: filterState.sortBy,
+      });
+
+      setProducts(liveProducts);
+      setCatalogPage(page);
+      setHasNextPage(liveProducts.length === PRODUCTS_PER_PAGE);
+    } catch (error) {
+      console.error('Failed to load WooCommerce products:', error);
+      setProducts([]);
+      setHasNextPage(false);
+      setProductLoadError(
+        'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.'
+      );
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadProducts(1);
+    // Filter state is intentionally the source of truth for every WooCommerce request.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filterState.searchQuery,
+    filterState.category,
+    filterState.condition,
+    filterState.location,
+    filterState.powerType,
+    filterState.statusFilter,
+    filterState.minPrice,
+    filterState.maxPrice,
+    filterState.sortBy,
+  ]);
+
   const handleToggleStatus = (productId: string, newStatus: 'READY' | 'SOLD') => {
     setProducts(prev => prev.map(p => {
       if (p.id === productId) {
@@ -108,73 +131,10 @@ export default function App() {
     void loadProducts(catalogPage);
   };
 
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    products.forEach(p => {
-      counts[p.category] = (counts[p.category] || 0) + 1;
-    });
+  const categoryCounts = products.reduce<Record<string, number>>((counts, product) => {
+    counts[product.category] = (counts[product.category] || 0) + 1;
     return counts;
-  }, [products]);
-
-  const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      if (filterState.searchQuery.trim()) {
-        const q = filterState.searchQuery.toLowerCase();
-        const matchName = product.name.toLowerCase().includes(q);
-        const matchSku = product.sku.toLowerCase().includes(q);
-        const matchBrand = product.brand.toLowerCase().includes(q);
-        const matchSummary = product.summary.toLowerCase().includes(q);
-        const matchLocation = product.location.toLowerCase().includes(q);
-        if (!matchName && !matchSku && !matchBrand && !matchSummary && !matchLocation) {
-          return false;
-        }
-      }
-
-      if (filterState.category !== 'Semua' && product.category !== filterState.category) {
-        return false;
-      }
-
-      if (filterState.condition !== 'Semua Kondisi' && product.condition !== filterState.condition) {
-        return false;
-      }
-
-      if (filterState.location !== 'Semua Lokasi') {
-        const locFilter = filterState.location.toLowerCase();
-        const prodLoc = product.location.toLowerCase();
-        if (!prodLoc.includes(locFilter.split(' ')[0])) {
-          return false;
-        }
-      }
-
-      if (filterState.powerType !== 'Semua Sumber Daya' && product.powerType !== filterState.powerType) {
-        return false;
-      }
-
-      if (filterState.statusFilter === 'READY_ONLY' && product.status !== 'READY') {
-        return false;
-      }
-      if (filterState.statusFilter === 'INCLUDE_SOLD' && product.status !== 'SOLD') {
-        return false;
-      }
-
-      return true;
-    }).sort((a, b) => {
-      if (filterState.sortBy === 'price_low') {
-        const priceA = a.price ?? 999999999;
-        const priceB = b.price ?? 999999999;
-        return priceA - priceB;
-      }
-      if (filterState.sortBy === 'price_high') {
-        const priceA = a.price ?? -1;
-        const priceB = b.price ?? -1;
-        return priceB - priceA;
-      }
-      if (filterState.sortBy === 'condition') {
-        return b.conditionRating - a.conditionRating;
-      }
-      return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
-    });
-  }, [products, filterState]);
+  }, {});
 
   const goToCatalogPage = (page: number) => {
     if (page < 1 || isLoadingProducts || (page > catalogPage && !hasNextPage)) return;
@@ -205,7 +165,7 @@ export default function App() {
         filterState={filterState}
         onFilterChange={handleFilterChange}
         onResetFilters={handleResetFilters}
-        totalResultsCount={filteredProducts.length}
+        totalResultsCount={products.length}
         categoryCounts={categoryCounts}
       />
 
@@ -219,7 +179,7 @@ export default function App() {
               )}
             </h2>
             <p className="text-xs text-slate-500">
-              Halaman {catalogPage} • Menampilkan {filteredProducts.length} unit dari halaman ini
+              Halaman {catalogPage} • Menampilkan {products.length} unit dari hasil WooCommerce live
             </p>
           </div>
 
@@ -254,10 +214,10 @@ export default function App() {
               <span>Coba Lagi</span>
             </button>
           </div>
-        ) : filteredProducts.length > 0 ? (
+        ) : products.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {filteredProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -302,7 +262,7 @@ export default function App() {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-slate-900">Tidak ada unit yang cocok dengan filter</h3>
               <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-                Unit dengan kriteria yang Anda cari mungkin sedang proses inspeksi atau belum terupload di katalog online.
+                WooCommerce tidak mengembalikan unit untuk kombinasi filter yang dipilih.
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">

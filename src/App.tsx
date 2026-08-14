@@ -11,64 +11,61 @@ import { KitchenConsultationBanner } from './components/KitchenConsultationBanne
 import { TrustSection } from './components/TrustSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
-import { INITIAL_PRODUCTS } from './data/products';
+import { getWooCommerceProducts } from './lib/woocommerce';
 import { Product, EquipmentCategory, FilterState } from './types';
-import { 
-  PackageOpen, 
-  RotateCcw, 
-  PlusCircle, 
-  Phone, 
+import {
+  PackageOpen,
+  RotateCcw,
+  PlusCircle,
+  Phone,
   Sparkles,
-  Search,
-  Filter
+  Loader2
 } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from './utils/formatters';
 
-const STORAGE_KEY = 'bbkitchen_products_inventory_v1';
-
 export default function App() {
-  // Load products from localStorage or fallback to INITIAL_PRODUCTS
-  const [products, setProducts] = useState<Product[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (e) {
-      console.warn('Failed to parse saved products from localStorage:', e);
-    }
-    return INITIAL_PRODUCTS;
-  });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [productLoadError, setProductLoadError] = useState<string | null>(null);
 
-  // Save to localStorage when products change
+  const loadProducts = async () => {
+    setIsLoadingProducts(true);
+    setProductLoadError(null);
+
+    try {
+      const liveProducts = await getWooCommerceProducts({ perPage: 100 });
+      setProducts(liveProducts);
+    } catch (error) {
+      console.error('Failed to load WooCommerce products:', error);
+      setProductLoadError(
+        'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.'
+      );
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-    } catch (e) {
-      console.warn('Failed to save products to localStorage:', e);
-    }
-  }, [products]);
+    void loadProducts();
+  }, []);
 
-  // Filter and search state
   const [filterState, setFilterState] = useState<FilterState>({
     searchQuery: '',
     category: 'Semua',
     condition: 'Semua Kondisi',
     location: 'Semua Lokasi',
     powerType: 'Semua Sumber Daya',
-    statusFilter: 'READY_ONLY', // Default to active READY units for optimal customer UX
+    statusFilter: 'READY_ONLY',
     minPrice: null,
     maxPrice: null,
     sortBy: 'latest'
   });
 
-  // Modals & Admin Mode state
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState<boolean>(false);
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
 
-  // Update filter handler
   const handleFilterChange = (updates: Partial<FilterState>) => {
     setFilterState(prev => ({ ...prev, ...updates }));
   };
@@ -87,7 +84,6 @@ export default function App() {
     });
   };
 
-  // Status toggle handler (for Admin Mode)
   const handleToggleStatus = (productId: string, newStatus: 'READY' | 'SOLD') => {
     setProducts(prev => prev.map(p => {
       if (p.id === productId) {
@@ -96,26 +92,19 @@ export default function App() {
       return p;
     }));
 
-    // Update modal product if currently open
     if (selectedProduct && selectedProduct.id === productId) {
       setSelectedProduct(prev => prev ? { ...prev, status: newStatus } : null);
     }
   };
 
-  // Add new product handler (from Admin Panel)
   const handleAddProduct = (newProduct: Product) => {
     setProducts(prev => [newProduct, ...prev]);
   };
 
-  // Reset inventory to initial default
   const handleResetToDefault = () => {
-    if (window.confirm('Reset semua data inventori kembali ke katalog awal?')) {
-      setProducts(INITIAL_PRODUCTS);
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    void loadProducts();
   };
 
-  // Category counts computation
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     products.forEach(p => {
@@ -124,10 +113,8 @@ export default function App() {
     return counts;
   }, [products]);
 
-  // Filtered & sorted products computation
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
-      // Search query
       if (filterState.searchQuery.trim()) {
         const q = filterState.searchQuery.toLowerCase();
         const matchName = product.name.toLowerCase().includes(q);
@@ -140,17 +127,14 @@ export default function App() {
         }
       }
 
-      // Category filter
       if (filterState.category !== 'Semua' && product.category !== filterState.category) {
         return false;
       }
 
-      // Condition filter
       if (filterState.condition !== 'Semua Kondisi' && product.condition !== filterState.condition) {
         return false;
       }
 
-      // Location filter
       if (filterState.location !== 'Semua Lokasi') {
         const locFilter = filterState.location.toLowerCase();
         const prodLoc = product.location.toLowerCase();
@@ -159,12 +143,10 @@ export default function App() {
         }
       }
 
-      // Power type filter
       if (filterState.powerType !== 'Semua Sumber Daya' && product.powerType !== filterState.powerType) {
         return false;
       }
 
-      // Status filter
       if (filterState.statusFilter === 'READY_ONLY' && product.status !== 'READY') {
         return false;
       }
@@ -187,15 +169,12 @@ export default function App() {
       if (filterState.sortBy === 'condition') {
         return b.conditionRating - a.conditionRating;
       }
-      // 'latest' default
       return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
     });
   }, [products, filterState]);
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
-      
-      {/* Header with Search, WhatsApp Hotline & Admin Mode */}
       <Header
         searchQuery={filterState.searchQuery}
         onSearchChange={(q) => handleFilterChange({ searchQuery: q })}
@@ -205,7 +184,6 @@ export default function App() {
         onOpenAdminPanel={() => setIsAdminPanelOpen(true)}
       />
 
-      {/* Hero Section */}
       <HeroSection
         onSelectCategory={(cat) => {
           handleFilterChange({ category: cat });
@@ -214,7 +192,6 @@ export default function App() {
         onRequestUnitClick={() => setIsRequestModalOpen(true)}
       />
 
-      {/* Category & Filter Control Bar */}
       <CategoryFilter
         filterState={filterState}
         onFilterChange={handleFilterChange}
@@ -223,10 +200,7 @@ export default function App() {
         categoryCounts={categoryCounts}
       />
 
-      {/* Main Catalogue Product Grid */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
-        
-        {/* Results Header */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-slate-200">
           <div>
             <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
@@ -252,8 +226,30 @@ export default function App() {
           </button>
         </div>
 
-        {/* Product Cards Grid */}
-        {filteredProducts.length > 0 ? (
+        {isLoadingProducts ? (
+          <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center shadow-xs my-8">
+            <Loader2 className="w-8 h-8 animate-spin text-amber-600 mx-auto mb-3" />
+            <p className="text-sm font-bold text-slate-900">Memuat katalog unit BBKitchen...</p>
+            <p className="text-xs text-slate-500 mt-1">Mengambil data terbaru dari WooCommerce.</p>
+          </div>
+        ) : productLoadError ? (
+          <div className="bg-white rounded-2xl border border-red-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">
+            <div className="space-y-1">
+              <h3 className="text-base font-bold text-slate-900">Katalog belum dapat dimuat</h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                {productLoadError}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void loadProducts()}
+              className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl inline-flex items-center gap-1.5 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Coba Lagi</span>
+            </button>
+          </div>
+        ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {filteredProducts.map((product) => (
               <ProductCard
@@ -266,12 +262,11 @@ export default function App() {
             ))}
           </div>
         ) : (
-          /* Empty Search & Filter State */
           <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">
             <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto border border-amber-200">
               <PackageOpen className="w-7 h-7" />
             </div>
-            
+
             <div className="space-y-1">
               <h3 className="text-base font-bold text-slate-900">
                 Tidak ada unit yang cocok dengan filter
@@ -302,24 +297,16 @@ export default function App() {
             </div>
           </div>
         )}
-
       </main>
 
-      {/* Kitchen Consultation Callout */}
       <KitchenConsultationBanner />
-
-      {/* Trust & Quality Assurance Pillars */}
       <TrustSection />
-
-      {/* FAQ Section */}
       <FAQSection />
 
-      {/* Footer */}
       <Footer
         onSelectCategory={(cat) => handleFilterChange({ category: cat })}
       />
 
-      {/* Floating WhatsApp Action Button on Mobile & Desktop */}
       <div className="fixed bottom-5 right-5 z-40">
         <a
           href={generateWhatsAppConsultationLink()}
@@ -334,7 +321,6 @@ export default function App() {
         </a>
       </div>
 
-      {/* Product Detail Modal */}
       <ProductDetailModal
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
@@ -342,13 +328,11 @@ export default function App() {
         onToggleStatus={handleToggleStatus}
       />
 
-      {/* Request Unit (Titip Sourcing) Modal */}
       <RequestUnitModal
         isOpen={isRequestModalOpen}
         onClose={() => setIsRequestModalOpen(false)}
       />
 
-      {/* Admin Panel Modal (Internal Only) */}
       <AdminPanelModal
         isOpen={isAdminPanelOpen}
         onClose={() => setIsAdminPanelOpen(false)}
@@ -357,7 +341,6 @@ export default function App() {
         onAddProduct={handleAddProduct}
         onResetToDefault={handleResetToDefault}
       />
-
     </div>
   );
 }

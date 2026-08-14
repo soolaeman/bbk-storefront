@@ -39,6 +39,8 @@ export default function App() {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [productLoadError, setProductLoadError] = useState<string | null>(null);
   const [catalogPage, setCatalogPage] = useState(1);
+  const [catalogPageInput, setCatalogPageInput] = useState('1');
+  const [totalPages, setTotalPages] = useState<number | null>(null);
   const [hasNextPage, setHasNextPage] = useState(false);
 
   const [catalogMetadata, setCatalogMetadata] = useState<CatalogMetadata>({
@@ -146,6 +148,8 @@ export default function App() {
       setProducts(result.products);
       setTotalResults(result.total);
       setCatalogPage(page);
+      setCatalogPageInput(String(page));
+      setTotalPages(result.totalPages);
       setHasNextPage(
         result.totalPages !== null
           ? page < result.totalPages
@@ -155,6 +159,7 @@ export default function App() {
       console.error('Failed to load WooCommerce products:', error);
       setProducts([]);
       setTotalResults(null);
+      setTotalPages(null);
       setHasNextPage(false);
       setProductLoadError(
         'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.',
@@ -241,13 +246,31 @@ export default function App() {
   );
 
   const goToCatalogPage = (page: number) => {
-    if (page < 1 || isLoadingProducts || (page > catalogPage && !hasNextPage)) return;
+    if (page < 1 || isLoadingProducts) return;
+    if (totalPages !== null && page > totalPages) return;
+    if (totalPages === null && page > catalogPage && !hasNextPage) return;
     window.scrollTo({ top: 380, behavior: 'smooth' });
     void loadProducts(page);
   };
 
+  const handleCatalogPageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const requestedPage = Number.parseInt(catalogPageInput, 10);
+
+    if (!Number.isFinite(requestedPage)) {
+      setCatalogPageInput(String(catalogPage));
+      return;
+    }
+
+    const maxPage = totalPages ?? (hasNextPage ? requestedPage : catalogPage);
+    const targetPage = Math.min(Math.max(requestedPage, 1), maxPage);
+    setCatalogPageInput(String(targetPage));
+    goToCatalogPage(targetPage);
+  };
+
   const displayedCount = products.length;
   const totalCountLabel = totalResults ?? catalogMetadata.totalProducts ?? displayedCount;
+  const totalPageLabel = totalPages ?? (hasNextPage ? '…' : catalogPage);
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
@@ -340,7 +363,7 @@ export default function App() {
               ))}
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-3" aria-label="Pagination katalog">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5" aria-label="Pagination katalog">
               <button
                 type="button"
                 onClick={() => goToCatalogPage(catalogPage - 1)}
@@ -351,9 +374,30 @@ export default function App() {
                 Sebelumnya
               </button>
 
-              <span className="px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black min-w-24 text-center">
-                Halaman {catalogPage}
-              </span>
+              <form onSubmit={handleCatalogPageSubmit} className="flex items-center gap-2">
+                <label htmlFor="catalog-page-input" className="text-xs font-semibold text-slate-500">
+                  Halaman
+                </label>
+                <input
+                  id="catalog-page-input"
+                  type="number"
+                  min={1}
+                  max={totalPages ?? undefined}
+                  value={catalogPageInput}
+                  onChange={(event) => setCatalogPageInput(event.target.value)}
+                  disabled={isLoadingProducts}
+                  className="w-16 px-2.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs font-black text-center outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:opacity-50"
+                  aria-label="Masukkan nomor halaman katalog"
+                />
+                <span className="text-xs font-bold text-slate-500">/ {totalPageLabel}</span>
+                <button
+                  type="submit"
+                  disabled={isLoadingProducts}
+                  className="px-3.5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  Go
+                </button>
+              </form>
 
               <button
                 type="button"
@@ -365,6 +409,10 @@ export default function App() {
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+
+            <p className="mt-3 text-center text-xs font-semibold text-slate-500">
+              Halaman {catalogPage} dari {totalPageLabel} • Menampilkan {displayedCount} unit
+            </p>
           </>
         ) : (
           <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { CategoryFilter } from './components/CategoryFilter';
@@ -143,6 +143,33 @@ export default function App() {
     return counts;
   }, {});
 
+  const liveCategoryOptions = useMemo(() => {
+    return Array.from(new Set(products.map((product) => product.category.trim()).filter(Boolean)))
+      .filter((category) => category !== 'Semua')
+      .map((category, index) => ({
+        id: index + 1,
+        name: category,
+        count: categoryCounts[category] ?? 0,
+      }));
+  }, [products, categoryCounts]);
+
+  const liveConditionOptions = useMemo(() => {
+    return Array.from(new Set(products.map((product) => product.condition.trim()).filter(Boolean)));
+  }, [products]);
+
+  const liveLocationOptions = useMemo(() => {
+    return Array.from(new Set(products.map((product) => product.location.trim()).filter(Boolean)));
+  }, [products]);
+
+  const livePowerTypeOptions = useMemo(() => {
+    return Array.from(new Set(products.map((product) => product.powerType.trim()).filter(Boolean)));
+  }, [products]);
+
+  const liveRequestCategoryOptions = useMemo(
+    () => liveCategoryOptions.map((category) => category.name),
+    [liveCategoryOptions],
+  );
+
   const goToCatalogPage = (page: number) => {
     if (page < 1 || isLoadingProducts || (page > catalogPage && !hasNextPage)) return;
     window.scrollTo({ top: 380, behavior: 'smooth' });
@@ -177,6 +204,10 @@ export default function App() {
         onResetFilters={handleResetFilters}
         totalResultsCount={totalCountLabel}
         categoryCounts={categoryCounts}
+        categories={liveCategoryOptions}
+        conditionOptions={liveConditionOptions}
+        locationOptions={liveLocationOptions}
+        powerTypeOptions={livePowerTypeOptions}
       />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
@@ -322,7 +353,11 @@ export default function App() {
         isAdminMode={isAdminMode}
         onToggleStatus={handleToggleStatus}
       />
-      <RequestUnitModal isOpen={isRequestModalOpen} onClose={() => setIsRequestModalOpen(false)} />
+      <RequestUnitModal
+        isOpen={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
+        categoryOptions={liveRequestCategoryOptions}
+      />
       <AdminPanelModal
         isOpen={isAdminPanelOpen}
         onClose={() => setIsAdminPanelOpen(false)}
@@ -330,6 +365,7 @@ export default function App() {
         onToggleStatus={handleToggleStatus}
         onAddProduct={handleAddProduct}
         onResetToDefault={handleResetToDefault}
+        categoryOptions={liveCategoryOptions}
       />
     </div>
   );

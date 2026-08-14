@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import App from '../App';
 
-const WORDPRESS_URL =
-  process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://bukanbarukitchen.com';
+const DEFAULT_SITE_URL = 'https://www.bukanbarukitchen.com';
+const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || DEFAULT_SITE_URL;
 
 interface YoastHeadResponse {
   head?: string;
@@ -30,6 +30,21 @@ async function getYoastHomepageMetadata(): Promise<Metadata> {
   const targetUrl = `${siteUrl}/`;
   const endpoint = `${siteUrl}/wp-json/yoast/v1/get_head?url=${encodeURIComponent(targetUrl)}`;
 
+  const fallbackMetadata: Metadata = {
+    title: 'BBKitchen — Peralatan Dapur Komersial',
+    description:
+      'Temukan peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
+    metadataBase: new URL(DEFAULT_SITE_URL),
+    alternates: { canonical: DEFAULT_SITE_URL },
+    openGraph: {
+      title: 'BBKitchen — Peralatan Dapur Komersial',
+      description:
+        'Temukan peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
+      url: DEFAULT_SITE_URL,
+      type: 'website',
+    },
+  };
+
   try {
     const response = await fetch(endpoint, {
       headers: { Accept: 'application/json' },
@@ -37,7 +52,12 @@ async function getYoastHomepageMetadata(): Promise<Metadata> {
     });
 
     if (!response.ok) {
-      throw new Error(`Yoast API returned ${response.status}`);
+      if (response.status === 404) {
+        console.warn('Yoast homepage metadata endpoint returned 404; using BBKitchen fallback metadata.');
+      } else {
+        console.warn(`Yoast homepage metadata returned ${response.status}; using BBKitchen fallback metadata.`);
+      }
+      return fallbackMetadata;
     }
 
     const data = (await response.json()) as YoastHeadResponse;
@@ -51,36 +71,21 @@ async function getYoastHomepageMetadata(): Promise<Metadata> {
       getMetaContent(head, 'og:url') || getMetaContent(head, 'canonical');
 
     return {
-      title: title || 'BBKitchen — Peralatan Dapur Komersial',
-      description:
-        description ||
-        'Temukan peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
-      alternates: canonical ? { canonical } : undefined,
+      metadataBase: new URL(DEFAULT_SITE_URL),
+      title: title || fallbackMetadata.title,
+      description: description || fallbackMetadata.description,
+      alternates: { canonical: canonical || DEFAULT_SITE_URL },
       openGraph: {
-        title: title || 'BBKitchen — Peralatan Dapur Komersial',
-        description:
-          description ||
-          'Temukan peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
-        url: canonical || targetUrl,
+        title: title || fallbackMetadata.title,
+        description: description || fallbackMetadata.description,
+        url: canonical || DEFAULT_SITE_URL,
         images: ogImage ? [{ url: ogImage }] : undefined,
         type: 'website',
       },
     };
   } catch (error) {
-    console.error('Failed to load Yoast homepage metadata:', error);
-
-    return {
-      title: 'BBKitchen — Peralatan Dapur Komersial',
-      description:
-        'Temukan peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
-      openGraph: {
-        title: 'BBKitchen — Peralatan Dapur Komersial',
-        description:
-          'Temukan peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
-        url: targetUrl,
-        type: 'website',
-      },
-    };
+    console.warn('Failed to load Yoast homepage metadata; using BBKitchen fallback metadata.', error);
+    return fallbackMetadata;
   }
 }
 

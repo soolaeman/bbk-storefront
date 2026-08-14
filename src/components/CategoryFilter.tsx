@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Flame,
   Utensils,
@@ -86,6 +86,15 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   conditionOptions = [],
   locationOptions = [],
 }) => {
+  // Inventory status is intentionally not exposed in the public catalog UI.
+  // Neutralize the legacy READY_ONLY state so the hidden field cannot keep
+  // restricting the SEO catalog to ready units only.
+  useEffect(() => {
+    if (filterState.statusFilter !== 'ALL') {
+      onFilterChange({ statusFilter: 'ALL' });
+    }
+  }, [filterState.statusFilter, onFilterChange]);
+
   const visibleCategories = categories.filter((category) => {
     if (category.name === 'Semua') return true;
     return category.count !== undefined || (categoryCounts[category.name] || 0) > 0;
@@ -98,7 +107,6 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
     filterState.category !== 'Semua' ||
     filterState.condition !== 'Semua Kondisi' ||
     filterState.location !== 'Semua Lokasi' ||
-    filterState.statusFilter !== 'READY_ONLY' ||
     filterState.searchQuery !== '';
 
   const renderOptionList = (values: string[], emptyLabel: string) => {
@@ -112,15 +120,6 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
       </option>
     ));
   };
-
-  const statusOptions: Array<{
-    value: FilterState['statusFilter'];
-    label: string;
-  }> = [
-    { value: 'READY_ONLY', label: 'Hanya Ready' },
-    { value: 'ALL', label: 'Semua Unit' },
-    { value: 'INCLUDE_SOLD', label: 'Unit Terjual / Archive' },
-  ];
 
   return (
     <section className="bg-white border-b border-slate-200 py-6 px-4">
@@ -195,53 +194,25 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
-            <div className="relative">
-              <select
-                id="filter-condition-select"
-                value={filterState.condition}
-                onChange={(e) => onFilterChange({ condition: e.target.value })}
-                className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
-              >
-                <option value="Semua Kondisi">Semua Kondisi</option>
-                {renderOptionList(conditionValues, 'Kondisi belum tersedia')}
-              </select>
-            </div>
+            <select
+              id="filter-condition-select"
+              value={filterState.condition}
+              onChange={(e) => onFilterChange({ condition: e.target.value })}
+              className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
+            >
+              <option value="Semua Kondisi">Semua Kondisi</option>
+              {renderOptionList(conditionValues, 'Kondisi belum tersedia')}
+            </select>
 
-            <div className="relative">
-              <select
-                id="filter-location-select"
-                value={filterState.location}
-                onChange={(e) => onFilterChange({ location: e.target.value })}
-                className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
-              >
-                <option value="Semua Lokasi">Semua Lokasi</option>
-                {renderOptionList(locationValues, 'Lokasi belum tersedia')}
-              </select>
-            </div>
-
-            <div className="flex items-center rounded-lg border border-slate-300 bg-white overflow-hidden">
-              {statusOptions.map((option) => {
-                const isActive = filterState.statusFilter === option.value;
-
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    id={`filter-status-${option.value.toLowerCase()}`}
-                    onClick={() => onFilterChange({ statusFilter: option.value })}
-                    className={`px-3 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap ${
-                      isActive
-                        ? option.value === 'READY_ONLY'
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-slate-900 text-white'
-                        : 'bg-white text-slate-600 hover:bg-slate-50'
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
+            <select
+              id="filter-location-select"
+              value={filterState.location}
+              onChange={(e) => onFilterChange({ location: e.target.value })}
+              className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"
+            >
+              <option value="Semua Lokasi">Semua Lokasi</option>
+              {renderOptionList(locationValues, 'Lokasi belum tersedia')}
+            </select>
           </div>
 
           <div className="flex items-center gap-2">

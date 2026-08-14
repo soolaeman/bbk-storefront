@@ -18,6 +18,21 @@ import { generateWhatsAppConsultationLink } from './utils/formatters';
 
 const PRODUCTS_PER_PAGE = 8;
 
+interface CatalogMetadataCategory {
+  id: number;
+  name: string;
+  slug?: string;
+  parent?: number;
+  count?: number;
+}
+
+interface CatalogMetadata {
+  categories: CatalogMetadataCategory[];
+  conditionOptions: string[];
+  locationOptions: string[];
+  totalProducts: number | null;
+}
+
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [totalResults, setTotalResults] = useState<number | null>(null);
@@ -25,6 +40,14 @@ export default function App() {
   const [productLoadError, setProductLoadError] = useState<string | null>(null);
   const [catalogPage, setCatalogPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
+
+  const [catalogMetadata, setCatalogMetadata] = useState<CatalogMetadata>({
+    categories: [],
+    conditionOptions: [],
+    locationOptions: [],
+    totalProducts: null,
+  });
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState(true);
 
   const [filterState, setFilterState] = useState<FilterState>({
     searchQuery: '',
@@ -60,6 +83,46 @@ export default function App() {
       sortBy: 'latest'
     });
   };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadCatalogMetadata = async () => {
+      setIsLoadingMetadata(true);
+
+      try {
+        const response = await fetch('/api/products?metadata=1', {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error(`Metadata endpoint gagal: ${response.status}`);
+        }
+
+        const data = (await response.json()) as CatalogMetadata;
+
+        if (!cancelled) {
+          setCatalogMetadata({
+            categories: Array.isArray(data.categories) ? data.categories : [],
+            conditionOptions: Array.isArray(data.conditionOptions) ? data.conditionOptions : [],
+            locationOptions: Array.isArray(data.locationOptions) ? data.locationOptions : [],
+            totalProducts: typeof data.totalProducts === 'number' ? data.totalProducts : null,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load WooCommerce catalog metadata:', error);
+      } finally {
+        if (!cancelled) setIsLoadingMetadata(false);
+      }
+    };
+
+    void loadCatalogMetadata();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const loadProducts = async (page = 1) => {
     setIsLoadingProducts(true);
@@ -138,28 +201,35 @@ export default function App() {
     void loadProducts(catalogPage);
   };
 
-  const categoryCounts = products.reduce<Record<string, number>>((counts, product) => {
-    counts[product.category] = (counts[product.category] || 0) + 1;
-    return counts;
-  }, {});
+  const categoryCounts = useMemo(() => {
+    return products.reduce<Record<string, number>>((counts, product) => {
+      counts[product.category] = (counts[product.category] || 0) + 1;
+      return counts;
+    }, {});
+  }, [products]);
 
   const liveCategoryOptions = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.category.trim()).filter(Boolean)))
-      .filter((category) => category !== 'Semua')
-      .map((category, index) => ({
-        id: index + 1,
-        name: category,
-        count: categoryCounts[category] ?? 0,
+    return catalogMetadata.categories
+      .filter((category) => category.name.trim() && category.name.trim() !== 'Semua')
+      .map((category) => ({
+        id: category.id,
+        name: category.name.trim(),
+        parentId: category.parent,
+        count: category.count ?? categoryCounts[category.name.trim()] ?? 0,
       }));
-  }, [products, categoryCounts]);
+  }, [catalogMetadata.categories, categoryCounts]);
 
   const liveConditionOptions = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.condition.trim()).filter(Boolean)));
-  }, [products]);
+    return Array.from(
+      new Set(catalogMetadata.conditionOptions.map((value) => value.trim()).filter(Boolean)),
+    );
+  }, [catalogMetadata.conditionOptions]);
 
   const liveLocationOptions = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.location.trim()).filter(Boolean)));
-  }, [products]);
+    return Array.from(
+      new Set(catalogMetadata.locationOptions.map((value) => value.trim()).filter(Boolean)),
+    );
+  }, [catalogMetadata.locationOptions]);
 
   const livePowerTypeOptions = useMemo(() => {
     return Array.from(new Set(products.map((product) => product.powerType.trim()).filter(Boolean)));
@@ -177,7 +247,7 @@ export default function App() {
   };
 
   const displayedCount = products.length;
-  const totalCountLabel = totalResults ?? displayedCount;
+  const totalCountLabel = totalResults ?? catalogMetadata.totalProducts ?? displayedCount;
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
@@ -221,6 +291,7 @@ export default function App() {
             </h2>
             <p className="text-xs text-slate-500">
               Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit WooCommerce live
+              {isLoadingMetadata ? ' • Menyiapkan filter metadata live...' : ''}
             </p>
           </div>
 

@@ -33,7 +33,16 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({ filterState, onF
   }, [filterState.statusFilter, onFilterChange]);
 
   const visibleCategories = categories.filter((category) => category.name === 'Semua' || category.count !== undefined || (categoryCounts[category.name] || 0) > 0);
-  const conditionValues = normalizeOptions(conditionOptions, filterState.condition).filter((value) => value === 'Baru' || value === 'Bekas');
+  const conditionValues = Array.from(new Set(
+    normalizeOptions(conditionOptions, filterState.condition)
+      .map((value) => {
+        const normalized = value.trim().toLowerCase();
+        if (normalized === 'baru') return 'Baru';
+        if (normalized === 'bekas') return 'Bekas';
+        return null;
+      })
+      .filter((value): value is 'Baru' | 'Bekas' => value !== null),
+  ));
   const conditions = ['Semua Kondisi', ...conditionValues];
   const locationValues = normalizeOptions(locationOptions, filterState.location);
   const isFiltered = filterState.category !== 'Semua' || filterState.condition !== 'Semua Kondisi' || filterState.location !== 'Semua Lokasi' || filterState.searchQuery !== '';

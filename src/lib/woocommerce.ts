@@ -21,6 +21,12 @@ interface WooCommerceCategory {
   name: string;
 }
 
+interface WooCommerceAttribute {
+  name: string;
+  option?: string;
+  options?: string[];
+}
+
 interface WooCommerceProduct {
   id: number;
   name: string;
@@ -32,14 +38,52 @@ interface WooCommerceProduct {
   description: string;
   images: WooCommerceImage[];
   categories: WooCommerceCategory[];
+  attributes?: WooCommerceAttribute[];
   stock_status: string;
   date_created?: string;
   meta_data?: WooCommerceMeta[];
 }
 
-function getMeta(product: WooCommerceProduct, key: string): string {
-  const value = product.meta_data?.find((item) => item.key === key)?.value;
-  return value === null || value === undefined ? '' : String(value);
+function normalizeKey(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[\s-]+/g, '_');
+}
+
+function getMeta(product: WooCommerceProduct, keys: string[]): string {
+  const normalizedKeys = keys.map(normalizeKey);
+  const item = product.meta_data?.find((entry) =>
+    normalizedKeys.includes(normalizeKey(entry.key)),
+  );
+
+  if (item?.value === null || item?.value === undefined) return '';
+  return String(item.value).trim();
+}
+
+function getAttribute(product: WooCommerceProduct, keys: string[]): string {
+  const normalizedKeys = keys.map(normalizeKey);
+  const attribute = product.attributes?.find((entry) =>
+    normalizedKeys.includes(normalizeKey(entry.name)),
+  );
+
+  if (!attribute) return '';
+
+  if (attribute.option?.trim()) return attribute.option.trim();
+  if (attribute.options?.length) return attribute.options.join(', ').trim();
+
+  return '';
+}
+
+function getProductField(
+  product: WooCommerceProduct,
+  metaKeys: string[],
+  attributeKeys: string[] = metaKeys,
+): string {
+  return (
+    getMeta(product, metaKeys) ||
+    getAttribute(product, attributeKeys)
+  );
 }
 
 function stripHtml(value: string): string {
@@ -58,22 +102,48 @@ function stripHtml(value: string): string {
 function mapStatus(value: string, stockStatus: string): AvailabilityStatus {
   const normalized = value.trim().toUpperCase();
 
-  if (normalized === 'SOLD') return 'SOLD';
-  if (normalized === 'BOOKED') return 'BOOKED';
-  if (normalized === 'CONFIRMING') return 'CONFIRMING';
-  if (normalized === 'READY') return 'READY';
+  if (normalized === 'SOLD' || normalized === 'TERJUAL') return 'SOLD';
+  if (normalized === 'BOOKED' || normalized === 'DIBOOKING') return 'BOOKED';
+  if (normalized === 'CONFIRMING' || normalized === 'KONFIRMASI') return 'CONFIRMING';
+  if (normalized === 'READY' || normalized === 'TERSEDIA' || normalized === 'AVAILABLE') {
+    return 'READY';
+  }
 
   return stockStatus === 'instock' ? 'READY' : 'SOLD';
 }
 
 function mapCondition(value: string, name: string): ProductCondition {
-  const normalized = `${value} ${name}`.toLowerCase();
+  const normalized = value.trim().toLowerCase();
 
   if (normalized.includes('rekondisi')) return 'Rekondisi Siap Pakai';
-  if (normalized.includes('ex-display') || normalized.includes('ex display')) {
+  if (
+    normalized.includes('ex-display') ||
+    normalized.includes('ex display') ||
+    normalized.includes('ex-display / like new') ||
+    normalized.includes('like new')
+  ) {
     return 'Like New / Ex-Display';
   }
-  if (normalized.includes('baru')) return 'Baru Sisa Proyek / Lelang';
+  if (
+    normalized.includes('baru') ||
+    normalized.includes('new') ||
+    normalized.includes('sisa proyek') ||
+    normalized.includes('lelang')
+  ) {
+    return 'Baru Sisa Proyek / Lelang';
+  }
+  if (normalized.includes('bekas') || normalized.includes('second') || normalized.includes('used')) {
+    return 'Bekas Original';
+  }
+
+  // Only use the product name as a secondary fallback when WooCommerce
+  // does not contain a kondisi_unit value/attribute.
+  const nameFallback = name.toLowerCase();
+  if (nameFallback.includes('rekondisi')) return 'Rekondisi Siap Pakai';
+  if (nameFallback.includes('ex-display') || nameFallback.includes('ex display')) {
+    return 'Like New / Ex-Display';
+  }
+  if (nameFallback.includes('baru')) return 'Baru Sisa Proyek / Lelang';
 
   return 'Bekas Original';
 }
@@ -97,6 +167,25 @@ function mapCategory(categoryName: string, productName: string): EquipmentCatego
 }
 
 function mapPowerType(product: WooCommerceProduct): Product['powerType'] {
+  const explicitPowerType = getProductField(
+    product,
+    ['power_type', 'jenis_daya', 'sumber_daya'],
+    ['Power Type', 'Jenis Daya', 'Sumber Daya'],
+  ).toLowerCase();
+
+  if (explicitPowerType.includes('gas') && explicitPowerType.includes('listrik')) {
+    return 'Gas & Listrik';
+  }
+  if (explicitPowerType.includes('gas') || explicitPowerType.includes('lpg')) {
+    return 'Gas';
+  }
+  if (explicitPowerType.includes('listrik') || explicitPowerType.includes('electric')) {
+    return 'Listrik';
+  }
+  if (explicitPowerType.includes('manual') || explicitPowerType.includes('tanpa daya')) {
+    return 'Manual / Tanpa Daya';
+  }
+
   const text = `${product.name} ${stripHtml(product.description)}`.toLowerCase();
 
   if (text.includes('gas') && (text.includes('listrik') || text.includes('220v'))) {
@@ -115,36 +204,77 @@ function parsePrice(product: WooCommerceProduct): number | null {
 }
 
 function mapProduct(product: WooCommerceProduct): Product {
-  const status = getMeta(product, 'status_unit');
-  const condition = getMeta(product, 'kondisi_unit');
-  const location = getMeta(product, 'lokasi_unit') || 'Hubungi Admin';
+  const statusValue = getProductField(
+    product,
+    ['status_unit', 'status', 'availability_status', 'ketersediaan'],
+    ['Status Unit', 'Status', 'Availability Status', 'Ketersediaan'],
+  );
+
+  const conditionValue = getProductField(
+    product,
+    ['kondisi_unit', 'kondisi', 'condition'],
+    ['Kondisi Unit', 'Kondisi', 'Condition'],
+  );
+
+  const brand = getProductField(
+    product,
+    ['brand', 'merek', 'merk'],
+    ['Brand', 'Merek', 'Merk'],
+  );
+
+  const location = getProductField(
+    product,
+    ['lokasi_unit', 'lokasi', 'location'],
+    ['Lokasi Unit', 'Lokasi', 'Location'],
+  ) || 'Hubungi Admin';
+
+  const dimensions = getProductField(
+    product,
+    ['dimensi', 'dimensions', 'ukuran'],
+    ['Dimensi', 'Dimensions', 'Ukuran'],
+  );
+
+  const material = getProductField(
+    product,
+    ['material', 'bahan'],
+    ['Material', 'Bahan'],
+  );
+
+  const powerWattage = getProductField(
+    product,
+    ['power_wattage', 'daya', 'wattage', 'spesifikasi_daya'],
+    ['Power Wattage', 'Daya', 'Wattage', 'Spesifikasi Daya'],
+  );
+
   const summary = stripHtml(product.short_description) || stripHtml(product.description);
   const description = stripHtml(product.description);
   const categoryName = product.categories?.[0]?.name || '';
+  const status = mapStatus(statusValue, product.stock_status);
+  const condition = mapCondition(conditionValue, product.name);
 
   return {
     id: String(product.id),
-    sku: product.sku || getMeta(product, 'kode_unit') || `BBK-${product.id}`,
+    sku: product.sku || getProductField(product, ['kode_unit', 'sku_unit'], ['Kode Unit', 'SKU Unit']) || `BBK-${product.id}`,
     name: stripHtml(product.name),
     category: mapCategory(categoryName, product.name),
-    brand: 'BBKitchen',
+    brand: brand || 'Tidak tercantum',
     price: parsePrice(product),
     originalPriceEstimate: null,
-    status: mapStatus(status, product.stock_status),
-    condition: mapCondition(condition, product.name),
+    status,
+    condition,
     conditionRating: 8.5,
     location,
     powerType: mapPowerType(product),
-    powerWattage: undefined,
-    dimensions: undefined,
-    material: undefined,
+    powerWattage: powerWattage || undefined,
+    dimensions: dimensions || undefined,
+    material: material || undefined,
     summary,
     description,
     testedFunctions: [],
     images: (product.images || []).map((image) => image.src),
     dateAdded: product.date_created || new Date().toISOString(),
-    previousUsage: condition.toLowerCase().includes('bekas')
-      ? 'Unit bekas restoran / usaha kuliner'
+    previousUsage: conditionValue
+      ? conditionValue
       : undefined,
     featured: false,
   };

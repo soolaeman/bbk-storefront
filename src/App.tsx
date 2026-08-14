@@ -13,40 +13,43 @@ import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { getWooCommerceProducts } from './lib/woocommerce';
 import { Product, EquipmentCategory, FilterState } from './types';
-import {
-  PackageOpen,
-  RotateCcw,
-  PlusCircle,
-  Phone,
-  Sparkles,
-  Loader2
-} from 'lucide-react';
+import { PackageOpen, RotateCcw, PlusCircle, Phone, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from './utils/formatters';
+
+const PRODUCTS_PER_PAGE = 24;
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [productLoadError, setProductLoadError] = useState<string | null>(null);
+  const [catalogPage, setCatalogPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
-  const loadProducts = async () => {
+  const loadProducts = async (page = catalogPage) => {
     setIsLoadingProducts(true);
     setProductLoadError(null);
 
     try {
-      const liveProducts = await getWooCommerceProducts({ perPage: 100 });
+      const liveProducts = await getWooCommerceProducts({
+        perPage: PRODUCTS_PER_PAGE,
+        page,
+      });
       setProducts(liveProducts);
+      setCatalogPage(page);
+      setHasNextPage(liveProducts.length === PRODUCTS_PER_PAGE);
     } catch (error) {
       console.error('Failed to load WooCommerce products:', error);
       setProductLoadError(
         'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.'
       );
+      setHasNextPage(false);
     } finally {
       setIsLoadingProducts(false);
     }
   };
 
   useEffect(() => {
-    void loadProducts();
+    void loadProducts(1);
   }, []);
 
   const [filterState, setFilterState] = useState<FilterState>({
@@ -102,7 +105,7 @@ export default function App() {
   };
 
   const handleResetToDefault = () => {
-    void loadProducts();
+    void loadProducts(catalogPage);
   };
 
   const categoryCounts = useMemo(() => {
@@ -173,6 +176,12 @@ export default function App() {
     });
   }, [products, filterState]);
 
+  const goToCatalogPage = (page: number) => {
+    if (page < 1 || isLoadingProducts || (page > catalogPage && !hasNextPage)) return;
+    window.scrollTo({ top: 380, behavior: 'smooth' });
+    void loadProducts(page);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
       <Header
@@ -206,13 +215,11 @@ export default function App() {
             <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
               <span>Katalog Unit Dapur</span>
               {filterState.category !== 'Semua' && (
-                <span className="text-amber-700 font-semibold">
-                  • {filterState.category}
-                </span>
+                <span className="text-amber-700 font-semibold">• {filterState.category}</span>
               )}
             </h2>
             <p className="text-xs text-slate-500">
-              Menampilkan {filteredProducts.length} peralatan komersial siap pakai & bergaransi uji fungsi
+              Halaman {catalogPage} • Menampilkan {filteredProducts.length} unit dari halaman ini
             </p>
           </div>
 
@@ -230,19 +237,17 @@ export default function App() {
           <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center shadow-xs my-8">
             <Loader2 className="w-8 h-8 animate-spin text-amber-600 mx-auto mb-3" />
             <p className="text-sm font-bold text-slate-900">Memuat katalog unit BBKitchen...</p>
-            <p className="text-xs text-slate-500 mt-1">Mengambil data terbaru dari WooCommerce.</p>
+            <p className="text-xs text-slate-500 mt-1">Mengambil 24 unit per halaman dari WooCommerce.</p>
           </div>
         ) : productLoadError ? (
           <div className="bg-white rounded-2xl border border-red-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">
             <div className="space-y-1">
               <h3 className="text-base font-bold text-slate-900">Katalog belum dapat dimuat</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-                {productLoadError}
-              </p>
+              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{productLoadError}</p>
             </div>
             <button
               type="button"
-              onClick={() => void loadProducts()}
+              onClick={() => void loadProducts(catalogPage)}
               className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl inline-flex items-center gap-1.5 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -250,32 +255,56 @@ export default function App() {
             </button>
           </div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onOpenDetail={(p) => setSelectedProduct(p)}
-                isAdminMode={isAdminMode}
-                onToggleStatus={handleToggleStatus}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onOpenDetail={(p) => setSelectedProduct(p)}
+                  isAdminMode={isAdminMode}
+                  onToggleStatus={handleToggleStatus}
+                />
+              ))}
+            </div>
+
+            <div className="mt-8 flex items-center justify-center gap-3" aria-label="Pagination katalog">
+              <button
+                type="button"
+                onClick={() => goToCatalogPage(catalogPage - 1)}
+                disabled={catalogPage === 1 || isLoadingProducts}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Sebelumnya
+              </button>
+
+              <span className="px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black min-w-24 text-center">
+                Halaman {catalogPage}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => goToCatalogPage(catalogPage + 1)}
+                disabled={!hasNextPage || isLoadingProducts}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+              >
+                Berikutnya
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </>
         ) : (
           <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">
             <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto border border-amber-200">
               <PackageOpen className="w-7 h-7" />
             </div>
-
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-900">
-                Tidak ada unit yang cocok dengan filter
-              </h3>
+              <h3 className="text-base font-bold text-slate-900">Tidak ada unit yang cocok dengan filter</h3>
               <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
                 Unit dengan kriteria yang Anda cari mungkin sedang proses inspeksi atau belum terupload di katalog online.
               </p>
             </div>
-
             <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
               <button
                 type="button"
@@ -285,7 +314,6 @@ export default function App() {
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reset Filter</span>
               </button>
-
               <button
                 type="button"
                 onClick={() => setIsRequestModalOpen(true)}
@@ -303,9 +331,7 @@ export default function App() {
       <TrustSection />
       <FAQSection />
 
-      <Footer
-        onSelectCategory={(cat) => handleFilterChange({ category: cat })}
-      />
+      <Footer onSelectCategory={(cat) => handleFilterChange({ category: cat })} />
 
       <div className="fixed bottom-5 right-5 z-40">
         <a
@@ -328,10 +354,7 @@ export default function App() {
         onToggleStatus={handleToggleStatus}
       />
 
-      <RequestUnitModal
-        isOpen={isRequestModalOpen}
-        onClose={() => setIsRequestModalOpen(false)}
-      />
+      <RequestUnitModal isOpen={isRequestModalOpen} onClose={() => setIsRequestModalOpen(false)} />
 
       <AdminPanelModal
         isOpen={isAdminPanelOpen}

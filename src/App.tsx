@@ -16,7 +16,7 @@ import { Product, EquipmentCategory, FilterState } from './types';
 import { PackageOpen, RotateCcw, PlusCircle, Phone, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from './utils/formatters';
 
-const PRODUCTS_PER_PAGE = 24;
+const PRODUCTS_PER_PAGE = 8;
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -237,7 +237,7 @@ export default function App() {
           <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center shadow-xs my-8">
             <Loader2 className="w-8 h-8 animate-spin text-amber-600 mx-auto mb-3" />
             <p className="text-sm font-bold text-slate-900">Memuat katalog unit BBKitchen...</p>
-            <p className="text-xs text-slate-500 mt-1">Mengambil 24 unit per halaman dari WooCommerce.</p>
+            <p className="text-xs text-slate-500 mt-1">Mengambil 8 unit per halaman dari WooCommerce.</p>
           </div>
         ) : productLoadError ? (
           <div className="bg-white rounded-2xl border border-red-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">

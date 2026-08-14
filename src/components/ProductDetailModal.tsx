@@ -5,7 +5,6 @@ import {
   X,
   Phone,
   MapPin,
-  CheckCircle2,
   ShieldCheck,
   Layers,
   Truck,
@@ -61,11 +60,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       `Kondisi: ${product.condition}`,
       `Brand: ${product.brand}`,
       `Lokasi: ${product.location}`,
-      `Daya: ${product.powerType}`,
-      product.powerWattage ? `Spesifikasi Daya: ${product.powerWattage}` : '',
       product.dimensions ? `Dimensi: ${product.dimensions}` : '',
       product.material ? `Material: ${product.material}` : '',
-      `Harga: ${formatRupiah(product.price)}`,
     ]
       .filter(Boolean)
       .join('\n');
@@ -215,7 +211,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     {product.brand} • {product.category}
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200">
-                    {product.condition} ({product.conditionRating}/10)
+                    {product.condition}
                   </span>
                 </div>
 
@@ -225,17 +221,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 >
                   {product.name}
                 </h2>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-baseline justify-between gap-4">
-                  <div>
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      {hasPrice ? 'Harga Penawaran BBKitchen' : 'Status Harga'}
-                    </div>
-                    <div className="text-2xl font-black text-slate-950">
-                      {formatRupiah(product.price)}
-                    </div>
-                  </div>
-                </div>
 
                 <div className="space-y-2 text-xs text-slate-600 bg-white border border-slate-200 rounded-xl p-3">
                   <div className="flex items-center gap-2">
@@ -314,29 +299,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-200">
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Hasil Inspeksi & Uji Fungsi</span>
-              </h3>
-
-              {product.testedFunctions.length > 0 ? (
-                <ul className="space-y-2">
-                  {product.testedFunctions.map((item, index) => (
-                    <li key={`${item}-${index}`} className="text-xs text-slate-700 flex items-start gap-2">
-                      <span className="text-emerald-600 font-bold mt-0.5">✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Detail checklist uji fungsi belum tersedia di data katalog untuk unit ini. Hubungi admin untuk konfirmasi kondisi dan video tes.
-                </p>
-              )}
-            </div>
-
+          <div className="border-t border-slate-200 pt-4">
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <Layers className="w-4 h-4 text-blue-600" />
@@ -357,10 +320,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <div className="p-2.5 flex justify-between gap-4">
                   <span className="text-slate-500 font-medium">Kondisi</span>
                   <span className="font-bold text-slate-900 text-right">{product.condition}</span>
-                </div>
-                <div className="p-2.5 flex justify-between gap-4">
-                  <span className="text-slate-500 font-medium">Sumber Daya</span>
-                  <span className="font-bold text-slate-900 text-right">{product.powerType}</span>
                 </div>
                 {product.powerWattage && (
                   <div className="p-2.5 flex justify-between gap-4">

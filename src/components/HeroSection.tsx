@@ -1,5 +1,5 @@
-import React from 'react';
-import { ShieldCheck, CheckCircle2, BadgePercent, Truck, Sparkles, Flame, Snowflake, Layers, Utensils, Table } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ShieldCheck, CheckCircle2, BadgePercent, Truck, Sparkles, Flame, Snowflake, Layers, Utensils, Table, Search } from 'lucide-react';
 import { EquipmentCategory } from '../types';
 
 interface HeroSectionProps {
@@ -7,24 +7,93 @@ interface HeroSectionProps {
   onRequestUnitClick: () => void;
 }
 
+interface LiveCategory {
+  id: number;
+  name: string;
+  parent?: number;
+  count?: number;
+}
+
+const FALLBACK_POPULAR_CATEGORIES = [
+  { name: 'Meja Stainless', label: 'Meja Stainless', icon: <Table className="w-3.5 h-3.5 text-slate-300" /> },
+  { name: 'Sink Stainless', label: 'Sink Stainless', icon: <Utensils className="w-3.5 h-3.5 text-blue-400" /> },
+  { name: 'Rak Stainless', label: 'Rak Stainless', icon: <Layers className="w-3.5 h-3.5 text-amber-400" /> },
+  { name: 'Kompor', label: 'Kompor', icon: <Flame className="w-3.5 h-3.5 text-amber-500" /> },
+  { name: 'Chiller', label: 'Chiller', icon: <Snowflake className="w-3.5 h-3.5 text-blue-500" /> },
+];
+
+function getCategoryIcon(name: string): React.ReactNode {
+  const normalized = name.toLowerCase();
+
+  if (normalized.includes('kompor')) {
+    return <Flame className="w-3.5 h-3.5 text-amber-500" />;
+  }
+
+  if (normalized.includes('chiller') || normalized.includes('freezer') || normalized.includes('ice')) {
+    return <Snowflake className="w-3.5 h-3.5 text-blue-500" />;
+  }
+
+  if (normalized.includes('sink') || normalized.includes('cuci')) {
+    return <Utensils className="w-3.5 h-3.5 text-blue-400" />;
+  }
+
+  if (normalized.includes('meja')) {
+    return <Table className="w-3.5 h-3.5 text-slate-300" />;
+  }
+
+  return <Layers className="w-3.5 h-3.5 text-amber-400" />;
+}
+
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectCategory,
   onRequestUnitClick
 }) => {
-  const quickCategories: { name: EquipmentCategory; label: string; icon: React.ReactNode }[] = [
-    { name: 'Kompor & Burner', label: 'Kompor & Wok', icon: <Flame className="w-3.5 h-3.5 text-amber-500" /> },
-    { name: 'Deep Fryer', label: 'Deep Fryer Gas/Listrik', icon: <Utensils className="w-3.5 h-3.5 text-amber-500" /> },
-    { name: 'Chiller & Freezer', label: 'Chiller & Freezer Upright', icon: <Snowflake className="w-3.5 h-3.5 text-blue-500" /> },
-    { name: 'Oven & Bakery', label: 'Deck Oven & Convection', icon: <Layers className="w-3.5 h-3.5 text-amber-600" /> },
-    { name: 'Stainless Fabrication', label: 'Meja & Bak Cuci SS304', icon: <Table className="w-3.5 h-3.5 text-slate-600" /> }
-  ];
+  const [popularCategories, setPopularCategories] = useState<LiveCategory[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPopularCategories = async () => {
+      try {
+        const response = await fetch('/api/products?metadata=1', {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
+        });
+
+        if (!response.ok) throw new Error(`Metadata endpoint gagal: ${response.status}`);
+
+        const data = (await response.json()) as { categories?: LiveCategory[] };
+        const categories = Array.isArray(data.categories) ? data.categories : [];
+        const ranked = categories
+          .filter((category) => category.name?.trim() && (category.parent ?? 0) === 0)
+          .sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
+          .slice(0, 5);
+
+        if (!cancelled) setPopularCategories(ranked);
+      } catch (error) {
+        console.error('Failed to load popular catalog categories:', error);
+      }
+    };
+
+    void loadPopularCategories();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const displayedCategories = popularCategories.length > 0
+    ? popularCategories.map((category) => ({
+        name: category.name,
+        label: category.name,
+        icon: getCategoryIcon(category.name),
+      }))
+    : FALLBACK_POPULAR_CATEGORIES;
 
   return (
     <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-10 px-4 border-b border-slate-700/80">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          {/* Main Copy */}
           <div className="lg:col-span-8 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/15 border border-amber-500/30 rounded-full text-xs font-semibold text-amber-300">
               <ShieldCheck className="w-4 h-4 text-amber-400" />
@@ -42,7 +111,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               Pilihan peralatan dapur komersial bekas berkualitas, rekondisi siap pakai, dan sisa proyek untuk restoran, cafe, catering, bakery, dan dapur program gizi (MBG). Setiap unit diuji fungsi burner, kompresor, dan dinamo sebelum serah terima.
             </p>
 
-            {/* Value Highlights Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
               <div className="bg-slate-800/80 border border-slate-700/70 p-2.5 rounded-xl flex items-start gap-2.5">
                 <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 shrink-0 mt-0.5">
@@ -85,27 +153,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            {/* Fast Category Jump Pills */}
             <div className="pt-2">
-              <div className="text-xs text-slate-400 mb-2 font-medium">Pencarian Populer:</div>
+              <div className="text-xs text-slate-400 mb-2 font-medium flex items-center gap-1.5">
+                <Search className="w-3.5 h-3.5 text-amber-400" />
+                <span>Pencarian Populer:</span>
+              </div>
               <div className="flex flex-wrap gap-2">
-                {quickCategories.map((qc) => (
+                {displayedCategories.map((category) => (
                   <button
-                    key={qc.name}
+                    key={category.name}
                     type="button"
-                    onClick={() => onSelectCategory(qc.name)}
+                    onClick={() => onSelectCategory(category.name as EquipmentCategory)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-all hover:border-amber-400/40"
                   >
-                    {qc.icon}
-                    <span>{qc.label}</span>
+                    {category.icon}
+                    <span>{category.label}</span>
                   </button>
                 ))}
               </div>
             </div>
-
           </div>
 
-          {/* Side Sourcing & Quick Action Card */}
           <div className="lg:col-span-4 bg-slate-800/90 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-700">
               <div className="flex items-center gap-2">
@@ -144,7 +212,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </section>

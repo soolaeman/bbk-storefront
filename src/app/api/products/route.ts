@@ -15,6 +15,14 @@ function getWooCommerceAuthHeader(): string | null {
   return `Basic ${Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64')}`;
 }
 
+function copyPaginationHeaders(response: Response, headers: Headers): void {
+  const total = response.headers.get('X-WP-Total');
+  const totalPages = response.headers.get('X-WP-TotalPages');
+
+  if (total) headers.set('X-WP-Total', total);
+  if (totalPages) headers.set('X-WP-TotalPages', totalPages);
+}
+
 export async function GET(request: NextRequest) {
   const authorization = getWooCommerceAuthHeader();
 
@@ -32,7 +40,7 @@ export async function GET(request: NextRequest) {
   const params = new URLSearchParams();
 
   params.set('status', incomingParams.get('status') || 'publish');
-  params.set('per_page', incomingParams.get('per_page') || '24');
+  params.set('per_page', incomingParams.get('per_page') || '8');
   params.set('page', incomingParams.get('page') || '1');
 
   const url = `${WOOCOMMERCE_API_URL}/products?${params.toString()}`;
@@ -50,22 +58,27 @@ export async function GET(request: NextRequest) {
 
     const body = await response.text();
     const contentType = response.headers.get('content-type') || 'application/json';
+    const responseHeaders = new Headers({
+      'Content-Type': contentType,
+    });
+
+    copyPaginationHeaders(response, responseHeaders);
 
     if (!response.ok) {
       return new NextResponse(body, {
         status: response.status,
-        headers: {
-          'Content-Type': contentType,
-        },
+        headers: responseHeaders,
       });
     }
 
+    responseHeaders.set(
+      'Cache-Control',
+      's-maxage=60, stale-while-revalidate=300',
+    );
+
     return new NextResponse(body, {
       status: 200,
-      headers: {
-        'Content-Type': contentType,
-        'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
-      },
+      headers: responseHeaders,
     });
   } catch (error) {
     console.error('WooCommerce proxy request failed:', error);

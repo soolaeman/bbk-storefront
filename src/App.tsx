@@ -11,7 +11,7 @@ import { KitchenConsultationBanner } from './components/KitchenConsultationBanne
 import { TrustSection } from './components/TrustSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
-import { getWooCommerceProducts } from './lib/woocommerce';
+import { getWooCommerceProductsResult } from './lib/woocommerce';
 import { Product, FilterState } from './types';
 import { PackageOpen, RotateCcw, PlusCircle, Phone, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from './utils/formatters';
@@ -20,6 +20,7 @@ const PRODUCTS_PER_PAGE = 8;
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [totalResults, setTotalResults] = useState<number | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [productLoadError, setProductLoadError] = useState<string | null>(null);
   const [catalogPage, setCatalogPage] = useState(1);
@@ -65,7 +66,7 @@ export default function App() {
     setProductLoadError(null);
 
     try {
-      const liveProducts = await getWooCommerceProducts({
+      const result = await getWooCommerceProductsResult({
         perPage: PRODUCTS_PER_PAGE,
         page,
         search: filterState.searchQuery.trim() || undefined,
@@ -79,12 +80,14 @@ export default function App() {
         sortBy: filterState.sortBy,
       });
 
-      setProducts(liveProducts);
+      setProducts(result.products);
+      setTotalResults(result.total);
       setCatalogPage(page);
-      setHasNextPage(liveProducts.length === PRODUCTS_PER_PAGE);
+      setHasNextPage(result.totalPages !== null ? page < result.totalPages : result.products.length === PRODUCTS_PER_PAGE);
     } catch (error) {
       console.error('Failed to load WooCommerce products:', error);
       setProducts([]);
+      setTotalResults(null);
       setHasNextPage(false);
       setProductLoadError(
         'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.'
@@ -142,6 +145,9 @@ export default function App() {
     void loadProducts(page);
   };
 
+  const displayedCount = products.length;
+  const totalCountLabel = totalResults ?? displayedCount;
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
       <Header
@@ -165,7 +171,7 @@ export default function App() {
         filterState={filterState}
         onFilterChange={handleFilterChange}
         onResetFilters={handleResetFilters}
-        totalResultsCount={products.length}
+        totalResultsCount={totalCountLabel}
         categoryCounts={categoryCounts}
       />
 
@@ -179,7 +185,7 @@ export default function App() {
               )}
             </h2>
             <p className="text-xs text-slate-500">
-              Halaman {catalogPage} • Menampilkan {products.length} unit dari hasil WooCommerce live
+              Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit WooCommerce live
             </p>
           </div>
 

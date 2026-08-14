@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Flame,
   Utensils,
@@ -86,25 +86,6 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   conditionOptions = [],
   locationOptions = [],
 }) => {
-  // The public/SEO catalog no longer exposes inventory-status or power-source
-  // controls. Keep the underlying request state neutral so the hidden legacy
-  // fields cannot continue forcing the catalog to READY-only results.
-  useEffect(() => {
-    const updates: Partial<FilterState> = {};
-
-    if (filterState.statusFilter !== 'ALL') {
-      updates.statusFilter = 'ALL';
-    }
-
-    if (filterState.powerType !== 'Semua Sumber Daya') {
-      updates.powerType = 'Semua Sumber Daya';
-    }
-
-    if (Object.keys(updates).length > 0) {
-      onFilterChange(updates);
-    }
-  }, [filterState.statusFilter, filterState.powerType, onFilterChange]);
-
   const visibleCategories = categories.filter((category) => {
     if (category.name === 'Semua') return true;
     return category.count !== undefined || (categoryCounts[category.name] || 0) > 0;
@@ -117,7 +98,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
     filterState.category !== 'Semua' ||
     filterState.condition !== 'Semua Kondisi' ||
     filterState.location !== 'Semua Lokasi' ||
-    filterState.statusFilter !== 'ALL' ||
+    filterState.statusFilter !== 'READY_ONLY' ||
     filterState.searchQuery !== '';
 
   const renderOptionList = (values: string[], emptyLabel: string) => {
@@ -131,6 +112,15 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
       </option>
     ));
   };
+
+  const statusOptions: Array<{
+    value: FilterState['statusFilter'];
+    label: string;
+  }> = [
+    { value: 'READY_ONLY', label: 'Hanya Ready' },
+    { value: 'ALL', label: 'Semua Unit' },
+    { value: 'INCLUDE_SOLD', label: 'Unit Terjual / Archive' },
+  ];
 
   return (
     <section className="bg-white border-b border-slate-200 py-6 px-4">
@@ -229,9 +219,28 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               </select>
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
-              <span className="font-semibold text-slate-600">Kondisi:</span>
-              <span>Baru / Bekas</span>
+            <div className="flex items-center rounded-lg border border-slate-300 bg-white overflow-hidden">
+              {statusOptions.map((option) => {
+                const isActive = filterState.statusFilter === option.value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    id={`filter-status-${option.value.toLowerCase()}`}
+                    onClick={() => onFilterChange({ statusFilter: option.value })}
+                    className={`px-3 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap ${
+                      isActive
+                        ? option.value === 'READY_ONLY'
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-slate-900 text-white'
+                        : 'bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

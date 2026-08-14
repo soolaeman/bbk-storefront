@@ -7,9 +7,7 @@ const WOOCOMMERCE_API_URL =
 function getWooCommerceAuthHeader(): string | null {
   const consumerKey = process.env.WC_CONSUMER_KEY;
   const consumerSecret = process.env.WC_CONSUMER_SECRET;
-
   if (!consumerKey || !consumerSecret) return null;
-
   return `Basic ${Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64')}`;
 }
 
@@ -73,8 +71,9 @@ async function buildWooCommerceParams(
   const category = incomingParams.get('category');
   if (category && normalizeText(category) !== 'semua') {
     const categoryId = await resolveWooCommerceCategoryId(category, authorization);
-    if (categoryId === null) return params;
-    params.set('category', String(categoryId));
+
+    // An unknown category must produce zero results, never a fallback to all products.
+    params.set('category', String(categoryId ?? -1));
   }
 
   return params;
@@ -134,7 +133,6 @@ async function proxyWooCommerceProducts(request: NextRequest, authorization: str
     'Cache-Control': 'no-store',
   });
   copyPaginationHeaders(response, headers);
-
   return new NextResponse(body, { status: response.status, headers });
 }
 
@@ -185,10 +183,7 @@ async function proxyWithCustomMetaFilters(
     'X-WP-TotalPages': String(totalPages),
   });
 
-  return new NextResponse(JSON.stringify(pagedProducts), {
-    status: 200,
-    headers,
-  });
+  return new NextResponse(JSON.stringify(pagedProducts), { status: 200, headers });
 }
 
 export async function GET(request: NextRequest) {

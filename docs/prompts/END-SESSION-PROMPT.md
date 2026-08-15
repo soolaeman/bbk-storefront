@@ -26,7 +26,25 @@ Lakukan forensic session close, repository audit, documentation audit, verificat
 1. FORENSIC EXTRACTION
 ==================================================
 
-Ekstrak hanya berdasarkan conversation/session dan GitHub evidence yang benar-benar tersedia.
+Ekstrak hanya berdasarkan conversation/session dan GitHub evidence yang benar-benar tersedia:
+
+- tujuan session
+- starting state
+- perubahan yang benar-benar dilakukan
+- file/component/route/API yang dibuat, diubah, dihapus, atau dipindahkan
+- data contracts
+- component contracts / prop changes
+- bottleneck
+- symptom
+- root cause
+- workaround
+- permanent resolution
+- failed approach / dead end
+- architecture decision
+- user decision / locked decision
+- technical debt
+- build/test/runtime/UI verification
+- relevant commit SHA + date
 
 Jika fakta tidak tersedia, tulis:
 `Tidak ditemukan di conversation.`
@@ -37,15 +55,32 @@ Jangan mengarang.
 2. REPOSITORY / VIBE-CODING DRIFT AUDIT
 ==================================================
 
-Audit repository state aktual terhadap dokumentasi.
-Periksa file baru/deleted/renamed, component, route, API, asset, copy owner, data contract, dan component ownership.
-Gunakan repository/GitHub sebagai sumber kebenaran struktur file.
+Audit repository state yang aktual terhadap dokumentasi yang ada.
+
+Periksa minimal:
+
+- file baru
+- file deleted
+- file renamed/moved
+- component baru
+- component split/merge
+- route baru/berubah
+- API route baru/berubah
+- asset baru/berubah
+- lokasi hardcoded copy berubah
+- data contract berubah
+- component ownership berubah
+
+Jangan mengasumsikan path/file masih sama hanya karena dokumentasi lama menyebutnya.
+
+Gunakan repository/GitHub sebagai sumber kebenaran untuk struktur file.
 
 ==================================================
 3. STATUS
 ==================================================
 
-Klasifikasikan:
+Klasifikasikan setiap pekerjaan:
+
 - DONE / VERIFIED
 - DONE / CODE ONLY
 - PARTIAL
@@ -53,28 +88,43 @@ Klasifikasikan:
 - DEFERRED
 - FAILED / ABORTED
 
-Pisahkan implemented, build verified, localhost/runtime verified, upstream verified, desktop verified, mobile verified.
+`Code exists` tidak sama dengan `verified`.
+
+Pisahkan:
+- implemented
+- build verified
+- localhost/runtime verified
+- upstream verified
+- desktop verified
+- mobile verified
 
 ==================================================
 4. PARETO
 ==================================================
 
-Pilih maksimal 5:
+Pilih maksimal 5 item untuk masing-masing:
 
 ### Top 20% Changes
-### Top 20% Bottlenecks
-### Top 20% Decisions
+Perubahan yang menghasilkan sekitar 80% dampak session.
 
-Pareto hanya untuk prioritas; jangan hapus history teknis.
+### Top 20% Bottlenecks
+Masalah yang paling banyak memengaruhi progress.
+
+### Top 20% Decisions
+Keputusan yang harus dipertahankan oleh chat berikutnya.
+
+Pareto hanya untuk prioritas. Jangan gunakan Pareto untuk menghapus history teknis.
 
 ==================================================
 5. SAVE / UPDATE PROGRESS ARCHIVE
 ==================================================
 
-Buat/update:
+Buat atau update:
+
 `docs/progress/CHAT-X.Y.md`
 
-Minimal:
+Isi minimal:
+
 - Date
 - Scope
 - Starting state
@@ -95,121 +145,185 @@ Jangan menimpa history session sebelumnya.
 ==================================================
 
 WAJIB update:
+
 `docs/progress/README.md`
 
-Pertahankan chronology, tanggal/period, fokus, status, links, milestones, current migration position, dan current Pareto focus.
+Index ini harus tetap mencerminkan:
+
+- chronology Chat 1.1, 1.2, 1.3, ...
+- tanggal/period tiap chat jika tersedia
+- fokus tiap chat
+- status
+- link ke archive masing-masing
+- milestone utama
+- current migration position
+- current Pareto focus
+
+Jangan mengubah progress index menjadi forensic log.
 
 ==================================================
 7. UPDATE ROOT README
 ==================================================
 
 WAJIB update:
+
 `README.md`
 
-README root adalah current-state dashboard, bukan forensic log.
-Update current phase, verified state, Pareto priorities, locked decisions, technical debt, chronology/docs links, last code checkpoint, last documentation checkpoint, dan next-chat handoff.
+README root bukan logbook.
+
+Update hanya informasi current-state yang relevan:
+
+- current phase
+- current verified state
+- Pareto priorities
+- major locked decisions
+- carried-forward technical debt
+- chronology / documentation links
+- last code checkpoint
+- last documentation checkpoint
+- next chat handoff
+
+Jangan menyalin seluruh forensic session ke README.
 
 ==================================================
 8. GUIDES AUDIT
 ==================================================
 
-Audit seluruh `docs/guides/*`.
-Jika repository berubah sehingga guide stale, update hanya guide yang terdampak.
-Jika masih valid, jangan membuat perubahan palsu.
+Audit seluruh:
+
+`docs/guides/*`
+
+Guides adalah living documentation untuk manusia/vibe coder.
+
+Jika repository berubah sehingga guide menjadi stale, update guide yang terdampak.
+
+Contoh drift yang WAJIB diperbaiki:
+
+- path file berubah
+- component dipindah
+- component baru menjadi owner copy tertentu
+- route berubah
+- asset location berubah
+- cara mengganti copy berubah
+- architecture/data contract berubah
+
+Jika guide masih valid, JANGAN mengubahnya hanya untuk membuat perubahan palsu.
 
 ==================================================
 9. PROMPTS AUDIT
 ==================================================
 
-Audit `docs/prompts/*`.
+Audit:
 
-- `END-SESSION-PROMPT.md` = satu-satunya canonical end-session normal.
-- `FORENSIC-EXTRACTION-PROMPT.md` = old/closed chats yang belum terdokumentasi.
-- `UPDATE-DOCUMENTATION-PROMPT.md` = sinkronisasi guides + README + NAVIGATOR bila diperlukan.
+`docs/prompts/*`
 
-Jangan membuat prompt end-session alternatif tanpa workflow nyata.
+Aturan:
+
+- `END-SESSION-PROMPT.md` adalah satu-satunya prompt canonical untuk end-session normal.
+- `FORENSIC-EXTRACTION-PROMPT.md` hanya digunakan untuk mengarsipkan chat lama/closed chat yang belum terdokumentasi.
+- Jangan membuat prompt end-session alternatif tanpa alasan workflow yang nyata.
+
+Jika SOP/documentation workflow berubah, update prompt yang terdampak.
 
 ==================================================
 10. ROOT SHORTCUT
 ==================================================
 
-Pastikan root `end-session-prompt.md` tetap menjadi shortcut sederhana menuju:
+Pastikan:
+
+`end-session-prompt.md`
+
+tetap menjadi shortcut sederhana menuju canonical:
+
 `docs/prompts/END-SESSION-PROMPT.md`
 
 Jangan membuat canonical prompt kedua di root.
 
 ==================================================
-11. NAVIGATOR
+11. BOTTLENECK REGISTER
 ==================================================
 
-WAJIB audit/update:
-`NAVIGATOR.md`
+Jika ada bottleneck baru, tambahkan ID berikutnya ke bottleneck register yang sesuai.
 
-Pastikan tabel repository documentation map mencerminkan file/folder `.md` yang benar-benar ada.
-Setiap link harus valid secara logis dan menjelaskan fungsi/kapan dipakai.
-
-Semua `.md` selain root `README.md` dan `NAVIGATOR.md` harus menyediakan link kembali ke Navigator.
-
-==================================================
-12. BOTTLENECK REGISTER
-==================================================
-
-Jika ada bottleneck baru, tambahkan ID berikutnya.
 Format:
+
 `B-XX | Chat | Problem | Root Cause | Resolution | Lesson | Status`
 
-Jangan mengganti ID lama.
+Jangan mengganti ID bottleneck lama.
 
 ==================================================
-13. TIMELINE
+12. TIMELINE
 ==================================================
 
 Catat:
-Date / Start / End.
-Jika exact time tidak tersedia:
+
+Date:
+Start:
+End:
+
+Jika exact time tidak tersedia, tulis:
 `Tidak ditemukan di conversation.`
 
-Jika tanggal berasal dari GitHub commit, sebutkan sumbernya.
+Jika tanggal berasal dari GitHub commit, gunakan tanggal commit dan sebutkan sumbernya.
 
 ==================================================
-14. GIT / VERIFICATION
+13. GIT / VERIFICATION
 ==================================================
 
-Jika perubahan code dalam scope belum committed, commit dengan message jelas dan catat full SHA.
+Periksa perubahan code dan documentation.
+
+Jika perubahan yang dibuat dalam session belum committed dan memang berada dalam scope session:
+
+- commit dengan message jelas
+- catat full SHA
+
 Prefer:
 `1 milestone = 1 verified commit`
 
-Setelah documentation write/commit, verify write berhasil sebelum melaporkan SHA.
 Jangan mengarang SHA.
+
+Setelah documentation write/commit, verify bahwa write berhasil sebelum melaporkan SHA.
+
+==================================================
+14. HANDOFF
+==================================================
+
+Tentukan:
+
+- current state
+- unresolved items
+- next priority order
+- things NOT to repeat
+- next conversation title
 
 ==================================================
 15. FINAL CHECK
 ==================================================
 
-Pastikan:
-- progress archive tersimpan
-- progress index tersimpan
-- root README tersimpan
-- impacted guides diperbarui atau dinyatakan valid
-- impacted prompts diperbarui atau dinyatakan valid
-- NAVIGATOR tersimpan dan links valid
-- root `end-session-prompt.md` menunjuk canonical prompt
-- reported SHAs berasal dari successful writes/commits
+Sebelum menjawab saya:
+
+- Pastikan `docs/progress/CHAT-X.Y.md` benar-benar tersimpan.
+- Pastikan `docs/progress/README.md` benar-benar tersimpan.
+- Pastikan root `README.md` benar-benar tersimpan.
+- Pastikan guide yang terdampak sudah diperbarui atau dinyatakan tetap valid.
+- Pastikan prompt/SOP yang terdampak sudah diperbarui atau dinyatakan tetap valid.
+- Pastikan `end-session-prompt.md` tetap menunjuk ke canonical prompt.
+- Pastikan SHA yang dilaporkan berasal dari write/commit yang berhasil.
+- Jangan bilang update berhasil jika write gagal.
 
 ==================================================
 16. FINAL RESPONSE
 ==================================================
 
 Jawab ringkas:
+
 1. Session status
 2. Progress archive path + SHA
 3. Progress index SHA
 4. README commit SHA
 5. Guides changed / no change
 6. Prompts changed / no change
-7. Navigator SHA
-8. Root shortcut SHA
-9. Last code checkpoint SHA
-10. Top 3 carried-forward items
-11. Next conversation title
+7. Last code checkpoint SHA
+8. Top 3 carried-forward items
+9. Next conversation title
 ```

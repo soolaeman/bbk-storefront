@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Header } from '../../../components/Header';
 
 const WOOCOMMERCE_API_URL =
   process.env.WOOCOMMERCE_API_URL ||
@@ -163,64 +164,7 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="sticky top-0 z-40 border-b border-slate-700/60 bg-slate-950 text-white shadow-lg">
-        <div className="border-b border-slate-800 bg-slate-950">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 text-[11px] sm:px-5 lg:px-8">
-            <div className="flex min-w-0 items-center gap-2 text-slate-300">
-              <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
-              <span className="shrink-0 font-semibold text-emerald-400">Katalog Update Harian</span>
-              <span className="hidden text-slate-600 sm:inline">•</span>
-              <span className="hidden truncate sm:inline">Peralatan Dapur Komersial Bekas &amp; Rekondisi Teruji</span>
-            </div>
-            <div className="flex shrink-0 items-center gap-3">
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Konsultasi kebutuhan dapur usaha')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden font-semibold text-emerald-400 hover:text-emerald-300 sm:inline"
-              >
-                ☎ Hotline WhatsApp: +62 812-8888-9999
-              </a>
-              <a
-                href="/#admin-mode-toggle-btn"
-                className="rounded px-1 py-1 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                title="Buka akses Staff / Owner di Katalog"
-              >
-                ♙ Staff / Owner
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-slate-900">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 sm:gap-5 sm:px-5 lg:flex-nowrap lg:px-8">
-            <a href="/" className="shrink-0 text-xl font-black tracking-tight sm:text-2xl">
-              BB<span className="text-amber-400">Kitchen</span>
-            </a>
-            <span className="hidden rounded border border-slate-700 bg-slate-800 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-300 xl:inline-block">
-              BUKAN BARU KITCHEN
-            </span>
-
-            <a
-              href="/?focus=search#global-search-input"
-              className="order-3 flex min-w-0 basis-full items-center gap-2 rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-xs text-slate-400 shadow-inner transition hover:border-amber-400 hover:text-slate-200 sm:text-sm lg:order-none lg:basis-auto lg:flex-1"
-              aria-label="Buka pencarian katalog"
-            >
-              <span className="text-slate-300">⌕</span>
-              <span className="truncate">Cari kompor 4 burner, deep fryer, chiller, mixer 20L, meja stainless...</span>
-            </a>
-
-            <nav className="ml-auto flex max-w-full items-center gap-3 overflow-x-auto text-xs font-semibold text-slate-300 sm:gap-5 sm:text-sm lg:shrink-0" aria-label="Navigasi utama">
-              <a href="/" className="shrink-0 hover:text-white">Home</a>
-              <a href="/#catalog" className="shrink-0 font-bold text-amber-400">Katalog</a>
-              <a href="/#cara-order" className="hidden shrink-0 hover:text-white sm:inline">Cara Order</a>
-              <a href="/#lokasi" className="hidden shrink-0 hover:text-white sm:inline">Lokasi</a>
-              <a href="/#dapur-mbg" className="hidden shrink-0 hover:text-white md:inline">Dapur MBG</a>
-              <a href="/#faq" className="shrink-0 hover:text-white">FAQ</a>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-7 lg:px-8 lg:py-9">
         <nav className="mb-4 flex min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[11px] font-medium text-slate-500 shadow-sm sm:gap-2 sm:px-4 sm:text-xs" aria-label="Breadcrumb">
@@ -249,22 +193,10 @@ export default async function ProductPage({
               {product.images.length > 0 ? (
                 product.images.map((image, index) => (
                   <div key={`${image.src}-${index}`} className="absolute inset-0">
-                    <input
-                      id={`product-gallery-${index}`}
-                      name="product-gallery"
-                      type="radio"
-                      defaultChecked={index === 0}
-                      className="peer sr-only"
-                    />
+                    <input id={`product-gallery-${index}`} name="product-gallery" type="radio" defaultChecked={index === 0} className="peer sr-only" />
                     <div className="pointer-events-none absolute inset-0 hidden peer-checked:block">
-                      <img
-                        src={image.src}
-                        alt={image.alt || `${product.name} foto ${index + 1}`}
-                        className="h-full w-full object-contain"
-                      />
-                      <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-[10px] font-black text-white shadow-md sm:text-xs">
-                        ● {status === 'READY' ? 'READY SIAP KIRIM' : status}
-                      </span>
+                      <img src={image.src} alt={image.alt || `${product.name} foto ${index + 1}`} className="h-full w-full object-contain" />
+                      <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-[10px] font-black text-white shadow-md sm:text-xs">● {status === 'READY' ? 'READY SIAP KIRIM' : status}</span>
                       <span className="absolute bottom-3 right-3 rounded-lg bg-slate-950/85 px-2.5 py-1.5 text-[10px] font-bold text-white">Foto Unit BBKitchen</span>
                     </div>
                   </div>
@@ -277,16 +209,8 @@ export default async function ProductPage({
             {product.images.length > 1 && (
               <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6" aria-label="Pilih foto produk">
                 {product.images.map((image, index) => (
-                  <label
-                    key={`thumb-${image.src}-${index}`}
-                    htmlFor={`product-gallery-${index}`}
-                    className="cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5 transition hover:border-amber-400 hover:ring-2 hover:ring-amber-100 focus-within:border-amber-500"
-                  >
-                    <img
-                      src={image.src}
-                      alt={`Pilih foto ${index + 1} ${product.name}`}
-                      className="aspect-square w-full rounded-md object-cover"
-                    />
+                  <label key={`thumb-${image.src}-${index}`} htmlFor={`product-gallery-${index}`} className="cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5 transition hover:border-amber-400 hover:ring-2 hover:ring-amber-100 focus-within:border-amber-500">
+                    <img src={image.src} alt={`Pilih foto ${index + 1} ${product.name}`} className="aspect-square w-full rounded-md object-cover" />
                   </label>
                 ))}
               </div>
@@ -317,14 +241,7 @@ export default async function ProductPage({
             <div className="mt-4 rounded-xl bg-slate-950 p-4">
               <p className="text-[10px] font-bold text-slate-400">Butuh unit ini?</p>
               <p className="mt-1 text-sm font-semibold text-white">Tanyakan harga, ketersediaan, dan detail unit ke tim BBKitchen.</p>
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-sm transition hover:bg-emerald-400 sm:text-sm"
-              >
-                ☎ Tanya Harga &amp; Ketersediaan via WhatsApp
-              </a>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-sm transition hover:bg-emerald-400 sm:text-sm">☎ Tanya Harga &amp; Ketersediaan via WhatsApp</a>
             </div>
           </section>
         </div>
@@ -353,14 +270,7 @@ export default async function ProductPage({
         </section>
       </div>
 
-      <a
-        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-4 right-4 z-50 rounded-full bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-xl transition hover:bg-emerald-400 sm:bottom-5 sm:right-5 sm:px-5 sm:text-sm"
-      >
-        ☎ Tanya Unit via WhatsApp
-      </a>
+      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-4 right-4 z-50 rounded-full bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-xl transition hover:bg-emerald-400 sm:bottom-5 sm:right-5 sm:px-5 sm:text-sm">☎ Tanya Unit via WhatsApp</a>
     </main>
   );
 }

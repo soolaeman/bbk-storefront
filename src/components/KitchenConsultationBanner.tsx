@@ -24,7 +24,7 @@ export const KitchenConsultationBanner: React.FC = () => {
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-amber-950 text-white py-10 px-4 border-y border-amber-500/20">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-stretch">
+        <div className="relative overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-stretch">
           <div className="space-y-5">
             <div className="text-center lg:text-left max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/15 border border-amber-500/30 rounded-full text-xs font-semibold text-amber-300">
@@ -127,11 +127,11 @@ export const KitchenConsultationBanner: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative min-h-[280px] lg:min-h-[430px] flex items-end justify-center lg:justify-end overflow-hidden">
+          <div className="relative h-full min-h-[280px] lg:min-h-[430px] flex items-end justify-end overflow-hidden">
             <img
               src="/images/people/bbkitchen-chef-presenting.webp"
               alt="Chef BBKitchen menyajikan pilihan layanan"
-              className="absolute bottom-0 right-4 lg:right-0 h-[300px] sm:h-[360px] lg:h-[430px] w-auto max-w-none object-contain object-bottom"
+              className="absolute bottom-0 right-0 max-h-[90%] w-auto object-contain object-bottom"
             />
           </div>
         </div>

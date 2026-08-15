@@ -9,6 +9,7 @@ import { RequestUnitModal } from './components/RequestUnitModal';
 import { AdminPanelModal } from './components/AdminPanelModal';
 import { KitchenConsultationBanner } from './components/KitchenConsultationBanner';
 import { TrustSection } from './components/TrustSection';
+import { TestimonialsSection } from './components/TestimonialsSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { getWooCommerceProductsResult } from './lib/woocommerce';
@@ -449,6 +450,7 @@ export default function App() {
 
       <KitchenConsultationBanner />
       <TrustSection />
+      <TestimonialsSection />
       <FAQSection />
       <Footer onSelectCategory={(cat) => handleFilterChange({ category: cat })} />
 

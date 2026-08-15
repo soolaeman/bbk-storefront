@@ -2,9 +2,18 @@
 
 Branch aktif: `feature/nextjs-migration`
 
-> **README = kondisi project sekarang.** Detail history ada di [`docs/progress/`](docs/progress/README.md).
+> **README = kondisi project sekarang.** Detail forensic history ada di [`docs/progress/`](docs/progress/README.md). Struktur file mengikuti repository aktual.
 
 [🧭 NAVIGATOR](NAVIGATOR.md)
+
+---
+
+# 🕒 SESSION START
+
+```text
+Session: 1.5 BBKitchen Next.js Migration
+Started: 16 August 2026 06:32:41 WIB (Asia/Jakarta)
+```
 
 ---
 
@@ -15,7 +24,7 @@ Chat 1.1 → ✅ Archived
 Chat 1.2 → ✅ Archived
 Chat 1.3 → ✅ Archived
 Chat 1.4 → ✅ Closed
-Chat 1.5 → 🚀 Next
+Chat 1.5 → 🚀 Active
 ```
 
 ## Last code checkpoint
@@ -27,14 +36,30 @@ feat: add video covers to social media cards
 
 GitHub date: **15 August 2026 21:24:06 UTC**.
 
-## Last documentation checkpoint
+## Current documentation checkpoint
 
 ```text
-0d65a185f085251b2d88bdc12ca4bfd8baca2a4c
-create canonical START-SESSION-PROMPT.md
+Branch head before this sync:
+78a7e93fdd97938fe3ba6fa6a2f3fbfa4e1f987a
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
+
+---
+
+# 🚀 NEXT ACTION
+
+**Verify the current application build + localhost/runtime baseline before changing application code.**
+
+Do not treat `code exists` as `verified`.
+
+After baseline verification, continue in Pareto order:
+
+```text
+1. Mobile / responsive QA
+2. Shared Header: search + sticky + visual parity
+3. Product Detail shared-design parity
+```
 
 ---
 
@@ -44,35 +69,36 @@ create canonical START-SESSION-PROMPT.md
 2. **Shared Header** — search typing, sticky behavior, and visual parity.
 3. **Product Detail** — match shared homepage/Header design system.
 4. **Local/article pages** — editorial typography and presentation.
-5. **ACF/Core System + production hardening**.
+5. **ACF authoritative filtering + Core System / production hardening**.
 
-Next layer:
+### Next layer
 
 - Related Products.
-- Authoritative ACF filtering.
 - SOLD → Google Sheets workflow.
 - SEO/performance/accessibility verification.
 
 ---
 
-# 📊 CURRENT STATE
+# 📊 CURRENT STATE + VERIFICATION
 
-| Area | Status | Note |
+| Area | Implementation | Verification |
 |---|---|---|
-| WooCommerce data architecture | ✅ | Live source-of-truth baseline |
-| Catalog / pagination | ✅ | Server-side, 8/page baseline |
-| Product Detail | ✅ | Functional; visual parity remains |
-| Local hierarchical routing | ✅ | `[...slug]` verified in Chat 1.3 |
-| Homepage sales positioning | ✅ | Sales-first direction locked |
-| WhatsApp contracts | ✅ | Product / MBG / Produksi Baru normalized |
-| READY / SOLD behavior | ✅ | SOLD remains discoverable |
-| Hero desktop/mobile assets | ✅ | Dedicated backgrounds present |
-| Social video covers | ✅ | Cover-first approach implemented |
-| Shared Header | ⚠️ | Search typing, sticky, parity remain |
-| Article typography | ⚠️ | Editorial parity remains |
-| Mobile QA | ⚠️ | Final cross-template verification remains |
-| Universal floating mascot | 🔒 | Rejected; do not reintroduce |
-| ACF/Core System | ⏳ | Future/hardening phase |
+| WooCommerce data architecture | ✅ | ✅ Established baseline |
+| Catalog / pagination | ✅ | ✅ Server-side, 8/page baseline |
+| Product Detail | ✅ Functional | ⚠️ Visual/shared-Header parity pending |
+| Local hierarchical routing | ✅ | ✅ `[...slug]` verified in Chat 1.3 |
+| Homepage sales positioning | ✅ | 🔒 Direction locked |
+| WhatsApp contracts | ✅ | 🔒 Contracts locked |
+| READY / SOLD behavior | ✅ | 🔒 Contract locked; SOLD discoverable |
+| Hero desktop/mobile assets | ✅ | ✅ Assets present; final mobile QA pending |
+| Social video covers | ✅ | ⚠️ Mobile/runtime QA pending |
+| Shared Header | ✅ Integrated | ⚠️ Search typing, sticky behavior, parity pending |
+| Article typography | ✅ Content rendering exists | ⚠️ Editorial parity pending |
+| Mobile QA | ⏳ | ⚠️ Final cross-template verification pending |
+| Universal floating mascot | ❌ Rejected | 🔒 Do not reintroduce |
+| ACF/Core System | ⏳ | ⏳ Deferred / hardening phase |
+
+**Important:** no final post-1.4 build/runtime/mobile verification evidence is recorded in the available evidence. The application-code checkpoint therefore remains `26f3911...` until a new code checkpoint is verified.
 
 ---
 
@@ -112,94 +138,41 @@ Desktop + Mobile UX
 
 ---
 
-# 💬 LOCKED UX CONTRACTS
+# 🔒 LOCKED UX CONTRACTS — SUMMARY
 
-### Dapur MBG
-
-```text
-Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
-```
-
-Relevant Header/Hero/Service/Footer CTA direction: **direct WhatsApp**. Service may additionally expose the PDF catalog CTA.
-
-### Produksi Baru
+Canonical full wording lives in [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md).
 
 ```text
-Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
+Dapur MBG       → direct WhatsApp
+Produksi Baru   → direct WhatsApp
+READY           → Tanya WA
+SOLD            → Tanya Lainnya
+Hero catalog CTA→ scroll to catalog
+Social videos   → cover first → play → iframe
 ```
 
-Direct WhatsApp.
+### Locked direction
 
-### Product WhatsApp
+- **Dapur MBG:** direct WhatsApp; service may additionally expose the PDF catalog CTA.
+- **Produksi Baru:** direct WhatsApp.
+- **Product WhatsApp:** normalized multiline unit metadata contract.
+- **Hero:** sales-first positioning with `Siap Kirim / Seluruh Indonesia` and catalog CTA.
 
-```text
-Halo Tim BBKitchen, saya tertarik dan ingin menanyakan penawaran harga dan ketersediaan untuk unit:
-
-Nama Unit: {NAMA UNIT}
-
-SKU/ID: {SKU}
-
-Lokasi Unit: {LOKASI}
-
-Kondisi: {BARU|BEKAS}
-
-Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.
-```
-
-### READY / SOLD
-
-```text
-READY → Tanya WA
-SOLD  → Tanya Lainnya
-```
-
-### Hero
-
-```text
-Cari, Jual, atau Produksi Peralatan Dapur Resto & Dapur MBG
-
-Siap Kirim
-Seluruh Indonesia
-
-Lihat Unit yang Tersedia →
-```
-
-The availability CTA scrolls toward the catalog.
-
-### Social Video
-
-```text
-public/images/social/youtube-shorts-cover.webp
-public/images/social/tiktok-cover.webp
-```
-
-Cover first → play overlay → iframe after click.
+Do not change routing, SEO, inventory, or message contracts during ordinary copy/UI edits.
 
 ---
 
-# ⚠️ MASTER BOTTLENECK SNAPSHOT
+# ⚠️ ACTIVE BOTTLENECKS
 
-| ID | Chat | Problem | Status |
-|---|---|---|---|
-| B-1 | 1.1 | WooCommerce 401/auth | Closed |
-| B-2 | 1.1 | Catalog volume/pagination | Closed |
-| B-3 | 1.1 | ACF REST limitation | Carried |
-| B-4 | 1.1 | Mock catalog | Closed |
-| B-5 | 1.2 | Metadata/taxonomy contract | Closed |
-| B-6 | 1.2 | Upstream 502/reset | Carried |
-| B-7 | 1.2 | SEO preservation | Locked |
-| B-8 | 1.3 | Single location route | Closed |
-| B-9 | 1.3 | Relative import after route refactor | Closed |
-| B-10 | 1.3 | Stale `.next` artifacts | Closed |
-| B-11 | 1.3 | Server/Client Header boundary | Closed |
-| B-12 | 1.3 | Article typography | Carried |
-| B-13 | 1.3 | Search interaction | Carried |
-| B-14 | 1.3 | Product Detail Header parity | Carried |
-| B-15 | 1.4 | Floating mascot composition | Closed / Do not repeat |
-| B-16 | 1.4 | Empty social cards | Closed |
-| B-17 | 1.4 | Duplicate WA wording | Closed |
+| ID | Problem | Status |
+|---|---|---|
+| B-3 | ACF REST / authoritative inventory metadata filtering | ⚠️ Carried |
+| B-6 | WooCommerce upstream connectivity 502/reset history | ⚠️ Carried; root cause not proven |
+| B-12 | Article/local editorial typography | ⚠️ Carried |
+| B-13 | Header search interaction | ⚠️ Carried |
+| B-14 | Product Detail shared Header parity | ⚠️ Carried |
 
-Full details: [`docs/progress/README.md`](docs/progress/README.md).
+Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them without new evidence.
 
 ---
 
@@ -218,17 +191,26 @@ Full details: [`docs/progress/README.md`](docs/progress/README.md).
 
 ---
 
-# 🧱 TECHNICAL DEBT
+# 🧱 TECHNICAL DEBT — NOW / NEXT / LATER
 
-- Article/local landing editorial typography.
-- Header search interaction + sticky behavior.
-- Product Detail shared Header parity.
-- Related Products.
+### NOW
+
+- Mobile QA across homepage, catalog, Product Detail, and local pages.
+- Header search interaction + sticky behavior + parity.
+- Product Detail shared Header/design parity.
+- Article/local editorial typography.
+
+### NEXT
+
 - Authoritative ACF filtering.
+- Related Products.
 - Admin/Core System workflow.
 - SOLD → Google Sheets.
-- Mobile QA across templates.
+
+### LATER
+
 - Production performance/accessibility hardening.
+- SEO verification and deeper measurement.
 
 ---
 
@@ -260,8 +242,6 @@ UI verified
 desktop verified
 mobile verified
 ```
-
-For Chat 1.4 specifically, **no final post-change build/runtime verification evidence was found in the available conversation**. The last verified application-code checkpoint is `26f3911f...`.
 
 Known non-blocking environment warning carried from earlier sessions:
 
@@ -355,16 +335,20 @@ Start title:
 1.5 BBKitchen Next.js Migration
 ```
 
+Current session:
+
+```text
+Started: 16 August 2026 06:32:41 WIB
+Status: ACTIVE
+```
+
 First actions:
 
-1. Read this README.
-2. Use [`NAVIGATOR.md`](NAVIGATOR.md) to jump to supporting documentation.
-3. Use [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) for formal session orientation.
-4. Audit current branch/code before changing anything.
-5. Verify build/runtime state before assuming anything is broken.
-6. Follow the Pareto priorities above.
-7. Prefer `1 step = 1 file = 1 verified commit`.
-8. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
+1. Verify current build/runtime baseline.
+2. Audit mobile/responsive behavior.
+3. Address Shared Header bottleneck before broader parity work.
+4. Prefer `1 step = 1 file = 1 verified commit`.
+5. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
 ### Do not repeat
 
@@ -397,9 +381,9 @@ Chat 1.1 → forensic archived
 Chat 1.2 → forensic archived
 Chat 1.3 → forensic archived
 Chat 1.4 → ✅ Closed
-Chat 1.5 → 🚀 Next
+Chat 1.5 → 🚀 Active
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Last documentation checkpoint before current sync: 0d65a185f085251b2d88bdc12ca4bfd8baca2a4c
+Documentation sync before this README update: 78a7e93fdd97938fe3ba6fa6a2f3fbfa4e1f987a
 ```

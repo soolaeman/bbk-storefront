@@ -1,13 +1,25 @@
 import React from 'react';
-import { Camera, MessageSquareQuote, Star } from 'lucide-react';
+import { MessageSquareQuote, Star } from 'lucide-react';
+
+const testimonials = [
+  {
+    name: 'Rio',
+    company: 'Titik Terang Coffee',
+    text: 'Sangat terbantu buat set up kitchen dari kosongan. Pelayanannya asyik dan informatif, diajak diskusi ukuran meja, kompor, sampai exhaust hood dipasin sama luas ruangan. Pas kebetulan ada stok barang yang bentrok, tim BBKitchen langsung kasih solusi unit pengganti yang lebih oke tanpa nambah biaya. Pengiriman juga transparan via Lalamove pakai live location & video update pas loading. Sukses terus BBKitchen!',
+  },
+  {
+    name: 'Arief Nur Rahman',
+    company: 'PT Bahari Mega Prestasi',
+    text: 'Sempat niat mau ke lokasi langsung, tapi jadwalnya gak ketemu. Akhirnya coba video call, dan barang ditunjukin satu-satu, jelas banget. Kita pilih 3 meja berbagai ukuran, dan pas barang nyampe ke kantor, sesuai persis kayak yang di video. Lalamove kita yang pesen sendiri, tapi Mas Angga dan tim bantuin kawal prosesnya, jadi tetap lancar.',
+  },
+  {
+    name: 'Hadi',
+    company: 'Owner SPPG Jogja',
+    text: 'Sangat terbantu cari alat Kwali Range & Deep Fryer untuk dapur MBG di sini. Kondisinya mantap, normal, dan sudah bersih sebelum dikirim, sampai langsung. Sellernya solutif, paham teknis, dan dicarikan truk balikan ke Jogja.',
+  },
+];
 
 export const TestimonialsSection: React.FC = () => {
-  const testimonialSlots = [
-    { label: 'Testimoni Customer 1', note: 'Ganti dengan screenshot WhatsApp, review, atau foto customer asli.' },
-    { label: 'Testimoni Customer 2', note: 'Ganti dengan bukti transaksi atau feedback customer asli.' },
-    { label: 'Testimoni Customer 3', note: 'Ganti dengan testimonial atau foto unit setelah sampai.' },
-  ];
-
   return (
     <section className="bg-white py-12 px-4 border-b border-slate-200">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -18,23 +30,24 @@ export const TestimonialsSection: React.FC = () => {
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">Pengalaman Customer BBKitchen</h2>
           <p className="text-xs sm:text-sm text-slate-600">
-            Kami hanya menampilkan pengalaman customer yang benar-benar ada. Bukti chat, review, dan foto asli bisa ditambahkan di sini.
+            Cerita langsung dari customer yang sudah bertransaksi dan menggunakan layanan BBKitchen.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {testimonialSlots.map((slot) => (
-            <article key={slot.label} className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 min-h-[220px] flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-1 text-amber-500 mb-4" aria-label="Slot rating customer">
-                  {[0, 1, 2, 3, 4].map((star) => <Star key={star} className="w-4 h-4 fill-current" />)}
-                </div>
-                <p className="text-sm font-bold text-slate-800">{slot.label}</p>
-                <p className="mt-2 text-xs text-slate-500 leading-relaxed">{slot.note}</p>
+          {testimonials.map((testimonial) => (
+            <article key={`${testimonial.name}-${testimonial.company}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col">
+              <div className="flex items-center gap-1 text-amber-500 mb-4" aria-label="5 dari 5 bintang">
+                {[0, 1, 2, 3, 4].map((star) => <Star key={star} className="w-4 h-4 fill-current" />)}
               </div>
-              <div className="mt-5 rounded-xl border border-slate-200 bg-white px-4 py-3 flex items-center gap-2 text-[11px] text-slate-500">
-                <Camera className="w-4 h-4 text-slate-400 shrink-0" />
-                <span>Slot bukti testimonial — tinggal replace dengan asset asli.</span>
+
+              <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
+                “{testimonial.text}”
+              </blockquote>
+
+              <div className="mt-5 pt-4 border-t border-slate-200">
+                <p className="text-sm font-extrabold text-slate-900">{testimonial.name}</p>
+                <p className="mt-0.5 text-xs text-slate-500">{testimonial.company}</p>
               </div>
             </article>
           ))}

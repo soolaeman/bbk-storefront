@@ -43,6 +43,35 @@ export interface WordPressMedia {
   mime_type: string;
 }
 
+export interface WordPressTerm {
+  id: number;
+  count: number;
+  description: string;
+  link: string;
+  name: string;
+  slug: string;
+  taxonomy?: string;
+  parent?: number;
+}
+
+export interface WordPressUser {
+  id: number;
+  name: string;
+  slug: string;
+  link: string;
+  description?: string;
+  avatar_urls?: Record<string, string>;
+}
+
+export interface WordPressSearchResult {
+  id: number;
+  title: string;
+  url: string;
+  type: string;
+  subtype: string;
+  _links?: Record<string, unknown>;
+}
+
 export interface WordPressQueryOptions {
   page?: number;
   perPage?: number;
@@ -50,8 +79,13 @@ export interface WordPressQueryOptions {
   slug?: string;
   status?: string;
   parent?: number;
+  author?: string;
   categories?: string;
   tags?: string;
+  include?: string;
+  exclude?: string;
+  after?: string;
+  before?: string;
   orderby?: string;
   order?: 'asc' | 'desc';
 }
@@ -65,8 +99,13 @@ function buildQuery(options?: WordPressQueryOptions): string {
   if (options?.slug) params.set('slug', options.slug);
   if (options?.status) params.set('status', options.status);
   if (options?.parent !== undefined) params.set('parent', String(options.parent));
+  if (options?.author) params.set('author', options.author);
   if (options?.categories) params.set('categories', options.categories);
   if (options?.tags) params.set('tags', options.tags);
+  if (options?.include) params.set('include', options.include);
+  if (options?.exclude) params.set('exclude', options.exclude);
+  if (options?.after) params.set('after', options.after);
+  if (options?.before) params.set('before', options.before);
   if (options?.orderby) params.set('orderby', options.orderby);
   if (options?.order) params.set('order', options.order);
 
@@ -105,4 +144,28 @@ export async function getWordPressMedia(
   options?: WordPressQueryOptions,
 ): Promise<WordPressMedia[]> {
   return fetchWordPress<WordPressMedia[]>('media', options);
+}
+
+export async function getWordPressCategories(
+  options?: WordPressQueryOptions,
+): Promise<WordPressTerm[]> {
+  return fetchWordPress<WordPressTerm[]>('categories', options);
+}
+
+export async function getWordPressTags(
+  options?: WordPressQueryOptions,
+): Promise<WordPressTerm[]> {
+  return fetchWordPress<WordPressTerm[]>('tags', options);
+}
+
+export async function getWordPressUsers(
+  options?: WordPressQueryOptions,
+): Promise<WordPressUser[]> {
+  return fetchWordPress<WordPressUser[]>('users', options);
+}
+
+export async function searchWordPress(
+  options?: WordPressQueryOptions,
+): Promise<WordPressSearchResult[]> {
+  return fetchWordPress<WordPressSearchResult[]>('search', options);
 }

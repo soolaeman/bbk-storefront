@@ -23,7 +23,7 @@ export const TestimonialsSection: React.FC = () => {
   return (
     <section className="bg-white py-12 px-4 border-b border-slate-200">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8 lg:gap-10 items-start">
+        <div className="relative overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8 lg:gap-10 items-start">
           <div className="space-y-8">
             <div className="text-center lg:text-left max-w-2xl space-y-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -56,11 +56,11 @@ export const TestimonialsSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative min-h-[280px] sm:min-h-[340px] lg:min-h-[500px] rounded-3xl bg-slate-50 border border-slate-200 overflow-hidden flex items-end justify-center lg:justify-end">
+          <div className="relative min-h-[280px] sm:min-h-[340px] lg:min-h-[400px] rounded-3xl bg-slate-50 border border-slate-200 overflow-hidden flex items-end justify-center">
             <img
               src="/images/people/bbkitchen-chef-trust.webp"
               alt="Chef BBKitchen dengan sikap profesional"
-              className="absolute top-0 right-0 h-[320px] sm:h-[380px] lg:h-[500px] w-auto max-w-none object-contain object-top"
+              className="h-full max-h-[400px] w-auto object-contain object-bottom"
             />
           </div>
         </div>

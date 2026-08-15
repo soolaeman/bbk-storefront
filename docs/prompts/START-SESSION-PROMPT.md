@@ -3,7 +3,6 @@
 # BBKitchen — Canonical Start-Session Prompt
 
 > **Use this prompt at the beginning of every migration chat.**
->
 > Purpose: make the new chat orient itself from the **actual repository state + current documentation** before changing code.
 
 Copy-paste this prompt at the start of every migration chat.
@@ -222,11 +221,15 @@ Selama session berjalan:
 - jika copy owner berubah, guides mungkin ikut berubah
 - jika route/asset/component berubah, Navigator mungkin ikut berubah
 - jika milestone selesai, progress archive akan diperbarui saat end-session
+- root `README.md` adalah current-state/Pareto dashboard, bukan forensic log
+- `docs/progress/README.md` adalah synthesis/timeline index, bukan pengganti archive detail
+- `docs/progress/CHAT-X.Y.md` adalah forensic session history
+- timeline facts must flow from evidence → progress index → root README without contradiction
 
 Jangan melakukan dokumentasi palsu hanya untuk memenuhi checklist.
 
 ==================================================
-13. SESSION TIMELINE RULE
+13. SESSION TIMELINE + PROJECT ELAPSED-TIME RULE
 ==================================================
 
 Catat waktu session berdasarkan evidence yang benar-benar tersedia:
@@ -236,16 +239,33 @@ Date:
 Start:
 End:
 Duration:
+Evidence source:
 ```
 
-- `Start` wajib dicatat pada saat session resmi dimulai jika waktu aktual tersedia.
+Rules:
+
+- `Start` wajib dicatat saat session resmi dimulai jika waktu aktual tersedia.
 - `End` dan `Duration` ditentukan saat session ditutup, bukan diprediksi.
+- Duration hanya dihitung dari verified Start + verified End.
 - Jika exact time tidak tersedia, tulis:
   `Tidak ditemukan di repository/evidence yang tersedia.`
 - Jika hanya tanggal/period yang tersedia, jangan mengubahnya menjadi durasi.
-- Jika timestamp berasal dari GitHub commit, tandai sumbernya sebagai GitHub commit.
-- Jangan mengarang, mengestimasi, atau menyimpulkan durasi tanpa evidence.
+- Jangan mengestimasi duration dari message count, skipped messages, calendar span, atau asumsi.
+- GitHub commit timestamp boleh menjadi evidence timestamp, tetapi labeli sebagai GitHub evidence.
+- Jika timestamp conflict, preserve the conflict; jangan silently choose one.
 - Root `README.md` dan `docs/progress/README.md` harus konsisten dengan timeline yang sudah terverifikasi.
+
+### Project elapsed time since Chat 1.1
+
+Jika diminta menampilkan waktu pengerjaan total sejak Chat 1.1:
+
+- cari exact Chat 1.1 start timestamp dari repository/conversation evidence terlebih dahulu
+- jika exact Chat 1.1 start tidak tersedia, tulis:
+  `Actual elapsed duration since Chat 1.1: NOT VERIFIABLE`
+- boleh tampilkan `earliest verifiable migration evidence` dan `calendar span` sebagai konteks
+- jangan menyamakan calendar span dengan actual working duration
+- jika timestamp Chat 1.1 berhasil ditemukan di masa depan, hitung elapsed duration dari timestamp tersebut ke timestamp reference yang terverifikasi
+- sinkronkan hasilnya ke `docs/progress/README.md` dan root `README.md`
 
 ==================================================
 14. END SESSION HANDOFF
@@ -271,7 +291,8 @@ Sebelum coding, jawab ringkas:
 6. Locked decisions relevant to this session
 7. Session goal
 8. Session start timestamp
-9. First implementation step
+9. Project elapsed-time status since Chat 1.1
+10. First implementation step
 
 Jika ada data yang tidak dapat diverifikasi:
 `Tidak ditemukan di repository/evidence yang tersedia.`

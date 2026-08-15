@@ -17,9 +17,10 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory }) => {
       <div className="max-w-7xl mx-auto px-4 py-12 space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-black text-base">BB</div>
-              <span className="text-lg font-extrabold text-white">BB<span className="text-amber-400">Kitchen</span></span>
+            <div className="flex items-center">
+              <a href="/" aria-label="BBKitchen — Home" className="inline-flex items-center">
+                <img src="/bbkitchen-logo.webp" alt="BBKitchen — Bukan Baru Kitchen — Sentra Barang Bekas Restoran" className="h-9 w-auto max-w-[190px] object-contain sm:h-10 sm:max-w-[220px]" />
+              </a>
             </div>
             <p className="text-slate-400 leading-relaxed text-xs">
               <strong>BBKitchen</strong> fokus menjual peralatan dapur restoran bekas komersial, satuan maupun borongan. Beberapa unit baru dan produksi baru juga tersedia dari workshop BBKitchen.

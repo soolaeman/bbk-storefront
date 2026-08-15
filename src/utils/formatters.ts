@@ -1,6 +1,6 @@
 import { Product } from '../types';
 
-export const WHATSAPP_NUMBER = '6281288889999'; // BBKitchen WhatsApp Hotline
+export const WHATSAPP_NUMBER = '6285122001051'; // BBKitchen WhatsApp Hotline
 
 export function formatRupiah(amount: number | null | undefined): string {
   if (amount === null || amount === undefined || isNaN(amount)) {

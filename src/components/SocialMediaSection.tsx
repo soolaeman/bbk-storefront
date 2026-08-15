@@ -6,6 +6,11 @@ import { ExternalLink, Facebook, Instagram, Pin, Play, MessageCircle, Youtube } 
 const youtubeEmbedUrl = 'https://www.youtube.com/embed/_uzgdL_JhXA?autoplay=1';
 const tiktokEmbedUrl = 'https://www.tiktok.com/player/v1/7547192180746767623?description=1&music_info=1';
 
+const videoCovers = {
+  youtube: '/images/social/youtube-shorts-cover.webp',
+  tiktok: '/images/social/tiktok-cover.webp',
+} as const;
+
 const socialLinks = [
   { name: 'Instagram', href: 'https://www.instagram.com/bukanbarukitchen/', icon: Instagram, copy: 'Update unit & aktivitas BBKitchen' },
   { name: 'Facebook', href: 'https://web.facebook.com/bukanbarukitchens', icon: Facebook, copy: 'Info & kabar BBKitchen' },
@@ -18,17 +23,19 @@ export const SocialMediaSection: React.FC = () => {
 
   const videoPanel = (type: 'youtube' | 'tiktok') => {
     const isYoutube = type === 'youtube';
+    const title = isYoutube ? 'YouTube Shorts' : 'TikTok';
+
     return (
       <div className="w-full aspect-video rounded-2xl border border-slate-200 bg-slate-950 overflow-hidden shadow-sm">
         <button
           type="button"
           onClick={() => setPlaying(current => current === type ? null : type)}
-          className="w-full h-full relative group"
-          aria-label={`Putar ${isYoutube ? 'YouTube Shorts' : 'TikTok'}`}
+          className="w-full h-full relative group text-left"
+          aria-label={`Putar ${title}`}
         >
           {playing === type ? (
             <iframe
-              title={`BBKitchen ${type}`}
+              title={`BBKitchen ${title}`}
               src={isYoutube ? youtubeEmbedUrl : tiktokEmbedUrl}
               className="w-full h-full border-0"
               loading="lazy"
@@ -36,16 +43,25 @@ export const SocialMediaSection: React.FC = () => {
               allowFullScreen
             />
           ) : (
-            <span className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 group-hover:bg-slate-900 transition-colors text-white px-5">
-              <span className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-lg">
-                {isYoutube ? <Youtube className="w-6 h-6 text-red-600" /> : <span className="font-black text-xl">♪</span>}
-                <Play className="w-3.5 h-3.5 ml-0.5 fill-current" />
+            <>
+              <img
+                src={videoCovers[type]}
+                alt={`Cover ${title} BBKitchen`}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+              />
+              <span className="absolute inset-0 bg-slate-950/25 group-hover:bg-slate-950/35 transition-colors" />
+              <span className="absolute inset-0 flex flex-col items-center justify-center text-white px-5">
+                <span className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl group-hover:scale-105 transition-transform">
+                  {isYoutube ? <Youtube className="w-6 h-6 text-red-600" /> : <span className="font-black text-xl">♪</span>}
+                  <Play className="w-3.5 h-3.5 ml-0.5 fill-current" />
+                </span>
+                <span className="mt-3 text-sm font-extrabold text-white drop-shadow">{title}</span>
+                <span className="mt-1 text-[11px] leading-relaxed text-center text-slate-100 drop-shadow">
+                  {isYoutube ? 'Aktivitas, unit terbaru, dan proses BBKitchen.' : 'Lihat konten dan aktivitas BBKitchen.'}
+                </span>
               </span>
-              <span className="mt-3 text-sm font-extrabold text-white">{isYoutube ? 'YouTube Shorts' : 'TikTok'}</span>
-              <span className="mt-1 text-[11px] leading-relaxed text-center text-slate-300">
-                {isYoutube ? 'Aktivitas, unit terbaru, dan proses BBKitchen.' : 'Lihat konten dan aktivitas BBKitchen.'}
-              </span>
-            </span>
+            </>
           )}
         </button>
       </div>

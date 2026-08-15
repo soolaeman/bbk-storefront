@@ -15,6 +15,13 @@ export const TrustSection: React.FC = () => {
     { label: 'Aktivitas BBKitchen', note: 'Ganti dengan foto aktivitas terbaru' },
   ];
 
+  const peopleGallery = [
+    { src: '/images/people/bbkitchen-team-thumbs-up.webp', alt: 'Tim BBKitchen', title: 'BBKitchen siap bantu kebutuhan dapur Anda.' },
+    { src: '/images/people/bbkitchen-chef-presenting.webp', alt: 'Tim BBKitchen dalam pakaian chef', title: 'Paham kebutuhan operasional dapur komersial.' },
+    { src: '/images/people/bbkitchen-chef-pointing.webp', alt: 'Tim BBKitchen memberikan arahan', title: 'Bisa diajak diskusi sebelum menentukan unit.' },
+    { src: '/images/people/bbkitchen-chef-trust.webp', alt: 'Tim BBKitchen', title: 'Fokus pada solusi, kondisi unit, dan kebutuhan Anda.' },
+  ];
+
   const pillars = [
     {
       icon: <Wrench className="w-5 h-5 text-amber-600" />,
@@ -40,6 +47,16 @@ export const TrustSection: React.FC = () => {
   const nextGallery = () => {
     setGalleryIndex((current) => (current + 1) % gallerySlots.length);
   };
+
+  const previousPerson = () => {
+    setGalleryIndex((current) => (current - 1 + peopleGallery.length) % peopleGallery.length);
+  };
+
+  const nextPerson = () => {
+    setGalleryIndex((current) => (current + 1) % peopleGallery.length);
+  };
+
+  const activePerson = peopleGallery[galleryIndex % peopleGallery.length];
 
   return (
     <section className="bg-slate-50 py-12 px-4 border-b border-slate-200">
@@ -76,33 +93,41 @@ export const TrustSection: React.FC = () => {
             })}
           </div>
 
-          <button
-            type="button"
-            onClick={previousGallery}
-            aria-label="Foto sebelumnya"
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 border border-slate-200 shadow-lg flex items-center justify-center text-slate-800 hover:bg-white transition-colors"
-          >
+          <button type="button" onClick={previousGallery} aria-label="Foto sebelumnya" className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 border border-slate-200 shadow-lg flex items-center justify-center text-slate-800 hover:bg-white transition-colors">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button
-            type="button"
-            onClick={nextGallery}
-            aria-label="Foto berikutnya"
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 border border-slate-200 shadow-lg flex items-center justify-center text-slate-800 hover:bg-white transition-colors"
-          >
+          <button type="button" onClick={nextGallery} aria-label="Foto berikutnya" className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 border border-slate-200 shadow-lg flex items-center justify-center text-slate-800 hover:bg-white transition-colors">
             <ChevronRight className="w-5 h-5" />
           </button>
 
           <div className="flex justify-center gap-1.5 mt-4" aria-label="Navigasi galeri">
             {gallerySlots.map((slot, index) => (
-              <button
-                key={slot.label}
-                type="button"
-                onClick={() => setGalleryIndex(index)}
-                aria-label={`Tampilkan ${slot.label}`}
-                className={`h-2 rounded-full transition-all ${index === galleryIndex ? 'w-6 bg-slate-900' : 'w-2 bg-slate-300 hover:bg-slate-400'}`}
-              />
+              <button key={slot.label} type="button" onClick={() => setGalleryIndex(index)} aria-label={`Tampilkan ${slot.label}`} className={`h-2 rounded-full transition-all ${index === galleryIndex ? 'w-6 bg-slate-900' : 'w-2 bg-slate-300 hover:bg-slate-400'}`} />
             ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 items-center bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+          <div className="relative min-h-[420px] bg-slate-100 flex items-end justify-center overflow-hidden">
+            <img src={activePerson.src} alt={activePerson.alt} className="max-h-[520px] w-auto max-w-full object-contain drop-shadow-xl" />
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 shadow-lg px-2 py-1.5">
+              <button type="button" onClick={previousPerson} aria-label="Foto tim sebelumnya" className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-[11px] font-bold text-slate-700 min-w-[54px] text-center">{(galleryIndex % peopleGallery.length) + 1} / {peopleGallery.length}</span>
+              <button type="button" onClick={nextPerson} aria-label="Foto tim berikutnya" className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100">
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <div className="p-7 sm:p-9 space-y-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900/5 text-slate-700 rounded-full text-xs font-bold uppercase tracking-wider">
+              <Award className="w-3.5 h-3.5" />
+              <span>Di Balik BBKitchen</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">Bukan cuma jual unit. Kami bantu cari solusi dapurnya.</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">Mulai dari cek kondisi, ukuran, kebutuhan menu, sampai pengiriman, tim BBKitchen siap diajak diskusi supaya pilihan alat lebih masuk akal untuk usaha Anda.</p>
+            <p className="text-sm font-semibold text-slate-800 leading-relaxed">{activePerson.title}</p>
           </div>
         </div>
 

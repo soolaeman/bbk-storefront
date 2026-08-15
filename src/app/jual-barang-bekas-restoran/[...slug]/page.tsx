@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getWordPressPages } from '../../../../lib/wordpress';
+import { getWordPressPages } from '../../../lib/wordpress';
 
 interface LocationPageProps {
   params: Promise<{ slug: string[] }>;

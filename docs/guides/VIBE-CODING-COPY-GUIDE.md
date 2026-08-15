@@ -1,3 +1,5 @@
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
+
 # BBKitchen Vibe Coding Guide — Copy Locations
 
 > For a non-developer / vibe-coding workflow: use this file to answer **“I want to change this wording — where is the file?”**
@@ -24,14 +26,16 @@ Footer               → src/components/Footer.tsx
 |---|---|
 | Hero headline | `src/components/HeroSection.tsx` |
 | Hero CTA | `src/components/HeroSection.tsx` |
+| Hero shipping/value copy | `src/components/HeroSection.tsx` |
 | Header menu text | `src/components/Header.tsx` |
 | Search placeholder | `src/components/Header.tsx` |
-| MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / service component / `Footer.tsx` |
+| MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / `KitchenConsultationBanner.tsx` / `Footer.tsx` |
+| MBG PDF catalog CTA | `src/components/KitchenConsultationBanner.tsx` |
 | Produksi Baru wording | same CTA owners as above |
 | READY/SOLD button | `src/components/ProductCard.tsx` |
 | Product WhatsApp message | search globally for `Halo Tim BBKitchen` |
 | Product Detail CTA | `src/app/product/[slug]/page.tsx` + child component |
-| Social copy | `src/components/SocialMediaSection.tsx` |
+| Social copy / video cards | `src/components/SocialMediaSection.tsx` |
 | Footer wording | `src/components/Footer.tsx` |
 | Category labels | `src/components/CategoryFilter.tsx` |
 | Local article H1/copy | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` |

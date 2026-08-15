@@ -1,19 +1,43 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getWordPressPages } from '../../../lib/wordpress';
+import { getWordPressPages } from '../../../../lib/wordpress';
 
 interface LocationPageProps {
-  params: Promise<{ location: string }>;
+  params: Promise<{ slug: string[] }>;
 }
 
-async function getLocationPage(location: string) {
-  const pages = await getWordPressPages({ slug: location });
-  return pages[0];
+async function getLocationPage(slugPath: string[]) {
+  if (slugPath.length === 0) return undefined;
+
+  const roots = await getWordPressPages({
+    slug: 'jual-barang-bekas-restoran',
+    parent: 0,
+  });
+
+  const root = roots[0];
+  if (!root) return undefined;
+
+  let parentId = root.id;
+  let page = undefined;
+
+  for (const segment of slugPath) {
+    const pages = await getWordPressPages({
+      slug: segment,
+      parent: parentId,
+    });
+
+    page = pages[0];
+    if (!page) return undefined;
+
+    parentId = page.id;
+  }
+
+  return page;
 }
 
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
-  const { location } = await params;
-  const page = await getLocationPage(location);
+  const { slug } = await params;
+  const page = await getLocationPage(slug);
 
   if (!page) return {};
 
@@ -27,8 +51,8 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 }
 
 export default async function LocationPage({ params }: LocationPageProps) {
-  const { location } = await params;
-  const page = await getLocationPage(location);
+  const { slug } = await params;
+  const page = await getLocationPage(slug);
 
   if (!page) notFound();
 

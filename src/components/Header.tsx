@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, Phone, PlusCircle, Search, ShieldCheck, Unlock, Lock, Wrench, X, Loader2 } from 'lucide-react';
+import { Loader2, Menu, Phone, Search, X } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from '../utils/formatters';
 
 interface HeaderSearchProduct {
@@ -16,11 +16,13 @@ interface HeaderSearchProduct {
 }
 
 interface HeaderProps {
-  /** @deprecated Header search is now self-contained. Kept temporarily for App.tsx compatibility. */
+  /** @deprecated Header search is self-contained. Kept temporarily for App.tsx compatibility. */
   searchQuery?: string;
-  /** @deprecated Header search is now self-contained. Kept temporarily for App.tsx compatibility. */
+  /** @deprecated Header search is self-contained. Kept temporarily for App.tsx compatibility. */
   onSearchChange?: (query: string) => void;
+  /** @deprecated Seller CTA is now a direct WhatsApp action. Kept temporarily for App.tsx compatibility. */
   onRequestUnitClick?: () => void;
+  /** @deprecated Admin controls are no longer part of public navigation. */
   isAdminMode?: boolean;
   onToggleAdminMode?: () => void;
   onOpenAdminPanel?: () => void;
@@ -29,21 +31,16 @@ interface HeaderProps {
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_RESULT_LIMIT = 3;
+const BBKITCHEN_WHATSAPP = '6285122001051';
 
-export const Header: React.FC<HeaderProps> = ({
-  onRequestUnitClick = () => undefined,
-  isAdminMode = false,
-  onToggleAdminMode = () => undefined,
-  onOpenAdminPanel = () => undefined,
-  simple = false,
-}) => {
+const buildWhatsAppLink = (message: string) =>
+  `https://wa.me/${BBKITCHEN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+
+export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState<HeaderSearchProduct[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [pinInputOpen, setPinInputOpen] = useState(false);
-  const [pin, setPin] = useState('');
-  const [pinError, setPinError] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchRequestRef = useRef(0);
@@ -116,34 +113,12 @@ export const Header: React.FC<HeaderProps> = ({
     window.location.href = `/product/${encodeURIComponent(product.slug)}`;
   };
 
-  const handleAdminToggle = () => {
-    if (isAdminMode) {
-      onToggleAdminMode();
-      setMobileMenuOpen(false);
-      return;
-    }
-
-    setPinInputOpen(true);
-    setPin('');
-    setPinError(false);
-  };
-
-  const handlePinSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (pin === '1234' || pin === 'admin') {
-      setPinInputOpen(false);
-      setPin('');
-      onToggleAdminMode();
-      setMobileMenuOpen(false);
-      return;
-    }
-
-    setPinError(true);
-  };
-
-  const scrollToCatalog = () => {
-    document.querySelector('main')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const handleSellerClick = () => {
+    window.open(
+      buildWhatsAppLink('Halo BBKitchen, saya ingin menjual peralatan restoran/dapur komersial. Saya ingin konsultasi untuk jual unit satuan atau borongan.'),
+      '_blank',
+      'noopener,noreferrer',
+    );
     setMobileMenuOpen(false);
   };
 
@@ -152,7 +127,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="hidden border-b border-slate-100 bg-slate-50 md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-[11px] text-slate-500 lg:px-6">
           <span>Sentra barang bekas restoran & peralatan dapur komersial</span>
-          <a href={generateWhatsAppConsultationLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-700 transition-colors hover:text-emerald-700">Konsultasi via WhatsApp</a>
+          <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-700 transition-colors hover:text-emerald-700">Konsultasi via WhatsApp</a>
         </div>
       </div>
 
@@ -220,8 +195,8 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="order-2 ml-auto flex shrink-0 items-center gap-2 md:order-3">
             {!simple && <>
-              <button type="button" onClick={onRequestUnitClick} className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:inline-flex"><PlusCircle className="h-4 w-4 text-emerald-600" /><span>Titip Cari</span></button>
-              <a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" id="header-wa-consult-btn" className="hidden items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-emerald-700 sm:inline-flex"><Phone className="h-4 w-4" /><span>Konsultasi</span></a>
+              <button type="button" onClick={handleSellerClick} className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:inline-flex"><span>Jual Unit</span></button>
+              <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" id="header-wa-consult-btn" className="hidden items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-emerald-700 sm:inline-flex"><Phone className="h-4 w-4" /><span>Konsultasi</span></a>
             </>}
             {!simple && <button type="button" onClick={() => setMobileMenuOpen((open) => !open)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 sm:hidden" aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>}
           </div>
@@ -232,18 +207,24 @@ export const Header: React.FC<HeaderProps> = ({
             <nav className="flex items-center justify-between gap-4 text-xs font-semibold text-slate-600" aria-label="Navigasi utama">
               <div className="flex items-center gap-5">
                 <a href="/" className="transition-colors hover:text-emerald-700">Home</a>
-                <button type="button" onClick={scrollToCatalog} className="transition-colors hover:text-emerald-700">Katalog</button>
-                <button type="button" onClick={onRequestUnitClick} className="transition-colors hover:text-emerald-700">Titip Cari Unit</button>
-                <a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-emerald-700">Konsultasi</a>
+                <a href="/catalog" className="transition-colors hover:text-emerald-700">Katalog</a>
+                <button type="button" onClick={handleSellerClick} className="transition-colors hover:text-emerald-700">Jual Unit</button>
+                <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-emerald-700">Konsultasi</a>
               </div>
-              <div className="relative">
-                <button type="button" id="admin-mode-toggle-btn" onClick={handleAdminToggle} className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-colors ${isAdminMode ? 'border border-amber-300 bg-amber-50 text-amber-800' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'}`} title={isAdminMode ? 'Admin Mode Aktif (Klik untuk keluar)' : 'Akses Owner / Staff'}>{isAdminMode ? <Unlock className="h-3.5 w-3.5 text-amber-600" /> : <Lock className="h-3.5 w-3.5 text-slate-400" />}<span>{isAdminMode ? 'Admin Mode ON' : 'Staff / Owner'}</span></button>
-                {pinInputOpen && <div className="absolute right-0 top-10 z-50 w-72 rounded-xl border border-slate-200 bg-white p-4 text-slate-700 shadow-xl"><div className="mb-1 flex items-center justify-between text-xs font-bold text-slate-900"><span>Verifikasi Akses Admin</span><button type="button" onClick={() => setPinInputOpen(false)} className="text-slate-400 hover:text-slate-700" aria-label="Tutup verifikasi">×</button></div><p className="mb-3 text-[11px] leading-relaxed text-slate-500">Masukkan PIN staff untuk membuka kontrol inventori. PIN demo saat ini: <strong>1234</strong>.</p><form onSubmit={handlePinSubmit} className="space-y-2.5"><input type="password" value={pin} onChange={(event) => { setPin(event.target.value); setPinError(false); }} placeholder="Masukkan PIN" autoFocus className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" />{pinError && <p className="text-[10px] font-semibold text-rose-600">PIN salah. Coba lagi.</p>}<div className="flex justify-end gap-2 pt-1"><button type="button" onClick={() => setPinInputOpen(false)} className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800">Batal</button><button type="submit" className="rounded-lg bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-slate-800">Buka Akses</button></div></form></div>}
-              </div>
+              <span className="text-[11px] font-medium text-slate-400">Unit cepat berputar · cek ketersediaan terbaru</span>
             </nav>
           </div>
-          {mobileMenuOpen && <div className="border-t border-slate-100 py-3 md:hidden"><nav className="grid gap-1 text-sm font-semibold text-slate-700" aria-label="Navigasi mobile"><a href="/" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Home</a><button type="button" onClick={scrollToCatalog} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Katalog</button><button type="button" onClick={() => { onRequestUnitClick(); setMobileMenuOpen(false); }} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Titip Cari Unit</button><a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Konsultasi WhatsApp</a><button type="button" onClick={handleAdminToggle} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">{isAdminMode ? <Unlock className="h-4 w-4 text-amber-600" /> : <Lock className="h-4 w-4 text-slate-400" />}{isAdminMode ? 'Keluar Admin Mode' : 'Staff / Owner'}</button>{isAdminMode && <button type="button" onClick={() => { onOpenAdminPanel(); setMobileMenuOpen(false); }} className="flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-left text-amber-800"><Wrench className="h-4 w-4" />Kelola Stok</button>}</nav></div>}
-          {isAdminMode && <div className="border-t border-amber-200 bg-amber-50 px-4 py-2 text-[11px] text-amber-800"><div className="mx-auto flex max-w-7xl items-center justify-between gap-3 lg:px-2"><div className="flex min-w-0 items-center gap-2"><ShieldCheck className="h-4 w-4 shrink-0 text-amber-600" /><span className="truncate"><strong>Mode Staff / Admin aktif.</strong> Kontrol inventori internal tersedia.</span></div><button type="button" onClick={onOpenAdminPanel} className="shrink-0 font-semibold underline hover:text-amber-950">Buka Panel →</button></div></div>}
+
+          {mobileMenuOpen && (
+            <div className="border-t border-slate-100 py-3 md:hidden">
+              <nav className="grid gap-1 text-sm font-semibold text-slate-700" aria-label="Navigasi mobile">
+                <a href="/" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Home</a>
+                <a href="/catalog" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Katalog</a>
+                <button type="button" onClick={handleSellerClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Jual Unit</button>
+                <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Konsultasi WhatsApp</a>
+              </nav>
+            </div>
+          )}
         </>}
       </div>
     </header>

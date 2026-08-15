@@ -113,11 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   };
 
   const handleSellerClick = () => {
-    window.open(
-      buildWhatsAppLink('Halo BBKitchen, saya ingin menjual peralatan restoran/dapur komersial. Saya ingin konsultasi untuk jual unit satuan atau borongan.'),
-      '_blank',
-      'noopener,noreferrer',
-    );
+    window.location.href = '/catalog?search=MBG';
     setMobileMenuOpen(false);
   };
 
@@ -203,7 +199,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
 
           <div className="order-2 ml-auto flex shrink-0 items-center gap-2 md:order-3">
             {!simple && <>
-              <button type="button" onClick={handleSellerClick} className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:inline-flex"><span>Jual Unit</span></button>
+              <button type="button" onClick={handleSellerClick} className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:inline-flex"><span>Dapur MBG</span></button>
               <button type="button" onClick={handleProductionClick} className="hidden items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-emerald-700 sm:inline-flex"><span>Mau Produksi Baru?</span></button>
             </>}
             {!simple && <button type="button" onClick={() => setMobileMenuOpen((open) => !open)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 sm:hidden" aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>}
@@ -216,7 +212,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
               <div className="flex items-center gap-5">
                 <a href="/" className="transition-colors hover:text-emerald-700">Home</a>
                 <a href="/catalog" className="transition-colors hover:text-emerald-700">Katalog</a>
-                <button type="button" onClick={handleSellerClick} className="transition-colors hover:text-emerald-700">Jual Unit</button>
+                <button type="button" onClick={handleSellerClick} className="transition-colors hover:text-emerald-700">Dapur MBG</button>
                 <button type="button" onClick={handleProductionClick} className="transition-colors hover:text-emerald-700">Mau Produksi Baru?</button>
               </div>
               <span className="text-[11px] font-medium text-slate-400">Unit cepat berputar · cek ketersediaan terbaru</span>
@@ -228,7 +224,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
               <nav className="grid gap-1 text-sm font-semibold text-slate-700" aria-label="Navigasi mobile">
                 <a href="/" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Home</a>
                 <a href="/catalog" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Katalog</a>
-                <button type="button" onClick={handleSellerClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Jual Unit</button>
+                <button type="button" onClick={handleSellerClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Dapur MBG</button>
                 <button type="button" onClick={handleProductionClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Mau Produksi Baru?</button>
               </nav>
             </div>

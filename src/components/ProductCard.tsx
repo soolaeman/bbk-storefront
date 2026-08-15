@@ -53,7 +53,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       id={`product-card-${product.id}`}
       className={`group bg-white rounded-2xl border transition-all duration-200 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-lg ${
         isSold
-          ? 'border-slate-300 opacity-80 bg-slate-50/70'
+          ? 'border-slate-300 bg-slate-50/70'
           : 'border-slate-200 hover:border-amber-400/60'
       }`}
     >
@@ -157,12 +157,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             id={`btn-wa-${product.id}`}
             className={`w-full py-2 px-2.5 text-xs font-bold rounded-xl transition-colors shadow-xs flex items-center justify-center gap-1.5 ${
               isSold
-                ? 'bg-slate-200 text-slate-500 cursor-not-allowed pointer-events-none'
+                ? 'bg-slate-700 hover:bg-slate-600 text-white'
                 : 'bg-emerald-600 hover:bg-emerald-500 text-white'
             }`}
           >
             <Phone className="w-3.5 h-3.5" />
-            <span>Tanya WA</span>
+            <span>{isSold ? 'Tanya Lainnya' : 'Tanya WA'}</span>
           </a>
         </div>
 

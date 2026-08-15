@@ -304,7 +304,12 @@ export default function CatalogPage() {
                   key={product.id}
                   product={product}
                   onOpenDetail={(selectedProduct) => {
-                    window.location.href = `/product/${encodeURIComponent(selectedProduct.id)}`;
+                    const detailSlug = selectedProduct.slug?.trim();
+                    if (!detailSlug) {
+                      console.error('Product detail slug tidak tersedia:', selectedProduct.id);
+                      return;
+                    }
+                    window.location.href = `/product/${encodeURIComponent(detailSlug)}`;
                   }}
                   isAdminMode={false}
                 />

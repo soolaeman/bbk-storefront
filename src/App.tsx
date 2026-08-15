@@ -10,12 +10,13 @@ import { AdminPanelModal } from './components/AdminPanelModal';
 import { KitchenConsultationBanner } from './components/KitchenConsultationBanner';
 import { TrustSection } from './components/TrustSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
+import { LocationSection } from './components/LocationSection';
+import { SocialMediaSection } from './components/SocialMediaSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { getWooCommerceProductsResult } from './lib/woocommerce';
 import { Product, FilterState } from './types';
-import { PackageOpen, RotateCcw, PlusCircle, Phone, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { generateWhatsAppConsultationLink } from './utils/formatters';
+import { PackageOpen, RotateCcw, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const PRODUCTS_PER_PAGE = 8;
 
@@ -92,19 +93,13 @@ export default function App() {
 
     const loadCatalogMetadata = async () => {
       setIsLoadingMetadata(true);
-
       try {
         const response = await fetch('/api/products?metadata=1', {
           headers: { Accept: 'application/json' },
           cache: 'no-store',
         });
-
-        if (!response.ok) {
-          throw new Error(`Metadata endpoint gagal: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`Metadata endpoint gagal: ${response.status}`);
         const data = (await response.json()) as CatalogMetadata;
-
         if (!cancelled) {
           setCatalogMetadata({
             categories: Array.isArray(data.categories) ? data.categories : [],
@@ -121,10 +116,7 @@ export default function App() {
     };
 
     void loadCatalogMetadata();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   const loadProducts = async (page = 1) => {
@@ -162,9 +154,7 @@ export default function App() {
       setTotalResults(null);
       setTotalPages(null);
       setHasNextPage(false);
-      setProductLoadError(
-        'Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.',
-      );
+      setProductLoadError('Katalog unit sedang tidak dapat dimuat. Silakan coba lagi atau hubungi Tim BBKitchen.');
     } finally {
       setIsLoadingProducts(false);
     }
@@ -187,13 +177,7 @@ export default function App() {
   ]);
 
   const handleToggleStatus = (productId: string, newStatus: 'READY' | 'SOLD') => {
-    setProducts(prev => prev.map(p => {
-      if (p.id === productId) {
-        return { ...p, status: newStatus };
-      }
-      return p;
-    }));
-
+    setProducts(prev => prev.map(p => p.id === productId ? { ...p, status: newStatus } : p));
     if (selectedProduct && selectedProduct.id === productId) {
       setSelectedProduct(prev => prev ? { ...prev, status: newStatus } : null);
     }
@@ -225,26 +209,10 @@ export default function App() {
       }));
   }, [catalogMetadata.categories, categoryCounts]);
 
-  const liveConditionOptions = useMemo(() => {
-    return Array.from(
-      new Set(catalogMetadata.conditionOptions.map((value) => value.trim()).filter(Boolean)),
-    );
-  }, [catalogMetadata.conditionOptions]);
-
-  const liveLocationOptions = useMemo(() => {
-    return Array.from(
-      new Set(catalogMetadata.locationOptions.map((value) => value.trim()).filter(Boolean)),
-    );
-  }, [catalogMetadata.locationOptions]);
-
-  const livePowerTypeOptions = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.powerType.trim()).filter(Boolean)));
-  }, [products]);
-
-  const liveRequestCategoryOptions = useMemo(
-    () => liveCategoryOptions.map((category) => category.name),
-    [liveCategoryOptions],
-  );
+  const liveConditionOptions = useMemo(() => Array.from(new Set(catalogMetadata.conditionOptions.map((value) => value.trim()).filter(Boolean))), [catalogMetadata.conditionOptions]);
+  const liveLocationOptions = useMemo(() => Array.from(new Set(catalogMetadata.locationOptions.map((value) => value.trim()).filter(Boolean))), [catalogMetadata.locationOptions]);
+  const livePowerTypeOptions = useMemo(() => Array.from(new Set(products.map((product) => product.powerType.trim()).filter(Boolean))), [products]);
+  const liveRequestCategoryOptions = useMemo(() => liveCategoryOptions.map((category) => category.name), [liveCategoryOptions]);
 
   const goToCatalogPage = (page: number) => {
     if (page < 1 || isLoadingProducts) return;
@@ -257,12 +225,10 @@ export default function App() {
   const handleCatalogPageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const requestedPage = Number.parseInt(catalogPageInput, 10);
-
     if (!Number.isFinite(requestedPage)) {
       setCatalogPageInput(String(catalogPage));
       return;
     }
-
     const maxPage = totalPages ?? (hasNextPage ? requestedPage : catalogPage);
     const targetPage = Math.min(Math.max(requestedPage, 1), maxPage);
     setCatalogPageInput(String(targetPage));
@@ -309,21 +275,14 @@ export default function App() {
           <div>
             <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
               <span>Katalog Unit Dapur</span>
-              {filterState.category !== 'Semua' && (
-                <span className="text-amber-700 font-semibold">• {filterState.category}</span>
-              )}
+              {filterState.category !== 'Semua' && <span className="text-amber-700 font-semibold">• {filterState.category}</span>}
             </h2>
             <p className="text-xs text-slate-500">
               Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit WooCommerce live
               {isLoadingMetadata ? ' • Menyiapkan filter metadata live...' : ''}
             </p>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setIsRequestModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold transition-colors"
-          >
+          <button type="button" onClick={() => setIsRequestModalOpen(true)} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold transition-colors">
             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
             <span>Alat belum ada? Titip Sourcing</span>
           </button>
@@ -341,11 +300,7 @@ export default function App() {
               <h3 className="text-base font-bold text-slate-900">Katalog belum dapat dimuat</h3>
               <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{productLoadError}</p>
             </div>
-            <button
-              type="button"
-              onClick={() => void loadProducts(catalogPage)}
-              className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl inline-flex items-center gap-1.5 transition-colors"
-            >
+            <button type="button" onClick={() => void loadProducts(catalogPage)} className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl inline-flex items-center gap-1.5 transition-colors">
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Coba Lagi</span>
             </button>
@@ -354,140 +309,50 @@ export default function App() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onOpenDetail={(p) => setSelectedProduct(p)}
-                  isAdminMode={isAdminMode}
-                  onToggleStatus={handleToggleStatus}
-                />
+                <ProductCard key={product.id} product={product} onOpenDetail={(p) => setSelectedProduct(p)} isAdminMode={isAdminMode} onToggleStatus={handleToggleStatus} />
               ))}
             </div>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5" aria-label="Pagination katalog">
-              <button
-                type="button"
-                onClick={() => goToCatalogPage(catalogPage - 1)}
-                disabled={catalogPage === 1 || isLoadingProducts}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
-              >
+              <button type="button" onClick={() => goToCatalogPage(catalogPage - 1)} disabled={catalogPage === 1 || isLoadingProducts} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors">
                 <ChevronLeft className="w-4 h-4" />
                 Sebelumnya
               </button>
-
               <form onSubmit={handleCatalogPageSubmit} className="flex items-center gap-2">
-                <label htmlFor="catalog-page-input" className="text-xs font-semibold text-slate-500">
-                  Halaman
-                </label>
-                <input
-                  id="catalog-page-input"
-                  type="number"
-                  min={1}
-                  max={totalPages ?? undefined}
-                  value={catalogPageInput}
-                  onChange={(event) => setCatalogPageInput(event.target.value)}
-                  disabled={isLoadingProducts}
-                  className="w-16 px-2.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs font-black text-center outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:opacity-50"
-                  aria-label="Masukkan nomor halaman katalog"
-                />
-                <span className="text-xs font-bold text-slate-500">/ {totalPageLabel}</span>
-                <button
-                  type="submit"
-                  disabled={isLoadingProducts}
-                  className="px-3.5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  Go
-                </button>
+                <label htmlFor="catalog-page-input" className="text-xs font-semibold text-slate-500">Halaman</label>
+                <input id="catalog-page-input" type="number" min={1} max={totalPages ?? undefined} value={catalogPageInput} onChange={(event) => setCatalogPageInput(event.target.value)} disabled={isLoadingProducts} className="w-16 px-2.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs font-black text-center outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:opacity-50" aria-label="Masukkan nomor halaman" />
               </form>
-
-              <button
-                type="button"
-                onClick={() => goToCatalogPage(catalogPage + 1)}
-                disabled={!hasNextPage || isLoadingProducts}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
-              >
+              <span className="text-xs text-slate-500 font-semibold">dari {totalPageLabel}</span>
+              <button type="button" onClick={() => goToCatalogPage(catalogPage + 1)} disabled={isLoadingProducts || (totalPages !== null ? catalogPage >= totalPages : !hasNextPage)} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors">
                 Berikutnya
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-
-            <p className="mt-3 text-center text-xs font-semibold text-slate-500">
-              Halaman {catalogPage} dari {totalPageLabel} • Menampilkan {displayedCount} unit
-            </p>
           </>
         ) : (
-          <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8">
-            <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto border border-amber-200">
-              <PackageOpen className="w-7 h-7" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-900">Tidak ada unit yang cocok dengan filter</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-                WooCommerce tidak mengembalikan unit untuk kombinasi filter yang dipilih.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                className="px-4 py-2 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl flex items-center gap-1.5 transition-colors"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset Filter</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsRequestModalOpen(true)}
-                className="px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-md flex items-center gap-1.5 transition-colors"
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Titip Cari Unit ke Tim Sourcing</span>
-              </button>
-            </div>
+          <div className="bg-white rounded-2xl border border-slate-200 p-10 sm:p-16 text-center shadow-xs my-8">
+            <PackageOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-base font-bold text-slate-900">Belum ada unit yang cocok</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto mt-1 leading-relaxed">Coba ubah kata kunci atau filter. Jika belum menemukan unit yang sesuai, hubungi Tim BBKitchen.</p>
+            <button type="button" onClick={handleResetFilters} className="mt-5 px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl transition-colors">Reset Filter</button>
           </div>
         )}
+
+        <div className="mt-8">
+          <KitchenConsultationBanner />
+        </div>
       </main>
 
-      <KitchenConsultationBanner />
       <TrustSection />
       <TestimonialsSection />
+      <LocationSection />
+      <SocialMediaSection />
       <FAQSection />
-      <Footer onSelectCategory={(cat) => handleFilterChange({ category: cat })} />
+      <Footer onSelectCategory={(category) => handleFilterChange({ category })} />
 
-      <div className="fixed bottom-5 right-5 z-40">
-        <a
-          href={generateWhatsAppConsultationLink()}
-          target="_blank"
-          rel="noopener noreferrer"
-          id="floating-wa-btn"
-          className="flex items-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-full shadow-2xl hover:scale-105 transition-all shadow-emerald-950/40 border border-emerald-400/40"
-        >
-          <Phone className="w-4 h-4 text-white animate-bounce" />
-          <span className="hidden sm:inline">Tanya Unit via WhatsApp</span>
-          <span className="sm:hidden">WhatsApp</span>
-        </a>
-      </div>
-
-      <ProductDetailModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        isAdminMode={isAdminMode}
-        onToggleStatus={handleToggleStatus}
-      />
-      <RequestUnitModal
-        isOpen={isRequestModalOpen}
-        onClose={() => setIsRequestModalOpen(false)}
-        categoryOptions={liveRequestCategoryOptions}
-      />
-      <AdminPanelModal
-        isOpen={isAdminPanelOpen}
-        onClose={() => setIsAdminPanelOpen(false)}
-        products={products}
-        onToggleStatus={handleToggleStatus}
-        onAddProduct={handleAddProduct}
-        onResetToDefault={handleResetToDefault}
-        categoryOptions={liveCategoryOptions}
-      />
+      {selectedProduct && <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onToggleStatus={handleToggleStatus} isAdminMode={isAdminMode} />}
+      {isRequestModalOpen && <RequestUnitModal isOpen={isRequestModalOpen} onClose={() => setIsRequestModalOpen(false)} categoryOptions={liveRequestCategoryOptions} />}
+      {isAdminPanelOpen && <AdminPanelModal isOpen={isAdminPanelOpen} onClose={() => setIsAdminPanelOpen(false)} products={products} onToggleStatus={handleToggleStatus} onAddProduct={handleAddProduct} onResetToDefault={handleResetToDefault} categoryOptions={liveCategoryOptions} />}
     </div>
   );
 }

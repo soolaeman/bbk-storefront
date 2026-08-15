@@ -57,8 +57,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
   if (!page) notFound();
 
   return (
-    <main className="min-h-screen bg-slate-100 text-slate-900">
-      <article className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+    <main className="min-h-screen overflow-x-hidden bg-slate-100 text-slate-900">
+      <article className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <header className="mb-8">
           <h1
             className="text-3xl font-black tracking-tight sm:text-4xl"
@@ -67,7 +67,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
         </header>
 
         <div
-          className="prose prose-slate max-w-none rounded-2xl bg-white p-6 shadow-sm sm:p-8"
+          className="prose prose-slate max-w-none overflow-hidden rounded-2xl bg-white p-6 shadow-sm sm:p-8 [&_a]:break-words [&_div]:max-w-full [&_figure]:max-w-full [&_iframe]:max-w-full [&_img]:!mx-auto [&_img]:!h-auto [&_img]:!max-w-full [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto [&_video]:max-w-full"
           dangerouslySetInnerHTML={{ __html: page.content.rendered }}
         />
       </article>

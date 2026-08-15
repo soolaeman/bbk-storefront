@@ -4,7 +4,7 @@ Frontend baru **Bukan Baru Kitchen / BBKitchen**.
 
 Branch aktif: `feature/nextjs-migration`
 
-> **README = current state + Pareto summary + handoff.** Detailed session history lives in `docs/progress/`.
+> **README = peta kondisi project sekarang.** Detail history ada di `docs/progress/`.
 
 ---
 
@@ -14,8 +14,8 @@ Branch aktif: `feature/nextjs-migration`
 Chat 1.1 → ✅ Archived
 Chat 1.2 → ✅ Archived
 Chat 1.3 → ✅ Archived
-Chat 1.4 → ✅ CLOSED / DONE
-Chat 1.5 → 🚀 NEXT
+Chat 1.4 → ✅ Closed / Done
+Chat 1.5 → 🚀 Next
 ```
 
 Last code checkpoint:
@@ -29,67 +29,21 @@ GitHub evidence: **15 August 2026 21:24:06 UTC**.
 
 ---
 
-# 📚 DOCUMENTATION MAP
+# 🎯 CURRENT PRIORITIES — PARETO
 
-| Area | Document | Purpose |
-|---|---|---|
-| 📊 Progress | [Progress Archive](docs/progress/README.md) | Index seluruh history session |
-| 📖 Guide | [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md) | Panduan teknis mencari/mengganti copy |
-| 📖 Guide | [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi awam: “copy ini ada di file mana?” |
-| 🤖 Prompt | [End Session Prompt](docs/prompts/END-SESSION-PROMPT.md) | Prompt lengkap untuk menutup session |
-| 🤖 Prompt | [Quick End Session](docs/prompts/QUICK-END-SESSION-PROMPT.md) | Prompt cepat untuk session kecil |
-| 🤖 Prompt | [Forensic Extraction](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Ekstrak history dari chat lama/skipped messages |
-| 🚪 Shortcut | [End Session Shortcut](end-session-prompt.md) | Shortcut ke protokol end-session |
+1. **Mobile/responsive QA** across homepage, catalog, product detail, and local pages.
+2. **Shared Header** — search typing, sticky behavior, and visual parity.
+3. **Product Detail** — match shared homepage/Header design system.
+4. **Catalog conversion** — READY/SOLD behavior, WhatsApp, and discoverability.
+5. **Local/article pages** — editorial typography and content presentation.
 
-### Progress archives
+Next layer:
 
-- [Chat 1.1](docs/progress/CHAT-1.1.md) — Foundation / WooCommerce migration
-- [Chat 1.2](docs/progress/CHAT-1.2.md) — API / metadata / catalog / product / SEO
-- [Chat 1.3](docs/progress/CHAT-1.3.md) — Frontend integration / routing / visual convergence
-- [Chat 1.4](docs/progress/CHAT-1.4.md) — Homepage / conversion / visual finalization
-
-### Documentation rule
-
-```text
-Chat session
-    ↓
-Forensic extraction
-    ↓
-docs/progress/CHAT-X.Y.md
-    ↓
-Pareto synthesis
-    ↓
-README.md
-    ↓
-Next-chat handoff
-```
-
-README should stay readable. Do not turn it into a full session log.
-
----
-
-# 🎯 CURRENT PROGRESS — PARETO
-
-## Top 20% priorities → ~80% impact
-
-### P0 — highest impact
-
-1. **Responsive/mobile QA** across homepage, catalog, product detail, and local pages.
-2. **Shared Header + search interaction** — verify typing, behavior, sticky state, and parity.
-3. **Product Detail visual parity** with the homepage/shared Header.
-4. **Catalog → conversion path** — READY/SOLD state, WhatsApp inquiry, and product discoverability.
-
-### P1 — next layer
-
-5. Article/local landing typography and editorial rendering.
-6. Dapur MBG + Produksi Baru CTA consistency.
-7. Related Products + authoritative ACF filtering.
-8. API/runtime reliability and production hardening.
-
-### P2 — polish / hardening
-
-9. SEO/performance/accessibility audit.
-10. Admin/Core System workflows and operational integrations.
+- Dapur MBG + Produksi Baru CTA consistency.
+- Related Products.
+- Authoritative ACF filtering.
+- API/runtime reliability and production hardening.
+- SEO/performance/accessibility audit.
 
 ---
 
@@ -104,7 +58,7 @@ README should stay readable. Do not turn it into a full session log.
 | Shared Header | ⚠️ | Integrated; interaction/parity audit remains |
 | Global search | ⚠️ | UI exists; typing/interaction needs verification |
 | Article typography | ⚠️ | Content renders; editorial parity remains |
-| Mobile QA | ⚠️ | Not fully evidenced in prior forensic sessions |
+| Mobile QA | ⚠️ | Final cross-template verification remains |
 | WhatsApp contracts | ✅ | Product / MBG / Produksi Baru normalized |
 | READY / SOLD behavior | ✅ | SOLD remains discoverable |
 | Hero desktop/mobile | ✅ | Dedicated backgrounds |
@@ -136,7 +90,7 @@ Desktop + Mobile UX
 - **Next.js:** presentation, routing, rendering, SEO presentation, catalog/conversion UX.
 - **Google Sheets:** backend/Core System concern; never expose credentials in client.
 
-Locked principles:
+### Locked principles
 
 - Next.js is the experience layer, not the inventory source of truth.
 - Catalog pagination is server-side.
@@ -151,7 +105,7 @@ Locked principles:
 
 # 💬 LOCKED UX CONTRACTS
 
-## Dapur MBG
+### Dapur MBG
 
 ```text
 Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
@@ -159,7 +113,7 @@ Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur M
 
 Direct WhatsApp from Header/Hero/Service/Footer.
 
-## Produksi Baru
+### Produksi Baru
 
 ```text
 Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
@@ -167,7 +121,7 @@ Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
 
 Direct WhatsApp from Header/Hero/Service/Footer.
 
-## Product WhatsApp
+### Product WhatsApp
 
 ```text
 Halo Tim BBKitchen, saya tertarik dan ingin menanyakan penawaran harga dan ketersediaan untuk unit:
@@ -183,14 +137,14 @@ Kondisi: {BARU|BEKAS}
 Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.
 ```
 
-## READY / SOLD
+### READY / SOLD
 
 ```text
 READY → Tanya WA
 SOLD  → Tanya Lainnya
 ```
 
-## Hero
+### Hero
 
 ```text
 public/images/hero/bbkitchen-hero-desktop.webp
@@ -199,7 +153,7 @@ public/images/hero/bbkitchen-hero-mobile.webp
 
 `Lihat Unit yang Tersedia →` scrolls to catalog.
 
-## Social Video
+### Social Video
 
 ```text
 public/images/social/youtube-shorts-cover.webp
@@ -232,35 +186,35 @@ Target: `1280×720`, `16:9`, WebP. Cover first → play overlay → iframe after
 | B-16 | 1.4 | Empty social cards | Closed |
 | B-17 | 1.4 | Duplicate WA wording | Closed |
 
-Full forensic details: [open progress archive](docs/progress/README.md).
+Full details: [Progress Archive](docs/progress/README.md).
 
 ---
 
-# 🚫 FAILED APPROACHES — DO NOT REPEAT
+# 🚫 DO NOT REPEAT
 
 - Mock catalog as source of truth.
-- Frontend-only category patches.
+- Frontend-only inventory/category truth.
 - Single `[location]` route for hierarchical WordPress URLs.
-- Treating stale `.next` artifacts as architecture failure.
+- Treating stale `.next` artifacts as source architecture failure.
 - Treating `next build` success as proof upstream runtime is healthy.
 - Importing interactive Client Components as pure Server Components.
-- Floating the same transparent mascot through every section.
+- Universal floating mascot layers.
 - Mass-changing existing SEO slugs.
 - Exposing WooCommerce/Google credentials to client code.
 
 ---
 
-# 🧱 TECHNICAL DEBT → CHAT 1.5
+# 🧱 TECHNICAL DEBT
 
-1. Article/local landing editorial typography.
-2. Header search interaction + sticky behavior audit.
-3. Product Detail shared Header parity.
-4. Related Products finalization.
-5. Authoritative ACF filtering.
-6. Admin/Core System workflow.
-7. SOLD → Google Sheets.
-8. Mobile QA across templates.
-9. Production performance/accessibility hardening.
+- Article/local landing editorial typography.
+- Header search interaction + sticky behavior.
+- Product Detail shared Header parity.
+- Related Products.
+- Authoritative ACF filtering.
+- Admin/Core System workflow.
+- SOLD → Google Sheets.
+- Mobile QA across templates.
+- Production performance/accessibility hardening.
 
 ---
 
@@ -269,7 +223,7 @@ Full forensic details: [open progress archive](docs/progress/README.md).
 ```text
 implemented
   ↓
-localhost verified
+localhost/runtime verified
   ↓
 desktop verified
   ↓
@@ -280,8 +234,6 @@ no obvious regression
 build verified
   ↓
 commit
-  ↓
-README + progress archive updated at milestone/session close
 ```
 
 Always distinguish:
@@ -352,6 +304,49 @@ For copy-location help: [📖 Guides](docs/guides/README.md).
 
 ---
 
+# 📚 DOCUMENTATION — SIMPLE MAP
+
+Kalau bingung, cukup ingat ini:
+
+```text
+README.md
+└── "Project sekarang ada di mana?"
+
+ docs/progress/
+ └── "Apa yang terjadi di setiap Chat?"
+
+ docs/guides/
+ └── "Kalau mau mengubah sesuatu, file-nya di mana?"
+
+ docs/prompts/
+ └── "Workflow apa yang harus AI jalankan?"
+```
+
+### Progress
+
+- [📊 Progress Archive](docs/progress/README.md)
+- [Chat 1.1](docs/progress/CHAT-1.1.md)
+- [Chat 1.2](docs/progress/CHAT-1.2.md)
+- [Chat 1.3](docs/progress/CHAT-1.3.md)
+- [Chat 1.4](docs/progress/CHAT-1.4.md)
+
+### Guides
+
+- [📚 Guides Index](docs/guides/README.md)
+- [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md)
+- [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md)
+
+### Prompts
+
+- [🤖 End Session Prompt — canonical](docs/prompts/END-SESSION-PROMPT.md)
+- [🔎 Forensic Extraction — old chats only](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
+
+### Shortcut
+
+- [🚪 End Session Shortcut](end-session-prompt.md)
+
+---
+
 # 🚀 CHAT 1.5 HANDOFF
 
 Start title:
@@ -363,12 +358,12 @@ Start title:
 First actions:
 
 1. Read this README.
-2. Read the relevant [progress archive](docs/progress/README.md) if the task touches migration history.
+2. Read [Progress Archive](docs/progress/README.md) only when migration history is relevant.
 3. Audit current branch/code before changing anything.
-4. Verify build/runtime state.
+4. Verify build/runtime state before assuming anything is broken.
 5. Follow the Pareto priorities above.
 6. Prefer `1 step = 1 file = 1 verified commit`.
-7. At session close, run the [End Session Prompt](docs/prompts/END-SESSION-PROMPT.md).
+7. At session close, use the [End Session Prompt](docs/prompts/END-SESSION-PROMPT.md).
 
 ### Do not repeat
 
@@ -380,9 +375,7 @@ First actions:
 
 ---
 
-# 📜 MIGRATION HISTORY INDEX
-
-Detailed history:
+# 📜 MIGRATION HISTORY
 
 - [Chat 1.1](docs/progress/CHAT-1.1.md)
 - [Chat 1.2](docs/progress/CHAT-1.2.md)
@@ -392,36 +385,14 @@ Detailed history:
 
 ---
 
-# 📖 GUIDES
-
-- [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md)
-- [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md)
-- [📚 Guides Index](docs/guides/README.md)
-
----
-
-# 🤖 PROMPTS
-
-- [🧠 Full End Session Prompt](docs/prompts/END-SESSION-PROMPT.md)
-- [⚡ Quick End Session Prompt](docs/prompts/QUICK-END-SESSION-PROMPT.md)
-- [🔎 Forensic Extraction Prompt](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
-
----
-
-# 🔐 SESSION CLOSE
-
-[🚪 Open Root End Session Shortcut](end-session-prompt.md)
-
----
-
 # FINAL CHECKPOINT
 
 ```text
 Chat 1.1 → forensic archived
 Chat 1.2 → forensic archived
 Chat 1.3 → forensic archived
-Chat 1.4 → ✅ CLOSED
-Chat 1.5 → 🚀 NEXT
+Chat 1.4 → ✅ Closed
+Chat 1.5 → 🚀 Next
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132

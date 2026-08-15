@@ -14,19 +14,25 @@ export function formatRupiah(amount: number | null | undefined): string {
   }).format(amount);
 }
 
+function getWhatsAppConditionLabel(condition: string | null | undefined): 'Baru' | 'Bekas' {
+  const normalized = String(condition ?? '').trim().toUpperCase();
+  return normalized.includes('BARU') ? 'Baru' : 'Bekas';
+}
+
 export function generateWhatsAppProductLink(
   product: Product,
   customAction?: 'video' | 'visit' | 'shipping' | 'quote',
 ): string {
   let message = '';
+  const conditionLabel = getWhatsAppConditionLabel(product.condition);
 
   if (product.price === null || customAction === 'quote') {
     message =
       `Halo Tim BBKitchen, saya tertarik dan ingin menanyakan penawaran harga dan ketersediaan untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n` +
-      `SKU/ID: ${product.sku}\n` +
-      `Lokasi Unit: ${product.location}\n` +
-      `Kondisi: ${product.condition}\n\n` +
+      `Nama Unit: ${product.name}\n\n` +
+      `SKU/ID: ${product.sku}\n\n` +
+      `Lokasi Unit: ${product.location}\n\n` +
+      `Kondisi: ${conditionLabel}\n\n` +
       `Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.`;
   } else if (customAction === 'video') {
     message =
@@ -54,11 +60,11 @@ export function generateWhatsAppProductLink(
   } else {
     message =
       `Halo Tim BBKitchen, saya tertarik dengan unit katalog:\n\n` +
-      `Nama Unit: ${product.name}\n` +
-      `SKU: ${product.sku}\n` +
+      `Nama Unit: ${product.name}\n\n` +
+      `SKU: ${product.sku}\n\n` +
       `Harga: ${product.price ? formatRupiah(product.price) : 'Tanyakan Harga'}\n` +
       `Lokasi: ${product.location}\n` +
-      `Kondisi: ${product.condition} (${product.conditionRating}/10)\n\n` +
+      `Kondisi: ${conditionLabel}\n\n` +
       `Apakah unit ini masih READY dan siap kirim? Mohon info selengkapnya. Terima kasih.`;
   }
 
@@ -70,11 +76,19 @@ export function generateWhatsAppConsultationLink(topic?: string): string {
     `Halo Tim BBKitchen, saya ingin konsultasi kebutuhan peralatan dapur komersial untuk usaha saya (Restoran/Cafe/Katering/Bakery/MBG Kitchen).\n\n` +
     `Bisa dibantu rekomendasi alat yang sesuai menu dan estimasi budget modal kami? Terima kasih.`;
 
-  const text = topic
-    ? `Halo Tim BBKitchen, saya ingin bertanya perihal: ${topic}`
-    : defaultText;
+  if (!topic) {
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(defaultText)}`;
+  }
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  const normalizedTopic = topic
+    .trim()
+    .replace(/^saya\s+ingin\s+/i, '')
+    .replace(/^saya\s+mau\s+/i, '')
+    .replace(/^saya\s+berminat\s+/i, '');
+
+  const message = `Halo Tim BBKitchen, saya ingin bertanya perihal ${normalizedTopic}`;
+
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 export function generateWhatsAppSourcingLink(itemDetails: {

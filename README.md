@@ -18,7 +18,7 @@ Ended: —
 Duration: —
 ```
 
-> **Elapsed time:** dihitung dari `Started` ke waktu saat README diperbarui berdasarkan timestamp update yang terverifikasi. `Duration` final hanya ditetapkan saat session memiliki `End` yang terverifikasi.
+> **Elapsed time:** untuk session aktif, hanya boleh dihitung dari `Start` ke timestamp update yang benar-benar terverifikasi. `Duration` final hanya ditetapkan saat session memiliki `End` yang terverifikasi.
 
 ---
 
@@ -44,8 +44,8 @@ GitHub date: **15 August 2026 21:24:06 UTC**.
 ## Current documentation checkpoint
 
 ```text
-Branch head before this sync:
-78a7e93fdd97938fe3ba6fa6a2f3fbfa4e1f987a
+Progress index sync:
+a762c07d826825d16a63caf6c3ce22f457bed275
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
@@ -54,15 +54,39 @@ Branch head before this sync:
 
 # 📈 MIGRATION PROGRESS
 
-| Session | Periode / waktu terverifikasi | Durasi | Fokus utama | Hasil utama | Status |
-|---|---|---:|---|---|---|
-| 1.1 | Tidak ditemukan di repository/evidence yang tersedia. | — | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
-| 1.2 | 14–15 Aug 2026 | — | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
-| 1.3 | 15 Aug 2026 evidence | — | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
-| 1.4 | 15–16 Aug 2026 evidence | — | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
-| 1.5 | Started 16 Aug 2026 06:32:41 WIB | Elapsed: berjalan | Responsive / Parity / Hardening | Baseline verification + mobile/Header/Product Detail parity next | 🚀 |
+| Session | Periode / waktu terverifikasi | Start | End | Durasi | Fokus utama | Hasil utama | Status |
+|---|---|---|---|---:|---|---|---|
+| 1.1 | Tidak ditemukan | — | — | — | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
+| 1.2 | 14–15 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
+| 1.3 | 15 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
+| 1.4 | 15–16 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
+| 1.5 | 16 Aug 2026 | 06:32:41 WIB | — | Active | Responsive / Parity / Hardening | Baseline verification + mobile/Header/Product Detail parity next | 🚀 |
 
-> **Timing rule:** tanggal/period tidak otomatis menjadi durasi. Durasi final hanya dihitung dari `Start` + `End` yang terverifikasi. Untuk session aktif, README menampilkan elapsed time berdasarkan timestamp update yang benar-benar tersedia dan menyatakan sumber waktunya; ini tidak menggantikan `Duration` final.
+### ⏱️ Project elapsed time from Chat 1.1
+
+```text
+Chat 1.1 actual start:
+Tidak ditemukan di repository/evidence yang tersedia.
+
+Actual elapsed duration since Chat 1.1:
+NOT VERIFIABLE
+
+Earliest verifiable migration evidence:
+14 August 2026 (Chat 1.2)
+
+Current migration date:
+16 August 2026
+
+Calendar span covered by verifiable evidence:
+≥ 2 calendar days
+
+This does NOT mean:
+≥ 2 days of working time
+```
+
+> **Timing rule:** tanggal/period tidak otomatis menjadi durasi. Durasi final hanya dihitung dari `Start` + `End` yang terverifikasi. README tidak boleh mengarang durasi Chat 1.1 hanya untuk menampilkan angka.
+
+Detail timeline/evidence rule berada di [`docs/progress/README.md`](docs/progress/README.md).
 
 ---
 
@@ -404,5 +428,5 @@ Chat 1.5 → 🚀 Active
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Documentation sync before this README update: 78a7e93fdd97938fe3ba6fa6a2f3fbfa4e1f987a
+Progress index checkpoint: a762c07d826825d16a63caf6c3ce22f457bed275
 ```

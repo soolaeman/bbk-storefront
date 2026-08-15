@@ -21,31 +21,33 @@ export const SocialMediaSection: React.FC = () => {
   const videoPanel = (type: 'youtube' | 'tiktok') => {
     const isYoutube = type === 'youtube';
     return (
-      <button
-        type="button"
-        onClick={() => setPlaying(current => current === type ? null : type)}
-        className="w-full aspect-video rounded-xl border border-slate-200 bg-slate-950 overflow-hidden relative group"
-        aria-label={`Putar ${isYoutube ? 'YouTube Shorts' : 'TikTok'}`}
-      >
-        {playing === type ? (
-          <iframe
-            title={`BBKitchen ${type}`}
-            src={isYoutube ? youtubeEmbedUrl : tiktokEmbedUrl}
-            className="w-full h-full border-0"
-            loading="lazy"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            allowFullScreen
-            onClick={(event) => event.stopPropagation()}
-          />
-        ) : (
-          <span className="absolute inset-0 flex items-center justify-center bg-slate-950 group-hover:bg-slate-900 transition-colors">
-            <span className="w-12 h-12 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-lg">
-              {isYoutube ? <Youtube className="w-5 h-5 text-red-600" /> : <span className="font-black text-lg">♪</span>}
-              <Play className="w-3 h-3 ml-0.5 fill-current" />
+      <div className="w-full aspect-video rounded-xl border border-slate-200 bg-slate-950 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setPlaying(current => current === type ? null : type)}
+          className="w-full h-full relative group"
+          aria-label={`Putar ${isYoutube ? 'YouTube Shorts' : 'TikTok'}`}
+        >
+          {playing === type ? (
+            <iframe
+              title={`BBKitchen ${type}`}
+              src={isYoutube ? youtubeEmbedUrl : tiktokEmbedUrl}
+              className="w-full h-full border-0"
+              loading="lazy"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <span className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 group-hover:bg-slate-900 transition-colors text-white">
+              <span className="w-12 h-12 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-lg">
+                {isYoutube ? <Youtube className="w-5 h-5 text-red-600" /> : <span className="font-black text-lg">♪</span>}
+                <Play className="w-3 h-3 ml-0.5 fill-current" />
+              </span>
+              {isYoutube && <span className="mt-2 text-[10px] font-semibold text-slate-300">Shorts BBKitchen — aktivitas & unit terbaru</span>}
             </span>
-          </span>
-        )}
-      </button>
+          )}
+        </button>
+      </div>
     );
   };
 

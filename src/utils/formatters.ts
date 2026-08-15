@@ -37,24 +37,27 @@ export function generateWhatsAppProductLink(
   } else if (customAction === 'video') {
     message =
       `Halo Tim BBKitchen, saya ingin meminta Video Tes Fungsi / Detail Fisik untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n` +
-      `SKU/ID: ${product.sku}\n` +
-      `Harga Katalog: ${formatRupiah(product.price)}\n` +
+      `Nama Unit: ${product.name}\n\n` +
+      `SKU/ID: ${product.sku}\n\n` +
+      `Harga Katalog: ${formatRupiah(product.price)}\n\n` +
       `Lokasi: ${product.location}\n\n` +
+      `Kondisi: ${conditionLabel}\n\n` +
       `Bisa dibantu kirimkan video kondisi unit dan tes nyalanya? Terima kasih.`;
   } else if (customAction === 'visit') {
     message =
       `Halo Tim BBKitchen, saya berminat cek fisik langsung ke lokasi untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n` +
-      `SKU/ID: ${product.sku}\n` +
+      `Nama Unit: ${product.name}\n\n` +
+      `SKU/ID: ${product.sku}\n\n` +
       `Lokasi: ${product.location}\n\n` +
+      `Kondisi: ${conditionLabel}\n\n` +
       `Kira-kira kapan jadwal yang memungkinkan untuk survei atau cek fisik unit ini? Terima kasih.`;
   } else if (customAction === 'shipping') {
     message =
       `Halo Tim BBKitchen, saya ingin konsultasi ongkos kirim dan pengantaran untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n` +
-      `SKU/ID: ${product.sku}\n` +
+      `Nama Unit: ${product.name}\n\n` +
+      `SKU/ID: ${product.sku}\n\n` +
       `Lokasi Asal Unit: ${product.location}\n\n` +
+      `Kondisi: ${conditionLabel}\n\n` +
       `Tujuan pengiriman saya ke kota: [Sebutkan Kota / Kecamatan Anda].\n` +
       `Bisa dibantu rekomendasi armada (Deliveree / Lalamove / Cargo)? Terima kasih.`;
   } else {
@@ -62,8 +65,8 @@ export function generateWhatsAppProductLink(
       `Halo Tim BBKitchen, saya tertarik dengan unit katalog:\n\n` +
       `Nama Unit: ${product.name}\n\n` +
       `SKU: ${product.sku}\n\n` +
-      `Harga: ${product.price ? formatRupiah(product.price) : 'Tanyakan Harga'}\n` +
-      `Lokasi: ${product.location}\n` +
+      `Harga: ${product.price ? formatRupiah(product.price) : 'Tanyakan Harga'}\n\n` +
+      `Lokasi: ${product.location}\n\n` +
       `Kondisi: ${conditionLabel}\n\n` +
       `Apakah unit ini masih READY dan siap kirim? Mohon info selengkapnya. Terima kasih.`;
   }

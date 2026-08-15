@@ -13,7 +13,7 @@
 | Tahu **project sekarang ada di mana** | [`README.md`](README.md) | Dashboard kondisi terbaru, prioritas Pareto, architecture, bottleneck, technical debt, dan handoff. |
 | Tahu **apa yang terjadi di tiap chat** | [`docs/progress/README.md`](docs/progress/README.md) | Index sejarah migration dan ringkasan progress lintas session. |
 | Tahu **file mana yang harus diedit** | [`docs/guides/README.md`](docs/guides/README.md) | Peta guide untuk memahami lokasi file dan perubahan yang aman. |
-| Minta AI **menjalankan workflow** | [`docs/prompts/`](docs/prompts/END-SESSION-PROMPT.md) | Prompt operasional untuk end-session, update dokumentasi, dan forensic extraction. |
+| Minta AI **menjalankan workflow** | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Canonical end-session workflow. |
 
 ---
 
@@ -25,6 +25,7 @@
 |---|---|---|
 | [`README.md`](README.md) | **Current project dashboard** | Setiap mulai chat baru atau sebelum mengambil keputusan besar. |
 | [`NAVIGATOR.md`](NAVIGATOR.md) | **Peta dokumentasi** | Saat bingung mencari file dokumentasi. |
+| [`end-session-prompt.md`](end-session-prompt.md) | **Shortcut ke canonical end-session prompt** | Kalau ingin cepat membuka prompt penutupan session dari root. |
 
 ---
 
@@ -36,7 +37,7 @@
 | [`CHAT-1.1.md`](docs/progress/CHAT-1.1.md) | Forensic history Chat 1.1 | Saat perlu memahami foundation dan bottleneck awal. |
 | [`CHAT-1.2.md`](docs/progress/CHAT-1.2.md) | Forensic history Chat 1.2 | Saat perlu memahami WooCommerce/API/ACF/SEO migration. |
 | [`CHAT-1.3.md`](docs/progress/CHAT-1.3.md) | Forensic history Chat 1.3 | Saat perlu memahami catch-all routing, Header, article integration, dan visual convergence. |
-| [`CHAT-1.4.md`](docs/progress/CHAT-1.4.md) | Forensic history Chat 1.4 | Saat perlu memahami visual/conversion work, mascot/assets, social covers, dan CTA changes. |
+| [`CHAT-1.4.md`](docs/progress/CHAT-1.4.md) | Forensic history Chat 1.4 | Saat perlu memahami homepage sales positioning, CTA, hero assets, mascot dead end, dan social video covers. |
 
 > **Rule:** `docs/progress/` = sejarah. Untuk kondisi terbaru, pakai root `README.md`.
 
@@ -58,8 +59,8 @@
 
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
-| [`END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: audit perubahan, update progress, verification, dan handoff | Setiap selesai migration chat/session normal. |
-| [`UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README secara khusus | Saat dokumentasi perlu diperbarui tanpa menjalankan seluruh end-session workflow. |
+| [`END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: forensic extraction, repository audit, documentation audit, verification, dan handoff | Setiap selesai migration chat/session normal. |
+| [`UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README + Navigator | Saat dokumentasi perlu diperbarui tanpa menjalankan seluruh end-session workflow. |
 | [`FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Mengekstrak history dari chat lama / transcript yang tidak lengkap | Saat mengarsipkan atau memperbaiki history session lama. |
 
 > **Prompt = instruksi untuk AI.** Source of truth project tetap berada di code, root `README.md`, dan progress archive sesuai konteksnya.
@@ -85,6 +86,10 @@ docs/guides/
         ↓
 docs/prompts/
 
+"Gue mau tutup session dari root."
+        ↓
+end-session-prompt.md
+
 "Gue bingung mulai dari mana."
         ↓
 NAVIGATOR.md
@@ -99,14 +104,17 @@ NAVIGATOR.md
 | 🏠 Current Project State | [`README.md`](README.md) |
 | 📊 Progress Archive | [`docs/progress/README.md`](docs/progress/README.md) |
 | 📖 Guides Index | [`docs/guides/README.md`](docs/guides/README.md) |
-| 🤖 Prompts | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) |
+| 🤖 Canonical End Session | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) |
+| 📝 Documentation Sync | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) |
+| 🔎 Forensic Extraction | [`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) |
+| ⚡ Root End Session Shortcut | [`end-session-prompt.md`](end-session-prompt.md) |
 | 🧭 Navigator | [`NAVIGATOR.md`](NAVIGATOR.md) |
 
 ---
 
 # 📌 Repository Navigation Rule
 
-Semua file `.md` di repository, **kecuali `README.md` dan `NAVIGATOR.md`**, wajib memiliki link kembali ke Navigator di bagian atas atau area navigasi yang mudah ditemukan.
+Semua file `.md` di repository, **kecuali root `README.md` dan `NAVIGATOR.md`**, wajib memiliki link kembali ke Navigator di bagian atas atau area navigasi yang mudah ditemukan.
 
 Gunakan relative path sesuai kedalaman file, misalnya:
 

@@ -77,27 +77,52 @@ Prioritas:
 
 | Area | Status | Catatan |
 |---|---|---|
-| Next.js App Router | ✅ | Build lokal sebelumnya berhasil |
+| Next.js App Router | ✅ | Build lokal berhasil setelah cache `.next` dibersihkan |
 | WooCommerce server proxy | ✅ | `/api/products` tersedia |
 | Global metadata endpoint | ✅ | `/api/products?metadata=1` tersedia |
 | Top-level category filter | ✅ | Subkategori tidak menjadi filter publik |
 | Pagination | ✅ | WooCommerce server-side; default 8/page |
-| Global search | ✅ | Menggunakan WooCommerce `search` |
+| Global search | ✅ | Homepage/catalog menggunakan WooCommerce `search` |
 | Product detail | ✅ | `/product/[slug]` menggunakan slug live |
 | Product detail SEO metadata | ✅ | Canonical/OG/Product JSON-LD sudah disiapkan |
 | Product gallery | ✅ | Thumbnail dapat mengganti foto utama |
 | Breadcrumb | ✅ | Home → Katalog → Kategori → Produk |
 | Salin Link | ✅ | Deep-link ke `/product/[slug]` |
 | Condition UI | ✅ | UI dinormalisasi menjadi Baru / Bekas |
+| Local landing route | ✅ | Catch-all `/jual-barang-bekas-restoran/[...slug]` mendukung `/jakarta` dan multi-level seperti `/jakarta/jakarta-pusat` |
+| Local landing visual | ⚠️ | Data WordPress sudah masuk; styling artikel masih perlu dirapikan agar mengikuti design system |
+| Shared Header | ✅ | `src/components/Header.tsx` sudah dipakai pada halaman migration dan bersifat sticky |
+| Article Header integration | ✅ | Header sudah tampil pada local landing page |
+| Article content typography | ⏳ | H1/H2/H3/list/paragraph masih perlu styling dan spacing yang konsisten |
+| Header global search on local pages | ⚠️ | Input header perlu wiring state/handler agar benar-benar searchable dari page yang bersangkutan |
+| Product detail header | ⚠️ | Masih memakai header hardcoded; perlu dikonsolidasikan ke shared `Header.tsx` |
 | Related Products | ⏳ | Belum menjadi implementasi final di migration baseline |
 | ACF authoritative filtering | ⏳ | Backend WordPress hook/endpoint belum selesai |
 | Shared design system | ⏳ | Perlu konsolidasi seluruh page/archive/post |
-| Header/logo visual verification | ⚠️ | Asset sudah disiapkan, visual localhost belum terverifikasi final |
 | Staff/Owner authentication | ⚠️ | Masih simulasi PIN frontend |
 | Admin → Telegram | ⏳ | Belum menjadi Core System workflow final |
 | Admin → READY/DP/SOLD | ⏳ | Belum menjadi Core System workflow final |
 | SOLD → Google Sheets | ⏳ | Belum diimplementasikan sebagai Core System workflow final |
 | Local WooCommerce connectivity | ⚠️ | Laptop sebelumnya mengalami connection reset → proxy 502 |
+
+### Chat 1.3 — status penutupan
+
+Pada akhir Chat 1.3, visual migration sudah melewati fase paling kasar dan masuk fase **site-wide consistency**.
+
+Yang sudah diverifikasi secara visual di localhost:
+
+- Home mempunyai header, katalog, card, dan visual system yang sudah jauh lebih matang.
+- Local landing `/jual-barang-bekas-restoran/jakarta` sudah mengambil data WordPress dan menampilkan hero/image/content.
+- Catch-all route berhasil melayani `/jakarta` dan `/jakarta/jakarta-pusat`.
+- Shared `Header.tsx` sudah tampil pada local landing page.
+- Product detail sudah mempunyai layout detail, gallery, metadata, breadcrumb, dan conversion area.
+- Build berhasil setelah stale `.next` dibersihkan.
+
+Tiga pekerjaan visual/UX yang sengaja **ditahan untuk chat berikutnya**:
+
+1. Product detail memakai shared header yang sama dengan Home/local landing.
+2. Search pada shared header dibuat benar-benar functional di halaman yang membutuhkannya.
+3. Article/local landing content dirapikan: H1/H2/H3, list, paragraph spacing, typography, palette, dan responsive reading width.
 
 ---
 
@@ -248,7 +273,35 @@ Prinsip:
 
 ---
 
-## 8. Planned Product Admin Workflow
+## 8. Local / Transactional Landing Pages
+
+Primary migration route:
+
+```text
+/jual-barang-bekas-restoran/[...slug]
+```
+
+Catch-all dipilih untuk mempertahankan dan mengembangkan hirarki URL lokasi tanpa mengunci frontend hanya pada satu segment `[location]`.
+
+Contoh yang sudah diuji di localhost:
+
+```text
+/jual-barang-bekas-restoran/jakarta
+/jual-barang-bekas-restoran/jakarta/jakarta-pusat
+```
+
+Resolver menggunakan data WordPress untuk menentukan halaman berdasarkan hirarki slug/parent.
+
+Prinsip penting:
+
+- Jangan membuat copy landing page kota secara hardcoded di frontend.
+- Jangan mengganti URL existing hanya karena template baru belum selesai.
+- Local/transactional page adalah aset SEO dan conversion, bukan sekadar halaman dekoratif.
+- Content WordPress harus tetap menjadi source material; frontend bertugas merendernya dengan design system yang konsisten.
+
+---
+
+## 9. Planned Product Admin Workflow
 
 Target operasional setelah BBK Core System siap:
 
@@ -287,7 +340,7 @@ frontend menampilkan status terbaru
 
 ---
 
-## 9. UI/UX Direction
+## 10. UI/UX Direction
 
 Target final bukan membuat Home saja terlihat bagus.
 
@@ -318,13 +371,25 @@ Catalog / Archive
 Product Detail
 Page
 Post
+Local / Transactional Landing Page
 ```
 
 Desktop dan mobile diperlakukan sebagai **satu design system**, bukan dua desain terpisah.
 
+Target visual saat ini sudah mengarah ke:
+
+- white/light content surfaces
+- navy/dark brand sections
+- BBKitchen yellow/amber accent
+- emerald action/availability states
+- shared spacing/container rules
+- consistent rounded cards and borders
+
+Palet harus dikonsolidasikan, bukan dibuat ulang per page.
+
 ---
 
-## 10. Search & Catalog
+## 11. Search & Catalog
 
 Search global diarahkan ke:
 
@@ -344,9 +409,11 @@ Tidak boleh mengambil seluruh katalog ribuan produk ke browser hanya untuk melak
 
 Power type / sumber daya sudah dikeluarkan dari UI filter publik berdasarkan keputusan migrasi.
 
+Shared header search adalah bagian dari design system dan harus tetap menjadi input yang benar-benar usable, bukan sekadar visual placeholder.
+
 ---
 
-## 11. SEO Baseline
+## 12. SEO Baseline
 
 Baseline Google Search Console yang **diberikan user dari snapshot GSC 15 Agustus 2026**:
 
@@ -401,7 +468,7 @@ Jangan:
 
 ---
 
-## 12. Copy Strategy
+## 13. Copy Strategy
 
 Copy lama diperlakukan sebagai aset.
 
@@ -425,7 +492,7 @@ Fokus terlebih dahulu pada:
 
 ---
 
-## 13. Repository Structure
+## 14. Repository Structure
 
 Struktur penting saat ini:
 
@@ -436,6 +503,7 @@ Struktur penting saat ini:
 ├── src/
 │   ├── app/
 │   │   ├── api/products/route.ts
+│   │   ├── jual-barang-bekas-restoran/[...slug]/page.tsx
 │   │   ├── product/[slug]/page.tsx
 │   │   └── page.tsx
 │   ├── components/
@@ -447,6 +515,7 @@ Struktur penting saat ini:
 │   │   ├── ProductDetailModal.tsx
 │   │   └── ...
 │   ├── data/products.ts
+│   ├── lib/wordpress.ts
 │   ├── lib/woocommerce.ts
 │   ├── types.ts
 │   └── utils/formatters.ts
@@ -457,7 +526,7 @@ Struktur penting saat ini:
 
 ---
 
-## 14. Environment
+## 15. Environment
 
 WooCommerce server-side proxy membutuhkan:
 
@@ -473,26 +542,51 @@ Dependency yang perlu diperhatikan: build migrasi yang sudah diuji menggunakan *
 
 ---
 
-## 15. Verification / Known Issues
+## 16. Verification / Known Issues
 
-Build lokal yang sudah dicapai selama migrasi sebelumnya melewati:
+Build lokal terakhir yang diverifikasi pada akhir Chat 1.3:
 
 ```text
-Compiled successfully
-Finished TypeScript
-Collecting page data
-Generating static pages
-Finalizing page optimization
+npm run build
+✓ Compiled successfully
+✓ Finished TypeScript
+✓ Collecting page data
+✓ Generating static pages
+✓ Finalizing page optimization
 ```
 
-Route yang terdeteksi:
+Route yang terdeteksi pada migration build:
 
 ```text
 /
 /_not-found
 /api/products
+/api/wordpress
+/jual-barang-bekas-restoran/[...slug]
 /product/[slug]
 ```
+
+### Stale `.next` issue
+
+Setelah rename route dari:
+
+```text
+/jual-barang-bekas-restoran/[location]
+```
+
+menjadi:
+
+```text
+/jual-barang-bekas-restoran/[...slug]
+```
+
+Next.js sempat membaca generated validator lama di `.next/dev/types/validator.ts`. Membersihkan cache dengan:
+
+```bash
+rmdir /s /q .next
+```
+
+lalu menjalankan build ulang menyelesaikan masalah tersebut.
 
 ### Local connectivity issue
 
@@ -515,14 +609,16 @@ User melaporkan domain dapat dibuka melalui HP. Karena itu jangan menyimpulkan s
 
 - ACF authoritative filtering belum selesai.
 - Related Products live berdasarkan kategori masih perlu difinalkan.
-- Header/logo masih perlu verifikasi visual.
+- Article/local landing typography dan content spacing belum final.
+- Product detail belum memakai shared `Header.tsx` yang sama dengan Home/local landing.
+- Shared header search masih perlu wiring agar usable di semua template.
 - Staff/Owner PIN frontend bukan authentication production.
 - `.env.example` perlu disinkronkan dengan variable WooCommerce.
 - Dependency versions perlu dikunci saat hardening.
 
 ---
 
-## 16. Migration Rules — WAJIB
+## 17. Migration Rules — WAJIB
 
 1. **1 step = 1 file = 1 commit.**
 2. Setelah step selesai: `git pull` → test → `npm run build` bila relevan.
@@ -535,10 +631,12 @@ User melaporkan domain dapat dibuka melalui HP. Karena itu jangan menyimpulkan s
 9. Jangan membangun Google Sheets integration langsung di client.
 10. **Setiap milestone/step yang mengubah project wajib didokumentasikan di README.**
 11. README harus membedakan **implemented**, **verified**, **planned**, dan **known issue**.
+12. Jangan menyelesaikan beberapa concern UI besar dalam satu commit hanya demi terlihat cepat.
+13. Untuk visual migration, prioritaskan **Pareto**: data/route correctness → shared header/design system → conversion → polish.
 
 ---
 
-## 17. Pareto Roadmap
+## 18. Pareto Roadmap
 
 ### P0 — Fondasi
 
@@ -555,30 +653,33 @@ User melaporkan domain dapat dibuka melalui HP. Karena itu jangan menyimpulkan s
 
 ### P2 — Site-wide UX
 
-8. Header/footer.
+8. Shared header/footer dan sticky behavior.
 9. Home.
 10. Catalog/archive.
-11. Page/post templates.
-12. Desktop/mobile QA.
+11. Local/transactional landing pages.
+12. Page/post templates.
+13. Product detail menggunakan shared header.
+14. Global search functional di seluruh template yang relevan.
+15. Desktop/mobile QA.
 
 ### P3 — SEO / Growth
 
-13. Canonical/schema/internal links.
-14. Preserve URL equity.
-15. Copy optimization berdasarkan GSC.
-16. Category/local landing-page optimization.
+16. Canonical/schema/internal links.
+17. Preserve URL equity.
+18. Copy optimization berdasarkan GSC.
+19. Category/local landing-page optimization.
 
 ### P4 — Production Hardening
 
-17. Real authentication/authorization.
-18. Dependency locking.
-19. Environment documentation.
-20. Performance/cache/error monitoring.
-21. Production cutover + rollback plan.
+20. Real authentication/authorization.
+21. Dependency locking.
+22. Environment documentation.
+23. Performance/cache/error monitoring.
+24. Production cutover + rollback plan.
 
 ---
 
-## 18. Working Estimate
+## 19. Working Estimate
 
 Dengan AI-assisted development dan user sebagai non-coder, target realistis untuk migrasi yang benar-benar production-minded adalah sekitar **4–6 minggu**, dengan buffer **6–8 minggu** bila Core System, authentication, network/hosting, SEO QA, atau production hardening menambah pekerjaan.
 
@@ -586,7 +687,7 @@ Estimasi ini adalah planning estimate, bukan deadline teknis.
 
 ---
 
-## 19. Source of Truth
+## 20. Source of Truth
 
 ```text
 Catalog product data
@@ -610,22 +711,35 @@ SEO baseline
 
 ---
 
-## 20. Migration Changelog
+## 21. Migration Changelog
 
-### 2026-08-15 — Chat 1.3 baseline
+### 2026-08-15 — Chat 1.3 closed
 
-- README dijadikan living documentation untuk migrasi.
-- Arsitektur dipertegas: WooCommerce/ACF sebagai source of truth, Next.js sebagai experience layer.
-- BBK Core System dan BBK AI Growth Automation dipisahkan secara boundary; keduanya bukan katalog mock di frontend.
-- Target UI/UX site-wide desktop + mobile ditambahkan.
-- Target admin Product Detail workflow ditambahkan: Telegram, READY/DP/SOLD, dan SOLD → tanggal terjual → Google Sheets melalui backend.
-- GSC baseline dari snapshot user didokumentasikan sebagai baseline, bukan hasil audit tool.
-- Pareto roadmap dan working estimate ditambahkan.
-- Aturan **1 step = 1 file = 1 commit** serta kewajiban update README dikunci.
+- Shared migration direction dipertahankan: **new frontend, old SEO equity**.
+- WooCommerce/WordPress tetap menjadi source of truth; Next.js tetap experience layer.
+- WordPress API proxy dan metadata flow berhasil diverifikasi melalui localhost.
+- Route local transactional diubah dari single `[location]` menjadi catch-all `[...slug]` untuk mendukung hirarki lokasi.
+- `/jual-barang-bekas-restoran/jakarta` dan `/jual-barang-bekas-restoran/jakarta/jakarta-pusat` berhasil diuji di localhost.
+- Resolver local page menggunakan data WordPress; frontend tidak membuat katalog/local content mock baru.
+- Shared `Header.tsx` berhasil masuk ke local landing page dan sudah sticky.
+- Homepage dan local landing sudah memakai arah visual BBKitchen yang lebih konsisten.
+- Product detail sudah memiliki layout conversion, gallery, metadata, breadcrumb, dan schema; header masih menunggu konsolidasi shared component.
+- Stale `.next` generated types setelah route rename berhasil dibereskan dengan clean build.
+- Build terakhir berhasil clean dengan Next.js 16.3.1.
+- Chat 1.3 sengaja ditutup sebelum melakukan over-engineering polish.
+
+### Next chat starting point
+
+```text
+1. Product Detail → pakai shared Header.tsx
+2. Shared Header search → functional di template yang relevan
+3. Local/article content → rapikan H1/H2/H3/list/paragraph/spacing/palette
+4. Setelah itu baru visual QA site-wide
+```
 
 ---
 
-## 21. Development Commands
+## 22. Development Commands
 
 ```bash
 npm install

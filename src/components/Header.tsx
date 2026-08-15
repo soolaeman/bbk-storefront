@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Phone, ShieldCheck, Wrench, Lock, Unlock, PlusCircle, Sparkles } from 'lucide-react';
+import { Search, Phone, ShieldCheck, Wrench, Lock, Unlock, PlusCircle } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from '../utils/formatters';
 
 interface HeaderProps {
@@ -35,7 +35,6 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Default PIN for admin simulation/testing is 1234 or demo
     if (pin === '1234' || pin === 'admin') {
       setPinInputOpen(false);
       onToggleAdminMode();
@@ -46,7 +45,6 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-md">
-      {/* Top utility bar */}
       <div className="bg-slate-950 px-4 py-1.5 text-xs text-slate-300 border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
@@ -71,15 +69,14 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Hotline WhatsApp: <strong className="text-white">+62 812-8888-9999</strong></span>
             </a>
 
-            {/* Subtle Admin Mode Lock/Unlock Trigger */}
             <div className="relative">
               <button
                 type="button"
                 id="admin-mode-toggle-btn"
                 onClick={handleAdminToggle}
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
-                  isAdminMode 
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
+                  isAdminMode
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
                 title={isAdminMode ? 'Admin Mode Aktif (Klik untuk keluar)' : 'Akses Owner / Staff'}
@@ -88,12 +85,11 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>{isAdminMode ? 'Admin Mode ON' : 'Staff / Owner'}</span>
               </button>
 
-              {/* PIN Modal Popup */}
               {pinInputOpen && (
                 <div className="absolute right-0 top-7 w-64 bg-slate-900 border border-slate-700 rounded-lg p-3 shadow-xl z-50 text-slate-200">
                   <div className="text-xs font-semibold text-white mb-1 flex items-center justify-between">
                     <span>Verifikasi Akses Admin</span>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setPinInputOpen(false)}
                       className="text-slate-400 hover:text-white"
@@ -137,30 +133,33 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Main Header Bar */}
       <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
-        {/* Brand identity */}
         <div className="flex items-center justify-between w-full md:w-auto">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-md border border-amber-300/30">
-              BB
-            </div>
-            <div>
+          <a
+            href="/"
+            aria-label="BBKitchen - Home"
+            className="flex items-center gap-3 min-w-0"
+          >
+            <img
+              src="/bbkitchen-logo.webp"
+              alt="BBKitchen"
+              className="h-10 sm:h-11 w-auto max-w-[180px] object-contain"
+            />
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white whitespace-nowrap">
                   BB<span className="text-amber-400">Kitchen</span>
                 </span>
-                <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 bg-slate-800 text-slate-300 rounded border border-slate-700">
+                <span className="hidden lg:inline text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">
                   Bukan Baru Kitchen
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-medium">
-                Peralatan Dapur Komersial Berkualitas & Hemat Modal
+                Sentra Barang Bekas Restoran
               </p>
             </div>
-          </div>
+          </a>
 
-          {/* Mobile request button */}
           <button
             type="button"
             onClick={onRequestUnitClick}
@@ -171,7 +170,6 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Global Search Bar */}
         <div className="w-full md:max-w-xl relative">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -195,7 +193,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Desktop Quick Actions */}
         <div className="hidden md:flex items-center gap-3">
           <button
             type="button"
@@ -232,7 +229,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Admin Notice Bar when Active */}
       {isAdminMode && (
         <div className="bg-amber-500/10 border-t border-b border-amber-500/30 px-4 py-1.5 text-xs text-amber-300">
           <div className="max-w-7xl mx-auto flex items-center justify-between">

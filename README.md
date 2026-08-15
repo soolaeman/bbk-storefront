@@ -31,15 +31,15 @@ GitHub evidence: **15 August 2026 21:24:06 UTC**.
 
 # 📚 DOCUMENTATION MAP
 
-| Document | Purpose |
-|---|---|
-| [📊 Progress Archive](docs/progress/README.md) | Index seluruh history session |
-| [🧠 End Session Prompt](docs/prompts/END-SESSION-PROMPT.md) | Prompt lengkap untuk menutup session |
-| [⚡ Quick End Session](docs/prompts/QUICK-END-SESSION-PROMPT.md) | Prompt cepat untuk session kecil |
-| [🔎 Forensic Extraction](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Ekstrak history dari chat lama/skipped messages |
-| [✍️ Copy Editing Guide](docs/COPY-EDITING-GUIDE.md) | Panduan lokasi file untuk mengganti copy |
-| [🧑‍💻 Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) | Versi cepat untuk user awam/vibe coding |
-| [🚪 End Session Shortcut](end-session-prompt.md) | Shortcut ke protokol end-session |
+| Area | Document | Purpose |
+|---|---|---|
+| 📊 Progress | [Progress Archive](docs/progress/README.md) | Index seluruh history session |
+| 📖 Guide | [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md) | Panduan teknis mencari/mengganti copy |
+| 📖 Guide | [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi awam: “copy ini ada di file mana?” |
+| 🤖 Prompt | [End Session Prompt](docs/prompts/END-SESSION-PROMPT.md) | Prompt lengkap untuk menutup session |
+| 🤖 Prompt | [Quick End Session](docs/prompts/QUICK-END-SESSION-PROMPT.md) | Prompt cepat untuk session kecil |
+| 🤖 Prompt | [Forensic Extraction](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Ekstrak history dari chat lama/skipped messages |
+| 🚪 Shortcut | [End Session Shortcut](end-session-prompt.md) | Shortcut ke protokol end-session |
 
 ### Progress archives
 
@@ -348,7 +348,7 @@ src/lib/wordpress.ts
 src/lib/woocommerce.ts
 ```
 
-For copy-location help: [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) / [Copy Editing Guide](docs/COPY-EDITING-GUIDE.md).
+For copy-location help: [📖 Guides](docs/guides/README.md).
 
 ---
 
@@ -392,12 +392,25 @@ Detailed history:
 
 ---
 
-# 🔐 SESSION CLOSE PROTOCOL
+# 📖 GUIDES
+
+- [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md)
+- [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md)
+- [📚 Guides Index](docs/guides/README.md)
+
+---
+
+# 🤖 PROMPTS
 
 - [🧠 Full End Session Prompt](docs/prompts/END-SESSION-PROMPT.md)
 - [⚡ Quick End Session Prompt](docs/prompts/QUICK-END-SESSION-PROMPT.md)
 - [🔎 Forensic Extraction Prompt](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
-- [🚪 Root End Session Shortcut](end-session-prompt.md)
+
+---
+
+# 🔐 SESSION CLOSE
+
+[🚪 Open Root End Session Shortcut](end-session-prompt.md)
 
 ---
 

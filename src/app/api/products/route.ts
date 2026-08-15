@@ -122,14 +122,11 @@ async function buildWooCommerceParams(
   if (category && normalizeText(category) !== 'semua') {
     const categoryId = await resolveWooCommerceCategoryId(category, authorization);
 
-    // Never silently turn an unknown category into the complete catalog.
     params.set('category', String(categoryId ?? -1));
   }
 
   const statusFilter = incomingParams.get('status_unit');
 
-  // WooCommerce's native stock_status filter is reliable and keeps the default
-  // READY catalog fast. The card still reads the live status_unit meta value.
   if (statusFilter === 'READY') {
     params.set('stock_status', 'instock');
   } else if (statusFilter === 'SOLD') {
@@ -218,11 +215,15 @@ async function fetchWooCommerceMetadata(
     return a.name.localeCompare(b.name, 'id');
   });
 
+  const topLevelIds = new Set(topLevelCategories.map((category) => category.id));
+  const childCategories = categories.filter(
+    (category) => category.parent !== 0 && topLevelIds.has(category.parent),
+  );
+
   return {
-    // The catalog filter intentionally exposes only WooCommerce top-level
-    // categories. Child categories remain in WooCommerce as source data but are
-    // not presented as filter choices.
-    categories: topLevelCategories,
+    // Expose top-level and direct child categories from WooCommerce. The UI
+    // uses parent to render children beneath the selected top-level category.
+    categories: [...topLevelCategories, ...childCategories],
     conditionOptions: [...ACF_CONDITION_OPTIONS],
     locationOptions: [...ACF_LOCATION_OPTIONS],
     statusOptions: [...ACF_STATUS_OPTIONS],
@@ -279,11 +280,6 @@ export async function GET(request: NextRequest) {
     if (total) headers.set('X-WP-Total', total);
     if (totalPages) headers.set('X-WP-TotalPages', totalPages);
 
-    // Important: do not fetch all 2,500+ products just to emulate an ACF meta query.
-    // The current WooCommerce REST product endpoint does not expose a verified
-    // multi-meta query contract for these ACF fields. For this optimization step,
-    // condition/location are therefore passed through as a safe fallback signal
-    // instead of triggering a server-side pagination loop.
     if (hasUnsupportedMetaFilters) {
       headers.set('X-BBK-Meta-Filter-Fallback', 'true');
       headers.set(

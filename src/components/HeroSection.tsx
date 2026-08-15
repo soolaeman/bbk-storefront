@@ -36,7 +36,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
   return (
     <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-10 px-4 border-b border-slate-700/80">
       <div className="max-w-7xl mx-auto">
-        <div className="relative overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-8 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/15 border border-amber-500/30 rounded-full text-xs font-semibold text-amber-300">
               <ShieldCheck className="w-4 h-4 text-amber-400" />
@@ -99,12 +99,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
             </div>
           </div>
 
-          <div className="lg:col-span-4 relative h-full min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] flex items-end justify-end overflow-hidden">
-            <img
-              src="/images/people/bbkitchen-team-thumbs-up.webp"
-              alt="Tim BBKitchen"
-              className="absolute bottom-0 right-0 max-h-[90%] w-auto object-contain object-bottom drop-shadow-2xl"
-            />
+          <div className="lg:col-span-4 flex items-center justify-center lg:justify-end px-4 sm:px-8 lg:px-0">
+            <div className="relative w-full max-w-[300px] sm:max-w-[340px] h-[250px] sm:h-[280px] rounded-3xl bg-slate-800/80 border border-slate-700 shadow-2xl overflow-visible">
+              <img
+                src="/images/people/bbkitchen-team-thumbs-up.webp"
+                alt="Tim BBKitchen"
+                className="absolute bottom-0 right-[-24px] sm:right-[-32px] h-[290px] sm:h-[330px] w-auto max-w-none object-contain object-bottom drop-shadow-2xl"
+              />
+            </div>
           </div>
         </div>
       </div>

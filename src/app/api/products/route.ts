@@ -43,6 +43,15 @@ function normalizeText(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+function normalizeUnitCode(value: string): string {
+  return value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function isUnitCodeQuery(value: string): boolean {
+  const normalized = normalizeUnitCode(value);
+  return normalized.length >= 4 && /^BBK\d+$/.test(normalized);
+}
+
 function appendIfPresent(source: URLSearchParams, target: URLSearchParams, key: string): void {
   const value = source.get(key);
   if (value !== null && value.trim() !== '') target.set(key, value);
@@ -69,6 +78,17 @@ function matchesMetaFilter(
 
   const actual = getProductMetaValue(product, [key]);
   return normalizeText(actual) === normalizeText(expected);
+}
+
+function matchesUnitCodeQuery(
+  product: { meta_data?: Array<{ key: string; value: string | number | boolean | null }> },
+  query: string,
+): boolean {
+  const actualCode = getProductMetaValue(product, ['kode_unit']);
+  const normalizedCode = normalizeUnitCode(actualCode);
+  const normalizedQuery = normalizeUnitCode(query);
+
+  return Boolean(normalizedCode) && normalizedCode.startsWith(normalizedQuery);
 }
 
 async function resolveWooCommerceCategoryId(
@@ -318,9 +338,12 @@ export async function GET(request: NextRequest) {
 
     const incomingParams = request.nextUrl.searchParams;
     const params = await buildWooCommerceParams(request, authorization);
+    const searchQuery = incomingParams.get('search')?.trim() || '';
     const conditionFilter = incomingParams.get('condition');
     const locationFilter = incomingParams.get('location');
+    const unitCodeSearch = isUnitCodeQuery(searchQuery);
     const needsMetaFiltering = Boolean(
+      unitCodeSearch ||
       (conditionFilter && normalizeText(conditionFilter) !== 'semua kondisi') ||
       (locationFilter && normalizeText(locationFilter) !== 'semua lokasi'),
     );
@@ -331,8 +354,16 @@ export async function GET(request: NextRequest) {
         Math.max(Number(incomingParams.get('per_page') || '8') || 8, 1),
         100,
       );
-      const allProducts = await fetchAllProductsForMetaFiltering(params, authorization);
+      const metaFilterParams = new URLSearchParams(params);
+
+      if (unitCodeSearch) {
+        metaFilterParams.delete('search');
+        metaFilterParams.delete('sku');
+      }
+
+      const allProducts = await fetchAllProductsForMetaFiltering(metaFilterParams, authorization);
       const filteredProducts = allProducts.filter((product) =>
+        (!unitCodeSearch || matchesUnitCodeQuery(product, searchQuery)) &&
         matchesMetaFilter(product, 'kondisi_unit', conditionFilter) &&
         matchesMetaFilter(product, 'lokasi_unit', locationFilter),
       );
@@ -348,7 +379,7 @@ export async function GET(request: NextRequest) {
           'Cache-Control': 'no-store',
           'X-WP-Total': String(total),
           'X-WP-TotalPages': String(totalPages),
-          'X-BBK-Meta-Filter': 'condition/location',
+          'X-BBK-Meta-Filter': unitCodeSearch ? 'unit-code/condition/location' : 'condition/location',
         },
       });
     }

@@ -4,7 +4,7 @@ interface WooCommerceMeta { key: string; value: string | number | boolean | null
 interface WooCommerceImage { src: string; }
 interface WooCommerceCategory { id?: number; name: string; slug?: string; }
 interface WooCommerceProduct {
-  id: number; name: string; sku: string; price: string; regular_price: string;
+  id: number; name: string; slug: string; sku: string; price: string; regular_price: string;
   short_description: string; description: string; images: WooCommerceImage[];
   categories: WooCommerceCategory[]; stock_status: string; date_created?: string;
   date_modified?: string; meta_data?: WooCommerceMeta[];
@@ -70,7 +70,9 @@ function mapProduct(product: WooCommerceProduct): Product {
   const description = stripHtml(product.description || '');
 
   return {
-    id: String(product.id), sku: kodeUnit || product.sku || `BBK-${product.id}`,
+    id: String(product.id),
+    slug: product.slug || undefined,
+    sku: kodeUnit || product.sku || `BBK-${product.id}`,
     name: stripHtml(product.name || ''), category: mapCategory(product), brand: 'Tidak tercantum',
     price: parsePrice(product), originalPriceEstimate: null, status: mapStatus(statusUnit),
     condition: mapCondition(kondisiUnit), conditionRating: 0, location: lokasiUnit || 'Tidak tercantum',

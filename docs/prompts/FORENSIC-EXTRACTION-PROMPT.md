@@ -42,6 +42,29 @@ Jika bukti tidak tersedia, tulis:
 18. Locked user decisions
 19. Handoff to next chat
 
+## SESSION TIMELINE
+
+Extract and record, only when supported by evidence:
+
+```text
+Date:
+Start:
+End:
+Duration:
+Evidence source:
+```
+
+Rules:
+
+- Exact Start/End time must come from conversation/session evidence or GitHub metadata.
+- If exact time is unavailable, write:
+  `Tidak ditemukan di conversation.`
+- If only a date/period is available, preserve the date/period and do not convert it into duration.
+- Duration may only be calculated from verified Start and End.
+- Never estimate duration from message count, date range, skipped messages, or assumptions.
+- If a timestamp comes from a GitHub commit, label it as GitHub evidence.
+- Keep timeline data consistent with `docs/progress/README.md` and root `README.md` when those are updated.
+
 ## PARETO
 
 After full extraction, produce:
@@ -101,6 +124,8 @@ End with:
 
 ```text
 Starting State
+      ↓
+Session Timeline
       ↓
 Major Changes
       ↓

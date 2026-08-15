@@ -1,3 +1,4 @@
+[🧭 NAVIGATOR](NAVIGATOR.md)
 # Chat 1.3 — Frontend Integration / Routing / Visual Convergence
 
 > **Forensic progress archive.** Basis: the Chat 1.3 conversation context available in the migration thread plus the user-provided forensic extraction. Some messages were skipped; missing facts remain explicitly marked as **Tidak ditemukan di conversation.**

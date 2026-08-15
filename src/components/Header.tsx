@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader2, Menu, Phone, Search, X } from 'lucide-react';
-import { generateWhatsAppConsultationLink } from '../utils/formatters';
+import { Loader2, Menu, Search, X } from 'lucide-react';
 
 interface HeaderSearchProduct {
   id: number;
@@ -122,12 +121,21 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
     setMobileMenuOpen(false);
   };
 
+  const handleProductionClick = () => {
+    window.open(
+      buildWhatsAppLink('Halo BBKitchen, saya ingin produksi peralatan dapur/restoran baru. Saya ingin konsultasi mengenai kebutuhan produksi atau custom.'),
+      '_blank',
+      'noopener,noreferrer',
+    );
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur">
       <div className="hidden border-b border-slate-100 bg-slate-50 md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-[11px] text-slate-500 lg:px-6">
           <span>Sentra barang bekas restoran & peralatan dapur komersial</span>
-          <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-700 transition-colors hover:text-emerald-700">Konsultasi via WhatsApp</a>
+          <button type="button" onClick={handleProductionClick} className="font-semibold text-slate-700 transition-colors hover:text-emerald-700">Mau Produksi Baru?</button>
         </div>
       </div>
 
@@ -196,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
           <div className="order-2 ml-auto flex shrink-0 items-center gap-2 md:order-3">
             {!simple && <>
               <button type="button" onClick={handleSellerClick} className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:inline-flex"><span>Jual Unit</span></button>
-              <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" id="header-wa-consult-btn" className="hidden items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-emerald-700 sm:inline-flex"><Phone className="h-4 w-4" /><span>Konsultasi</span></a>
+              <button type="button" onClick={handleProductionClick} className="hidden items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-emerald-700 sm:inline-flex"><span>Mau Produksi Baru?</span></button>
             </>}
             {!simple && <button type="button" onClick={() => setMobileMenuOpen((open) => !open)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 sm:hidden" aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>}
           </div>
@@ -209,7 +217,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
                 <a href="/" className="transition-colors hover:text-emerald-700">Home</a>
                 <a href="/catalog" className="transition-colors hover:text-emerald-700">Katalog</a>
                 <button type="button" onClick={handleSellerClick} className="transition-colors hover:text-emerald-700">Jual Unit</button>
-                <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-emerald-700">Konsultasi</a>
+                <button type="button" onClick={handleProductionClick} className="transition-colors hover:text-emerald-700">Mau Produksi Baru?</button>
               </div>
               <span className="text-[11px] font-medium text-slate-400">Unit cepat berputar · cek ketersediaan terbaru</span>
             </nav>
@@ -221,7 +229,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
                 <a href="/" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Home</a>
                 <a href="/catalog" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Katalog</a>
                 <button type="button" onClick={handleSellerClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Jual Unit</button>
-                <a href={buildWhatsAppLink('Konsultasi Kebutuhan Dapur Usaha')} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Konsultasi WhatsApp</a>
+                <button type="button" onClick={handleProductionClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Mau Produksi Baru?</button>
               </nav>
             </div>
           )}

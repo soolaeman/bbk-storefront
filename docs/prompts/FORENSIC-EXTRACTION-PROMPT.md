@@ -1,114 +1,45 @@
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
+
 # BBKitchen — Forensic Extraction Prompt
 
-Use this when an old migration chat needs to be archived, especially when many messages are skipped or the session is already closed.
+> Use this only to reconstruct **old/closed migration chats** that were not adequately archived.
 
-```text
-# FORENSIC EXTRACTION — BBKITCHEN NEXT.JS MIGRATION
+This is not the normal end-session workflow. For the current session, use [`END-SESSION-PROMPT.md`](END-SESSION-PROMPT.md).
 
-Ekstrak engineering history dari conversation ini.
+---
 
-Repository:
-soolaeman/Front-End-BBKitchen
-Branch:
-feature/nextjs-migration
+## Purpose
 
-RULE UTAMA:
-Jangan membuat summary generik.
-Jangan mengisi gap dengan asumsi.
-Jika bukti tidak tersedia, tulis:
+Extract institutional memory from an older conversation using only evidence that is actually available.
+
+If a fact cannot be proven from the supplied conversation/evidence, write:
+
 `Tidak ditemukan di conversation.`
 
-## EXTRACT
+Do not infer missing SHA, root cause, file path, prop contract, or verification result.
 
-1. Starting state
-2. Work performed
-3. Files/components/routes/API changed
-4. Data contracts
-5. Component contracts / prop changes
-6. Architecture decisions
-7. Bottlenecks
-8. Symptom vs root cause
-9. Attempts and failures
-10. Workarounds
-11. Permanent resolutions
-12. Verification evidence
-13. Build/runtime failures
-14. SEO implications
-15. Responsive/mobile implications
-16. Git commits / SHAs / dates
-17. Technical debt
-18. Locked user decisions
-19. Handoff to next chat
+---
 
-## PARETO
+## Output priorities
 
-After full extraction, produce:
+Capture:
 
-### Top 20% Changes
-Maximum 5.
+- session objective
+- starting state
+- changes
+- file/component/route/API history
+- data and component contracts
+- bottlenecks
+- symptoms
+- root causes
+- workarounds
+- permanent resolutions
+- failed approaches
+- architecture decisions
+- locked user decisions
+- technical debt
+- build/runtime/UI verification
+- Git checkpoints and dates
+- handoff
 
-### Top 20% Bottlenecks
-Maximum 5.
-
-### Top 20% Decisions
-Maximum 5.
-
-Do not delete the full forensic evidence. Pareto is a synthesis layer only.
-
-## FAILURE FORENSICS
-
-For every important failure use:
-
-```text
-Symptom:
-Root Cause:
-Attempt:
-Why It Failed:
-Resolution:
-Lesson:
-Status:
-```
-
-## CONTRACT FORENSICS
-
-For component/API/route changes use:
-
-```text
-Old Contract:
-New Contract:
-Why Changed:
-Consumers Affected:
-Verification:
-```
-
-Do not invent prop names or types.
-
-## GIT FORENSICS
-
-Record only SHAs/dates actually visible in conversation or GitHub evidence.
-
-Never fabricate a final SHA.
-
-## OUTPUT
-
-Produce a Markdown engineering archive suitable for:
-
-`docs/progress/CHAT-X.Y.md`
-
-End with:
-
-```text
-Starting State
-      ↓
-Major Changes
-      ↓
-Bottlenecks
-      ↓
-Decisions
-      ↓
-Verified State
-      ↓
-Technical Debt
-      ↓
-Next Chat Handoff
-```
+Preserve the original terminology and distinction between implemented, verified, blocked, and unknown.

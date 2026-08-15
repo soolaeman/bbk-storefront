@@ -1,3 +1,5 @@
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
+
 # BBKitchen Guides
 
 Guides are **reference documents for humans**. They explain how the project works, where files live, and what is safe to change.

@@ -2,6 +2,7 @@
 
 Frontend baru untuk **Bukan Baru Kitchen / BBKitchen**, dengan WooCommerce + WordPress/ACF sebagai source of truth katalog.
 
+> **Dokumentasi status terakhir: 15 Agustus 2026**  
 > Branch aktif pengembangan: `feature/nextjs-migration`
 
 ## Tujuan Migrasi
@@ -15,6 +16,29 @@ Prinsip utama:
 - WordPress/ACF tetap menjadi sumber field inventory seperti `status_unit`, `kondisi_unit`, `lokasi_unit`, dan `kode_unit`.
 - Credential WooCommerce tidak dikirim ke browser; request katalog melewati Next.js server route.
 - UI boleh berevolusi, tetapi slug produk dan intent SEO tidak boleh diubah sembarangan.
+
+## Status Migrasi — 15 Agustus 2026
+
+| Area | Status | Catatan |
+|---|---|---|
+| Next.js App Router | ✅ | Berjalan dan sudah melalui build lokal |
+| WooCommerce server proxy | ✅ | `/api/products` tersedia |
+| Global metadata endpoint | ✅ | `/api/products?metadata=1` tersedia |
+| Top-level category filter | ✅ | Subkategori tidak digunakan |
+| Pagination | ✅ | Server-side WooCommerce |
+| Global search | ✅ | Menggunakan WooCommerce search |
+| Product detail `/product/[slug]` | ✅ | Slug live WooCommerce dipertahankan |
+| Product detail SEO metadata | ✅ | Canonical, OG, Product JSON-LD disiapkan |
+| Condition UI | ✅ | UI dinormalisasi menjadi Baru / Bekas |
+| Product modal — Salin Link | ✅ | Deep-link ke `/product/[slug]` |
+| Related Products | ⏳ | Belum diimplementasikan |
+| ACF authoritative filtering | ⏳ | Backend WordPress hook/endpoint belum selesai |
+| Header logo asset | ⚠️ | Reference code sudah ada, tetapi **belum terverifikasi berhasil secara visual di localhost** |
+| Header responsive refinement | ⏳ | Masih perlu verifikasi UI |
+| Staff/Owner authentication | ⚠️ | Saat ini hanya simulasi PIN frontend |
+| Local WooCommerce connectivity | ⚠️ | Laptop terakhir mengalami connection reset → proxy 502 |
+
+> **Status code ≠ status UI.** Fitur hanya dianggap `✅` jika implementasi dan hasil runtime sudah terverifikasi. Khusus logo/header, asset dan reference sudah ada di code, tetapi user masih melaporkan logo belum berubah secara visual; karena itu statusnya sengaja tidak ditulis sebagai selesai.
 
 ## Stack
 
@@ -281,11 +305,15 @@ Product detail modal juga memiliki deep-link action **Salin Link**, yang mengara
 
 ## Header & Branding
 
-Logo utama menggunakan asset:
+Logo asset yang disiapkan:
 
 ```text
 public/bbkitchen-logo.webp
 ```
+
+Header sudah memiliki reference code ke asset tersebut dan accessibility text menggunakan `sr-only`.
+
+**Status per 15 Agustus 2026: ⚠️ belum terverifikasi berhasil secara visual di localhost.** User masih melaporkan logo header belum berubah. Karena itu dokumentasi tidak menganggap pekerjaan logo sebagai selesai.
 
 Header tetap menyediakan:
 
@@ -294,8 +322,6 @@ Header tetap menyediakan:
 - Konsultasi WhatsApp
 - Staff / Owner
 - Admin panel ketika mode admin aktif
-
-Brand text accessibility disediakan melalui `sr-only` sehingga branding tidak perlu diduplikasi secara visual di samping logo.
 
 ## Staff / Owner Mode
 
@@ -408,17 +434,30 @@ Warning `package-lock.json` di parent directory (`C:\Users\Lenovo`) berasal dari
 
 ## Known Issues / Current Limitations
 
-### 1. WooCommerce connectivity
+### 1. WooCommerce connectivity — LAPTOP
 
-Jika server/local environment tidak dapat menjangkau:
+Pada **15 Agustus 2026**, local laptop environment mengalami:
 
 ```text
-https://www.bukanbarukitchen.com
+curl -I https://www.bukanbarukitchen.com
+curl: (35) Recv failure: Connection was reset
 ```
 
-proxy `/api/products` akan mengembalikan `502 Bad Gateway`.
+dan request ke:
 
-Ini adalah upstream/network failure, bukan bukti bahwa TypeScript atau Next.js build gagal.
+```text
+https://www.bukanbarukitchen.com/wp-json/wc/v3/products
+```
+
+juga mengalami connection reset.
+
+Akibatnya browser menerima:
+
+```text
+/api/products → 502 Bad Gateway
+```
+
+User melaporkan domain masih dapat diakses melalui HP. Karena itu masalah ini belum dinyatakan sebagai WooCommerce application failure; kemungkinan masih berada pada jalur network/DNS/TLS/firewall/IPv4/IPv6 laptop.
 
 ### 2. ACF meta filtering
 
@@ -465,7 +504,7 @@ Prioritas setelah fondasi ini stabil:
 
 1. **Related Products** berbasis kategori WooCommerce live dan exclude current product.
 2. Sinkronisasi penuh ACF metadata filtering melalui backend WordPress.
-3. Verifikasi asset/logo dan responsive header.
+3. **Verifikasi dan perbaikan logo/header secara visual di localhost.**
 4. Penyempurnaan search UX dan popular-search behavior berbasis data nyata.
 5. Shared design system untuk Home → Catalog → Product Detail.
 6. SEO schema/canonical/internal-link hardening.

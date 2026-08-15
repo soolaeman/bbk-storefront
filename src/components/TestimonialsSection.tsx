@@ -22,35 +22,47 @@ const testimonials = [
 export const TestimonialsSection: React.FC = () => {
   return (
     <section className="bg-white py-12 px-4 border-b border-slate-200">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider">
-            <MessageSquareQuote className="w-3.5 h-3.5 text-amber-600" />
-            <span>Kata Mereka</span>
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8 lg:gap-10 items-start">
+          <div className="space-y-8">
+            <div className="text-center lg:text-left max-w-2xl space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider">
+                <MessageSquareQuote className="w-3.5 h-3.5 text-amber-600" />
+                <span>Kata Mereka</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">Pengalaman Customer BBKitchen</h2>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Cerita langsung dari customer yang sudah bertransaksi dan menggunakan layanan BBKitchen.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {testimonials.map((testimonial) => (
+                <article key={`${testimonial.name}-${testimonial.company}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col">
+                  <div className="flex items-center gap-1 text-amber-500 mb-4" aria-label="5 dari 5 bintang">
+                    {[0, 1, 2, 3, 4].map((star) => <Star key={star} className="w-4 h-4 fill-current" />)}
+                  </div>
+
+                  <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
+                    “{testimonial.text}”
+                  </blockquote>
+
+                  <div className="mt-5 pt-4 border-t border-slate-200">
+                    <p className="text-sm font-extrabold text-slate-900">{testimonial.name}</p>
+                    <p className="mt-0.5 text-xs text-slate-500">{testimonial.company}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">Pengalaman Customer BBKitchen</h2>
-          <p className="text-xs sm:text-sm text-slate-600">
-            Cerita langsung dari customer yang sudah bertransaksi dan menggunakan layanan BBKitchen.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {testimonials.map((testimonial) => (
-            <article key={`${testimonial.name}-${testimonial.company}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col">
-              <div className="flex items-center gap-1 text-amber-500 mb-4" aria-label="5 dari 5 bintang">
-                {[0, 1, 2, 3, 4].map((star) => <Star key={star} className="w-4 h-4 fill-current" />)}
-              </div>
-
-              <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
-                “{testimonial.text}”
-              </blockquote>
-
-              <div className="mt-5 pt-4 border-t border-slate-200">
-                <p className="text-sm font-extrabold text-slate-900">{testimonial.name}</p>
-                <p className="mt-0.5 text-xs text-slate-500">{testimonial.company}</p>
-              </div>
-            </article>
-          ))}
+          <div className="relative min-h-[280px] sm:min-h-[340px] lg:min-h-[500px] rounded-3xl bg-slate-50 border border-slate-200 overflow-hidden flex items-end justify-center lg:justify-end">
+            <img
+              src="/images/people/bbkitchen-chef-trust.webp"
+              alt="Chef BBKitchen dengan sikap profesional"
+              className="absolute top-0 right-0 h-[320px] sm:h-[380px] lg:h-[500px] w-auto max-w-none object-contain object-top"
+            />
+          </div>
         </div>
       </div>
     </section>

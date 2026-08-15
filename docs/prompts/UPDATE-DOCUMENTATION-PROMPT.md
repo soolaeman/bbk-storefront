@@ -169,14 +169,21 @@ Pastikan yang berikut tetap akurat:
 
 Jika README menampilkan migration progress antar-session:
 
-- tampilkan tanggal tiap session jika tersedia
+- chronology harus mengikuti `docs/progress/README.md`
+- tampilkan tanggal/period tiap session jika tersedia
 - tampilkan Start / End / Duration hanya jika dapat diverifikasi
 - gunakan evidence dari session/conversation atau GitHub commit metadata
 - jika exact time tidak tersedia, tulis:
   `Tidak ditemukan di repository/evidence yang tersedia.`
 - jika hanya tanggal/period tersedia, jangan mengubahnya menjadi durasi
 - jangan mengarang atau mengestimasi elapsed time
-- pastikan timeline konsisten dengan `docs/progress/README.md`
+- jangan menyamakan calendar span dengan actual working duration
+- project elapsed time sejak Chat 1.1 hanya boleh dihitung jika exact Chat 1.1 start timestamp terverifikasi
+- jika exact Chat 1.1 start belum tersedia, gunakan:
+  `Actual elapsed duration since Chat 1.1: NOT VERIFIABLE`
+- earliest verifiable migration evidence dan calendar span boleh ditampilkan sebagai konteks, tetapi harus diberi label dan tidak dianggap sebagai working duration
+- jika timestamp conflict, jangan silently choose one
+- root README tidak boleh menciptakan timing fact yang bertentangan dengan progress index
 
 README bukan:
 - forensic log
@@ -272,7 +279,9 @@ Sebelum commit:
 - tiga guides konsisten
 - Navigator konsisten dengan repository
 - README konsisten dengan current repository
-- session timeline, jika ada, konsisten dengan progress index
+- session chronology/timeline di README konsisten dengan progress index
+- project elapsed-time status since Chat 1.1 konsisten dengan progress index
+- no duration is inferred from calendar span
 
 ==================================================
 11. COMMIT
@@ -304,6 +313,7 @@ Jawab ringkas:
 4. Files changed
 5. Main drift fixed
 6. Session timeline impact: Date / Start / End / Duration jika relevan dan terverifikasi
-7. Commit SHA, jika ada
-8. Unknowns / items still not provable
+7. Project elapsed-time status since Chat 1.1
+8. Commit SHA, jika ada
+9. Unknowns / items still not provable
 ```

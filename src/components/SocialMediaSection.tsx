@@ -19,7 +19,7 @@ export const SocialMediaSection: React.FC = () => {
   const videoPanel = (type: 'youtube' | 'tiktok') => {
     const isYoutube = type === 'youtube';
     return (
-      <div className="w-full max-w-[320px] mx-auto aspect-[9/16] rounded-2xl border border-slate-200 bg-slate-950 overflow-hidden shadow-sm">
+      <div className="w-full max-w-[280px] mx-auto rounded-2xl border border-slate-200 bg-slate-950 overflow-hidden shadow-sm" style={{ aspectRatio: '9 / 16' }}>
         <button
           type="button"
           onClick={() => setPlaying(current => current === type ? null : type)}

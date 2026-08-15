@@ -31,26 +31,24 @@ GitHub evidence: **15 August 2026 21:24:06 UTC**.
 
 # 📚 DOCUMENTATION MAP
 
-```text
-docs/
-├── progress/
-│   ├── CHAT-1.1.md
-│   ├── CHAT-1.2.md
-│   ├── CHAT-1.3.md
-│   ├── CHAT-1.4.md
-│   └── README.md
-│
-├── prompts/
-│   ├── END-SESSION-PROMPT.md
-│   └── FORENSIC-EXTRACTION-PROMPT.md
-│
-└── COPY-EDITING-GUIDE.md
+| Document | Purpose |
+|---|---|
+| [📊 Progress Archive](docs/progress/README.md) | Index seluruh history session |
+| [🧠 End Session Prompt](docs/prompts/END-SESSION-PROMPT.md) | Prompt lengkap untuk menutup session |
+| [⚡ Quick End Session](docs/prompts/QUICK-END-SESSION-PROMPT.md) | Prompt cepat untuk session kecil |
+| [🔎 Forensic Extraction](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Ekstrak history dari chat lama/skipped messages |
+| [✍️ Copy Editing Guide](docs/COPY-EDITING-GUIDE.md) | Panduan lokasi file untuk mengganti copy |
+| [🧑‍💻 Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) | Versi cepat untuk user awam/vibe coding |
+| [🚪 End Session Shortcut](end-session-prompt.md) | Shortcut ke protokol end-session |
 
-end-session-prompt.md       → shortcut to canonical end-session prompt
-VIBE-CODING-COPY-GUIDE.md   → quick copy-location guide
-```
+### Progress archives
 
-## Documentation rule
+- [Chat 1.1](docs/progress/CHAT-1.1.md) — Foundation / WooCommerce migration
+- [Chat 1.2](docs/progress/CHAT-1.2.md) — API / metadata / catalog / product / SEO
+- [Chat 1.3](docs/progress/CHAT-1.3.md) — Frontend integration / routing / visual convergence
+- [Chat 1.4](docs/progress/CHAT-1.4.md) — Homepage / conversion / visual finalization
+
+### Documentation rule
 
 ```text
 Chat session
@@ -234,7 +232,7 @@ Target: `1280×720`, `16:9`, WebP. Cover first → play overlay → iframe after
 | B-16 | 1.4 | Empty social cards | Closed |
 | B-17 | 1.4 | Duplicate WA wording | Closed |
 
-Full forensic details: `docs/progress/CHAT-X.Y.md`.
+Full forensic details: [open progress archive](docs/progress/README.md).
 
 ---
 
@@ -350,7 +348,7 @@ src/lib/wordpress.ts
 src/lib/woocommerce.ts
 ```
 
-For copy-location help: `VIBE-CODING-COPY-GUIDE.md` / `docs/COPY-EDITING-GUIDE.md`.
+For copy-location help: [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) / [Copy Editing Guide](docs/COPY-EDITING-GUIDE.md).
 
 ---
 
@@ -365,12 +363,12 @@ Start title:
 First actions:
 
 1. Read this README.
-2. Read the relevant `docs/progress/CHAT-X.Y.md` archive if the task touches migration history.
+2. Read the relevant [progress archive](docs/progress/README.md) if the task touches migration history.
 3. Audit current branch/code before changing anything.
 4. Verify build/runtime state.
 5. Follow the Pareto priorities above.
 6. Prefer `1 step = 1 file = 1 verified commit`.
-7. At session close, run `docs/prompts/END-SESSION-PROMPT.md`.
+7. At session close, run the [End Session Prompt](docs/prompts/END-SESSION-PROMPT.md).
 
 ### Do not repeat
 
@@ -384,30 +382,22 @@ First actions:
 
 # 📜 MIGRATION HISTORY INDEX
 
-Detailed history is archived here:
+Detailed history:
 
-- `docs/progress/CHAT-1.1.md` — Foundation / WooCommerce migration
-- `docs/progress/CHAT-1.2.md` — API / metadata / catalog / product / SEO
-- `docs/progress/CHAT-1.3.md` — Frontend integration / routing / visual convergence
-- `docs/progress/CHAT-1.4.md` — Homepage / conversion / visual finalization
-
-Use `docs/progress/README.md` for the archive rules.
+- [Chat 1.1](docs/progress/CHAT-1.1.md)
+- [Chat 1.2](docs/progress/CHAT-1.2.md)
+- [Chat 1.3](docs/progress/CHAT-1.3.md)
+- [Chat 1.4](docs/progress/CHAT-1.4.md)
+- [📊 Progress Archive README](docs/progress/README.md)
 
 ---
 
 # 🔐 SESSION CLOSE PROTOCOL
 
-Canonical:
-
-`docs/prompts/END-SESSION-PROMPT.md`
-
-Forensic extraction of an old/skipped chat:
-
-`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`
-
-Root shortcut:
-
-`end-session-prompt.md`
+- [🧠 Full End Session Prompt](docs/prompts/END-SESSION-PROMPT.md)
+- [⚡ Quick End Session Prompt](docs/prompts/QUICK-END-SESSION-PROMPT.md)
+- [🔎 Forensic Extraction Prompt](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
+- [🚪 Root End Session Shortcut](end-session-prompt.md)
 
 ---
 

@@ -99,11 +99,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
             </div>
           </div>
 
-          <div className="lg:col-span-4 relative min-h-[420px] overflow-hidden flex items-end justify-end">
+          <div className="lg:col-span-4 relative min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] overflow-hidden flex items-end justify-end">
             <img
               src="/images/people/bbkitchen-team-thumbs-up.webp"
               alt="Tim BBKitchen"
-              className="absolute right-[-24px] bottom-[-170px] w-[500px] max-w-none h-auto object-contain drop-shadow-2xl"
+              className="absolute right-4 lg:right-8 bottom-0 w-[330px] sm:w-[400px] lg:w-[500px] max-w-none h-auto object-contain object-bottom drop-shadow-2xl"
             />
           </div>
         </div>

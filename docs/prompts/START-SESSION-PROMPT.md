@@ -226,7 +226,29 @@ Selama session berjalan:
 Jangan melakukan dokumentasi palsu hanya untuk memenuhi checklist.
 
 ==================================================
-13. END SESSION HANDOFF
+13. SESSION TIMELINE RULE
+==================================================
+
+Catat waktu session berdasarkan evidence yang benar-benar tersedia:
+
+```text
+Date:
+Start:
+End:
+Duration:
+```
+
+- `Start` wajib dicatat pada saat session resmi dimulai jika waktu aktual tersedia.
+- `End` dan `Duration` ditentukan saat session ditutup, bukan diprediksi.
+- Jika exact time tidak tersedia, tulis:
+  `Tidak ditemukan di repository/evidence yang tersedia.`
+- Jika hanya tanggal/period yang tersedia, jangan mengubahnya menjadi durasi.
+- Jika timestamp berasal dari GitHub commit, tandai sumbernya sebagai GitHub commit.
+- Jangan mengarang, mengestimasi, atau menyimpulkan durasi tanpa evidence.
+- Root `README.md` dan `docs/progress/README.md` harus konsisten dengan timeline yang sudah terverifikasi.
+
+==================================================
+14. END SESSION HANDOFF
 ==================================================
 
 Saat session selesai, gunakan canonical:
@@ -236,7 +258,7 @@ Saat session selesai, gunakan canonical:
 Jangan membuat prompt end-session alternatif.
 
 ==================================================
-14. START SESSION RESPONSE
+15. START SESSION RESPONSE
 ==================================================
 
 Sebelum coding, jawab ringkas:
@@ -248,7 +270,8 @@ Sebelum coding, jawab ringkas:
 5. Top 3 carried-forward risks/debt
 6. Locked decisions relevant to this session
 7. Session goal
-8. First implementation step
+8. Session start timestamp
+9. First implementation step
 
 Jika ada data yang tidak dapat diverifikasi:
 `Tidak ditemukan di repository/evidence yang tersedia.`

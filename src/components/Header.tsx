@@ -28,6 +28,15 @@ export const Header: React.FC<HeaderProps> = ({
   const [pinError, setPinError] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    window.location.href = `/?search=${encodeURIComponent(query)}#global-search-input`;
+  };
+
   const handleAdminToggle = () => {
     if (isAdminMode) {
       onToggleAdminMode();
@@ -77,11 +86,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           {!simple && (
             <div className="order-3 w-full md:order-2 md:flex-1">
-              <div className="relative mx-auto max-w-2xl">
+              <form onSubmit={handleSearchSubmit} className="relative mx-auto max-w-2xl">
                 <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input type="text" id="global-search-input" value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Cari kompor, meja stainless, sink, chiller..." className="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-10 pr-10 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100 placeholder:text-slate-400" aria-label="Cari katalog BBKitchen" />
                 {searchQuery && <button type="button" onClick={() => onSearchChange('')} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-xs font-semibold text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700" aria-label="Hapus pencarian">×</button>}
-              </div>
+              </form>
             </div>
           )}
 

@@ -306,20 +306,18 @@ For copy-location help: [📖 Guides](docs/guides/README.md).
 
 # 📚 DOCUMENTATION — SIMPLE MAP
 
-Kalau bingung, cukup ingat ini:
-
 ```text
 README.md
 └── "Project sekarang ada di mana?"
 
- docs/progress/
- └── "Apa yang terjadi di setiap Chat?"
+docs/progress/
+└── "Apa yang terjadi di setiap Chat?"
 
- docs/guides/
- └── "Kalau mau mengubah sesuatu, file-nya di mana?"
+docs/guides/
+└── "Kalau mau mengubah sesuatu, file-nya di mana?"
 
- docs/prompts/
- └── "Workflow apa yang harus AI jalankan?"
+docs/prompts/
+└── "Workflow apa yang harus AI jalankan?"
 ```
 
 ### Progress
@@ -397,3 +395,9 @@ Chat 1.5 → 🚀 Next
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
 ```
+
+<!--
+END-SESSION SYNTHESIS TARGET
+Root README is updated after every end session by the canonical end-session workflow.
+Keep this file short, current, and decision-oriented. Do not paste full forensic history here.
+-->

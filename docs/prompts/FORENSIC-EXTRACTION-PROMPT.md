@@ -58,12 +58,35 @@ Rules:
 
 - Exact Start/End time must come from conversation/session evidence or GitHub metadata.
 - If exact time is unavailable, write:
-  `Tidak ditemukan di conversation.`
+  `Tidak ditemukan di repository/evidence yang tersedia.`
 - If only a date/period is available, preserve the date/period and do not convert it into duration.
 - Duration may only be calculated from verified Start and End.
-- Never estimate duration from message count, date range, skipped messages, or assumptions.
+- Never estimate duration from message count, date range, calendar span, skipped messages, or assumptions.
 - If a timestamp comes from a GitHub commit, label it as GitHub evidence.
+- If timestamps conflict, preserve the conflict; do not silently choose one.
 - Keep timeline data consistent with `docs/progress/README.md` and root `README.md` when those are updated.
+
+## PROJECT TIMELINE SINCE CHAT 1.1
+
+When extracting or updating migration progress, separately record:
+
+```text
+Chat 1.1 exact start timestamp:
+Earliest verifiable migration evidence:
+Current migration date:
+Actual elapsed duration since Chat 1.1:
+Calendar span covered by verifiable evidence:
+```
+
+Rules:
+
+- Search repository/GitHub/conversation evidence for the exact Chat 1.1 start before declaring it unavailable.
+- If exact Chat 1.1 start is not available, write:
+  `Actual elapsed duration since Chat 1.1: NOT VERIFIABLE`
+- Earliest verifiable evidence and calendar span may be reported as context.
+- Calendar span is not working duration.
+- Do not calculate project elapsed time from the first known date unless that date is explicitly the verified Chat 1.1 start.
+- If the Chat 1.1 timestamp is recovered later, update the synthesis layers without rewriting historical facts.
 
 ## PARETO
 
@@ -114,6 +137,24 @@ Record only SHAs/dates actually visible in conversation or GitHub evidence.
 
 Never fabricate a final SHA.
 
+## DOCUMENTATION SYNTHESIS RULE
+
+The forensic archive is the detailed source layer. When the workflow calls for progress synchronization:
+
+```text
+CHAT-X.Y.md
+      ↓
+docs/progress/README.md
+      ↓
+README.md
+```
+
+The progress index should summarize chronology, dates/times, duration when verifiable, focus, status, milestones, current Pareto, and project elapsed-time status.
+
+The root README should summarize current state and Pareto progress, not reproduce the forensic archive.
+
+Timing facts must remain consistent across all three layers.
+
 ## OUTPUT
 
 Produce a Markdown engineering archive suitable for:
@@ -126,6 +167,8 @@ End with:
 Starting State
       ↓
 Session Timeline
+      ↓
+Project Timeline Since Chat 1.1
       ↓
 Major Changes
       ↓

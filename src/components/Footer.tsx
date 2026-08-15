@@ -100,7 +100,6 @@ export const Footer: React.FC<FooterProps> = () => {
                   </a>
                 ))}
               </div>
-              <p className="mt-2 text-[10px] text-slate-500 leading-relaxed">YouTube · TikTok · Instagram · Threads · Facebook · Pinterest</p>
             </div>
           </div>
         </div>

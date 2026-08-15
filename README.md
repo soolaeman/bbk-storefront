@@ -4,14 +4,16 @@ Frontend baru **Bukan Baru Kitchen / BBKitchen**.
 
 Branch aktif: `feature/nextjs-migration`
 
-> Living documentation + institutional memory + handoff. Jika fakta tidak tersedia di source conversation, tulis `Tidak ditemukan di conversation`; jangan mengarang.
+> **README = current state + Pareto summary + handoff.** Detailed session history lives in `docs/progress/`.
+
+---
 
 # 🏁 CURRENT CHECKPOINT
 
 ```text
-Chat 1.1 → forensic captured
-Chat 1.2 → forensic captured
-Chat 1.3 → forensic captured
+Chat 1.1 → ✅ Archived
+Chat 1.2 → ✅ Archived
+Chat 1.3 → ✅ Archived
 Chat 1.4 → ✅ CLOSED / DONE
 Chat 1.5 → 🚀 NEXT
 ```
@@ -23,86 +25,98 @@ Last code checkpoint:
 feat: add video covers to social media cards
 ```
 
----
-
-# 📊 CURRENT PROGRESS — PARETO VIEW
-
-**Last documented phase:** Chat 1.4 — CLOSED / DONE  
-**Next phase:** Chat 1.5 — ACTIVE / NEXT  
-**Migration branch:** `feature/nextjs-migration`  
-**Documentation principle:** README answers **"where are we?"**; detailed forensic history answers **"how did we get here?"**.
-
-## 80/20 Project Focus
-
-Prioritize the small number of engineering areas that have the largest impact on BBKitchen's real business outcome:
-
-```text
-1. Catalog / Inventory Accuracy
-2. Conversion / WhatsApp / Product Inquiry
-3. Production Stability / API Reliability
-4. SEO Preservation
-5. Responsive UX
-```
-
-Avoid spending disproportionate effort on low-impact visual or architectural refactors while the above areas remain incomplete.
-
-## Phase Progress
-
-| Phase | Status | Primary Focus | Position |
-|---|---|---|---|
-| 1.1 | ✅ Done | Foundation / WooCommerce migration | Historical |
-| 1.2 | ✅ Done | API / metadata / catalog / product / SEO | Historical |
-| 1.3 | ✅ Done | Frontend integration / routing / visual convergence | Historical |
-| 1.4 | ✅ Done | Homepage / conversion / visual finalization | Closed |
-| 1.5 | 🚀 Next | Hardening / responsive / shared UX / Core System | Current |
-
-## Chat 1.5 Pareto Priorities
-
-### P0 — Highest impact
-
-1. **Responsive/mobile audit** across Hero, Header, Catalog, Product Detail and Footer.
-2. **Header + search interaction** — verify the search field is actually usable, not merely visible.
-3. **Product Detail visual parity** with the shared Header/design system.
-4. **Catalog/Product conversion path** — READY/SOLD behavior, product WhatsApp contract and CTA consistency.
-
-### P1 — Important
-
-5. **Article / Local Landing typography** and semantic content rendering.
-6. **Dapur MBG + Produksi Baru CTA consistency** across Hero, services and Footer.
-7. **Related Products / ACF authoritative filtering**.
-8. **Production reliability** — API/runtime/error-state audit.
-
-### P2 — After core flow is stable
-
-9. SEO/performance/accessibility hardening.
-10. Admin/Core System workflows, including inventory operations and SOLD → Google Sheets.
-
-> **Rule:** if a proposed task does not materially improve conversion, inventory correctness, production stability, SEO, or responsive usability, defer it unless it is required to unblock P0/P1 work.
-
-## Current State Snapshot
-
-```text
-DATA / CATALOG             ✅ Foundation established
-PRODUCT DETAIL             ✅ Functional / parity audit remains
-LOCAL ROUTING              ✅ Catch-all verified
-HEADER                     ✅ Integrated / interaction audit remains
-GLOBAL SEARCH              ⚠️ UI exists / typing must be verified
-ARTICLE TYPOGRAPHY         ⚠️ Carried technical debt
-MOBILE QA                  ⚠️ Not fully verified in 1.3/1.4 forensic source
-WHATSAPP CONTRACT          ✅ Current contracts established
-READY / SOLD               ✅ Current UX contract established
-MBG / PRODUKSI BARU        ✅ Direct WhatsApp contract established
-SOCIAL VIDEO               ✅ Cover-first / iframe-on-click
-MASCOT                     🔒 Universal floating approach rejected
-SEO BASELINE               🔒 Preserve existing equity
-CORE SYSTEM                ⏳ Next major engineering area
-```
+GitHub evidence: **15 August 2026 21:24:06 UTC**.
 
 ---
 
-# 1. MIGRATION PRINCIPLE
+# 📚 DOCUMENTATION MAP
 
-> **New frontend, old SEO equity.**
+```text
+docs/
+├── progress/
+│   ├── CHAT-1.1.md
+│   ├── CHAT-1.2.md
+│   ├── CHAT-1.3.md
+│   ├── CHAT-1.4.md
+│   └── README.md
+│
+├── prompts/
+│   ├── END-SESSION-PROMPT.md
+│   └── FORENSIC-EXTRACTION-PROMPT.md
+│
+└── COPY-EDITING-GUIDE.md
+
+end-session-prompt.md       → shortcut to canonical end-session prompt
+VIBE-CODING-COPY-GUIDE.md   → quick copy-location guide
+```
+
+## Documentation rule
+
+```text
+Chat session
+    ↓
+Forensic extraction
+    ↓
+docs/progress/CHAT-X.Y.md
+    ↓
+Pareto synthesis
+    ↓
+README.md
+    ↓
+Next-chat handoff
+```
+
+README should stay readable. Do not turn it into a full session log.
+
+---
+
+# 🎯 CURRENT PROGRESS — PARETO
+
+## Top 20% priorities → ~80% impact
+
+### P0 — highest impact
+
+1. **Responsive/mobile QA** across homepage, catalog, product detail, and local pages.
+2. **Shared Header + search interaction** — verify typing, behavior, sticky state, and parity.
+3. **Product Detail visual parity** with the homepage/shared Header.
+4. **Catalog → conversion path** — READY/SOLD state, WhatsApp inquiry, and product discoverability.
+
+### P1 — next layer
+
+5. Article/local landing typography and editorial rendering.
+6. Dapur MBG + Produksi Baru CTA consistency.
+7. Related Products + authoritative ACF filtering.
+8. API/runtime reliability and production hardening.
+
+### P2 — polish / hardening
+
+9. SEO/performance/accessibility audit.
+10. Admin/Core System workflows and operational integrations.
+
+---
+
+# 📊 CURRENT STATE
+
+| Area | Status | Note |
+|---|---|---|
+| WooCommerce data architecture | ✅ | Live source-of-truth baseline |
+| Catalog / pagination | ✅ | Server-side, 8/page baseline |
+| Product Detail | ✅ | Functional; visual parity audit remains |
+| Local hierarchical routing | ✅ | `[...slug]` verified |
+| Shared Header | ⚠️ | Integrated; interaction/parity audit remains |
+| Global search | ⚠️ | UI exists; typing/interaction needs verification |
+| Article typography | ⚠️ | Content renders; editorial parity remains |
+| Mobile QA | ⚠️ | Not fully evidenced in prior forensic sessions |
+| WhatsApp contracts | ✅ | Product / MBG / Produksi Baru normalized |
+| READY / SOLD behavior | ✅ | SOLD remains discoverable |
+| Hero desktop/mobile | ✅ | Dedicated backgrounds |
+| Social video covers | ✅ | Cover-first approach |
+| Universal floating mascot | 🔒 | Explicitly rejected |
+| Core System / admin workflows | ⏳ | Future phase |
+
+---
+
+# 🧭 ARCHITECTURE BASELINE
 
 ```text
 WordPress / WooCommerce
@@ -118,35 +132,42 @@ Shared Design System
 Desktop + Mobile UX
 ```
 
-- WooCommerce: products, prices, stock, categories, images, slug, descriptions.
-- WordPress/ACF: `kode_unit`, `status_unit`, `kondisi_unit`, `lokasi_unit`, `link_telegram`.
-- Core System: inventory/business logic + integrations.
-- Next.js: presentation, routing, rendering, SEO presentation, catalog/conversion UX.
-- Google Sheets: backend/Core System concern; never expose credentials in client.
+- **WooCommerce:** products, prices, stock, categories, images, slug, descriptions.
+- **WordPress/ACF:** inventory metadata such as `kode_unit`, `status_unit`, `kondisi_unit`, `lokasi_unit`, `link_telegram`.
+- **Core System:** inventory/business logic + integrations.
+- **Next.js:** presentation, routing, rendering, SEO presentation, catalog/conversion UX.
+- **Google Sheets:** backend/Core System concern; never expose credentials in client.
 
-# 2. FINAL UX CONTRACTS
+Locked principles:
 
-## Homepage
+- Next.js is the experience layer, not the inventory source of truth.
+- Catalog pagination is server-side.
+- Product route: `/product/[slug]`.
+- Local route: `/jual-barang-bekas-restoran/[...slug]`.
+- Existing SEO URL/slug intent must be preserved.
+- Inventory business logic does not belong in presentation components.
+- SOLD Product Cards remain discoverable.
+- Homepage positioning is primarily sales.
 
-Primary positioning: **jualan unit/peralatan**, not the main channel for people offering borongan/sell-to-BBKitchen.
+---
 
-Focus: available units, condition, savings, ready-to-ship Indonesia-wide, categories, WhatsApp inquiry, Dapur MBG, Produksi Baru as secondary CTA.
+# 💬 LOCKED UX CONTRACTS
 
-## Header
-
-`Jual Unit` → `Dapur MBG`.
-
-Dapur MBG WhatsApp:
+## Dapur MBG
 
 ```text
 Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
 ```
 
-Produksi Baru WhatsApp:
+Direct WhatsApp from Header/Hero/Service/Footer.
+
+## Produksi Baru
 
 ```text
 Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
 ```
+
+Direct WhatsApp from Header/Hero/Service/Footer.
 
 ## Product WhatsApp
 
@@ -164,16 +185,12 @@ Kondisi: {BARU|BEKAS}
 Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.
 ```
 
-Condition is normalized to `BARU` or `BEKAS`. Avoid duplicated `saya` wording.
-
 ## READY / SOLD
 
 ```text
 READY → Tanya WA
 SOLD  → Tanya Lainnya
 ```
-
-SOLD cards remain clickable/discoverable.
 
 ## Hero
 
@@ -182,241 +199,22 @@ public/images/hero/bbkitchen-hero-desktop.webp
 public/images/hero/bbkitchen-hero-mobile.webp
 ```
 
-`Lihat Unit yang Tersedia →` smooth-scrolls to catalog. Do not bake UI/copy into hero images. Desktop/mobile backgrounds may differ.
+`Lihat Unit yang Tersedia →` scrolls to catalog.
 
-## Social video
+## Social Video
 
 ```text
 public/images/social/youtube-shorts-cover.webp
 public/images/social/tiktok-cover.webp
 ```
 
-Target: `1280×720`, `16:9`, WebP. Cover first → play overlay → iframe only after click.
-
-# 3. DATA / ROUTING BASELINE
-
-```text
-GET /api/products
-GET /api/products?metadata=1
-```
-
-Default pagination: `8/page`.
-
-```text
-/api/products?search=...
-/product/[slug]
-/jual-barang-bekas-restoran/[...slug]
-```
-
-Verified local routes from Chat 1.3:
-
-```text
-/jual-barang-bekas-restoran/jakarta
-/jual-barang-bekas-restoran/jakarta/jakarta-pusat
-```
-
-Catch-all is intentional because WordPress local URLs are hierarchical.
-
-Top-level categories:
-
-```text
-Meja Stainless
-Sink Stainless
-Rak Stainless
-Hood Stainless
-Kompor
-Chiller
-Ice System
-Freezer
-Showcase
-Peralatan Dapur Bekas Lainnya
-```
-
-`src/data/products.ts` is type-only contract, not mock catalog/source of truth.
-
-# 4. ASSET BASELINE
-
-```text
-public/images/hero/
-├── bbkitchen-hero-desktop.webp
-└── bbkitchen-hero-mobile.webp
-
-public/images/people/
-├── bbkitchen-team-thumbs-up.webp
-├── bbkitchen-chef-presenting.webp
-├── bbkitchen-chef-pointing.webp
-└── bbkitchen-chef-trust.webp
-
-public/images/social/
-├── youtube-shorts-cover.webp
-└── tiktok-cover.webp
-```
-
-Mascot decision: **do not float mascot across every section**. Previous attempts caused overlap, double images, floating composition, map/card conflicts, and mobile breakage. Hero may use controlled composition/card treatment.
-
-# 5. MASTER MIGRATION CHRONOLOGY — 1.1 → 1.4
-
-## Chat 1.1 — Foundation / WooCommerce Migration
-
-**Date:** exact start/end date not found.
-
-### Work
-
-- Next.js migration foundation.
-- WooCommerce/WordPress source-of-truth boundary.
-- Server proxy architecture.
-- Live WooCommerce replacing mock catalog.
-- Product typing/data contracts.
-- Pagination foundation.
-- ACF inventory boundary investigation.
-
-### Bottlenecks
-
-**B-1 — WooCommerce 401**: authentication/configuration path. Resolution kept credentials/server request server-side.
-
-**B-2 — Catalog volume**: browser-side giant dataset rejected; server pagination became baseline 8/page.
-
-**B-3 — ACF REST limitation**: `BBK INVENTORY` uses `show_in_rest: 0`; do not assume native WooCommerce REST filtering. Use Core/proxy boundary.
-
-**B-4 — Mock catalog**: retired as source of truth.
-
-Exact final Chat 1.1 SHA: **Tidak ditemukan di conversation.**
+Target: `1280×720`, `16:9`, WebP. Cover first → play overlay → iframe after click.
 
 ---
 
-## Chat 1.2 — API / Metadata / Catalog / Product / SEO
+# ⚠️ MASTER BOTTLENECK SNAPSHOT
 
-**Date:** 14 August 2026 evidence.
-
-### Work
-
-- `/api/products`
-- `/api/products?metadata=1`
-- dynamic category metadata
-- server pagination
-- global search
-- live catalog
-- `/product/[slug]`
-- gallery/breadcrumb/Salin Link
-- Product SEO metadata/canonical/OG/JSON-LD baseline
-- WordPress/ACF contract/fallback investigation
-
-### Bottlenecks
-
-**B-5 — Metadata contract**: categories needed without frontend hardcoding. Resolution: metadata endpoint/server-owned contract.
-
-**B-6 — Upstream 502/connection reset**: build could succeed while runtime upstream failed. Lesson: `build verified` ≠ `runtime/upstream verified`; don't rewrite architecture to mask network/upstream problems.
-
-**B-7 — SEO preservation**: preserve URL/slug/search intent/canonical/schema; no mass slug rewrite.
-
-Exact final Chat 1.2 SHA: **Tidak ditemukan di forensic source.**
-
----
-
-## Chat 1.3 — Frontend Integration / Routing / Visual Convergence
-
-**Date:** 15 August 2026 evidence.
-
-### Work
-
-- App Router architecture.
-- Live catalog consumer.
-- Product Detail integration.
-- WordPress local/transactional pages.
-- Shared Header.
-- Article rendering.
-- Homepage visual comparison/design convergence.
-
-### Bottlenecks
-
-**B-8 — `[location]` too simple**: hierarchical WordPress URLs required `[...slug]`. Verified `/jakarta` and `/jakarta/jakarta-pusat`.
-
-**B-9 — Catch-all import error**:
-
-```text
-Module not found
-Can't resolve '../../../../lib/wordpress'
-```
-
-Root cause: route filesystem depth changed; relative import was stale.
-
-**B-10 — Stale `.next`**: generated validator still referenced `[location]` after route rename. Fix:
-
-```bash
-rmdir /s /q .next
-npm run build
-```
-
-**B-11 — Header Server/Client boundary**: interactive Header used `useState` in Server Component tree. Lesson: interactive Header is a Client Component boundary.
-
-**B-12 — Article typography**: content rendered, but editorial semantics appeared as stacked paragraphs instead of BBKitchen typography. Carried forward.
-
-**B-13 — Header search**: UI existed but field could not yet be typed. Root cause: **Tidak ditemukan di conversation.** Carried.
-
-**B-14 — Product Detail Header parity**: Product Detail worked but Header was not yet visually identical. Root cause: **Tidak ditemukan di conversation.** Carried.
-
-### Git evidence
-
-```text
-9c0784f..ea35c4b   catch-all route evolution
-3cb54a0..566b5b5   import correction
-9672ed8..871fa49   Header update
-479c92c1b025550c30630a1219da8a6a560abde2   documentation checkpoint
-```
-
----
-
-## Chat 1.4 — Homepage / Conversion / Visual Finalization
-
-**Date:** 15–16 August 2026 evidence.
-
-### Work
-
-- homepage visual convergence
-- Hero AI desktop/mobile backgrounds
-- mascot experiment cleanup
-- homepage positioning toward selling equipment
-- `Jual Unit` → `Dapur MBG`
-- Produksi Baru CTA
-- WhatsApp contract cleanup
-- READY/SOLD behavior
-- location/map cleanup
-- footer/social cleanup
-- social video covers
-
-### Major failed approach — floating mascot everywhere
-
-Attempted Hero + Location + Service + Testimonial mascot layers.
-
-Failure: overlap, images escaping containers, double mascot, floating/"terbang" composition, map/card conflicts, mobile damage.
-
-Final decision: **do not float mascot across sections**. Use controlled composition; Hero may use dedicated card/foreground treatment.
-
-### Hero decision
-
-Separate AI-generated desktop/mobile backgrounds replaced fragile floating image positioning.
-
-### CTA decisions
-
-```text
-Dapur MBG              → direct WhatsApp
-Mau Produksi Baru?     → direct WhatsApp
-Lihat Unit Tersedia    → smooth-scroll catalog
-```
-
-### Social decision
-
-YouTube Shorts/TikTok show cover first and instantiate iframe only after click.
-
-Checkpoint:
-
-```text
-26f3911f0d60c595656e85f1e9b65087bab86132
-```
-
-# 6. MASTER BOTTLENECK REGISTER
-
-| ID | Chat | Bottleneck | Status |
+| ID | Chat | Problem | Status |
 |---|---|---|---|
 | B-1 | 1.1 | WooCommerce 401/auth | Closed |
 | B-2 | 1.1 | Catalog volume/pagination | Closed |
@@ -426,57 +224,49 @@ Checkpoint:
 | B-6 | 1.2 | Upstream 502/reset | Carried |
 | B-7 | 1.2 | SEO preservation | Locked |
 | B-8 | 1.3 | Single location route | Closed |
-| B-9 | 1.3 | Relative import | Closed |
-| B-10 | 1.3 | Stale `.next` | Closed |
+| B-9 | 1.3 | Relative import after route refactor | Closed |
+| B-10 | 1.3 | Stale `.next` artifacts | Closed |
 | B-11 | 1.3 | Server/Client Header boundary | Closed |
 | B-12 | 1.3 | Article typography | Carried |
-| B-13 | 1.3 | Search not typable | Carried |
+| B-13 | 1.3 | Search interaction | Carried |
 | B-14 | 1.3 | Product Detail Header parity | Carried |
-| B-15 | 1.4 | Floating mascot chaos | Closed / Do not repeat |
+| B-15 | 1.4 | Floating mascot composition | Closed / Do not repeat |
 | B-16 | 1.4 | Empty social cards | Closed |
 | B-17 | 1.4 | Duplicate WA wording | Closed |
 
-# 7. FAILED APPROACHES — DO NOT REPEAT
+Full forensic details: `docs/progress/CHAT-X.Y.md`.
 
-1. Mock catalog as source of truth.
-2. Frontend-only category patches.
-3. Single `[location]` route for hierarchical WordPress URLs.
-4. Stale relative imports after route restructuring.
-5. Treating stale `.next` artifacts as architecture failure.
-6. Treating successful `next build` as proof upstream runtime is healthy.
-7. Importing interactive Client Components as pure Server Components.
-8. Floating the same transparent mascot through every section with `absolute` positioning.
-9. Mass-changing existing SEO slugs.
-10. Exposing WooCommerce/Google credentials to client code.
+---
 
-# 8. LOCKED ARCHITECTURE DECISIONS
+# 🚫 FAILED APPROACHES — DO NOT REPEAT
 
-- WooCommerce/WordPress/ACF/Core System remain source-of-truth layers.
-- Next.js is the experience layer.
-- Catalog pagination is server-side, default 8/page.
-- Product route: `/product/[slug]`.
-- Local route: `/jual-barang-bekas-restoran/[...slug]`.
-- Existing SEO URL/slug intent must be preserved.
-- Inventory business logic does not belong in presentation components.
-- Google Sheets access belongs to backend/Core System.
-- Homepage positioning is primarily sales.
-- Dapur MBG + Produksi Baru use direct WhatsApp flows.
-- SOLD Product Cards stay discoverable.
-- Mascot is not a universal floating layer.
+- Mock catalog as source of truth.
+- Frontend-only category patches.
+- Single `[location]` route for hierarchical WordPress URLs.
+- Treating stale `.next` artifacts as architecture failure.
+- Treating `next build` success as proof upstream runtime is healthy.
+- Importing interactive Client Components as pure Server Components.
+- Floating the same transparent mascot through every section.
+- Mass-changing existing SEO slugs.
+- Exposing WooCommerce/Google credentials to client code.
 
-# 9. TECHNICAL DEBT → CHAT 1.5
+---
 
-- Article/Local Landing typography/editorial rendering.
-- Header search interaction audit.
-- Product Detail shared Header parity.
-- Related Products finalization.
-- Authoritative ACF filtering.
-- Admin/Core System workflow.
-- SOLD → Google Sheets.
-- Mobile QA across templates.
-- Production performance/accessibility hardening.
+# 🧱 TECHNICAL DEBT → CHAT 1.5
 
-# 10. BUILD / VERIFICATION RULE
+1. Article/local landing editorial typography.
+2. Header search interaction + sticky behavior audit.
+3. Product Detail shared Header parity.
+4. Related Products finalization.
+5. Authoritative ACF filtering.
+6. Admin/Core System workflow.
+7. SOLD → Google Sheets.
+8. Mobile QA across templates.
+9. Production performance/accessibility hardening.
+
+---
+
+# 🧪 VERIFICATION RULE
 
 ```text
 implemented
@@ -493,7 +283,17 @@ build verified
   ↓
 commit
   ↓
-README update when milestone-level
+README + progress archive updated at milestone/session close
+```
+
+Always distinguish:
+
+```text
+build verified
+runtime verified
+upstream verified
+UI verified
+mobile verified
 ```
 
 Known non-blocking environment warning:
@@ -503,9 +303,9 @@ Next.js ignored package-lock.json in C:\Users\Lenovo
 because it is outside the Git repository.
 ```
 
-Do not turn this warning into architecture work unless it becomes a real build/runtime issue.
+---
 
-# 11. SEO BASELINE
+# 🔍 SEO BASELINE
 
 GSC snapshot supplied for 15 August 2026:
 
@@ -519,9 +319,11 @@ Indexed       ~2.29K
 Not indexed   ~413
 ```
 
-Rules: preserve URL, slug, search intent, canonical/schema/internal linking. Never mass-redirect or mass-noindex without mapping/audit.
+Preserve URL, slug, search intent, canonical/schema/internal linking. Never mass-redirect or mass-noindex without mapping/audit.
 
-# 12. IMPORTANT FILES / ASSETS
+---
+
+# 📦 IMPORTANT FILES / ASSETS
 
 ```text
 public/images/hero/bbkitchen-hero-desktop.webp
@@ -548,9 +350,13 @@ src/lib/wordpress.ts
 src/lib/woocommerce.ts
 ```
 
-# 13. CHAT 1.5 HANDOFF
+For copy-location help: `VIBE-CODING-COPY-GUIDE.md` / `docs/COPY-EDITING-GUIDE.md`.
 
-Start:
+---
+
+# 🚀 CHAT 1.5 HANDOFF
+
+Start title:
 
 ```text
 1.5 BBKitchen Next.js Migration
@@ -559,47 +365,58 @@ Start:
 First actions:
 
 1. Read this README.
-2. Audit current branch/code before changes.
-3. Verify build/runtime state.
-4. Continue from technical debt above.
-5. Prefer `1 step = 1 file = 1 verified commit`.
-6. Update README after milestone-level changes.
+2. Read the relevant `docs/progress/CHAT-X.Y.md` archive if the task touches migration history.
+3. Audit current branch/code before changing anything.
+4. Verify build/runtime state.
+5. Follow the Pareto priorities above.
+6. Prefer `1 step = 1 file = 1 verified commit`.
+7. At session close, run `docs/prompts/END-SESSION-PROMPT.md`.
 
-Priority:
+### Do not repeat
 
-1. Responsive/mobile audit.
-2. Shared Header + search interaction.
-3. Product Detail Header parity.
-4. Article/Local Landing typography.
-5. READY/SOLD Product Card audit.
-6. WhatsApp contract audit.
-7. MBG / Produksi Baru CTA consistency.
-8. Related Products / ACF/Core System.
-9. SEO/performance/accessibility hardening.
+- Do not return to mock catalog.
+- Do not invent frontend-only inventory truth.
+- Do not mass-change SEO slugs.
+- Do not reintroduce universal floating mascot layers.
+- Do not claim verification without evidence.
 
-# 14. DOCUMENTATION INDEX
+---
 
-For detailed project memory and operator guidance:
+# 📜 MIGRATION HISTORY INDEX
 
-```text
-README.md
-└── current state + Pareto priorities + architecture + history + handoff
+Detailed history is archived here:
 
-end-session-prompt.md
-└── closing protocol for each Chat session
+- `docs/progress/CHAT-1.1.md` — Foundation / WooCommerce migration
+- `docs/progress/CHAT-1.2.md` — API / metadata / catalog / product / SEO
+- `docs/progress/CHAT-1.3.md` — Frontend integration / routing / visual convergence
+- `docs/progress/CHAT-1.4.md` — Homepage / conversion / visual finalization
 
-VIBE-CODING-COPY-GUIDE.md
-└── beginner-friendly map of where to change website copy
-```
+Use `docs/progress/README.md` for the archive rules.
 
-Use the README for **current state**. Use the dedicated docs for **procedures/details**. Do not turn README into a daily activity log.
+---
+
+# 🔐 SESSION CLOSE PROTOCOL
+
+Canonical:
+
+`docs/prompts/END-SESSION-PROMPT.md`
+
+Forensic extraction of an old/skipped chat:
+
+`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`
+
+Root shortcut:
+
+`end-session-prompt.md`
+
+---
 
 # FINAL CHECKPOINT
 
 ```text
-Chat 1.1 → forensic captured
-Chat 1.2 → forensic captured
-Chat 1.3 → forensic captured
+Chat 1.1 → forensic archived
+Chat 1.2 → forensic archived
+Chat 1.3 → forensic archived
 Chat 1.4 → ✅ CLOSED
 Chat 1.5 → 🚀 NEXT
 

@@ -9,11 +9,21 @@ interface FooterProps {
 
 const ADDRESS = 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A, Belakang Masjid Al - Kahfi No.020, RT.004, Pd. Benda, Kec. Pamulang, Kota Tangerang Selatan, Banten 15434';
 const WHATSAPP = '0851 2200 1051';
+const WHATSAPP_CONSULTATION_URL = 'https://wa.me/6285122001051?text=Halo%20Tim%20BBKitchen%2C%20saya%20ingin%20konsultasi%20kebutuhan%20peralatan%20dapur%20komersial%20untuk%20usaha%20saya%20%28Restoran%2FCafe%2FKatering%2FBakery%2FMBG%20Kitchen%29.%0A%0ABisa%20dibantu%20rekomendasi%20alat%20yang%20sesuai%20menu%20dan%20estimasi%20budget%20modal%20kami%3F%20Terima%20kasih.';
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=BBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen';
 const MBG_CATALOG_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1';
 const MBG_WHATSAPP_URL = 'https://wa.me/6285122001051?text=Halo%20BBKitchen%2C%20saya%20ingin%20minta%20info%20paket%20Dapur%20MBG.';
 
-export const Footer: React.FC<FooterProps> = ({ onSelectCategory }) => {
+const socialLinks = [
+  { label: 'YouTube Shorts', href: 'https://www.youtube.com/shorts/_uzgdL_JhXA', icon: <Youtube className="w-4 h-4" /> },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@bukanbarukitchen.com/photo/7547192180746767623', icon: <span className="text-sm font-black leading-none">♪</span> },
+  { label: 'Instagram', href: 'https://www.instagram.com/bukanbarukitchen/', icon: <Instagram className="w-4 h-4" /> },
+  { label: 'Threads', href: 'https://www.threads.com/@bukanbarukitchen', icon: <span className="text-sm font-black leading-none">@</span> },
+  { label: 'Facebook', href: 'https://www.facebook.com/bukanbarukitchens', icon: <Facebook className="w-4 h-4" /> },
+  { label: 'Pinterest', href: 'https://id.pinterest.com/bukanbarukitchen/', icon: <span className="text-sm font-black leading-none">P</span> },
+];
+
+export const Footer: React.FC<FooterProps> = () => {
   return (
     <footer className="bg-slate-950 text-slate-400 text-xs border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-12 space-y-10">
@@ -77,14 +87,19 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory }) => {
               <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">Butuh Unit?</h4>
               <p className="mt-2 text-xs text-slate-300 leading-relaxed">Cek katalog, tanyakan kode unit, atau hubungi BBKitchen untuk memastikan stok terbaru.</p>
             </div>
-            <a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors">
+            <a href={WHATSAPP_CONSULTATION_URL} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors">
               <Phone className="w-4 h-4" />
               Tanya via WhatsApp
             </a>
-            <div className="flex items-center gap-2 pt-1">
-              <a href="https://www.instagram.com/bukanbarukitchen/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-9 h-9 rounded-lg border border-slate-700 flex items-center justify-center hover:text-white hover:border-slate-500 transition-colors"><Instagram className="w-4 h-4" /></a>
-              <a href="https://www.facebook.com/bukanbarukitchens" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-9 h-9 rounded-lg border border-slate-700 flex items-center justify-center hover:text-white hover:border-slate-500 transition-colors"><Facebook className="w-4 h-4" /></a>
-              <a href="https://www.youtube.com/shorts/_uzgdL_JhXA" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-9 h-9 rounded-lg border border-slate-700 flex items-center justify-center hover:text-white hover:border-slate-500 transition-colors"><Youtube className="w-4 h-4" /></a>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Ikuti BBKitchen</p>
+              <div className="flex flex-wrap items-center gap-2">
+                {socialLinks.map((social) => (
+                  <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label} className="w-9 h-9 rounded-lg border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800 transition-colors">
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>

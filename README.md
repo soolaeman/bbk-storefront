@@ -8,129 +8,471 @@ Branch aktif:
 feature/nextjs-migration
 ```
 
-> Dokumentasi ini adalah **living documentation**. Status `done` hanya untuk pekerjaan yang sudah benar-benar dikerjakan/terverifikasi. Rencana ditulis terpisah dari implementasi.
+> README ini adalah **living documentation** dan handoff resmi antar-conversation. Jangan mengulang pekerjaan yang sudah berstatus `done` tanpa alasan teknis.
 
 ---
 
-## 1. Tujuan Migrasi
+# 🏁 CHECKPOINT — CHAT 1.4 CLOSED
+
+## Status
+
+```text
+Chat 1.4 → ✅ CLOSED / DONE
+Chat 1.5 → 🚀 NEXT
+Branch   → feature/nextjs-migration
+```
+
+Checkpoint terakhir:
+
+```text
+26f3911f0d60c595656e85f1e9b65087bab86132
+feat: add video covers to social media cards
+```
+
+Chat 1.4 fokus pada finalisasi visual homepage, hero, CTA/conversion, positioning MBG, WhatsApp flow, mascot experiment cleanup, dan social-video presentation.
+
+---
+
+# 1. TUJUAN MIGRASI
 
 > **New frontend, old SEO equity.**
 
-Migrasi bukan sekadar mengganti theme WordPress. Targetnya adalah membangun experience layer BBKitchen yang lebih konsisten di desktop dan mobile tanpa membuang data live, URL/slug, taxonomy, content intent, dan SEO equity yang sudah ada.
+Target migrasi adalah membangun experience layer BBKitchen yang modern, cepat, konsisten, conversion-oriented, dan responsive tanpa membuang data live, URL/slug, taxonomy, content intent, serta SEO equity existing.
 
 Prioritas:
 
-1. UI/UX rata di Home, Catalog/Archive, Product Detail, Page, dan Post.
+1. UI/UX konsisten di Home, Catalog/Archive, Product Detail, Page, Post, dan transactional landing.
 2. WooCommerce + WordPress/ACF tetap menjadi source of truth katalog.
-3. URL/slug dan search intent lama dipertahankan.
-4. Product detail menjadi halaman conversion utama.
+3. URL/slug/search intent lama dipertahankan.
+4. Product Detail menjadi halaman conversion utama.
 5. Business logic inventory dipisahkan dari frontend.
 6. SEO, copy, UX, dan data migration dikerjakan sebagai satu program.
+7. Homepage difokuskan untuk **jualan unit/peralatan**, bukan kanal utama penerimaan barang borongan.
 
 ---
 
-## 2. Target Architecture
+# 2. ARCHITECTURE BOUNDARY
 
 ```text
-                    BBK AI GROWTH AUTOMATION
-                 inventory / AI / sourcing pipeline
-                              │
-                              ▼
-                       WordPress / WooCommerce
-                              │
-                 ┌────────────┼────────────┐
-                 ▼            ▼            ▼
-             Products      ACF        Categories
-                 │            │            │
-                 └────────────┼────────────┘
-                              ▼
-                     BBK CORE SYSTEM
-                WordPress business-logic layer
-                              │
-                              ▼
-                     Next.js Data Layer
-                              │
-                 ┌────────────┼────────────┐
-                 ▼            ▼            ▼
-                Home       Catalog      Product
-                 │            │            │
-                 └────────────┼────────────┘
-                              ▼
-                   Shared Design System
-                              │
-                              ▼
-                    Desktop + Mobile UX
+BBK AI GROWTH AUTOMATION
+          ↓
+WordPress / WooCommerce
+          ↓
+BBK CORE SYSTEM
+          ↓
+Next.js Data Layer
+          ↓
+Home / Catalog / Product / Pages
+          ↓
+Shared Design System
+          ↓
+Desktop + Mobile UX
 ```
 
 ### Boundary yang dikunci
 
 - **WooCommerce**: produk, harga, stok, kategori, gambar, slug, description, short description.
 - **WordPress/ACF**: inventory fields seperti `kode_unit`, `status_unit`, `kondisi_unit`, `lokasi_unit`, `link_telegram`.
-- **BBK Core System**: business logic dan integration layer WordPress. Saat dokumentasi ini dibuat, plugin tersebut masih merupakan fondasi yang belum diisi sebagai sistem final.
-- **BBK AI Growth Automation**: automation/sourcing pipeline terpisah; tidak menjadi bagian dari Next.js frontend.
-- **Next.js**: UI/UX, routing, rendering, SEO presentation, catalog experience, dan conversion experience.
-- **Google Sheets**: target pencatatan penjualan melalui backend Core System; Next.js tidak boleh menyimpan credential atau mengakses Google Sheets secara langsung.
+- **BBK Core System**: business logic + integration layer WordPress.
+- **BBK AI Growth Automation**: automation/sourcing pipeline terpisah dari frontend.
+- **Next.js**: UI/UX, routing, rendering, SEO presentation, catalog dan conversion experience.
+- **Google Sheets**: pencatatan penjualan melalui backend/Core System. Next.js tidak boleh menyimpan credential atau mengakses Google Sheets secara langsung.
 
 ---
 
-## 3. Current Migration Status — 15 Agustus 2026
+# 3. STATUS MIGRATION SAAT INI
 
-| Area | Status | Catatan |
-|---|---|---|
-| Next.js App Router | ✅ | Build lokal berhasil setelah cache `.next` dibersihkan |
-| WooCommerce server proxy | ✅ | `/api/products` tersedia |
-| Global metadata endpoint | ✅ | `/api/products?metadata=1` tersedia |
-| Top-level category filter | ✅ | Subkategori tidak menjadi filter publik |
-| Pagination | ✅ | WooCommerce server-side; default 8/page |
-| Global search | ✅ | Homepage/catalog menggunakan WooCommerce `search` |
-| Product detail | ✅ | `/product/[slug]` menggunakan slug live |
-| Product detail SEO metadata | ✅ | Canonical/OG/Product JSON-LD sudah disiapkan |
-| Product gallery | ✅ | Thumbnail dapat mengganti foto utama |
-| Breadcrumb | ✅ | Home → Katalog → Kategori → Produk |
-| Salin Link | ✅ | Deep-link ke `/product/[slug]` |
-| Condition UI | ✅ | UI dinormalisasi menjadi Baru / Bekas |
-| Local landing route | ✅ | Catch-all `/jual-barang-bekas-restoran/[...slug]` mendukung `/jakarta` dan multi-level seperti `/jakarta/jakarta-pusat` |
-| Local landing visual | ⚠️ | Data WordPress sudah masuk; styling artikel masih perlu dirapikan agar mengikuti design system |
-| Shared Header | ✅ | `src/components/Header.tsx` sudah dipakai pada halaman migration dan bersifat sticky |
-| Article Header integration | ✅ | Header sudah tampil pada local landing page |
-| Article content typography | ⏳ | H1/H2/H3/list/paragraph masih perlu styling dan spacing yang konsisten |
-| Header global search on local pages | ⚠️ | Input header perlu wiring state/handler agar benar-benar searchable dari page yang bersangkutan |
-| Product detail header | ⚠️ | Masih memakai header hardcoded; perlu dikonsolidasikan ke shared `Header.tsx` |
-| Related Products | ⏳ | Belum menjadi implementasi final di migration baseline |
-| ACF authoritative filtering | ⏳ | Backend WordPress hook/endpoint belum selesai |
-| Shared design system | ⏳ | Perlu konsolidasi seluruh page/archive/post |
-| Staff/Owner authentication | ⚠️ | Masih simulasi PIN frontend |
-| Admin → Telegram | ⏳ | Belum menjadi Core System workflow final |
-| Admin → READY/DP/SOLD | ⏳ | Belum menjadi Core System workflow final |
-| SOLD → Google Sheets | ⏳ | Belum diimplementasikan sebagai Core System workflow final |
-| Local WooCommerce connectivity | ⚠️ | Laptop sebelumnya mengalami connection reset → proxy 502 |
-
-### Chat 1.3 — status penutupan
-
-Pada akhir Chat 1.3, visual migration sudah melewati fase paling kasar dan masuk fase **site-wide consistency**.
-
-Yang sudah diverifikasi secara visual di localhost:
-
-- Home mempunyai header, katalog, card, dan visual system yang sudah jauh lebih matang.
-- Local landing `/jual-barang-bekas-restoran/jakarta` sudah mengambil data WordPress dan menampilkan hero/image/content.
-- Catch-all route berhasil melayani `/jakarta` dan `/jakarta/jakarta-pusat`.
-- Shared `Header.tsx` sudah tampil pada local landing page.
-- Product detail sudah mempunyai layout detail, gallery, metadata, breadcrumb, dan conversion area.
-- Build berhasil setelah stale `.next` dibersihkan.
-
-Tiga pekerjaan visual/UX yang sengaja **ditahan untuk chat berikutnya**:
-
-1. Product detail memakai shared header yang sama dengan Home/local landing.
-2. Search pada shared header dibuat benar-benar functional di halaman yang membutuhkannya.
-3. Article/local landing content dirapikan: H1/H2/H3, list, paragraph spacing, typography, palette, dan responsive reading width.
+| Area | Status |
+|---|---|
+| Next.js App Router | ✅ |
+| WooCommerce `/api/products` proxy | ✅ |
+| `/api/products?metadata=1` | ✅ |
+| Top-level category filter | ✅ |
+| Server-side pagination, default 8/page | ✅ |
+| Global catalog search | ✅ |
+| `/product/[slug]` | ✅ |
+| Product SEO metadata / canonical / OG / JSON-LD baseline | ✅ |
+| Product gallery | ✅ |
+| Breadcrumb + Salin Link | ✅ |
+| Condition UI Baru / Bekas | ✅ |
+| Local catch-all `/jual-barang-bekas-restoran/[...slug]` | ✅ |
+| Shared Header baseline | ✅ |
+| Homepage visual system | ✅ |
+| Hero desktop/mobile backgrounds | ✅ |
+| Hero mascot card | ✅ |
+| Floating mascot di section lain | ❌ intentionally removed |
+| Product WhatsApp message | ✅ |
+| MBG CTA WhatsApp | ✅ |
+| Produksi Baru CTA WhatsApp | ✅ |
+| Social YouTube/TikTok covers | ✅ |
+| Social iframe lazy-load on click | ✅ |
+| Article typography finalization | ⏳ |
+| Shared Header search audit | ⚠️ |
+| Product Detail shared header audit | ⚠️ |
+| Related Products final | ⏳ |
+| ACF authoritative filtering | ⏳ |
+| Admin/Core System workflow | ⏳ |
+| SOLD → Google Sheets | ⏳ |
 
 ---
 
-## 4. Existing Frontend Data Contract
+# 4. HOMEPAGE POSITIONING — FINAL DECISION
 
-`src/data/products.ts` sudah diposisikan sebagai **type-only contract**, bukan katalog mock.
+Homepage harus terasa seperti:
 
-Contract utama:
+```text
+BUY USED / READY-TO-USE KITCHEN EQUIPMENT
+```
+
+Fokus:
+
+- unit tersedia
+- kondisi unit
+- hemat modal
+- siap kirim seluruh Indonesia
+- siap dipakai
+- kategori produk
+- WhatsApp inquiry
+- Dapur MBG
+- produksi baru sebagai secondary CTA
+
+Jangan mengembalikan homepage menjadi halaman utama untuk orang yang ingin menjual barang/borongan.
+
+---
+
+# 5. HEADER NAVIGATION
+
+CTA header yang sebelumnya **Jual Unit** diganti menjadi:
+
+```text
+Dapur MBG
+Mau Produksi Baru?
+```
+
+### Dapur MBG — WhatsApp message
+
+Semua CTA Dapur MBG yang mengarah ke WhatsApp menggunakan:
+
+```text
+Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
+```
+
+### Mau Produksi Baru? — WhatsApp message
+
+```text
+Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
+```
+
+Jangan membuat cabang behavior berbeda tanpa keputusan baru yang eksplisit.
+
+---
+
+# 6. HERO — FINAL BASELINE
+
+Asset:
+
+```text
+public/images/hero/bbkitchen-hero-desktop.webp
+public/images/hero/bbkitchen-hero-mobile.webp
+```
+
+Hero menggunakan generated commercial background yang memadukan:
+
+- chef/person BBKitchen
+- hood stainless
+- sink stainless
+- kompor
+- freezer
+- dark navy commercial environment
+
+Copy baseline:
+
+```text
+Peralatan Dapur Bekas untuk Resto & Usaha Kuliner
+```
+
+Description:
+
+```text
+Temukan unit peralatan dapur bekas yang masih layak pakai, siap digunakan, dan beberapa unit baru. Cocok untuk restoran, cafe, catering, bakery, hotel, dan dapur komersial. Unit tersedia satuan maupun kebutuhan usaha.
+```
+
+Benefit cards:
+
+```text
+Cek Kondisi
+Informasi kondisi tiap unit
+
+Hemat Modal
+Pilihan unit bekas & baru
+
+Siap Kirim
+Seluruh Indonesia
+
+Siap Dipakai
+Unit dicek sebelum dikirim
+```
+
+CTA:
+
+```text
+Lihat Unit yang Tersedia →
+```
+
+CTA harus **scroll langsung ke catalog section**, bukan membuka route baru.
+
+### Hero asset rules
+
+- WebP bila memungkinkan.
+- Desktop target 16:9.
+- Mobile boleh memiliki background portrait/vertical terpisah.
+- Jangan bake copy/UI ke gambar.
+- Jangan mengandalkan crop desktop jika subjek penting akan terpotong di mobile.
+- Equipment harus realistis secara skala/perspektif.
+- Person tidak boleh terlihat terjepit oleh equipment.
+
+---
+
+# 7. MASCOT / PEOPLE ASSETS
+
+```text
+public/images/people/
+├── bbkitchen-team-thumbs-up.webp
+├── bbkitchen-chef-presenting.webp
+├── bbkitchen-chef-pointing.webp
+└── bbkitchen-chef-trust.webp
+```
+
+### Keputusan final Chat 1.4
+
+**Jangan floating mascot di semua section.**
+
+Eksperimen sebelumnya menyebabkan overlap, keluar container, double mascot, komposisi melayang, konflik map/card, dan mobile layout rusak.
+
+Untuk saat ini:
+
+- hero mascot boleh digunakan sebagai composition/card foreground bila memang rapi.
+- mascot di Location/Service/Testimonial **tidak dipasang sebagai floating layer**.
+- jika suatu hari dipakai lagi, desain composition-nya harus dibuat khusus untuk section tersebut; jangan sekadar menambahkan `absolute`.
+
+---
+
+# 8. SOCIAL VIDEO SECTION
+
+Component:
+
+```text
+src/components/SocialMediaSection.tsx
+```
+
+Assets:
+
+```text
+public/images/social/youtube-shorts-cover.webp
+public/images/social/tiktok-cover.webp
+```
+
+Target asset:
+
+```text
+1280 × 720 px
+16:9
+WebP
+```
+
+Behavior final:
+
+1. Cover tampil terlebih dahulu.
+2. Overlay play button tampil di atas cover.
+3. iframe tidak langsung dimuat.
+4. Klik card → iframe baru dirender.
+5. Responsive desktop/mobile tetap menggunakan `aspect-video`.
+
+Last commit yang mengimplementasikan ini:
+
+```text
+26f3911f0d60c595656e85f1e9b65087bab86132
+```
+
+---
+
+# 9. WHATSAPP PRODUCT CONTRACT
+
+Semua tombol WhatsApp product harus menghindari duplicate wording seperti `saya` ganda.
+
+Format baseline:
+
+```text
+Halo Tim BBKitchen, saya tertarik dan ingin menanyakan penawaran harga dan ketersediaan untuk unit:
+
+Nama Unit: {NAMA UNIT}
+
+SKU/ID: {SKU}
+
+Lokasi Unit: {LOKASI}
+
+Kondisi: {BARU|BEKAS}
+
+Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.
+```
+
+Kondisi harus berasal dari data produk:
+
+```text
+BARU
+BEKAS
+```
+
+---
+
+# 10. PRODUCT CARD READY / SOLD
+
+Card produk **tetap hidup ketika SOLD**.
+
+```text
+READY
+→ Tanya WA
+
+SOLD
+→ Tanya Lainnya
+```
+
+Jangan mematikan card SOLD. Tujuannya menjaga discoverability, SEO value, dan kesempatan menawarkan alternatif.
+
+---
+
+# 11. MBG / SERVICE FLOW
+
+Intent service:
+
+```text
+1. Beli Unit
+2. Jual Unit
+3. Dapur MBG
+4. Produksi Baru
+```
+
+Namun positioning homepage tetap jualan.
+
+Copy service baseline:
+
+```text
+Cari, Jual, atau Produksi Peralatan Dapur Resto & Dapur MBG
+```
+
+### Dapur MBG
+
+WhatsApp:
+
+```text
+Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
+```
+
+PDF katalog MBG:
+
+```text
+https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1
+```
+
+Label:
+
+```text
+PDF Katalog MBG
+```
+
+---
+
+# 12. SEARCH & CATALOG
+
+Search:
+
+```text
+/api/products?search=...
+```
+
+Pagination:
+
+```text
+8 products/page
+```
+
+Jangan mengambil seluruh katalog ribuan produk ke browser hanya untuk pagination/filter.
+
+Power type/sumber daya tidak menjadi public filter berdasarkan keputusan migrasi.
+
+---
+
+# 13. CATEGORY CONTRACT
+
+Top-level WooCommerce categories:
+
+1. Meja Stainless
+2. Sink Stainless
+3. Rak Stainless
+4. Hood Stainless
+5. Kompor
+6. Chiller
+7. Ice System
+8. Freezer
+9. Showcase
+10. Peralatan Dapur Bekas Lainnya
+
+Jangan membuat kategori hardcoded baru hanya untuk memperbaiki visual.
+
+---
+
+# 14. PRODUCT DETAIL
+
+Route:
+
+```text
+/product/[slug]
+```
+
+Data yang harus dipertahankan:
+
+- title/H1
+- slug
+- description
+- short description
+- SKU
+- category
+- condition
+- location
+- status
+- images
+- canonical
+- Open Graph
+- Product JSON-LD
+
+> **Jangan mengganti slug produk/category secara massal.**
+
+---
+
+# 15. LOCAL / TRANSACTIONAL LANDING
+
+Route:
+
+```text
+/jual-barang-bekas-restoran/[...slug]
+```
+
+Contoh:
+
+```text
+/jual-barang-bekas-restoran/jakarta
+/jual-barang-bekas-restoran/jakarta/jakarta-pusat
+```
+
+Content WordPress tetap menjadi source material. Jangan membuat copy kota hardcoded atau mengubah URL existing tanpa mapping/audit.
+
+---
+
+# 16. DATA CONTRACT
+
+`src/data/products.ts` adalah type-only contract, bukan katalog mock.
+
+Contract:
 
 ```text
 Product
@@ -143,7 +485,7 @@ ProductCategoryOption
 CatalogMetadata
 ```
 
-Nilai resmi inventory yang menjadi acuan:
+Inventory values:
 
 ```text
 status_unit
@@ -167,143 +509,39 @@ SETU
 PAMULANG BARAT
 ```
 
-ACF export `BBK INVENTORY` yang dipelajari selama migrasi menggunakan `show_in_rest: 0`. Karena itu field ACF tidak boleh diasumsikan otomatis tersedia sebagai query filter native WooCommerce REST API.
+ACF export `BBK INVENTORY` menggunakan `show_in_rest: 0`; jangan mengasumsikan ACF otomatis tersedia sebagai native WooCommerce REST filter.
 
 ---
 
-## 5. WooCommerce Proxy
-
-Endpoint:
+# 17. WOOCOMMERCE PROXY
 
 ```text
 GET /api/products
 GET /api/products?metadata=1
 ```
 
-File utama:
+File:
 
 ```text
 src/app/api/products/route.ts
 ```
 
-Proxy menangani kebutuhan katalog seperti:
+Proxy menangani page/per_page/search/sorting/stock/SKU/price/category metadata dan fallback ACF contract.
 
-- `page`
-- `per_page`
-- `search`
-- sorting
-- stock status
-- SKU
-- price range
-- WooCommerce category lookup
-- top-level category metadata
-- ACF contract/fallback handling
-
-Header pagination WooCommerce:
+Pagination headers:
 
 ```text
 X-WP-Total
 X-WP-TotalPages
 ```
 
-**Jangan mengubah proxy untuk menutupi masalah network laptop.** Connection reset yang pernah terjadi perlu dibedakan dari application error.
+Jangan mengubah proxy hanya untuk menutupi connection reset/network laptop.
 
 ---
 
-## 6. Category Contract
+# 18. ADMIN / CORE SYSTEM — PLANNED
 
-Filter publik menggunakan **top-level WooCommerce categories**.
-
-Urutan UI yang dikunci:
-
-1. Meja Stainless
-2. Sink Stainless
-3. Rak Stainless
-4. Hood Stainless
-5. Kompor
-6. Chiller
-7. Ice System
-8. Freezer
-9. Showcase
-10. Peralatan Dapur Bekas Lainnya
-
-Tidak boleh membuat kategori hardcoded baru di frontend hanya untuk memperbaiki tampilan.
-
----
-
-## 7. Product Detail
-
-Route:
-
-```text
-/product/[slug]
-```
-
-Tujuan halaman:
-
-```text
-SEO landing page
-        +
-Product information
-        +
-Conversion
-        +
-Admin workflow (planned)
-```
-
-Data penting yang dipertahankan:
-
-- title/H1
-- slug
-- description
-- short description
-- SKU
-- category
-- condition
-- location
-- status
-- images
-- canonical
-- Open Graph
-- Product JSON-LD
-
-Prinsip:
-
-> **Jangan mengganti slug produk/category secara massal.**
-
----
-
-## 8. Local / Transactional Landing Pages
-
-Primary migration route:
-
-```text
-/jual-barang-bekas-restoran/[...slug]
-```
-
-Catch-all dipilih untuk mempertahankan dan mengembangkan hirarki URL lokasi tanpa mengunci frontend hanya pada satu segment `[location]`.
-
-Contoh yang sudah diuji di localhost:
-
-```text
-/jual-barang-bekas-restoran/jakarta
-/jual-barang-bekas-restoran/jakarta/jakarta-pusat
-```
-
-Resolver menggunakan data WordPress untuk menentukan halaman berdasarkan hirarki slug/parent.
-
-Prinsip penting:
-
-- Jangan membuat copy landing page kota secara hardcoded di frontend.
-- Jangan mengganti URL existing hanya karena template baru belum selesai.
-- Local/transactional page adalah aset SEO dan conversion, bukan sekadar halaman dekoratif.
-- Content WordPress harus tetap menjadi source material; frontend bertugas merendernya dengan design system yang konsisten.
-
----
-
-## 9. Planned Product Admin Workflow
-
-Target operasional setelah BBK Core System siap:
+Target workflow:
 
 ```text
 WordPress admin login
@@ -318,7 +556,7 @@ BBK Admin Controls
              └── SOLD
 ```
 
-Saat `SOLD`:
+Saat SOLD:
 
 ```text
 Admin klik SOLD
@@ -329,22 +567,58 @@ update inventory/status
       ↓
 catat tanggal terjual
       ↓
-sinkron ke Google Sheets
+sinkron Google Sheets
       ↓
 refresh/cache invalidation
       ↓
 frontend menampilkan status terbaru
 ```
 
-**Next.js tidak boleh menjadi sumber kebenaran Google Sheets.** Workflow final harus melewati backend/Core System.
+Next.js bukan source of truth Google Sheets.
 
 ---
 
-## 10. UI/UX Direction
+# 19. SEO BASELINE
 
-Target final bukan membuat Home saja terlihat bagus.
+Baseline GSC yang diberikan user dari snapshot 15 Agustus 2026:
 
-Semua template harus menggunakan bahasa visual yang sama:
+```text
+16 months
+Clicks        ~1.01K
+Impressions   ~28.1K
+CTR           3.6%
+Avg position  9.5
+
+Indexed       ~2.29K
+Not indexed   ~413
+```
+
+Query penting:
+
+```text
+bbkitchen
+bukanbarukitchen
+jual barang bekas restoran jakarta
+bbkitchen - sentra peralatan dapur restoran bekas jakarta | bukan baru kitchen kota tangerang selatan
+```
+
+Migration rules:
+
+- pertahankan URL
+- pertahankan slug
+- pertahankan search intent
+- pertahankan H1/title intent
+- pertahankan canonical/schema/internal linking
+- jangan slug massal
+- jangan hapus URL tanpa mapping
+- jangan redirect semua URL ke homepage
+- jangan noindex massal tanpa alasan
+
+---
+
+# 20. DESIGN SYSTEM
+
+Semua template harus memakai bahasa visual yang sama:
 
 ```text
 Header
@@ -363,7 +637,7 @@ Modal
 Responsive rules
 ```
 
-Template target:
+Target:
 
 ```text
 Home
@@ -374,161 +648,67 @@ Post
 Local / Transactional Landing Page
 ```
 
-Desktop dan mobile diperlakukan sebagai **satu design system**, bukan dua desain terpisah.
+Visual language:
 
-Target visual saat ini sudah mengarah ke:
-
-- white/light content surfaces
+- white/light surfaces
 - navy/dark brand sections
 - BBKitchen yellow/amber accent
 - emerald action/availability states
 - shared spacing/container rules
-- consistent rounded cards and borders
+- rounded cards
+- subtle borders
+- premium commercial photography
 
-Palet harus dikonsolidasikan, bukan dibuat ulang per page.
-
----
-
-## 11. Search & Catalog
-
-Search global diarahkan ke:
-
-```text
-/api/products?search=...
-```
-
-Catalog menggunakan live WooCommerce data.
-
-Pagination default:
-
-```text
-8 products/page
-```
-
-Tidak boleh mengambil seluruh katalog ribuan produk ke browser hanya untuk melakukan pagination atau filter sederhana.
-
-Power type / sumber daya sudah dikeluarkan dari UI filter publik berdasarkan keputusan migrasi.
-
-Shared header search adalah bagian dari design system dan harus tetap menjadi input yang benar-benar usable, bukan sekadar visual placeholder.
+Desktop dan mobile adalah **satu design system**, bukan dua desain terpisah.
 
 ---
 
-## 12. SEO Baseline
-
-Baseline Google Search Console yang **diberikan user dari snapshot GSC 15 Agustus 2026**:
+# 21. IMPORTANT REPOSITORY ASSETS
 
 ```text
-16 months
-Clicks        ~1.01K
-Impressions   ~28.1K
-CTR           3.6%
-Avg position  9.5
+public/images/hero/
+├── bbkitchen-hero-desktop.webp
+└── bbkitchen-hero-mobile.webp
+
+public/images/people/
+├── bbkitchen-team-thumbs-up.webp
+├── bbkitchen-chef-presenting.webp
+├── bbkitchen-chef-pointing.webp
+└── bbkitchen-chef-trust.webp
+
+public/images/social/
+├── youtube-shorts-cover.webp
+└── tiktok-cover.webp
 ```
 
-Snapshot indexing:
+Important components:
 
 ```text
-Indexed       ~2.29K
-Not indexed   ~413
+src/components/Header.tsx
+src/components/Footer.tsx
+src/components/ProductCard.tsx
+src/components/SocialMediaSection.tsx
+src/components/CategoryFilter.tsx
+src/components/ProductDetailModal.tsx
+src/components/AdminPanelModal.tsx
 ```
 
-Snapshot query yang terlihat antara lain:
+Important routes/files:
 
 ```text
-bbkitchen
-bbkitchen - sentra peralatan dapur restoran bekas jakarta | bukan baru kitchen kota tangerang selatan
-jual barang bekas restoran jakarta
-bukanbarukitchen
-```
-
-Ini adalah **baseline yang diberikan user**, bukan audit GSC yang dijalankan oleh repository.
-
-### SEO migration rules
-
-Pertahankan sebanyak mungkin:
-
-- URL
-- slug
-- search intent
-- H1 intent
-- title intent
-- description
-- category intent
-- internal linking
-- canonical
-- schema
-
-Jangan:
-
-- mengganti slug massal
-- menghapus URL lama tanpa mapping
-- mengarahkan semua URL ke homepage
-- noindex massal tanpa alasan
-- mengganti copy yang sudah menghasilkan traffic tanpa audit
-
----
-
-## 13. Copy Strategy
-
-Copy lama diperlakukan sebagai aset.
-
-```text
-OLD CONTENT
-├── SEO GOLD       → pertahankan
-├── CONVERSION     → upgrade
-├── OUTDATED       → rewrite
-└── GARBAGE        → hapus bila aman
-```
-
-Prioritas copy bukan menulis ulang semua 2.000+ halaman.
-
-Fokus terlebih dahulu pada:
-
-1. Homepage.
-2. Landing pages dengan traffic/search intent kuat.
-3. Category pages.
-4. Product pages yang penting secara bisnis/SEO.
-5. Local/transactional pages yang sudah terbukti mendapat impression/click.
-
----
-
-## 14. Repository Structure
-
-Struktur penting saat ini:
-
-```text
-.
-├── public/
-│   └── bbkitchen-logo.webp
-├── src/
-│   ├── app/
-│   │   ├── api/products/route.ts
-│   │   ├── jual-barang-bekas-restoran/[...slug]/page.tsx
-│   │   ├── product/[slug]/page.tsx
-│   │   └── page.tsx
-│   ├── components/
-│   │   ├── AdminPanelModal.tsx
-│   │   ├── CategoryFilter.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Header.tsx
-│   │   ├── ProductCard.tsx
-│   │   ├── ProductDetailModal.tsx
-│   │   └── ...
-│   ├── data/products.ts
-│   ├── lib/wordpress.ts
-│   ├── lib/woocommerce.ts
-│   ├── types.ts
-│   └── utils/formatters.ts
-├── next.config.ts
-├── package.json
-└── tsconfig.json
+src/app/page.tsx
+src/app/catalog/page.tsx
+src/app/product/[slug]/page.tsx
+src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
+src/app/api/products/route.ts
+src/data/products.ts
+src/lib/wordpress.ts
+src/lib/woocommerce.ts
 ```
 
 ---
 
-## 15. Environment
-
-WooCommerce server-side proxy membutuhkan:
+# 22. ENVIRONMENT / BUILD
 
 ```env
 WOOCOMMERCE_API_URL=https://www.bukanbarukitchen.com/wp-json/wc/v3
@@ -536,220 +716,90 @@ WC_CONSUMER_KEY=...
 WC_CONSUMER_SECRET=...
 ```
 
-Credential tidak boleh masuk client bundle atau repository.
+Credential tidak boleh masuk client bundle/repository.
 
-Dependency yang perlu diperhatikan: build migrasi yang sudah diuji menggunakan **Next.js 16.3.1**, sedangkan `package.json` sebelumnya menggunakan range `latest`. Dependency locking menjadi pekerjaan hardening.
-
----
-
-## 16. Verification / Known Issues
-
-Build lokal terakhir yang diverifikasi pada akhir Chat 1.3:
+Build baseline yang pernah diverifikasi:
 
 ```text
-npm run build
-✓ Compiled successfully
-✓ Finished TypeScript
-✓ Collecting page data
-✓ Generating static pages
-✓ Finalizing page optimization
-```
-
-Route yang terdeteksi pada migration build:
-
-```text
-/
-/_not-found
-/api/products
-/api/wordpress
-/jual-barang-bekas-restoran/[...slug]
-/product/[slug]
-```
-
-### Stale `.next` issue
-
-Setelah rename route dari:
-
-```text
-/jual-barang-bekas-restoran/[location]
-```
-
-menjadi:
-
-```text
-/jual-barang-bekas-restoran/[...slug]
-```
-
-Next.js sempat membaca generated validator lama di `.next/dev/types/validator.ts`. Membersihkan cache dengan:
-
-```bash
-rmdir /s /q .next
-```
-
-lalu menjalankan build ulang menyelesaikan masalah tersebut.
-
-### Local connectivity issue
-
-Pada 15 Agustus 2026 laptop mengalami:
-
-```text
-curl -I https://www.bukanbarukitchen.com
-curl: (35) Recv failure: Connection was reset
-```
-
-dan endpoint WooCommerce juga mengalami connection reset sehingga:
-
-```text
-/api/products → 502 Bad Gateway
-```
-
-User melaporkan domain dapat dibuka melalui HP. Karena itu jangan menyimpulkan source code WooCommerce/Next.js rusak sebelum jalur DNS/TLS/firewall/IPv4/IPv6/network laptop diverifikasi.
-
-### Other known limitations
-
-- ACF authoritative filtering belum selesai.
-- Related Products live berdasarkan kategori masih perlu difinalkan.
-- Article/local landing typography dan content spacing belum final.
-- Product detail belum memakai shared `Header.tsx` yang sama dengan Home/local landing.
-- Shared header search masih perlu wiring agar usable di semua template.
-- Staff/Owner PIN frontend bukan authentication production.
-- `.env.example` perlu disinkronkan dengan variable WooCommerce.
-- Dependency versions perlu dikunci saat hardening.
-
----
-
-## 17. Migration Rules — WAJIB
-
-1. **1 step = 1 file = 1 commit.**
-2. Setelah step selesai: `git pull` → test → `npm run build` bila relevan.
-3. Jangan kembali ke mock catalog sebagai source of truth.
-4. Jangan mengubah slug tanpa alasan SEO yang terverifikasi.
-5. Jangan mengirim WooCommerce credential ke browser.
-6. Jangan membuat kategori publik hardcoded baru.
-7. Bedakan `status_unit` ACF dengan WooCommerce `stock_status`.
-8. Jangan mengambil seluruh katalog hanya untuk filter/pagination frontend.
-9. Jangan membangun Google Sheets integration langsung di client.
-10. **Setiap milestone/step yang mengubah project wajib didokumentasikan di README.**
-11. README harus membedakan **implemented**, **verified**, **planned**, dan **known issue**.
-12. Jangan menyelesaikan beberapa concern UI besar dalam satu commit hanya demi terlihat cepat.
-13. Untuk visual migration, prioritaskan **Pareto**: data/route correctness → shared header/design system → conversion → polish.
-
----
-
-## 18. Pareto Roadmap
-
-### P0 — Fondasi
-
-1. Stabilkan boundary BBK Core System.
-2. Pastikan konektivitas WooCommerce dari development environment.
-3. Konsolidasi shared design system.
-
-### P1 — Conversion
-
-4. Product detail UX.
-5. Related Products live.
-6. Admin controls: Telegram + READY/DP/SOLD.
-7. SOLD → tanggal terjual → Google Sheets melalui Core System.
-
-### P2 — Site-wide UX
-
-8. Shared header/footer dan sticky behavior.
-9. Home.
-10. Catalog/archive.
-11. Local/transactional landing pages.
-12. Page/post templates.
-13. Product detail menggunakan shared header.
-14. Global search functional di seluruh template yang relevan.
-15. Desktop/mobile QA.
-
-### P3 — SEO / Growth
-
-16. Canonical/schema/internal links.
-17. Preserve URL equity.
-18. Copy optimization berdasarkan GSC.
-19. Category/local landing-page optimization.
-
-### P4 — Production Hardening
-
-20. Real authentication/authorization.
-21. Dependency locking.
-22. Environment documentation.
-23. Performance/cache/error monitoring.
-24. Production cutover + rollback plan.
-
----
-
-## 19. Working Estimate
-
-Dengan AI-assisted development dan user sebagai non-coder, target realistis untuk migrasi yang benar-benar production-minded adalah sekitar **4–6 minggu**, dengan buffer **6–8 minggu** bila Core System, authentication, network/hosting, SEO QA, atau production hardening menambah pekerjaan.
-
-Estimasi ini adalah planning estimate, bukan deadline teknis.
-
----
-
-## 20. Source of Truth
-
-```text
-Catalog product data
-→ WooCommerce
-
-Inventory metadata
-→ WordPress / ACF
-
-Business logic
-→ BBK Core System (target architecture)
-
-Automation / sourcing
-→ BBK AI Growth Automation
-
-Frontend experience
-→ Next.js
-
-SEO baseline
-→ Existing WordPress URLs + user-provided GSC baseline
+Next.js 16.3.1
 ```
 
 ---
 
-## 21. Migration Changelog
+# 23. CHAT 1.5 — NEXT STARTING POINT
 
-### 2026-08-15 — Chat 1.3 closed
-
-- Shared migration direction dipertahankan: **new frontend, old SEO equity**.
-- WooCommerce/WordPress tetap menjadi source of truth; Next.js tetap experience layer.
-- WordPress API proxy dan metadata flow berhasil diverifikasi melalui localhost.
-- Route local transactional diubah dari single `[location]` menjadi catch-all `[...slug]` untuk mendukung hirarki lokasi.
-- `/jual-barang-bekas-restoran/jakarta` dan `/jual-barang-bekas-restoran/jakarta/jakarta-pusat` berhasil diuji di localhost.
-- Resolver local page menggunakan data WordPress; frontend tidak membuat katalog/local content mock baru.
-- Shared `Header.tsx` berhasil masuk ke local landing page dan sudah sticky.
-- Homepage dan local landing sudah memakai arah visual BBKitchen yang lebih konsisten.
-- Product detail sudah memiliki layout conversion, gallery, metadata, breadcrumb, dan schema; header masih menunggu konsolidasi shared component.
-- Stale `.next` generated types setelah route rename berhasil dibereskan dengan clean build.
-- Build terakhir berhasil clean dengan Next.js 16.3.1.
-- Chat 1.3 sengaja ditutup sebelum melakukan over-engineering polish.
-
-### Next chat starting point
+Conversation baru:
 
 ```text
-1. Product Detail → pakai shared Header.tsx
-2. Shared Header search → functional di template yang relevan
-3. Local/article content → rapikan H1/H2/H3/list/paragraph/spacing/palette
-4. Setelah itu baru visual QA site-wide
+1.5 BBKitchen Next.js Migration
 ```
+
+**Tidak perlu mengulang fondasi migration.** Baca README ini, audit current repository/code, lalu lanjut incremental.
+
+### Prioritas 1.5
+
+1. Audit visual homepage dari atas sampai bawah setelah final asset integration.
+2. Audit responsive mobile: hero, header, catalog, product cards, CTA, social video, footer.
+3. Audit shared Header dan pastikan global search benar-benar functional di semua template yang membutuhkan.
+4. Konsolidasikan Product Detail agar memakai shared Header.
+5. Rapikan Article/Local Landing typography: H1/H2/H3, paragraph, list, spacing, reading width, mobile.
+6. Finalisasi READY/SOLD Product Card behavior.
+7. Audit seluruh WhatsApp message generator agar tidak ada duplicate wording.
+8. Audit MBG CTA + PDF CTA + Produksi Baru CTA agar behavior konsisten.
+9. Jalankan production build dan bereskan error/warning application yang valid.
+10. Setelah visual baseline stabil, lanjut SEO/performance/accessibility hardening.
+
+### Jangan dilakukan tanpa alasan kuat
+
+- Jangan mengulang eksperimen floating mascot di semua section.
+- Jangan mengganti hero background final tanpa membandingkan desktop + mobile.
+- Jangan mengubah slug existing.
+- Jangan membuat mock catalog baru.
+- Jangan memindahkan inventory business logic ke Next.js jika seharusnya di Core System.
+- Jangan memasukkan credential WooCommerce/Google ke client.
+- Jangan mengorbankan mobile demi desktop composition.
 
 ---
 
-## 22. Development Commands
+# 24. HANDOFF PROMPT — CHAT 1.5
 
-```bash
-npm install
-npm run dev
-npm run build
-npm run start
-```
+> **BBKitchen Next.js Migration 1.5** melanjutkan branch `feature/nextjs-migration` dari checkpoint Chat 1.4. README repository adalah source of context. Chat 1.4 sudah selesai. Fokus sekarang bukan migrasi fondasi lagi, tetapi finalisasi visual/UX, responsive behavior, shared components, CTA consistency, SEO/performance hardening, dan persiapan production. Jangan mengulang pekerjaan yang sudah `done`. Baca README terlebih dahulu, audit repository/current code, lalu kerjakan secara incremental dan commit setiap milestone yang terverifikasi.
 
-Local development:
+---
+
+# 25. DEFINITION OF DONE
+
+Sebuah perubahan dianggap `done` jika:
 
 ```text
-http://localhost:3000
+code implemented
+      ↓
+localhost verified
+      ↓
+desktop verified
+      ↓
+mobile verified
+      ↓
+no obvious layout regression
+      ↓
+build verified
+      ↓
+commit created
+      ↓
+README/status updated when milestone-level
 ```
+
+> **Jangan menyebut sesuatu `done` hanya karena kode sudah ditulis.**
+
+---
+
+# FINAL CHECKPOINT
+
+```text
+Chat 1.4  → ✅ CLOSED
+Chat 1.5  → 🚀 NEXT
+Branch    → feature/nextjs-migration
+Last code checkpoint → 26f3911f0d60c595656e85f1e9b65087bab86132
+```
+
+**Next conversation: `1.5 BBKitchen Next.js Migration`**

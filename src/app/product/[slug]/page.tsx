@@ -81,9 +81,7 @@ async function getProduct(slug: string): Promise<WooCommerceProduct | null> {
     cache: 'no-store',
   });
 
-  if (!response.ok) {
-    throw new Error(`WooCommerce product lookup gagal: ${response.status}`);
-  }
+  if (!response.ok) throw new Error(`WooCommerce product lookup gagal: ${response.status}`);
 
   const products = (await response.json()) as WooCommerceProduct[];
   return products[0] ?? null;
@@ -123,7 +121,6 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
   const product = await getProduct(slug);
-
   if (!product) notFound();
 
   const rawCondition = getMeta(product, 'kondisi_unit');
@@ -168,148 +165,163 @@ export default async function ProductPage({
 
       <header className="sticky top-0 z-40 border-b border-slate-700/60 bg-slate-950 text-white shadow-lg">
         <div className="border-b border-slate-800 bg-slate-950">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-2 text-xs lg:px-8">
-            <div className="flex items-center gap-2 text-slate-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span className="font-semibold text-emerald-400">Katalog Update Harian</span>
-              <span className="text-slate-600">•</span>
-              <span>Peralatan Dapur Komersial Bekas &amp; Rekondisi Teruji</span>
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 text-[11px] sm:px-5 lg:px-8">
+            <div className="flex min-w-0 items-center gap-2 text-slate-300">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
+              <span className="shrink-0 font-semibold text-emerald-400">Katalog Update Harian</span>
+              <span className="hidden text-slate-600 sm:inline">•</span>
+              <span className="hidden truncate sm:inline">Peralatan Dapur Komersial Bekas &amp; Rekondisi Teruji</span>
             </div>
-            <div className="hidden items-center gap-4 md:flex">
-              <span className="font-semibold text-emerald-400">☎ Hotline WhatsApp: +62 812-8888-9999</span>
-              <span className="text-slate-400">♙ Staff / Owner</span>
+            <div className="flex shrink-0 items-center gap-3">
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Konsultasi kebutuhan dapur usaha')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden font-semibold text-emerald-400 hover:text-emerald-300 sm:inline"
+              >
+                ☎ Hotline WhatsApp: +62 812-8888-9999
+              </a>
+              <a
+                href="/#admin-mode-toggle-btn"
+                className="rounded px-1 py-1 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                title="Buka akses Staff / Owner di Katalog"
+              >
+                ♙ Staff / Owner
+              </a>
             </div>
           </div>
         </div>
 
         <div className="bg-slate-900">
-          <div className="mx-auto flex max-w-7xl items-center gap-5 px-5 py-4 lg:px-8">
-            <a href="/" className="shrink-0 text-2xl font-black tracking-tight">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 sm:gap-5 sm:px-5 lg:flex-nowrap lg:px-8">
+            <a href="/" className="shrink-0 text-xl font-black tracking-tight sm:text-2xl">
               BB<span className="text-amber-400">Kitchen</span>
             </a>
-            <span className="hidden rounded border border-slate-700 bg-slate-800 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-300 sm:inline-block">
+            <span className="hidden rounded border border-slate-700 bg-slate-800 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-300 xl:inline-block">
               BUKAN BARU KITCHEN
             </span>
+
             <a
-              href="/?focus=search"
-              className="hidden min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-400 shadow-inner md:block"
+              href="/?focus=search#global-search-input"
+              className="order-3 flex min-w-0 basis-full items-center gap-2 rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-xs text-slate-400 shadow-inner transition hover:border-amber-400 hover:text-slate-200 sm:text-sm lg:order-none lg:basis-auto lg:flex-1"
+              aria-label="Buka pencarian katalog"
             >
-              🔎 Cari kompor 4 burner, deep fryer, chiller, mixer 20L, meja stainless...
+              <span className="text-slate-300">⌕</span>
+              <span className="truncate">Cari kompor 4 burner, deep fryer, chiller, mixer 20L, meja stainless...</span>
             </a>
-            <nav className="ml-auto hidden items-center gap-5 text-sm font-medium text-slate-300 lg:flex">
-              <a href="/" className="hover:text-white">Home</a>
-              <a href="/" className="font-bold text-amber-400">Katalog</a>
-              <a href="/#cara-order" className="hover:text-white">Cara Order</a>
-              <a href="/#lokasi" className="hover:text-white">Lokasi</a>
-              <a href="/#dapur-mbg" className="hover:text-white">Dapur MBG</a>
-              <a href="/#faq" className="hover:text-white">FAQ</a>
+
+            <nav className="ml-auto flex max-w-full items-center gap-3 overflow-x-auto text-xs font-semibold text-slate-300 sm:gap-5 sm:text-sm lg:shrink-0" aria-label="Navigasi utama">
+              <a href="/" className="shrink-0 hover:text-white">Home</a>
+              <a href="/#catalog" className="shrink-0 font-bold text-amber-400">Katalog</a>
+              <a href="/#cara-order" className="hidden shrink-0 hover:text-white sm:inline">Cara Order</a>
+              <a href="/#lokasi" className="hidden shrink-0 hover:text-white sm:inline">Lokasi</a>
+              <a href="/#dapur-mbg" className="hidden shrink-0 hover:text-white md:inline">Dapur MBG</a>
+              <a href="/#faq" className="shrink-0 hover:text-white">FAQ</a>
             </nav>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-5 py-7 lg:px-8 lg:py-9">
-        <nav className="mb-5 flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500" aria-label="Breadcrumb">
-          <a href="/" className="hover:text-emerald-700">Home</a>
-          <span>/</span>
-          <a href="/" className="hover:text-emerald-700">Katalog</a>
-          <span>/</span>
-          <span>{category}</span>
-          <span>/</span>
-          <span className="font-semibold text-slate-700">{product.name}</span>
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-7 lg:px-8 lg:py-9">
+        <nav className="mb-4 flex min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[11px] font-medium text-slate-500 shadow-sm sm:gap-2 sm:px-4 sm:text-xs" aria-label="Breadcrumb">
+          <a href="/" className="shrink-0 hover:text-emerald-700">Home</a>
+          <span className="shrink-0 text-slate-300">›</span>
+          <a href="/#catalog" className="shrink-0 hover:text-emerald-700">Katalog</a>
+          <span className="shrink-0 text-slate-300">›</span>
+          <a href="/#catalog" className="max-w-[34vw] shrink-0 truncate hover:text-emerald-700">{category}</a>
+          <span className="shrink-0 text-slate-300">›</span>
+          <span className="min-w-0 truncate font-semibold text-slate-800" aria-current="page">{product.name}</span>
         </nav>
 
-        <div className="mb-6 rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-sm md:px-7">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-amber-600">Detail Unit BBKitchen</p>
-              <h1 className="max-w-4xl text-2xl font-black leading-tight tracking-tight text-slate-950 md:text-4xl">
-                {product.name}
-              </h1>
+        <div className="mb-5 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm sm:px-6 sm:py-5">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+            <div className="min-w-0">
+              <p className="mb-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">Detail Unit BBKitchen</p>
+              <h1 className="text-2xl font-black leading-tight tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">{product.name}</h1>
             </div>
-            <span className="w-fit rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700">
-              {category}
-            </span>
+            <span className="w-fit max-w-full truncate rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase text-amber-700">{category}</span>
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
-          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:p-5">
-            <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-              {product.images[0] ? (
-                <img
-                  src={product.images[0].src}
-                  alt={product.images[0].alt || product.name}
-                  className="aspect-square w-full object-contain"
-                />
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
+            <div className="relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+              {product.images.length > 0 ? (
+                product.images.map((image, index) => (
+                  <div key={`${image.src}-${index}`} className="absolute inset-0">
+                    <input
+                      id={`product-gallery-${index}`}
+                      name="product-gallery"
+                      type="radio"
+                      defaultChecked={index === 0}
+                      className="peer sr-only"
+                    />
+                    <div className="pointer-events-none absolute inset-0 hidden peer-checked:block">
+                      <img
+                        src={image.src}
+                        alt={image.alt || `${product.name} foto ${index + 1}`}
+                        className="h-full w-full object-contain"
+                      />
+                      <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-[10px] font-black text-white shadow-md sm:text-xs">
+                        ● {status === 'READY' ? 'READY SIAP KIRIM' : status}
+                      </span>
+                      <span className="absolute bottom-3 right-3 rounded-lg bg-slate-950/85 px-2.5 py-1.5 text-[10px] font-bold text-white">Foto Unit BBKitchen</span>
+                    </div>
+                  </div>
+                ))
               ) : (
-                <div className="flex aspect-square items-center justify-center text-sm font-semibold text-slate-500">
-                  Foto unit belum tersedia
-                </div>
+                <div className="flex h-full items-center justify-center text-sm font-semibold text-slate-500">Foto unit belum tersedia</div>
               )}
-              <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-black text-white shadow-md">
-                ● {status === 'READY' ? 'READY SIAP KIRIM' : status}
-              </span>
-              <span className="absolute bottom-3 right-3 rounded-lg bg-slate-950/85 px-3 py-1.5 text-[11px] font-bold text-white">
-                Foto Unit BBKitchen
-              </span>
             </div>
 
             {product.images.length > 1 && (
-              <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6">
+              <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6" aria-label="Pilih foto produk">
                 {product.images.map((image, index) => (
-                  <div key={`${image.src}-${index}`} className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+                  <label
+                    key={`thumb-${image.src}-${index}`}
+                    htmlFor={`product-gallery-${index}`}
+                    className="cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5 transition hover:border-amber-400 hover:ring-2 hover:ring-amber-100 focus-within:border-amber-500"
+                  >
                     <img
                       src={image.src}
-                      alt={image.alt || `${product.name} foto ${index + 1}`}
+                      alt={`Pilih foto ${index + 1} ${product.name}`}
                       className="aspect-square w-full rounded-md object-cover"
                     />
-                  </div>
+                  </label>
                 ))}
               </div>
             )}
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 md:p-6">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-black text-white">
-                {status}
-              </span>
-              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700">
-                {condition}
-              </span>
+              <span className="rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-black text-white">{status}</span>
+              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700">{condition}</span>
             </div>
 
-            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50">
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50">
               <dl className="divide-y divide-slate-200">
-                <div className="flex items-center justify-between gap-5 p-4">
-                  <dt className="text-sm font-medium text-slate-500">SKU</dt>
-                  <dd className="text-right text-sm font-black text-slate-900">{kodeUnit}</dd>
-                </div>
-                <div className="flex items-center justify-between gap-5 p-4">
-                  <dt className="text-sm font-medium text-slate-500">Kategori</dt>
-                  <dd className="max-w-[65%] text-right text-sm font-bold text-slate-900">{category}</dd>
-                </div>
-                <div className="flex items-center justify-between gap-5 p-4">
-                  <dt className="text-sm font-medium text-slate-500">Lokasi Unit</dt>
-                  <dd className="text-right text-sm font-bold text-slate-900">{location || 'Belum tercantum'}</dd>
-                </div>
+                <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4"><dt className="text-sm font-medium text-slate-500">SKU</dt><dd className="text-right text-sm font-black text-slate-900">{kodeUnit}</dd></div>
+                <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4"><dt className="text-sm font-medium text-slate-500">Kategori</dt><dd className="max-w-[65%] text-right text-sm font-bold text-slate-900">{category}</dd></div>
+                <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4"><dt className="text-sm font-medium text-slate-500">Lokasi Unit</dt><dd className="text-right text-sm font-bold text-slate-900">{location || 'Belum tercantum'}</dd></div>
               </dl>
             </div>
 
             {shortDescription && (
-              <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4">
-                <p className="mb-2 text-xs font-black uppercase tracking-wide text-slate-500">Ringkasan</p>
+              <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                <p className="mb-2 text-[10px] font-black uppercase tracking-wide text-slate-500">Ringkasan</p>
                 <p className="line-clamp-5 text-sm leading-6 text-slate-600">{stripHtml(shortDescription)}</p>
               </div>
             )}
 
-            <div className="mt-5 rounded-xl bg-slate-950 p-4">
-              <p className="text-xs font-bold text-slate-400">Butuh unit ini?</p>
+            <div className="mt-4 rounded-xl bg-slate-950 p-4">
+              <p className="text-[10px] font-bold text-slate-400">Butuh unit ini?</p>
               <p className="mt-1 text-sm font-semibold text-white">Tanyakan harga, ketersediaan, dan detail unit ke tim BBKitchen.</p>
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`}
-                className="mt-4 flex items-center justify-center rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-emerald-400"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-sm transition hover:bg-emerald-400 sm:text-sm"
               >
                 ☎ Tanya Harga &amp; Ketersediaan via WhatsApp
               </a>
@@ -317,52 +329,35 @@ export default async function ProductPage({
           </section>
         </div>
 
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
+        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-7">
           <div className="mb-5 flex items-center gap-3 border-b border-slate-200 pb-4">
             <span className="rounded-lg bg-amber-50 px-2.5 py-2 text-amber-600">▤</span>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-amber-600">Informasi Produk</p>
-              <h2 className="text-xl font-black text-slate-950">Deskripsi &amp; Detail Unit</h2>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600">Informasi Produk</p>
+              <h2 className="text-lg font-black text-slate-950 sm:text-xl">Deskripsi &amp; Detail Unit</h2>
             </div>
           </div>
           <div className="prose prose-slate max-w-none text-sm leading-7 prose-headings:font-black prose-headings:text-slate-950 prose-a:text-emerald-700">
-            {product.description ? (
-              <div dangerouslySetInnerHTML={{ __html: product.description }} />
-            ) : (
-              <p>{stripHtml(shortDescription) || 'Deskripsi unit belum tersedia.'}</p>
-            )}
+            {product.description ? <div dangerouslySetInnerHTML={{ __html: product.description }} /> : <p>{stripHtml(shortDescription) || 'Deskripsi unit belum tersedia.'}</p>}
           </div>
         </section>
 
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
-          <div className="mb-5">
-            <p className="text-xs font-bold uppercase tracking-wide text-amber-600">Data Live WooCommerce + ACF</p>
-            <h2 className="mt-1 text-xl font-black text-slate-950">Ringkasan Unit</h2>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold text-slate-500">Kondisi</p>
-              <p className="mt-1 font-black text-slate-950">{condition}</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold text-slate-500">Status</p>
-              <p className="mt-1 font-black text-emerald-700">{status}</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold text-slate-500">Lokasi</p>
-              <p className="mt-1 font-black text-slate-950">{location || 'Belum tercantum'}</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold text-slate-500">SKU</p>
-              <p className="mt-1 font-black text-slate-950">{kodeUnit}</p>
-            </div>
+        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-7">
+          <h2 className="text-lg font-black text-slate-950 sm:text-xl">Ringkasan Unit</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">Kondisi</p><p className="mt-1 font-black text-slate-950">{condition}</p></div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">Status</p><p className="mt-1 font-black text-emerald-700">{status}</p></div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">Lokasi</p><p className="mt-1 font-black text-slate-950">{location || 'Belum tercantum'}</p></div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">SKU</p><p className="mt-1 font-black text-slate-950">{kodeUnit}</p></div>
           </div>
         </section>
       </div>
 
       <a
         href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`}
-        className="fixed bottom-5 right-5 z-50 rounded-full bg-emerald-500 px-5 py-3 text-sm font-black text-white shadow-xl transition hover:bg-emerald-400"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-4 right-4 z-50 rounded-full bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-xl transition hover:bg-emerald-400 sm:bottom-5 sm:right-5 sm:px-5 sm:text-sm"
       >
         ☎ Tanya Unit via WhatsApp
       </a>

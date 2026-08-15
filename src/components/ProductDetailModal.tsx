@@ -39,6 +39,16 @@ const getConditionLabel = (value: string | null | undefined): string => {
   return 'Kondisi belum tercantum';
 };
 
+const slugifyProductName = (value: string): string => {
+  return value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   product,
   onClose,
@@ -74,7 +84,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const description = product.description || product.summary || 'Detail unit belum tersedia.';
 
   const handleCopyLink = async () => {
-    const slug = product.slug?.trim();
+    const slug = slugifyProductName(product.name);
     const productUrl = slug
       ? `${window.location.origin}/product/${encodeURIComponent(slug)}`
       : window.location.href;

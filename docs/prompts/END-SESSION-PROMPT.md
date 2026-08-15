@@ -3,7 +3,6 @@
 # BBKitchen — Canonical End-Session Prompt
 
 > **Use this one prompt at the end of every migration chat.**
->
 > `QUICK-END-SESSION-PROMPT.md` is intentionally removed. Forensic extraction of old/closed chats remains a separate archival workflow in `FORENSIC-EXTRACTION-PROMPT.md`.
 
 Copy-paste this prompt at the end of every migration chat.
@@ -129,6 +128,7 @@ Isi minimal:
 - Start
 - End
 - Duration
+- Evidence source for timing
 - Scope
 - Starting state
 - Pareto
@@ -146,10 +146,11 @@ Isi minimal:
 - `Start`, `End`, dan `Duration` hanya boleh diisi dari evidence yang benar-benar tersedia.
 - Jangan mengarang atau mengestimasi exact time.
 - Jika exact time tidak tersedia, tulis:
-  `Tidak ditemukan di conversation.`
+  `Tidak ditemukan di repository/evidence yang tersedia.`
 - Jika hanya tanggal/period yang tersedia, jangan mengubahnya menjadi durasi.
-- Jika timestamp berasal dari GitHub commit, sebutkan sumbernya.
+- Jika timestamp berasal dari GitHub commit, sebutkan sumbernya sebagai GitHub evidence.
 - Duration hanya dihitung setelah Start dan End dapat diverifikasi.
+- Jika evidence timestamp conflict, preserve the conflict and do not silently resolve it.
 
 Jangan menimpa history session sebelumnya.
 
@@ -165,13 +166,40 @@ Index ini harus tetap mencerminkan:
 
 - chronology Chat 1.1, 1.2, 1.3, ...
 - tanggal/period tiap chat jika tersedia
-- start/end/duration jika dapat diverifikasi
+- Start/End/Duration jika dapat diverifikasi
 - fokus tiap chat
 - status
 - link ke archive masing-masing
 - milestone utama
 - current migration position
 - current Pareto focus
+- project timeline since Chat 1.1
+
+### Project elapsed-time rule
+
+Progress index harus membedakan:
+
+```text
+actual elapsed working duration
+calendar span
+earliest verifiable migration evidence
+```
+
+Jika exact Chat 1.1 start timestamp tidak tersedia:
+
+```text
+Actual elapsed duration since Chat 1.1:
+NOT VERIFIABLE
+```
+
+Boleh menampilkan earliest verifiable evidence dan calendar span sebagai konteks, tetapi:
+
+- jangan menyamakan calendar span dengan actual working duration
+- jangan menghitung dari tanggal saja
+- jangan mengestimasi dari message count/skipped messages
+- jangan mengisi angka duration tanpa Start + End yang terverifikasi
+
+Jika exact Chat 1.1 start timestamp ditemukan di masa depan, update timeline dengan evidence tersebut tanpa mengubah forensic history secara retroaktif.
 
 Jika waktu tidak dapat dibuktikan, tulis:
 `Tidak ditemukan di repository/evidence yang tersedia.`
@@ -197,6 +225,7 @@ Update hanya informasi current-state yang relevan:
 - carried-forward technical debt
 - chronology / documentation links
 - session timeline/progress summary
+- project elapsed-time status since Chat 1.1
 - last code checkpoint
 - last documentation checkpoint
 - next chat handoff
@@ -205,6 +234,9 @@ Untuk timeline/progress:
 
 - tampilkan tanggal tiap session jika tersedia
 - tampilkan Start/End/Duration hanya jika dapat diverifikasi
+- jika Chat 1.1 start tidak dapat diverifikasi, tampilkan `Actual elapsed duration since Chat 1.1: NOT VERIFIABLE`
+- boleh tampilkan earliest verifiable evidence/calendar span sebagai konteks
+- jangan menyamakan calendar span dengan working duration
 - jangan mengarang atau mengestimasi durasi
 - jika tidak tersedia, tulis:
   `Tidak ditemukan di repository/evidence yang tersedia.`
@@ -248,7 +280,7 @@ Aturan:
 - `END-SESSION-PROMPT.md` adalah satu-satunya prompt canonical untuk end-session normal.
 - `FORENSIC-EXTRACTION-PROMPT.md` hanya digunakan untuk mengarsipkan chat lama/closed chat yang belum terdokumentasi.
 - Jangan membuat prompt end-session alternatif tanpa alasan workflow yang nyata.
-- Session timeline rule harus tetap konsisten di prompt yang relevan.
+- Session timeline + project elapsed-time rules harus tetap konsisten di prompt yang relevan.
 
 Jika SOP/documentation workflow berubah, update prompt yang terdampak.
 
@@ -288,8 +320,9 @@ Date:
 Start:
 End:
 Duration:
-
 Evidence source:
+
+Evidence source dapat berupa:
 
 - conversation/session timestamp
 - GitHub commit timestamp
@@ -299,11 +332,13 @@ Rules:
 
 - Exact time is preferred when verifiable.
 - If exact time is unavailable, write:
-  `Tidak ditemukan di conversation.`
+  `Tidak ditemukan di repository/evidence yang tersedia.`
 - If only a date/period is known, record the date/period without converting it into duration.
 - Duration must be calculated only from verified Start and End.
-- Never estimate elapsed time from message count, date range, or assumptions.
+- Never estimate elapsed time from message count, skipped messages, date range, calendar span, or assumptions.
 - If a timestamp comes from GitHub commit metadata, label it as GitHub evidence.
+- If timestamps conflict, preserve the conflict and do not silently choose one.
+- Root README and progress index must not contain timing facts that contradict the archive evidence.
 
 ==================================================
 13. GIT / VERIFICATION
@@ -347,6 +382,7 @@ Sebelum menjawab saya:
 - Pastikan guide yang terdampak sudah diperbarui atau dinyatakan tetap valid.
 - Pastikan prompt/SOP yang terdampak sudah diperbarui atau dinyatakan tetap valid.
 - Pastikan timeline Start/End/Duration konsisten di archive, progress index, dan root README.
+- Pastikan project elapsed-time status sejak Chat 1.1 konsisten di progress index dan root README.
 - Pastikan `end-session-prompt.md` tetap menunjuk ke canonical prompt.
 - Pastikan SHA yang dilaporkan berasal dari write/commit yang berhasil.
 - Jangan bilang update berhasil jika write gagal.
@@ -359,12 +395,13 @@ Jawab ringkas:
 
 1. Session status
 2. Session Date / Start / End / Duration
-3. Progress archive path + SHA
-4. Progress index SHA
-5. README commit SHA
-6. Guides changed / no change
-7. Prompts changed / no change
-8. Last code checkpoint SHA
-9. Top 3 carried-forward items
-10. Next conversation title
+3. Project elapsed-time status since Chat 1.1
+4. Progress archive path + SHA
+5. Progress index SHA
+6. README commit SHA
+7. Guides changed / no change
+8. Prompts changed / no change
+9. Last code checkpoint SHA
+10. Top 3 carried-forward items
+11. Next conversation title
 ```

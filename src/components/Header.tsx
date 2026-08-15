@@ -93,7 +93,8 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
         <div className="flex items-center justify-between w-full md:w-auto">
           <a href="/" aria-label="BBKitchen - Home" className="flex items-center min-w-0">
-            <img src="/bbkitchen-logo.webp" alt="BBKitchen" className="h-9 sm:h-10 md:h-11 w-auto max-w-[250px] object-contain" />
+            <img src="/bbkitchen-logo.webp" alt="BBKitchen — Bukan Baru Kitchen — Sentra Barang Bekas Restoran" className="h-10 sm:h-11 w-auto max-w-[250px] object-contain" />
+            <span className="sr-only">BBKitchen — Bukan Baru Kitchen — Sentra Barang Bekas Restoran</span>
           </a>
 
           <button type="button" onClick={onRequestUnitClick} className="md:hidden inline-flex items-center gap-1 px-3 py-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold">

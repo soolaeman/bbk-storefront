@@ -1,204 +1,124 @@
 # BBKitchen Frontend — Next.js Migration
 
-Frontend baru untuk **Bukan Baru Kitchen / BBKitchen**, dengan WooCommerce + WordPress/ACF sebagai source of truth katalog.
+Frontend baru **Bukan Baru Kitchen / BBKitchen**.
 
-> **Dokumentasi status terakhir: 15 Agustus 2026**  
-> Branch aktif pengembangan: `feature/nextjs-migration`
+Branch aktif:
 
-## Tujuan Migrasi
+```text
+feature/nextjs-migration
+```
 
-Migrasi frontend ke Next.js tanpa membuang data live, URL produk, struktur kategori, dan SEO equity yang sudah dimiliki website lama.
+> Dokumentasi ini adalah **living documentation**. Status `done` hanya untuk pekerjaan yang sudah benar-benar dikerjakan/terverifikasi. Rencana ditulis terpisah dari implementasi.
 
-Prinsip utama:
+---
 
-- **New frontend, old SEO equity.**
-- WooCommerce tetap menjadi sumber data produk, harga, stok, kategori, gambar, slug, description, dan short description.
-- WordPress/ACF tetap menjadi sumber field inventory seperti `status_unit`, `kondisi_unit`, `lokasi_unit`, dan `kode_unit`.
-- Credential WooCommerce tidak dikirim ke browser; request katalog melewati Next.js server route.
-- UI boleh berevolusi, tetapi slug produk dan intent SEO tidak boleh diubah sembarangan.
+## 1. Tujuan Migrasi
 
-## Status Migrasi — 15 Agustus 2026
+> **New frontend, old SEO equity.**
+
+Migrasi bukan sekadar mengganti theme WordPress. Targetnya adalah membangun experience layer BBKitchen yang lebih konsisten di desktop dan mobile tanpa membuang data live, URL/slug, taxonomy, content intent, dan SEO equity yang sudah ada.
+
+Prioritas:
+
+1. UI/UX rata di Home, Catalog/Archive, Product Detail, Page, dan Post.
+2. WooCommerce + WordPress/ACF tetap menjadi source of truth katalog.
+3. URL/slug dan search intent lama dipertahankan.
+4. Product detail menjadi halaman conversion utama.
+5. Business logic inventory dipisahkan dari frontend.
+6. SEO, copy, UX, dan data migration dikerjakan sebagai satu program.
+
+---
+
+## 2. Target Architecture
+
+```text
+                    BBK AI GROWTH AUTOMATION
+                 inventory / AI / sourcing pipeline
+                              │
+                              ▼
+                       WordPress / WooCommerce
+                              │
+                 ┌────────────┼────────────┐
+                 ▼            ▼            ▼
+             Products      ACF        Categories
+                 │            │            │
+                 └────────────┼────────────┘
+                              ▼
+                     BBK CORE SYSTEM
+                WordPress business-logic layer
+                              │
+                              ▼
+                     Next.js Data Layer
+                              │
+                 ┌────────────┼────────────┐
+                 ▼            ▼            ▼
+                Home       Catalog      Product
+                 │            │            │
+                 └────────────┼────────────┘
+                              ▼
+                   Shared Design System
+                              │
+                              ▼
+                    Desktop + Mobile UX
+```
+
+### Boundary yang dikunci
+
+- **WooCommerce**: produk, harga, stok, kategori, gambar, slug, description, short description.
+- **WordPress/ACF**: inventory fields seperti `kode_unit`, `status_unit`, `kondisi_unit`, `lokasi_unit`, `link_telegram`.
+- **BBK Core System**: business logic dan integration layer WordPress. Saat dokumentasi ini dibuat, plugin tersebut masih merupakan fondasi yang belum diisi sebagai sistem final.
+- **BBK AI Growth Automation**: automation/sourcing pipeline terpisah; tidak menjadi bagian dari Next.js frontend.
+- **Next.js**: UI/UX, routing, rendering, SEO presentation, catalog experience, dan conversion experience.
+- **Google Sheets**: target pencatatan penjualan melalui backend Core System; Next.js tidak boleh menyimpan credential atau mengakses Google Sheets secara langsung.
+
+---
+
+## 3. Current Migration Status — 15 Agustus 2026
 
 | Area | Status | Catatan |
 |---|---|---|
-| Next.js App Router | ✅ | Berjalan dan sudah melalui build lokal |
+| Next.js App Router | ✅ | Build lokal sebelumnya berhasil |
 | WooCommerce server proxy | ✅ | `/api/products` tersedia |
 | Global metadata endpoint | ✅ | `/api/products?metadata=1` tersedia |
-| Top-level category filter | ✅ | Subkategori tidak digunakan |
-| Pagination | ✅ | Server-side WooCommerce |
-| Global search | ✅ | Menggunakan WooCommerce search |
-| Product detail `/product/[slug]` | ✅ | Slug live WooCommerce dipertahankan |
-| Product detail SEO metadata | ✅ | Canonical, OG, Product JSON-LD disiapkan |
+| Top-level category filter | ✅ | Subkategori tidak menjadi filter publik |
+| Pagination | ✅ | WooCommerce server-side; default 8/page |
+| Global search | ✅ | Menggunakan WooCommerce `search` |
+| Product detail | ✅ | `/product/[slug]` menggunakan slug live |
+| Product detail SEO metadata | ✅ | Canonical/OG/Product JSON-LD sudah disiapkan |
+| Product gallery | ✅ | Thumbnail dapat mengganti foto utama |
+| Breadcrumb | ✅ | Home → Katalog → Kategori → Produk |
+| Salin Link | ✅ | Deep-link ke `/product/[slug]` |
 | Condition UI | ✅ | UI dinormalisasi menjadi Baru / Bekas |
-| Product modal — Salin Link | ✅ | Deep-link ke `/product/[slug]` |
-| Related Products | ⏳ | Belum diimplementasikan |
+| Related Products | ⏳ | Belum menjadi implementasi final di migration baseline |
 | ACF authoritative filtering | ⏳ | Backend WordPress hook/endpoint belum selesai |
-| Header logo asset | ⚠️ | Reference code sudah ada, tetapi **belum terverifikasi berhasil secara visual di localhost** |
-| Header responsive refinement | ⏳ | Masih perlu verifikasi UI |
-| Staff/Owner authentication | ⚠️ | Saat ini hanya simulasi PIN frontend |
-| Local WooCommerce connectivity | ⚠️ | Laptop terakhir mengalami connection reset → proxy 502 |
+| Shared design system | ⏳ | Perlu konsolidasi seluruh page/archive/post |
+| Header/logo visual verification | ⚠️ | Asset sudah disiapkan, visual localhost belum terverifikasi final |
+| Staff/Owner authentication | ⚠️ | Masih simulasi PIN frontend |
+| Admin → Telegram | ⏳ | Belum menjadi Core System workflow final |
+| Admin → READY/DP/SOLD | ⏳ | Belum menjadi Core System workflow final |
+| SOLD → Google Sheets | ⏳ | Belum diimplementasikan sebagai Core System workflow final |
+| Local WooCommerce connectivity | ⚠️ | Laptop sebelumnya mengalami connection reset → proxy 502 |
 
-> **Status code ≠ status UI.** Fitur hanya dianggap `✅` jika implementasi dan hasil runtime sudah terverifikasi. Khusus logo/header, asset dan reference sudah ada di code, tetapi user masih melaporkan logo belum berubah secara visual; karena itu statusnya sengaja tidak ditulis sebagai selesai.
+---
 
-## Stack
+## 4. Existing Frontend Data Contract
 
-- Next.js / App Router
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- Lucide React
-- WooCommerce REST API v3
-- WordPress + ACF
-
-Package scripts saat ini:
-
-```bash
-npm run dev
-npm run build
-npm run start
-```
-
-> Catatan: `package.json` saat ini mendeklarasikan `next` sebagai `latest`. Untuk build lokal yang sudah diuji selama migrasi, Next.js yang berjalan adalah **16.3.1**. Jika reproducibility menjadi prioritas, dependency version sebaiknya dikunci pada tahap hardening.
-
-## Arsitektur
-
-```text
-WordPress / WooCommerce
-        │
-        ├── Products
-        ├── Categories
-        └── ACF Inventory
-                │
-                ▼
-        Next.js Server Proxy
-                │
-                ├── /api/products
-                └── /api/products?metadata=1
-                │
-                ▼
-             App.tsx
-                │
-        ┌───────┼────────┐
-        ▼       ▼        ▼
-     Filters  Cards    Modals
-                │
-                ▼
-        /product/[slug]
-                │
-                ▼
-       SEO Product Detail
-```
-
-## Repository Structure
-
-```text
-.
-├── public/
-│   └── bbkitchen-logo.webp
-├── src/
-│   ├── app/
-│   │   ├── api/products/route.ts
-│   │   ├── product/[slug]/page.tsx
-│   │   └── page.tsx
-│   ├── components/
-│   │   ├── AdminPanelModal.tsx
-│   │   ├── CategoryFilter.tsx
-│   │   ├── FAQSection.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Header.tsx
-│   │   ├── HeroSection.tsx
-│   │   ├── KitchenConsultationBanner.tsx
-│   │   ├── ProductCard.tsx
-│   │   ├── ProductDetailModal.tsx
-│   │   ├── RequestUnitModal.tsx
-│   │   └── TrustSection.tsx
-│   ├── data/
-│   │   └── products.ts
-│   ├── lib/
-│   │   └── woocommerce.ts
-│   ├── types.ts
-│   └── utils/
-│       └── formatters.ts
-├── next.config.ts
-├── package.json
-└── tsconfig.json
-```
-
-## Data Contract
-
-`src/data/products.ts` sengaja **tidak berisi katalog mock**. File tersebut menjadi contract type untuk data live.
+`src/data/products.ts` sudah diposisikan sebagai **type-only contract**, bukan katalog mock.
 
 Contract utama:
 
-- `ProductCondition`: `BARU | BEKAS`
-- `AvailabilityStatus`: `READY | DP | SOLD`
-- `Product`
-- `ProductFilterState`
-- `CatalogMetadata`
-
-WooCommerce + WordPress/ACF adalah source of truth; data dummy produk tidak lagi menjadi sumber katalog.
-
-## WooCommerce Proxy
-
-Endpoint utama:
-
 ```text
-GET /api/products
+Product
+ProductCategory
+ProductCondition
+AvailabilityStatus
+ProductPowerType
+ProductFilterState
+ProductCategoryOption
+CatalogMetadata
 ```
 
-Metadata:
-
-```text
-GET /api/products?metadata=1
-```
-
-Route handler berada di:
-
-```text
-src/app/api/products/route.ts
-```
-
-Server proxy menangani antara lain:
-
-- pagination (`page`, `per_page`)
-- search
-- sorting
-- stock status
-- SKU
-- price range
-- WooCommerce category lookup
-- top-level category metadata
-- ACF condition/location/status contract
-
-Response produk meneruskan header WooCommerce yang relevan:
-
-```text
-X-WP-Total
-X-WP-TotalPages
-```
-
-Default katalog menggunakan **8 produk per halaman**.
-
-### Category Contract
-
-Filter frontend hanya mengekspos kategori WooCommerce **top-level**, bukan subkategori.
-
-Urutan kategori yang digunakan UI:
-
-1. Meja Stainless
-2. Sink Stainless
-3. Rak Stainless
-4. Hood Stainless
-5. Kompor
-6. Chiller
-7. Ice System
-8. Freezer
-9. Showcase
-10. Peralatan Dapur Bekas Lainnya
-
-### ACF Contract
-
-Nilai resmi yang dipakai frontend:
+Nilai resmi inventory yang menjadi acuan:
 
 ```text
 status_unit
@@ -222,150 +142,324 @@ SETU
 PAMULANG BARAT
 ```
 
-Export ACF `BBK INVENTORY` yang menjadi acuan migrasi menggunakan `show_in_rest: 0`. Karena itu field ACF tersebut tidak boleh diasumsikan otomatis tersedia sebagai query filter native WooCommerce REST API.
+ACF export `BBK INVENTORY` yang dipelajari selama migrasi menggunakan `show_in_rest: 0`. Karena itu field ACF tidak boleh diasumsikan otomatis tersedia sebagai query filter native WooCommerce REST API.
 
-## Filtering
+---
 
-Filtering kategori dilakukan melalui WooCommerce category ID yang di-resolve server-side.
+## 5. WooCommerce Proxy
 
-Untuk status:
+Endpoint:
 
-- `READY` dipetakan ke WooCommerce `stock_status=instock`.
-- `SOLD` dipetakan ke WooCommerce `stock_status=outofstock`.
+```text
+GET /api/products
+GET /api/products?metadata=1
+```
 
-**Penting:** `stock_status` WooCommerce dan `status_unit` ACF adalah dua konsep berbeda. Mapping di atas adalah optimasi/filter operasional, bukan pengganti source-of-truth ACF.
+File utama:
 
-Condition/location ACF saat ini belum memiliki query metadata WordPress yang terverifikasi di route proxy. Route tidak melakukan loop seluruh ribuan produk hanya untuk meniru meta query. Jika filter metadata ini perlu menjadi server-side authoritative filtering, backend WordPress harus menyediakan endpoint/hook metadata yang resmi.
+```text
+src/app/api/products/route.ts
+```
 
-## Search
+Proxy menangani kebutuhan katalog seperti:
 
-Global search pada header mengalir ke state filter dan diteruskan ke WooCommerce melalui parameter `search` pada proxy Next.js.
+- `page`
+- `per_page`
+- `search`
+- sorting
+- stock status
+- SKU
+- price range
+- WooCommerce category lookup
+- top-level category metadata
+- ACF contract/fallback handling
 
-Target UX search adalah katalog live, bukan pencarian terhadap mock/static dataset.
+Header pagination WooCommerce:
 
-## Product Detail & SEO
+```text
+X-WP-Total
+X-WP-TotalPages
+```
 
-Route detail:
+**Jangan mengubah proxy untuk menutupi masalah network laptop.** Connection reset yang pernah terjadi perlu dibedakan dari application error.
+
+---
+
+## 6. Category Contract
+
+Filter publik menggunakan **top-level WooCommerce categories**.
+
+Urutan UI yang dikunci:
+
+1. Meja Stainless
+2. Sink Stainless
+3. Rak Stainless
+4. Hood Stainless
+5. Kompor
+6. Chiller
+7. Ice System
+8. Freezer
+9. Showcase
+10. Peralatan Dapur Bekas Lainnya
+
+Tidak boleh membuat kategori hardcoded baru di frontend hanya untuk memperbaiki tampilan.
+
+---
+
+## 7. Product Detail
+
+Route:
 
 ```text
 /product/[slug]
 ```
 
-`src/app/product/[slug]/page.tsx` mengambil produk berdasarkan **slug WooCommerce**.
+Tujuan halaman:
 
-Detail page mempertahankan data SEO penting:
+```text
+SEO landing page
+        +
+Product information
+        +
+Conversion
+        +
+Admin workflow (planned)
+```
 
-- product name / H1
+Data penting yang dipertahankan:
+
+- title/H1
+- slug
+- description
 - short description
-- full description
-- SKU / kode unit
+- SKU
 - category
 - condition
 - location
 - status
 - images
-- canonical URL
-- Open Graph metadata
+- canonical
+- Open Graph
 - Product JSON-LD
 
-Canonical menggunakan domain BBKitchen:
+Prinsip:
+
+> **Jangan mengganti slug produk/category secara massal.**
+
+---
+
+## 8. Planned Product Admin Workflow
+
+Target operasional setelah BBK Core System siap:
 
 ```text
-https://www.bukanbarukitchen.com/product/{slug}
+WordPress admin login
+        ↓
+Product Detail
+        ↓
+BBK Admin Controls
+        ├── Buka Telegram
+        └── Status
+             ├── READY
+             ├── DP
+             └── SOLD
 ```
 
-**Jangan mengubah slug produk atau category URL secara sembarangan.** Existing search equity adalah bagian dari requirement migrasi.
-
-## Product UI
-
-Komponen katalog utama:
-
-- `Header`
-- `HeroSection`
-- `CategoryFilter`
-- `ProductCard`
-- `ProductDetailModal`
-- `RequestUnitModal`
-- `AdminPanelModal`
-- `KitchenConsultationBanner`
-- `TrustSection`
-- `FAQSection`
-- `Footer`
-
-Product card menggunakan label kondisi UI yang dinormalisasi menjadi:
+Saat `SOLD`:
 
 ```text
-Baru
-Bekas
+Admin klik SOLD
+      ↓
+BBK Core System
+      ↓
+update inventory/status
+      ↓
+catat tanggal terjual
+      ↓
+sinkron ke Google Sheets
+      ↓
+refresh/cache invalidation
+      ↓
+frontend menampilkan status terbaru
 ```
 
-Nilai ACF mentah seperti `Baru Sisa Proyek / Lelang` tidak seharusnya tampil sebagai label kondisi UI final.
+**Next.js tidak boleh menjadi sumber kebenaran Google Sheets.** Workflow final harus melewati backend/Core System.
 
-Product detail modal juga memiliki deep-link action **Salin Link**, yang mengarah ke `/product/[slug]` agar unit mudah dibagikan ke sales/WhatsApp.
+---
 
-## Header & Branding
+## 9. UI/UX Direction
 
-Logo asset yang disiapkan:
+Target final bukan membuat Home saja terlihat bagus.
+
+Semua template harus menggunakan bahasa visual yang sama:
 
 ```text
-public/bbkitchen-logo.webp
+Header
+Footer
+Container
+Typography
+Button
+Badge
+Card
+Input
+Select
+Breadcrumb
+Section
+CTA
+Modal
+Responsive rules
 ```
 
-Header sudah memiliki reference code ke asset tersebut dan accessibility text menggunakan `sr-only`.
-
-**Status per 15 Agustus 2026: ⚠️ belum terverifikasi berhasil secara visual di localhost.** User masih melaporkan logo header belum berubah. Karena itu dokumentasi tidak menganggap pekerjaan logo sebagai selesai.
-
-Header tetap menyediakan:
-
-- global search
-- Titip Cari Unit
-- Konsultasi WhatsApp
-- Staff / Owner
-- Admin panel ketika mode admin aktif
-
-## Staff / Owner Mode
-
-Header memiliki akses Staff / Owner berbasis PIN demo pada frontend saat ini.
-
-PIN demo yang ada di implementasi:
+Template target:
 
 ```text
-1234
+Home
+Catalog / Archive
+Product Detail
+Page
+Post
 ```
 
-atau:
+Desktop dan mobile diperlakukan sebagai **satu design system**, bukan dua desain terpisah.
+
+---
+
+## 10. Search & Catalog
+
+Search global diarahkan ke:
 
 ```text
-admin
+/api/products?search=...
 ```
 
-### Security Warning
+Catalog menggunakan live WooCommerce data.
 
-Ini **bukan authentication production-grade**. PIN tersebut berada di frontend dan hanya cocok untuk simulasi/UI development. Untuk production, akses owner/staff harus dipindahkan ke authentication server-side dengan authorization yang nyata.
+Pagination default:
 
-## Pagination
+```text
+8 products/page
+```
 
-Katalog menggunakan pagination server-side WooCommerce.
+Tidak boleh mengambil seluruh katalog ribuan produk ke browser hanya untuk melakukan pagination atau filter sederhana.
 
-UI menyediakan:
+Power type / sumber daya sudah dikeluarkan dari UI filter publik berdasarkan keputusan migrasi.
 
-- halaman saat ini
-- total halaman ketika tersedia
-- tombol sebelumnya/berikutnya
-- input nomor halaman
-- jumlah item yang sedang ditampilkan
+---
 
-Tidak ada strategi mengambil seluruh katalog 2.500+ produk ke browser hanya untuk pagination.
+## 11. SEO Baseline
 
-## Metadata / Global Filter Options
+Baseline Google Search Console yang **diberikan user dari snapshot GSC 15 Agustus 2026**:
 
-`/api/products?metadata=1` mengambil kategori live WooCommerce dan mengembalikan contract ACF statis yang telah ditentukan.
+```text
+16 months
+Clicks        ~1.01K
+Impressions   ~28.1K
+CTR           3.6%
+Avg position  9.5
+```
 
-Kategori tidak dibangun dari hanya 8 produk yang sedang tampil. Ini penting supaya kategori tidak hilang hanya karena produk pada page aktif tidak memiliki kategori tertentu.
+Snapshot indexing:
 
-## Environment
+```text
+Indexed       ~2.29K
+Not indexed   ~413
+```
 
-Server-side WooCommerce proxy membutuhkan:
+Snapshot query yang terlihat antara lain:
+
+```text
+bbkitchen
+bbkitchen - sentra peralatan dapur restoran bekas jakarta | bukan baru kitchen kota tangerang selatan
+jual barang bekas restoran jakarta
+bukanbarukitchen
+```
+
+Ini adalah **baseline yang diberikan user**, bukan audit GSC yang dijalankan oleh repository.
+
+### SEO migration rules
+
+Pertahankan sebanyak mungkin:
+
+- URL
+- slug
+- search intent
+- H1 intent
+- title intent
+- description
+- category intent
+- internal linking
+- canonical
+- schema
+
+Jangan:
+
+- mengganti slug massal
+- menghapus URL lama tanpa mapping
+- mengarahkan semua URL ke homepage
+- noindex massal tanpa alasan
+- mengganti copy yang sudah menghasilkan traffic tanpa audit
+
+---
+
+## 12. Copy Strategy
+
+Copy lama diperlakukan sebagai aset.
+
+```text
+OLD CONTENT
+├── SEO GOLD       → pertahankan
+├── CONVERSION     → upgrade
+├── OUTDATED       → rewrite
+└── GARBAGE        → hapus bila aman
+```
+
+Prioritas copy bukan menulis ulang semua 2.000+ halaman.
+
+Fokus terlebih dahulu pada:
+
+1. Homepage.
+2. Landing pages dengan traffic/search intent kuat.
+3. Category pages.
+4. Product pages yang penting secara bisnis/SEO.
+5. Local/transactional pages yang sudah terbukti mendapat impression/click.
+
+---
+
+## 13. Repository Structure
+
+Struktur penting saat ini:
+
+```text
+.
+├── public/
+│   └── bbkitchen-logo.webp
+├── src/
+│   ├── app/
+│   │   ├── api/products/route.ts
+│   │   ├── product/[slug]/page.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── AdminPanelModal.tsx
+│   │   ├── CategoryFilter.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   ├── ProductCard.tsx
+│   │   ├── ProductDetailModal.tsx
+│   │   └── ...
+│   ├── data/products.ts
+│   ├── lib/woocommerce.ts
+│   ├── types.ts
+│   └── utils/formatters.ts
+├── next.config.ts
+├── package.json
+└── tsconfig.json
+```
+
+---
+
+## 14. Environment
+
+WooCommerce server-side proxy membutuhkan:
 
 ```env
 WOOCOMMERCE_API_URL=https://www.bukanbarukitchen.com/wp-json/wc/v3
@@ -373,45 +467,15 @@ WC_CONSUMER_KEY=...
 WC_CONSUMER_SECRET=...
 ```
 
-Jangan commit credential asli ke repository.
+Credential tidak boleh masuk client bundle atau repository.
 
-> Catatan: `.env.example` pada branch ini masih berisi template lama untuk Gemini/AI Studio dan belum merepresentasikan variable WooCommerce yang dipakai route handler. Ini adalah item dokumentasi/configuration yang masih perlu dirapikan pada hardening berikutnya.
+Dependency yang perlu diperhatikan: build migrasi yang sudah diuji menggunakan **Next.js 16.3.1**, sedangkan `package.json` sebelumnya menggunakan range `latest`. Dependency locking menjadi pekerjaan hardening.
 
-## Local Development
+---
 
-Install dependency:
+## 15. Verification / Known Issues
 
-```bash
-npm install
-```
-
-Development:
-
-```bash
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
-
-Production server:
-
-```bash
-npm run start
-```
-
-Local URL:
-
-```text
-http://localhost:3000
-```
-
-## Verification
-
-Build yang telah digunakan selama migrasi berhasil melewati:
+Build lokal yang sudah dicapai selama migrasi sebelumnya melewati:
 
 ```text
 Compiled successfully
@@ -421,7 +485,7 @@ Generating static pages
 Finalizing page optimization
 ```
 
-Route yang telah terdeteksi dalam build:
+Route yang terdeteksi:
 
 ```text
 /
@@ -430,101 +494,148 @@ Route yang telah terdeteksi dalam build:
 /product/[slug]
 ```
 
-Warning `package-lock.json` di parent directory (`C:\Users\Lenovo`) berasal dari struktur directory lokal/Turbopack dan bukan TypeScript/build error aplikasi.
+### Local connectivity issue
 
-## Known Issues / Current Limitations
-
-### 1. WooCommerce connectivity — LAPTOP
-
-Pada **15 Agustus 2026**, local laptop environment mengalami:
+Pada 15 Agustus 2026 laptop mengalami:
 
 ```text
 curl -I https://www.bukanbarukitchen.com
 curl: (35) Recv failure: Connection was reset
 ```
 
-dan request ke:
-
-```text
-https://www.bukanbarukitchen.com/wp-json/wc/v3/products
-```
-
-juga mengalami connection reset.
-
-Akibatnya browser menerima:
+dan endpoint WooCommerce juga mengalami connection reset sehingga:
 
 ```text
 /api/products → 502 Bad Gateway
 ```
 
-User melaporkan domain masih dapat diakses melalui HP. Karena itu masalah ini belum dinyatakan sebagai WooCommerce application failure; kemungkinan masih berada pada jalur network/DNS/TLS/firewall/IPv4/IPv6 laptop.
+User melaporkan domain dapat dibuka melalui HP. Karena itu jangan menyimpulkan source code WooCommerce/Next.js rusak sebelum jalur DNS/TLS/firewall/IPv4/IPv6/network laptop diverifikasi.
 
-### 2. ACF meta filtering
+### Other known limitations
 
-`kondisi_unit` dan `lokasi_unit` belum memiliki query metadata server-side WordPress yang authoritative di route ini. Route sengaja tidak melakukan full-catalog scan untuk mengemulasikan filter tersebut.
+- ACF authoritative filtering belum selesai.
+- Related Products live berdasarkan kategori masih perlu difinalkan.
+- Header/logo masih perlu verifikasi visual.
+- Staff/Owner PIN frontend bukan authentication production.
+- `.env.example` perlu disinkronkan dengan variable WooCommerce.
+- Dependency versions perlu dikunci saat hardening.
 
-### 3. Related Products
+---
 
-Related products berbasis kategori WooCommerce live, dengan current product excluded, masih menjadi pekerjaan berikutnya.
-
-### 4. Product detail header
-
-Product detail page masih memiliki header/layout yang didefinisikan sendiri. Konsolidasi penuh dengan shared `Header` component dapat dilakukan setelah UX stabil agar tidak mengganggu SEO/detail rendering.
-
-### 5. Authentication
-
-Staff/Owner PIN saat ini adalah simulasi frontend, bukan sistem auth production.
-
-### 6. Dependency hardening
-
-`next` masih menggunakan range `latest`. Dependency versions sebaiknya dikunci setelah migrasi stabil untuk menghindari perubahan build yang tidak disengaja.
-
-### 7. Configuration documentation
-
-`.env.example` belum sinkron dengan environment variable WooCommerce yang benar-benar digunakan oleh server route.
-
-## Migration Rules
-
-Selama fase migrasi, gunakan aturan berikut:
+## 16. Migration Rules — WAJIB
 
 1. **1 step = 1 file = 1 commit.**
-2. Jangan mengembalikan mock catalog sebagai source of truth.
-3. Jangan mengubah slug produk/category tanpa alasan SEO yang terverifikasi.
-4. Jangan memindahkan WooCommerce credential ke client.
-5. Jangan mengambil seluruh katalog hanya untuk menyelesaikan filter/pagination di frontend.
-6. Gunakan kategori WooCommerce top-level untuk filter publik.
-7. Normalisasi label UI tanpa mengubah raw source data.
-8. Bedakan `status_unit` ACF dari WooCommerce `stock_status`.
-9. Pastikan perubahan UI tetap konsisten dengan design system Home BBKitchen.
-10. Setelah setiap step, jalankan `git pull` + `npm run build` sebelum melanjutkan.
+2. Setelah step selesai: `git pull` → test → `npm run build` bila relevan.
+3. Jangan kembali ke mock catalog sebagai source of truth.
+4. Jangan mengubah slug tanpa alasan SEO yang terverifikasi.
+5. Jangan mengirim WooCommerce credential ke browser.
+6. Jangan membuat kategori publik hardcoded baru.
+7. Bedakan `status_unit` ACF dengan WooCommerce `stock_status`.
+8. Jangan mengambil seluruh katalog hanya untuk filter/pagination frontend.
+9. Jangan membangun Google Sheets integration langsung di client.
+10. **Setiap milestone/step yang mengubah project wajib didokumentasikan di README.**
+11. README harus membedakan **implemented**, **verified**, **planned**, dan **known issue**.
 
-## Next Roadmap
+---
 
-Prioritas setelah fondasi ini stabil:
+## 17. Pareto Roadmap
 
-1. **Related Products** berbasis kategori WooCommerce live dan exclude current product.
-2. Sinkronisasi penuh ACF metadata filtering melalui backend WordPress.
-3. **Verifikasi dan perbaikan logo/header secara visual di localhost.**
-4. Penyempurnaan search UX dan popular-search behavior berbasis data nyata.
-5. Shared design system untuk Home → Catalog → Product Detail.
-6. SEO schema/canonical/internal-link hardening.
-7. Production authentication untuk Staff/Owner.
-8. Lock dependency versions dan sinkronisasi `.env.example`.
+### P0 — Fondasi
 
-## Source of Truth
+1. Stabilkan boundary BBK Core System.
+2. Pastikan konektivitas WooCommerce dari development environment.
+3. Konsolidasi shared design system.
+
+### P1 — Conversion
+
+4. Product detail UX.
+5. Related Products live.
+6. Admin controls: Telegram + READY/DP/SOLD.
+7. SOLD → tanggal terjual → Google Sheets melalui Core System.
+
+### P2 — Site-wide UX
+
+8. Header/footer.
+9. Home.
+10. Catalog/archive.
+11. Page/post templates.
+12. Desktop/mobile QA.
+
+### P3 — SEO / Growth
+
+13. Canonical/schema/internal links.
+14. Preserve URL equity.
+15. Copy optimization berdasarkan GSC.
+16. Category/local landing-page optimization.
+
+### P4 — Production Hardening
+
+17. Real authentication/authorization.
+18. Dependency locking.
+19. Environment documentation.
+20. Performance/cache/error monitoring.
+21. Production cutover + rollback plan.
+
+---
+
+## 18. Working Estimate
+
+Dengan AI-assisted development dan user sebagai non-coder, target realistis untuk migrasi yang benar-benar production-minded adalah sekitar **4–6 minggu**, dengan buffer **6–8 minggu** bila Core System, authentication, network/hosting, SEO QA, atau production hardening menambah pekerjaan.
+
+Estimasi ini adalah planning estimate, bukan deadline teknis.
+
+---
+
+## 19. Source of Truth
 
 ```text
-Product / price / stock / category / slug / description
+Catalog product data
 → WooCommerce
 
-status_unit / kondisi_unit / lokasi_unit / kode_unit
-→ WordPress ACF BBK INVENTORY
+Inventory metadata
+→ WordPress / ACF
 
-Frontend presentation / UX / navigation / SEO rendering
+Business logic
+→ BBK Core System (target architecture)
+
+Automation / sourcing
+→ BBK AI Growth Automation
+
+Frontend experience
 → Next.js
+
+SEO baseline
+→ Existing WordPress URLs + user-provided GSC baseline
 ```
 
 ---
 
-**BBKitchen — Bukan Baru Kitchen**  
-Sentra Barang Bekas Restoran
+## 20. Migration Changelog
+
+### 2026-08-15 — Chat 1.3 baseline
+
+- README dijadikan living documentation untuk migrasi.
+- Arsitektur dipertegas: WooCommerce/ACF sebagai source of truth, Next.js sebagai experience layer.
+- BBK Core System dan BBK AI Growth Automation dipisahkan secara boundary; keduanya bukan katalog mock di frontend.
+- Target UI/UX site-wide desktop + mobile ditambahkan.
+- Target admin Product Detail workflow ditambahkan: Telegram, READY/DP/SOLD, dan SOLD → tanggal terjual → Google Sheets melalui backend.
+- GSC baseline dari snapshot user didokumentasikan sebagai baseline, bukan hasil audit tool.
+- Pareto roadmap dan working estimate ditambahkan.
+- Aturan **1 step = 1 file = 1 commit** serta kewajiban update README dikunci.
+
+---
+
+## 21. Development Commands
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run start
+```
+
+Local development:
+
+```text
+http://localhost:3000
+```

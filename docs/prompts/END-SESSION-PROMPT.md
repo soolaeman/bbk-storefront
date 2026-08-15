@@ -126,6 +126,9 @@ Buat atau update:
 Isi minimal:
 
 - Date
+- Start
+- End
+- Duration
 - Scope
 - Starting state
 - Pareto
@@ -137,6 +140,16 @@ Isi minimal:
 - Git checkpoint
 - Technical debt
 - Handoff
+
+### Timeline evidence rule
+
+- `Start`, `End`, dan `Duration` hanya boleh diisi dari evidence yang benar-benar tersedia.
+- Jangan mengarang atau mengestimasi exact time.
+- Jika exact time tidak tersedia, tulis:
+  `Tidak ditemukan di conversation.`
+- Jika hanya tanggal/period yang tersedia, jangan mengubahnya menjadi durasi.
+- Jika timestamp berasal dari GitHub commit, sebutkan sumbernya.
+- Duration hanya dihitung setelah Start dan End dapat diverifikasi.
 
 Jangan menimpa history session sebelumnya.
 
@@ -152,12 +165,16 @@ Index ini harus tetap mencerminkan:
 
 - chronology Chat 1.1, 1.2, 1.3, ...
 - tanggal/period tiap chat jika tersedia
+- start/end/duration jika dapat diverifikasi
 - fokus tiap chat
 - status
 - link ke archive masing-masing
 - milestone utama
 - current migration position
 - current Pareto focus
+
+Jika waktu tidak dapat dibuktikan, tulis:
+`Tidak ditemukan di repository/evidence yang tersedia.`
 
 Jangan mengubah progress index menjadi forensic log.
 
@@ -179,9 +196,18 @@ Update hanya informasi current-state yang relevan:
 - major locked decisions
 - carried-forward technical debt
 - chronology / documentation links
+- session timeline/progress summary
 - last code checkpoint
 - last documentation checkpoint
 - next chat handoff
+
+Untuk timeline/progress:
+
+- tampilkan tanggal tiap session jika tersedia
+- tampilkan Start/End/Duration hanya jika dapat diverifikasi
+- jangan mengarang atau mengestimasi durasi
+- jika tidak tersedia, tulis:
+  `Tidak ditemukan di repository/evidence yang tersedia.`
 
 Jangan menyalin seluruh forensic session ke README.
 
@@ -222,6 +248,7 @@ Aturan:
 - `END-SESSION-PROMPT.md` adalah satu-satunya prompt canonical untuk end-session normal.
 - `FORENSIC-EXTRACTION-PROMPT.md` hanya digunakan untuk mengarsipkan chat lama/closed chat yang belum terdokumentasi.
 - Jangan membuat prompt end-session alternatif tanpa alasan workflow yang nyata.
+- Session timeline rule harus tetap konsisten di prompt yang relevan.
 
 Jika SOP/documentation workflow berubah, update prompt yang terdampak.
 
@@ -260,11 +287,23 @@ Catat:
 Date:
 Start:
 End:
+Duration:
 
-Jika exact time tidak tersedia, tulis:
-`Tidak ditemukan di conversation.`
+Evidence source:
 
-Jika tanggal berasal dari GitHub commit, gunakan tanggal commit dan sebutkan sumbernya.
+- conversation/session timestamp
+- GitHub commit timestamp
+- repository evidence
+
+Rules:
+
+- Exact time is preferred when verifiable.
+- If exact time is unavailable, write:
+  `Tidak ditemukan di conversation.`
+- If only a date/period is known, record the date/period without converting it into duration.
+- Duration must be calculated only from verified Start and End.
+- Never estimate elapsed time from message count, date range, or assumptions.
+- If a timestamp comes from GitHub commit metadata, label it as GitHub evidence.
 
 ==================================================
 13. GIT / VERIFICATION
@@ -307,6 +346,7 @@ Sebelum menjawab saya:
 - Pastikan root `README.md` benar-benar tersimpan.
 - Pastikan guide yang terdampak sudah diperbarui atau dinyatakan tetap valid.
 - Pastikan prompt/SOP yang terdampak sudah diperbarui atau dinyatakan tetap valid.
+- Pastikan timeline Start/End/Duration konsisten di archive, progress index, dan root README.
 - Pastikan `end-session-prompt.md` tetap menunjuk ke canonical prompt.
 - Pastikan SHA yang dilaporkan berasal dari write/commit yang berhasil.
 - Jangan bilang update berhasil jika write gagal.
@@ -318,12 +358,13 @@ Sebelum menjawab saya:
 Jawab ringkas:
 
 1. Session status
-2. Progress archive path + SHA
-3. Progress index SHA
-4. README commit SHA
-5. Guides changed / no change
-6. Prompts changed / no change
-7. Last code checkpoint SHA
-8. Top 3 carried-forward items
-9. Next conversation title
+2. Session Date / Start / End / Duration
+3. Progress archive path + SHA
+4. Progress index SHA
+5. README commit SHA
+6. Guides changed / no change
+7. Prompts changed / no change
+8. Last code checkpoint SHA
+9. Top 3 carried-forward items
+10. Next conversation title
 ```

@@ -1,6 +1,8 @@
 import React from 'react';
-import { ArrowRight, FileText, Factory, MessageCircle, PackageCheck, Store } from 'lucide-react';
+import { ArrowRight, FileText, Factory, MessageCircle, PackageCheck, Store, ExternalLink } from 'lucide-react';
 import { generateWhatsAppConsultationLink, generateWhatsAppCustomLink } from '../utils/formatters';
+
+const MBG_CATALOG_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1';
 
 export const KitchenConsultationBanner: React.FC = () => {
   const buyUnitLink = generateWhatsAppConsultationLink(
@@ -29,7 +31,7 @@ export const KitchenConsultationBanner: React.FC = () => {
               <span>BBKitchen • Unit Bekas • MBG • Produksi Baru</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold text-white leading-tight mt-3">
-              Cari, Jual, atau Produksi Peralatan Dapur Resto
+              Cari, Jual, atau Produksi Peralatan Dapur Resto &amp; Dapur MBG
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2">
               Pilih kebutuhan Anda. BBKitchen melayani pembelian unit bekas satuan maupun borongan,
@@ -74,28 +76,37 @@ export const KitchenConsultationBanner: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <a
-              href={mbgLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group rounded-2xl border border-sky-500/30 bg-sky-700/10 hover:border-sky-400/70 p-5 transition-all"
-            >
+            <div className="group rounded-2xl border border-sky-500/30 bg-sky-700/10 hover:border-sky-400/70 p-5 transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <FileText className="w-6 h-6 text-sky-400 mb-3" />
                   <p className="text-[10px] uppercase tracking-[0.16em] text-sky-300 font-bold">3 • Dapur MBG</p>
                   <h3 className="text-lg font-black text-white mt-1">Paket Peralatan Dapur MBG</h3>
-                  <p className="text-xs text-slate-400 mt-2">Hubungi BBKitchen via WhatsApp untuk kebutuhan peralatan dapur MBG.</p>
+                  <p className="text-xs text-slate-400 mt-2">Lihat katalog atau hubungi BBKitchen via WhatsApp untuk kebutuhan peralatan dapur MBG.</p>
                 </div>
-                <ArrowRight className="w-5 h-5 text-sky-400 shrink-0 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-5 h-5 text-sky-400 shrink-0" />
               </div>
               <div className="flex flex-wrap gap-2 mt-4">
-                <span className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white">
+                <a
+                  href={mbgLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white hover:bg-emerald-500 transition-colors"
+                >
                   <MessageCircle className="w-4 h-4" />
                   Tanya via WhatsApp
-                </span>
+                </a>
+                <a
+                  href={MBG_CATALOG_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-sky-400/40 bg-sky-950/50 px-3.5 py-2.5 text-xs font-bold text-sky-200 hover:bg-sky-900/70 transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  PDF Katalog Dapur MBG
+                </a>
               </div>
-            </a>
+            </div>
 
             <a
               href={productionLink}

@@ -1,67 +1,117 @@
 # 🧭 BBKitchen — Documentation Navigator
 
-> **One place to navigate the repository documentation.**
+> **Satu tempat untuk mencari dokumentasi repository.**
 >
-> This file is the repository-wide documentation navigator. It does not replace `README.md` or any guide/prompt; it only provides the map and redirects.
+> `NAVIGATOR.md` adalah peta dokumentasi. Ia tidak menggantikan `README.md`, progress archive, guides, atau prompts.
 
 ---
 
-## 🏠 Project
+## 🚦 Mulai dari Sini
 
-- [README.md — Current Project State](README.md)
+| Kalau lu mau... | Buka | Gunanya |
+|---|---|---|
+| Tahu **project sekarang ada di mana** | [`README.md`](README.md) | Dashboard kondisi terbaru, prioritas Pareto, architecture, bottleneck, technical debt, dan handoff. |
+| Tahu **apa yang terjadi di tiap chat** | [`docs/progress/README.md`](docs/progress/README.md) | Index sejarah migration dan ringkasan progress lintas session. |
+| Tahu **file mana yang harus diedit** | [`docs/guides/README.md`](docs/guides/README.md) | Peta guide untuk memahami lokasi file dan perubahan yang aman. |
+| Minta AI **menjalankan workflow** | [`docs/prompts/`](docs/prompts/END-SESSION-PROMPT.md) | Prompt operasional untuk end-session, update dokumentasi, dan forensic extraction. |
+
+---
+
+# 🗂️ Repository Documentation Map
+
+## 🏠 Root
+
+| File | Dipakai untuk | Kapan buka? |
+|---|---|---|
+| [`README.md`](README.md) | **Current project dashboard** | Setiap mulai chat baru atau sebelum mengambil keputusan besar. |
+| [`NAVIGATOR.md`](NAVIGATOR.md) | **Peta dokumentasi** | Saat bingung mencari file dokumentasi. |
+
+---
 
 ## 📊 Progress / History
 
-- [Progress Archive](docs/progress/README.md)
-- [Chat 1.1](docs/progress/CHAT-1.1.md)
-- [Chat 1.2](docs/progress/CHAT-1.2.md)
-- [Chat 1.3](docs/progress/CHAT-1.3.md)
-- [Chat 1.4](docs/progress/CHAT-1.4.md)
+| File | Dipakai untuk | Kapan buka? |
+|---|---|---|
+| [`docs/progress/README.md`](docs/progress/README.md) | Index dan ringkasan seluruh progress migration | Saat ingin melihat gambaran sejarah tanpa membaca semua chat. |
+| [`CHAT-1.1.md`](docs/progress/CHAT-1.1.md) | Forensic history Chat 1.1 | Saat perlu memahami foundation dan bottleneck awal. |
+| [`CHAT-1.2.md`](docs/progress/CHAT-1.2.md) | Forensic history Chat 1.2 | Saat perlu memahami WooCommerce/API/ACF/SEO migration. |
+| [`CHAT-1.3.md`](docs/progress/CHAT-1.3.md) | Forensic history Chat 1.3 | Saat perlu memahami catch-all routing, Header, article integration, dan visual convergence. |
+| [`CHAT-1.4.md`](docs/progress/CHAT-1.4.md) | Forensic history Chat 1.4 | Saat perlu memahami visual/conversion work, mascot/assets, social covers, dan CTA changes. |
 
-> New session archives should be added to `docs/progress/` and linked from its `README.md`.
+> **Rule:** `docs/progress/` = sejarah. Untuk kondisi terbaru, pakai root `README.md`.
+
+---
 
 ## 📖 Guides
 
-- [Guides Index](docs/guides/README.md)
-- [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md)
-- [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md)
+| File | Dipakai untuk | Kapan buka? |
+|---|---|---|
+| [`docs/guides/README.md`](docs/guides/README.md) | Index semua human/vibe-coding guides | Saat belum tahu guide mana yang relevan. |
+| [`COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, atau teks UI. |
+| [`VIBE-CODING-COPY-GUIDE.md`](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi sederhana untuk user non-developer / vibe coding | Saat mau mengubah copy tanpa perlu memahami seluruh architecture. |
+
+> **Guide = menjelaskan.** Guide bukan instruksi eksekusi AI.
+
+---
 
 ## 🤖 Prompts / AI Workflows
 
-- [End Session Prompt — canonical](docs/prompts/END-SESSION-PROMPT.md)
-- [Update Documentation Prompt](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md)
-- [Forensic Extraction Prompt — old chats](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
+| File | Dipakai untuk | Kapan buka? |
+|---|---|---|
+| [`END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: audit perubahan, update progress, verification, dan handoff | Setiap selesai migration chat/session normal. |
+| [`UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README secara khusus | Saat dokumentasi perlu diperbarui tanpa menjalankan seluruh end-session workflow. |
+| [`FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Mengekstrak history dari chat lama / transcript yang tidak lengkap | Saat mengarsipkan atau memperbaiki history session lama. |
 
-## 🧭 Documentation Rules
+> **Prompt = instruksi untuk AI.** Source of truth project tetap berada di code, root `README.md`, dan progress archive sesuai konteksnya.
+
+---
+
+# 🧠 Rule of Thumb
 
 ```text
+"Project sekarang gimana?"
+        ↓
 README.md
-  → current project state
 
-NAVIGATOR.md
-  → documentation map / redirects
-
+"Kenapa kita sampai di sini?"
+        ↓
 docs/progress/
-  → session history
 
+"Kalau mau ganti sesuatu, file-nya di mana?"
+        ↓
 docs/guides/
-  → human / vibe-coder guides
 
+"AI harus melakukan workflow apa?"
+        ↓
 docs/prompts/
-  → AI workflow prompts
+
+"Gue bingung mulai dari mana."
+        ↓
+NAVIGATOR.md
 ```
 
-### File rule
+---
 
-Every Markdown file in the repository, except:
+# 🔗 Quick Access
 
-- `README.md`
-- `NAVIGATOR.md`
+| Tujuan | Link |
+|---|---|
+| 🏠 Current Project State | [`README.md`](README.md) |
+| 📊 Progress Archive | [`docs/progress/README.md`](docs/progress/README.md) |
+| 📖 Guides Index | [`docs/guides/README.md`](docs/guides/README.md) |
+| 🤖 Prompts | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) |
+| 🧭 Navigator | [`NAVIGATOR.md`](NAVIGATOR.md) |
 
-should contain a small **Back to NAVIGATOR** link near the top so the documentation can be navigated from any `.md` file.
+---
 
-The repository root `README.md` is intentionally exempt because it is the main project landing page.
+# 📌 Repository Navigation Rule
 
-## 🔗 Back to Navigator
+Semua file `.md` di repository, **kecuali `README.md` dan `NAVIGATOR.md`**, wajib memiliki link kembali ke Navigator di bagian atas atau area navigasi yang mudah ditemukan.
 
-[🧭 NAVIGATOR.md](NAVIGATOR.md)
+Gunakan relative path sesuai kedalaman file, misalnya:
+
+```markdown
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
+```
+
+Untuk file yang berada lebih dalam, sesuaikan jumlah `../`.

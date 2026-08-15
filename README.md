@@ -30,11 +30,11 @@ GitHub date: **15 August 2026 21:24:06 UTC**.
 ## Last documentation checkpoint
 
 ```text
-014ef6cba980f5f7cf60414c7bda3b77cc7c4cd8
-close Chat 1.4 forensic progress archive
+0d65a185f085251b2d88bdc12ca4bfd8baca2a4c
+create canonical START-SESSION-PROMPT.md
 ```
 
-> Subsequent documentation commits may advance the branch without changing the application-code checkpoint above.
+> Documentation-only commits may advance the branch without changing the application-code checkpoint above.
 
 ---
 
@@ -335,6 +335,12 @@ NAVIGATOR.md
 └── docs/prompts/   → workflow AI
 ```
 
+### Session workflow
+
+- [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) → canonical orientation prompt untuk membuka session baru.
+- [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) → canonical forensic close/handoff prompt untuk menutup session.
+- [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) → documentation-only synchronization workflow.
+
 ### Root shortcut
 
 [`end-session-prompt.md`](end-session-prompt.md) → shortcut ke canonical [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
@@ -353,11 +359,12 @@ First actions:
 
 1. Read this README.
 2. Use [`NAVIGATOR.md`](NAVIGATOR.md) to jump to supporting documentation.
-3. Audit current branch/code before changing anything.
-4. Verify build/runtime state before assuming anything is broken.
-5. Follow the Pareto priorities above.
-6. Prefer `1 step = 1 file = 1 verified commit`.
-7. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
+3. Use [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) for formal session orientation.
+4. Audit current branch/code before changing anything.
+5. Verify build/runtime state before assuming anything is broken.
+6. Follow the Pareto priorities above.
+7. Prefer `1 step = 1 file = 1 verified commit`.
+8. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
 ### Do not repeat
 
@@ -394,5 +401,5 @@ Chat 1.5 → 🚀 Next
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Last documentation checkpoint: 014ef6cba980f5f7cf60414c7bda3b77cc7c4cd8
+Last documentation checkpoint before current sync: 0d65a185f085251b2d88bdc12ca4bfd8baca2a4c
 ```

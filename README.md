@@ -45,7 +45,7 @@ GitHub date: **15 August 2026 21:24:06 UTC**.
 
 ```text
 Progress index sync:
-a762c07d826825d16a63caf6c3ce22f457bed275
+be14242e0d53279e958ec5c2ef299acdbd5393c0
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
@@ -56,7 +56,7 @@ a762c07d826825d16a63caf6c3ce22f457bed275
 
 | Session | Periode / waktu terverifikasi | Start | End | Durasi | Fokus utama | Hasil utama | Status |
 |---|---|---|---|---:|---|---|---|
-| 1.1 | Tidak ditemukan | — | — | — | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
+| 1.1 | **14 Aug 2026** | **17:04 WIB** | — | — | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
 | 1.2 | 14–15 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
 | 1.3 | 15 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
 | 1.4 | 15–16 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
@@ -65,26 +65,23 @@ a762c07d826825d16a63caf6c3ce22f457bed275
 ### ⏱️ Project elapsed time from Chat 1.1
 
 ```text
-Chat 1.1 actual start:
-Tidak ditemukan di repository/evidence yang tersedia.
+Chat 1.1 verified start:
+14 August 2026 — 17:04 WIB
 
-Actual elapsed duration since Chat 1.1:
+Chat 1.5 verified start:
+16 August 2026 — 06:32:41 WIB
+
+Elapsed project span at Chat 1.5 start:
+1 day 13 hours 28 minutes 41 seconds
+
+Actual total working duration across all chats:
 NOT VERIFIABLE
 
-Earliest verifiable migration evidence:
-14 August 2026 (Chat 1.2)
-
-Current migration date:
-16 August 2026
-
-Calendar span covered by verifiable evidence:
-≥ 2 calendar days
-
-This does NOT mean:
-≥ 2 days of working time
+Reason:
+End timestamps / working intervals for earlier chats are not fully verified.
 ```
 
-> **Timing rule:** tanggal/period tidak otomatis menjadi durasi. Durasi final hanya dihitung dari `Start` + `End` yang terverifikasi. README tidak boleh mengarang durasi Chat 1.1 hanya untuk menampilkan angka.
+> **Important:** elapsed project span ≠ total working duration. The project elapsed span can be calculated from the verified Chat 1.1 start timestamp, but actual working duration requires verified working intervals/end timestamps.
 
 Detail timeline/evidence rule berada di [`docs/progress/README.md`](docs/progress/README.md).
 
@@ -408,11 +405,11 @@ First actions:
 Use [`NAVIGATOR.md`](NAVIGATOR.md) or [`docs/progress/README.md`](docs/progress/README.md).
 
 ```text
-Chat 1.1 → foundation
+Chat 1.1 → foundation — started 14 Aug 2026, 17:04 WIB
 Chat 1.2 → live catalog / API / SEO
 Chat 1.3 → routing / integration / visual convergence
 Chat 1.4 → sales-first homepage / CTA / visual assets
-Chat 1.5 → responsive / parity / hardening
+Chat 1.5 → responsive / parity / hardening — started 16 Aug 2026, 06:32:41 WIB
 ```
 
 ---
@@ -428,5 +425,5 @@ Chat 1.5 → 🚀 Active
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Progress index checkpoint: a762c07d826825d16a63caf6c3ce22f457bed275
+Progress index checkpoint: be14242e0d53279e958ec5c2ef299acdbd5393c0
 ```

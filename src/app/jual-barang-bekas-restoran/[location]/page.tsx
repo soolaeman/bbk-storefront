@@ -6,10 +6,14 @@ interface LocationPageProps {
   params: Promise<{ location: string }>;
 }
 
+async function getLocationPage(location: string) {
+  const pages = await getWordPressPages({ slug: location });
+  return pages[0];
+}
+
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
   const { location } = await params;
-  const pages = await getWordPressPages({ slug: `jual-barang-bekas-restoran-${location}` });
-  const page = pages[0];
+  const page = await getLocationPage(location);
 
   if (!page) return {};
 
@@ -24,8 +28,7 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 
 export default async function LocationPage({ params }: LocationPageProps) {
   const { location } = await params;
-  const pages = await getWordPressPages({ slug: `jual-barang-bekas-restoran-${location}` });
-  const page = pages[0];
+  const page = await getLocationPage(location);
 
   if (!page) notFound();
 

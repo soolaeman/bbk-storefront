@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader2, Menu, Search, X } from 'lucide-react';
+import { generateWhatsAppCustomLink } from '../utils/formatters';
 
 interface HeaderSearchProduct {
   id: number;
@@ -30,12 +31,12 @@ interface HeaderProps {
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_RESULT_LIMIT = 3;
-const BBKITCHEN_WHATSAPP = '6285122001051';
-const MBG_CATALOG_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1';
-const MBG_WHATSAPP_MESSAGE = 'Halo Tim BBKitchen, saya ingin bertanya perihal: Saya ingin info kebutuhan peralatan dapur untuk MBG dari BBKitchen.';
-
-const buildWhatsAppLink = (message: string) =>
-  `https://wa.me/${BBKITCHEN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+const MBG_WHATSAPP_LINK = generateWhatsAppCustomLink(
+  'Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.',
+);
+const PRODUCTION_WHATSAPP_LINK = generateWhatsAppCustomLink(
+  'Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru',
+);
 
 export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -43,7 +44,6 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mbgMenuOpen, setMbgMenuOpen] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchRequestRef = useRef(0);
 
@@ -116,23 +116,12 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   };
 
   const openMbgWhatsApp = () => {
-    window.open(buildWhatsAppLink(MBG_WHATSAPP_MESSAGE), '_blank', 'noopener,noreferrer');
-    setMbgMenuOpen(false);
-    setMobileMenuOpen(false);
-  };
-
-  const openMbgCatalog = () => {
-    window.open(MBG_CATALOG_URL, '_blank', 'noopener,noreferrer');
-    setMbgMenuOpen(false);
+    window.open(MBG_WHATSAPP_LINK, '_blank', 'noopener,noreferrer');
     setMobileMenuOpen(false);
   };
 
   const handleProductionClick = () => {
-    window.open(
-      buildWhatsAppLink('Halo BBKitchen, saya ingin produksi peralatan dapur/restoran baru. Saya ingin konsultasi mengenai kebutuhan produksi atau custom.'),
-      '_blank',
-      'noopener,noreferrer',
-    );
+    window.open(PRODUCTION_WHATSAPP_LINK, '_blank', 'noopener,noreferrer');
     setMobileMenuOpen(false);
   };
 
@@ -209,18 +198,9 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
 
           <div className="order-2 ml-auto flex shrink-0 items-center gap-2 md:order-3">
             {!simple && <>
-              <div className="relative hidden sm:block">
-                <button type="button" onClick={() => setMbgMenuOpen((open) => !open)} aria-expanded={mbgMenuOpen} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50">
-                  <span>Dapur MBG</span>
-                  <span className="text-[10px]">⌄</span>
-                </button>
-                {mbgMenuOpen && (
-                  <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xl">
-                    <button type="button" onClick={openMbgWhatsApp} className="w-full rounded-lg px-3 py-2.5 text-left text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">Konsultasi kebutuhan MBG via WhatsApp</button>
-                    <button type="button" onClick={openMbgCatalog} className="w-full rounded-lg px-3 py-2.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50">Lihat PDF Katalog MBG</button>
-                  </div>
-                )}
-              </div>
+              <button type="button" onClick={openMbgWhatsApp} className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:inline-flex">
+                <span>Dapur MBG</span>
+              </button>
               <button type="button" onClick={handleProductionClick} className="hidden items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-emerald-700 sm:inline-flex"><span>Mau Produksi Baru?</span></button>
             </>}
             {!simple && <button type="button" onClick={() => setMobileMenuOpen((open) => !open)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 sm:hidden" aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>}
@@ -233,15 +213,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
               <div className="flex items-center gap-5">
                 <a href="/" className="transition-colors hover:text-emerald-700">Home</a>
                 <a href="/catalog" className="transition-colors hover:text-emerald-700">Katalog</a>
-                <div className="relative">
-                  <button type="button" onClick={() => setMbgMenuOpen((open) => !open)} aria-expanded={mbgMenuOpen} className="transition-colors hover:text-emerald-700">Dapur MBG</button>
-                  {mbgMenuOpen && (
-                    <div className="absolute left-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xl">
-                      <button type="button" onClick={openMbgWhatsApp} className="w-full rounded-lg px-3 py-2.5 text-left text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">Konsultasi kebutuhan MBG via WhatsApp</button>
-                      <button type="button" onClick={openMbgCatalog} className="w-full rounded-lg px-3 py-2.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50">Lihat PDF Katalog MBG</button>
-                    </div>
-                  )}
-                </div>
+                <button type="button" onClick={openMbgWhatsApp} className="transition-colors hover:text-emerald-700">Dapur MBG</button>
                 <button type="button" onClick={handleProductionClick} className="transition-colors hover:text-emerald-700">Mau Produksi Baru?</button>
               </div>
               <span className="text-[11px] font-medium text-slate-400">Unit cepat berputar · cek ketersediaan terbaru</span>
@@ -253,13 +225,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
               <nav className="grid gap-1 text-sm font-semibold text-slate-700" aria-label="Navigasi mobile">
                 <a href="/" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Home</a>
                 <a href="/catalog" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Katalog</a>
-                <button type="button" onClick={() => setMbgMenuOpen((open) => !open)} aria-expanded={mbgMenuOpen} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Dapur MBG</button>
-                {mbgMenuOpen && (
-                  <div className="ml-3 grid gap-1 border-l-2 border-slate-100 pl-2">
-                    <button type="button" onClick={openMbgWhatsApp} className="rounded-lg px-3 py-2 text-left text-xs font-bold text-emerald-700 hover:bg-emerald-50">Konsultasi via WhatsApp</button>
-                    <button type="button" onClick={openMbgCatalog} className="rounded-lg px-3 py-2 text-left text-xs font-bold text-slate-700 hover:bg-slate-50">PDF Katalog MBG</button>
-                  </div>
-                )}
+                <button type="button" onClick={openMbgWhatsApp} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Dapur MBG</button>
                 <button type="button" onClick={handleProductionClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Mau Produksi Baru?</button>
               </nav>
             </div>

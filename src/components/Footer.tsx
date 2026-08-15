@@ -1,6 +1,6 @@
 import React from 'react';
 import { Phone, MapPin, Clock, Instagram, Facebook, Youtube, ArrowUpRight } from 'lucide-react';
-import { generateWhatsAppConsultationLink } from '../utils/formatters';
+import { generateWhatsAppConsultationLink, generateWhatsAppCustomLink } from '../utils/formatters';
 import { EquipmentCategory } from '../types';
 
 interface FooterProps {
@@ -9,10 +9,14 @@ interface FooterProps {
 
 const ADDRESS = 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A, Belakang Masjid Al - Kahfi No.020, RT.004, Pd. Benda, Kec. Pamulang, Kota Tangerang Selatan, Banten 15434';
 const WHATSAPP = '0851 2200 1051';
-const WHATSAPP_CONSULTATION_URL = 'https://wa.me/6285122001051?text=Halo%20Tim%20BBKitchen%2C%20saya%20ingin%20konsultasi%20kebutuhan%20peralatan%20dapur%20komersial%20untuk%20usaha%20saya%20%28Restoran%2FCafe%2FKatering%2FBakery%2FMBG%20Kitchen%29.%0A%0ABisa%20dibantu%20rekomendasi%20alat%20yang%20sesuai%20menu%20dan%20estimasi%20budget%20modal%20kami%3F%20Terima%20kasih.';
+const WHATSAPP_CONSULTATION_URL = generateWhatsAppConsultationLink();
+const MBG_WHATSAPP_URL = generateWhatsAppCustomLink(
+  'Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.',
+);
+const PRODUCTION_WHATSAPP_URL = generateWhatsAppCustomLink(
+  'Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru',
+);
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=BBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen';
-const MBG_CATALOG_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1';
-const MBG_WHATSAPP_URL = 'https://wa.me/6285122001051?text=Halo%20Tim%20BBKitchen%2C%20saya%20ingin%20bertanya%20perihal%20info%20kebutuhan%20peralatan%20dapur%20untuk%20MBG%20dari%20BBKitchen.';
 
 const socialLinks = [
   { label: 'YouTube Shorts', href: 'https://www.youtube.com/shorts/_uzgdL_JhXA', icon: <Youtube className="w-4 h-4" /> },
@@ -47,9 +51,9 @@ export const Footer: React.FC<FooterProps> = () => {
             <ul className="space-y-2.5">
               <li><a href="/catalog" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Beli Unit <ArrowUpRight className="w-3 h-3" /></a></li>
               <li><a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Jual Unit <ArrowUpRight className="w-3 h-3" /></a></li>
-              <li><a href={MBG_CATALOG_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Dapur MBG <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={MBG_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Dapur MBG <ArrowUpRight className="w-3 h-3" /></a></li>
               <li><a href={MBG_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Tanya Paket MBG <ArrowUpRight className="w-3 h-3" /></a></li>
-              <li><a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Produksi Baru <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={PRODUCTION_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Produksi Baru <ArrowUpRight className="w-3 h-3" /></a></li>
               <li><a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Lokasi <ArrowUpRight className="w-3 h-3" /></a></li>
             </ul>
           </div>

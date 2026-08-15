@@ -13,7 +13,9 @@
 | Tahu **project sekarang ada di mana** | [`README.md`](README.md) | Dashboard kondisi terbaru, prioritas Pareto, architecture, bottleneck, technical debt, dan handoff. |
 | Tahu **apa yang terjadi di tiap chat** | [`docs/progress/README.md`](docs/progress/README.md) | Index sejarah migration dan ringkasan progress lintas session. |
 | Tahu **file mana yang harus diedit** | [`docs/guides/README.md`](docs/guides/README.md) | Peta guide untuk memahami lokasi file dan perubahan yang aman. |
-| Minta AI **menjalankan workflow** | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Canonical end-session workflow. |
+| **Mulai session baru** | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Canonical orientation workflow sebelum coding. |
+| **Menutup session** | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Canonical forensic close, documentation audit, verification, dan handoff. |
+| Sinkronisasi dokumentasi saja | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Update guides + README + Navigator tanpa forensic session close. |
 
 ---
 
@@ -59,7 +61,8 @@
 
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
-| [`END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: forensic extraction, repository audit, documentation audit, verification, dan handoff | Setiap selesai migration chat/session normal. |
+| [`START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Orientasi repository + documentation + verification sebelum coding | **Awal setiap migration chat/session baru.** |
+| [`END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: forensic extraction, repository audit, documentation audit, verification, dan handoff | **Akhir setiap migration chat/session normal.** |
 | [`UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README + Navigator | Saat dokumentasi perlu diperbarui tanpa menjalankan seluruh end-session workflow. |
 | [`FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Mengekstrak history dari chat lama / transcript yang tidak lengkap | Saat mengarsipkan atau memperbaiki history session lama. |
 
@@ -82,13 +85,21 @@ docs/progress/
         ↓
 docs/guides/
 
-"AI harus melakukan workflow apa?"
+"Gue mau mulai session baru."
         ↓
-docs/prompts/
+docs/prompts/START-SESSION-PROMPT.md
 
-"Gue mau tutup session dari root."
+"Gue mau tutup session."
         ↓
-end-session-prompt.md
+docs/prompts/END-SESSION-PROMPT.md
+
+"Gue cuma mau sinkronisasi dokumentasi."
+        ↓
+docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md
+
+"Gue punya chat lama yang belum terdokumentasi."
+        ↓
+docs/prompts/FORENSIC-EXTRACTION-PROMPT.md
 
 "Gue bingung mulai dari mana."
         ↓
@@ -104,7 +115,8 @@ NAVIGATOR.md
 | 🏠 Current Project State | [`README.md`](README.md) |
 | 📊 Progress Archive | [`docs/progress/README.md`](docs/progress/README.md) |
 | 📖 Guides Index | [`docs/guides/README.md`](docs/guides/README.md) |
-| 🤖 Canonical End Session | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) |
+| ▶️ Start Session | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) |
+| 🛑 End Session | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) |
 | 📝 Documentation Sync | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) |
 | 🔎 Forensic Extraction | [`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) |
 | ⚡ Root End Session Shortcut | [`end-session-prompt.md`](end-session-prompt.md) |

@@ -71,7 +71,11 @@ export function generateWhatsAppProductLink(
       `Apakah unit ini masih READY dan siap kirim? Mohon info selengkapnya. Terima kasih.`;
   }
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return generateWhatsAppCustomLink(message);
+}
+
+export function generateWhatsAppCustomLink(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message.trim())}`;
 }
 
 export function generateWhatsAppConsultationLink(topic?: string): string {
@@ -80,7 +84,7 @@ export function generateWhatsAppConsultationLink(topic?: string): string {
     `Bisa dibantu rekomendasi alat yang sesuai menu dan estimasi budget modal kami? Terima kasih.`;
 
   if (!topic) {
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(defaultText)}`;
+    return generateWhatsAppCustomLink(defaultText);
   }
 
   const normalizedTopic = topic
@@ -91,7 +95,7 @@ export function generateWhatsAppConsultationLink(topic?: string): string {
 
   const message = `Halo Tim BBKitchen, saya ingin bertanya perihal ${normalizedTopic}`;
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return generateWhatsAppCustomLink(message);
 }
 
 export function generateWhatsAppSourcingLink(itemDetails: {
@@ -110,5 +114,5 @@ export function generateWhatsAppSourcingLink(itemDetails: {
     (itemDetails.notes ? `Catatan Tambahan: ${itemDetails.notes}\n` : '') +
     `\nJika ada unit yang cocok atau masuk ke radar sourcing BBKitchen, mohon dikabari ya. Terima kasih!`;
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return generateWhatsAppCustomLink(message);
 }

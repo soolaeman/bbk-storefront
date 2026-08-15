@@ -33,6 +33,11 @@ function getCategoryIcon(name: string): React.ReactNode {
 export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRequestUnitClick }) => {
   const [popularCategories] = useState<PopularCategory[]>(POPULAR_CATEGORIES);
 
+  const scrollToCatalog = () => {
+    const catalogSection = document.querySelector('main');
+    catalogSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <section className="relative overflow-hidden bg-slate-950 text-white border-b border-slate-700/80">
       <div
@@ -73,7 +78,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
 
               <div className="bg-slate-900/70 border border-slate-700/70 backdrop-blur-sm p-2.5 rounded-xl flex items-start gap-2.5">
                 <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 shrink-0 mt-0.5"><Truck className="w-4 h-4" /></div>
-                <div><h4 className="text-xs font-bold text-slate-100">Siap Diproses</h4><p className="text-[11px] text-slate-300 leading-snug">Cek fisik &amp; pengiriman</p></div>
+                <div><h4 className="text-xs font-bold text-slate-100">Siap Kirim</h4><p className="text-[11px] text-slate-300 leading-snug">Seluruh Indonesia</p></div>
               </div>
 
               <div className="bg-slate-900/70 border border-slate-700/70 backdrop-blur-sm p-2.5 rounded-xl flex items-start gap-2.5">
@@ -98,7 +103,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
             </div>
 
             <div className="pt-2">
-              <button type="button" id="hero-request-sourcing-btn" onClick={onRequestUnitClick} className="inline-flex items-center justify-center gap-2 py-2.5 px-5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-all">
+              <button type="button" id="hero-request-sourcing-btn" onClick={scrollToCatalog} className="inline-flex items-center justify-center gap-2 py-2.5 px-5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-all">
                 <span>Lihat Unit yang Tersedia</span>
                 <span>→</span>
               </button>

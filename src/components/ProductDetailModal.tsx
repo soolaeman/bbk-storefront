@@ -11,7 +11,7 @@ import {
   Video,
   Calendar,
   Info,
-  Copy,
+  Link,
   Check,
 } from 'lucide-react';
 
@@ -73,21 +73,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   const description = product.description || product.summary || 'Detail unit belum tersedia.';
 
-  const handleCopyInfo = async () => {
-    const text = [
-      `${product.name} (SKU: ${product.sku})`,
-      `Status: ${statusLabel}`,
-      `Kondisi: ${conditionLabel}`,
-      `Brand: ${product.brand}`,
-      `Lokasi: ${product.location}`,
-      product.dimensions ? `Dimensi: ${product.dimensions}` : '',
-      product.material ? `Material: ${product.material}` : '',
-    ]
-      .filter(Boolean)
-      .join('\n');
+  const handleCopyLink = async () => {
+    const slug = product.slug?.trim();
+    const productUrl = slug
+      ? `${window.location.origin}/product/${encodeURIComponent(slug)}`
+      : window.location.href;
 
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(productUrl);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -124,17 +117,17 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
-              id="detail-copy-info-btn"
-              onClick={handleCopyInfo}
+              id="detail-copy-link-btn"
+              onClick={handleCopyLink}
               className="px-2.5 py-1 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center gap-1.5 transition-colors"
-              title="Salin ringkasan unit"
+              title="Salin link produk"
             >
               {copied ? (
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
               ) : (
-                <Copy className="w-3.5 h-3.5" />
+                <Link className="w-3.5 h-3.5" />
               )}
-              <span>{copied ? 'Tersalin!' : 'Salin Info'}</span>
+              <span>{copied ? 'Link Tersalin!' : 'Salin Link'}</span>
             </button>
 
             <button

@@ -7,6 +7,7 @@ import {
   Eye,
   Layers,
   Wrench,
+  Send,
 } from 'lucide-react';
 
 interface ProductCardProps {
@@ -26,6 +27,16 @@ function getConditionLabel(condition: string | undefined): 'Baru' | 'Bekas' | nu
   }
 
   return null;
+}
+
+function formatAdminPrice(price: number | null | undefined): string {
+  if (price === null || price === undefined || !Number.isFinite(price)) return 'Harga belum diisi';
+
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+  }).format(price);
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -156,43 +167,61 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {isAdminMode && (
-          <div className="mt-2 p-2 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-1.5 text-xs">
+          <div className="mt-2 p-2 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2 text-xs">
             <div className="flex items-center justify-between text-[11px] font-bold text-amber-900">
               <span className="flex items-center gap-1">
                 <Wrench className="w-3 h-3 text-amber-600" />
                 <span>Admin Control</span>
               </span>
               <span className="text-[10px] font-mono text-amber-700">
-                {product.adminTelegramRef ? `Ref: ${product.adminTelegramRef}` : 'No TG Ref'}
+                {product.adminTelegramRef ? 'Telegram siap' : 'No TG Ref'}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 pt-1">
+            <div className="rounded-lg border border-amber-200 bg-white/80 px-2.5 py-2">
+              <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Harga Admin</div>
+              <div className="mt-0.5 text-sm font-black text-slate-950">{formatAdminPrice(product.price)}</div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 id={`admin-toggle-ready-${product.id}`}
                 onClick={() => onToggleStatus && onToggleStatus(product.id, 'READY')}
-                className={`flex-1 py-1 px-2 text-[11px] font-bold rounded-lg transition-colors ${
+                className={`py-1.5 px-2 text-[11px] font-bold rounded-lg transition-colors ${
                   product.status === 'READY'
                     ? 'bg-emerald-600 text-white'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                Set READY
+                READY
               </button>
               <button
                 type="button"
                 id={`admin-toggle-sold-${product.id}`}
                 onClick={() => onToggleStatus && onToggleStatus(product.id, 'SOLD')}
-                className={`flex-1 py-1 px-2 text-[11px] font-bold rounded-lg transition-colors ${
+                className={`py-1.5 px-2 text-[11px] font-bold rounded-lg transition-colors ${
                   product.status === 'SOLD'
                     ? 'bg-slate-900 text-white'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                Set SOLD
+                SOLD
               </button>
             </div>
+
+            {product.adminTelegramRef && (
+              <a
+                href={product.adminTelegramRef}
+                target="_blank"
+                rel="noopener noreferrer"
+                id={`admin-telegram-${product.id}`}
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-sky-600 px-2.5 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-sky-500"
+              >
+                <Send className="h-3.5 w-3.5" />
+                Buka Telegram
+              </a>
+            )}
 
             {product.adminInternalNotes && (
               <p className="text-[10px] text-slate-600 italic bg-white/70 p-1 rounded">

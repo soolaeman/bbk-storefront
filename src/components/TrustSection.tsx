@@ -1,7 +1,11 @@
-import React from 'react';
-import { Award, Camera, Eye, Truck, Wrench } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import { Award, Camera, ChevronLeft, ChevronRight, Eye, Truck, Wrench } from 'lucide-react';
 
 export const TrustSection: React.FC = () => {
+  const [galleryIndex, setGalleryIndex] = useState(0);
+
   const gallerySlots = [
     { label: 'Pengiriman Unit', note: 'Ganti dengan foto loading / pickup BBKitchen' },
     { label: 'Unit Siap Dikirim', note: 'Ganti dengan foto unit sebelum berangkat' },
@@ -29,6 +33,14 @@ export const TrustSection: React.FC = () => {
     },
   ];
 
+  const previousGallery = () => {
+    setGalleryIndex((current) => (current - 1 + gallerySlots.length) % gallerySlots.length);
+  };
+
+  const nextGallery = () => {
+    setGalleryIndex((current) => (current + 1) % gallerySlots.length);
+  };
+
   return (
     <section className="bg-slate-50 py-12 px-4 border-b border-slate-200">
       <div className="max-w-7xl mx-auto space-y-10">
@@ -41,23 +53,57 @@ export const TrustSection: React.FC = () => {
             Barang Nyata. Siap Dikirim.
           </h2>
           <p className="text-xs sm:text-sm text-slate-600">
-            Galeri ini menjadi tempat foto pengiriman, unit, workshop, dan aktivitas BBKitchen. Foto asli tinggal menggantikan slot yang tersedia.
+            Galeri pengiriman, unit, workshop, dan aktivitas BBKitchen. Foto asli tinggal menggantikan slot yang tersedia.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          {gallerySlots.map((slot) => (
-            <div
-              key={slot.label}
-              className="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 bg-white flex flex-col items-center justify-center text-center p-4"
-            >
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mb-2">
-                <Camera className="w-5 h-5" />
-              </div>
-              <p className="text-xs sm:text-sm font-bold text-slate-800">{slot.label}</p>
-              <p className="mt-1 text-[10px] sm:text-xs text-slate-500 max-w-[180px]">{slot.note}</p>
-            </div>
-          ))}
+        <div className="relative">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-hidden">
+            {[0, 1, 2].map((offset) => {
+              const slot = gallerySlots[(galleryIndex + offset) % gallerySlots.length];
+              return (
+                <div
+                  key={`${slot.label}-${galleryIndex}-${offset}`}
+                  className="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 bg-white flex flex-col items-center justify-center text-center p-4"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mb-2">
+                    <Camera className="w-5 h-5" />
+                  </div>
+                  <p className="text-sm font-bold text-slate-800">{slot.label}</p>
+                  <p className="mt-1 text-xs text-slate-500 max-w-[220px]">{slot.note}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={previousGallery}
+            aria-label="Foto sebelumnya"
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 border border-slate-200 shadow-lg flex items-center justify-center text-slate-800 hover:bg-white transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={nextGallery}
+            aria-label="Foto berikutnya"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 border border-slate-200 shadow-lg flex items-center justify-center text-slate-800 hover:bg-white transition-colors"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div className="flex justify-center gap-1.5 mt-4" aria-label="Navigasi galeri">
+            {gallerySlots.map((slot, index) => (
+              <button
+                key={slot.label}
+                type="button"
+                onClick={() => setGalleryIndex(index)}
+                aria-label={`Tampilkan ${slot.label}`}
+                className={`h-2 rounded-full transition-all ${index === galleryIndex ? 'w-6 bg-slate-900' : 'w-2 bg-slate-300 hover:bg-slate-400'}`}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="text-center max-w-2xl mx-auto space-y-2 pt-2">

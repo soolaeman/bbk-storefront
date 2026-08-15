@@ -1,3 +1,5 @@
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
+
 # BBKitchen — Update Guides & Documentation Prompt
 
 Use this prompt when you want to synchronize the **human-facing documentation** after repository changes.
@@ -14,6 +16,9 @@ This is separate from the normal End Session prompt.
 ### General README
 - `README.md`
 
+### Navigator
+- `NAVIGATOR.md`
+
 Do not update `docs/progress/*` with this prompt.
 Do not update code/assets with this prompt.
 Do not perform forensic session extraction with this prompt.
@@ -23,7 +28,7 @@ Do not perform forensic session extraction with this prompt.
 ## Prompt
 
 ```text
-# UPDATE BBKITCHEN GUIDES + GENERAL README
+# UPDATE BBKITCHEN GUIDES + GENERAL README + NAVIGATOR
 
 Repository:
 soolaeman/Front-End-BBKitchen
@@ -41,6 +46,9 @@ GUIDES
 
 GENERAL README
 4. README.md
+
+NAVIGATOR
+5. NAVIGATOR.md
 
 Jangan mengubah:
 - source code
@@ -166,7 +174,25 @@ README bukan:
 Jangan menyalin seluruh progress archive ke README.
 
 ==================================================
-6. STATUS DISCIPLINE
+6. UPDATE NAVIGATOR.md
+==================================================
+
+NAVIGATOR.md adalah peta dokumentasi repository.
+
+Audit seluruh file/folder dokumentasi yang benar-benar ada.
+
+Pastikan tabel menjelaskan:
+- file/folder
+- fungsi
+- kapan digunakan
+- link relatif yang benar
+
+Jangan mengarang file yang tidak ada.
+
+Semua `.md` selain root `README.md` dan `NAVIGATOR.md` wajib menyediakan link kembali ke Navigator.
+
+==================================================
+7. STATUS DISCIPLINE
 ==================================================
 
 Gunakan:
@@ -187,7 +213,7 @@ UI verified
 mobile verified
 
 ==================================================
-7. DRIFT CLASSIFICATION
+8. DRIFT CLASSIFICATION
 ==================================================
 
 Untuk referensi dokumentasi yang diperiksa:
@@ -206,7 +232,7 @@ UNKNOWN
 `Tidak ditemukan di repository/evidence yang tersedia.`
 
 ==================================================
-8. PARETO RULE
+9. PARETO RULE
 ==================================================
 
 Keep docs concise.
@@ -217,10 +243,13 @@ Guides menjawab:
 README menjawab:
 "Project sekarang ada di mana dan apa prioritas berikutnya?"
 
+Navigator menjawab:
+"Dokumentasi mana yang harus saya buka?"
+
 History detail tetap berada di `docs/progress/`.
 
 ==================================================
-9. VERIFY
+10. VERIFY
 ==================================================
 
 Sebelum commit:
@@ -228,16 +257,17 @@ Sebelum commit:
 - tidak ada old path yang masih disebut
 - relative documentation links valid secara logis
 - tiga guides konsisten
+- Navigator konsisten dengan repository
 - README konsisten dengan current repository
 
 ==================================================
-10. COMMIT
+11. COMMIT
 ==================================================
 
 Jika ada perubahan dokumentasi:
 
 ```text
-docs: sync guides and general README with current repository
+docs: sync guides README and navigator with current repository
 ```
 
 Catat full SHA hasil write/commit yang berhasil.
@@ -249,15 +279,16 @@ Jika tidak ada perubahan:
 Jangan membuat commit kosong.
 
 ==================================================
-11. FINAL RESPONSE
+12. FINAL RESPONSE
 ==================================================
 
 Jawab ringkas:
 
 1. Guides: updated / no changes
 2. README: updated / no changes
-3. Files changed
-4. Main drift fixed
-5. Commit SHA, jika ada
-6. Unknowns / items still not provable
+3. Navigator: updated / no changes
+4. Files changed
+5. Main drift fixed
+6. Commit SHA, jika ada
+7. Unknowns / items still not provable
 ```

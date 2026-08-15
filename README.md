@@ -25,6 +25,81 @@ feat: add video covers to social media cards
 
 ---
 
+# 📊 CURRENT PROGRESS — PARETO VIEW
+
+**Last documented phase:** Chat 1.4 — CLOSED / DONE  
+**Next phase:** Chat 1.5 — ACTIVE / NEXT  
+**Migration branch:** `feature/nextjs-migration`  
+**Documentation principle:** README answers **"where are we?"**; detailed forensic history answers **"how did we get here?"**.
+
+## 80/20 Project Focus
+
+Prioritize the small number of engineering areas that have the largest impact on BBKitchen's real business outcome:
+
+```text
+1. Catalog / Inventory Accuracy
+2. Conversion / WhatsApp / Product Inquiry
+3. Production Stability / API Reliability
+4. SEO Preservation
+5. Responsive UX
+```
+
+Avoid spending disproportionate effort on low-impact visual or architectural refactors while the above areas remain incomplete.
+
+## Phase Progress
+
+| Phase | Status | Primary Focus | Position |
+|---|---|---|---|
+| 1.1 | ✅ Done | Foundation / WooCommerce migration | Historical |
+| 1.2 | ✅ Done | API / metadata / catalog / product / SEO | Historical |
+| 1.3 | ✅ Done | Frontend integration / routing / visual convergence | Historical |
+| 1.4 | ✅ Done | Homepage / conversion / visual finalization | Closed |
+| 1.5 | 🚀 Next | Hardening / responsive / shared UX / Core System | Current |
+
+## Chat 1.5 Pareto Priorities
+
+### P0 — Highest impact
+
+1. **Responsive/mobile audit** across Hero, Header, Catalog, Product Detail and Footer.
+2. **Header + search interaction** — verify the search field is actually usable, not merely visible.
+3. **Product Detail visual parity** with the shared Header/design system.
+4. **Catalog/Product conversion path** — READY/SOLD behavior, product WhatsApp contract and CTA consistency.
+
+### P1 — Important
+
+5. **Article / Local Landing typography** and semantic content rendering.
+6. **Dapur MBG + Produksi Baru CTA consistency** across Hero, services and Footer.
+7. **Related Products / ACF authoritative filtering**.
+8. **Production reliability** — API/runtime/error-state audit.
+
+### P2 — After core flow is stable
+
+9. SEO/performance/accessibility hardening.
+10. Admin/Core System workflows, including inventory operations and SOLD → Google Sheets.
+
+> **Rule:** if a proposed task does not materially improve conversion, inventory correctness, production stability, SEO, or responsive usability, defer it unless it is required to unblock P0/P1 work.
+
+## Current State Snapshot
+
+```text
+DATA / CATALOG             ✅ Foundation established
+PRODUCT DETAIL             ✅ Functional / parity audit remains
+LOCAL ROUTING              ✅ Catch-all verified
+HEADER                     ✅ Integrated / interaction audit remains
+GLOBAL SEARCH              ⚠️ UI exists / typing must be verified
+ARTICLE TYPOGRAPHY         ⚠️ Carried technical debt
+MOBILE QA                  ⚠️ Not fully verified in 1.3/1.4 forensic source
+WHATSAPP CONTRACT          ✅ Current contracts established
+READY / SOLD               ✅ Current UX contract established
+MBG / PRODUKSI BARU        ✅ Direct WhatsApp contract established
+SOCIAL VIDEO               ✅ Cover-first / iframe-on-click
+MASCOT                     🔒 Universal floating approach rejected
+SEO BASELINE               🔒 Preserve existing equity
+CORE SYSTEM                ⏳ Next major engineering area
+```
+
+---
+
 # 1. MIGRATION PRINCIPLE
 
 > **New frontend, old SEO equity.**
@@ -502,6 +577,23 @@ Priority:
 8. Related Products / ACF/Core System.
 9. SEO/performance/accessibility hardening.
 
+# 14. DOCUMENTATION INDEX
+
+For detailed project memory and operator guidance:
+
+```text
+README.md
+└── current state + Pareto priorities + architecture + history + handoff
+
+end-session-prompt.md
+└── closing protocol for each Chat session
+
+VIBE-CODING-COPY-GUIDE.md
+└── beginner-friendly map of where to change website copy
+```
+
+Use the README for **current state**. Use the dedicated docs for **procedures/details**. Do not turn README into a daily activity log.
+
 # FINAL CHECKPOINT
 
 ```text
@@ -514,5 +606,3 @@ Chat 1.5 → 🚀 NEXT
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
 ```
-
-**Next conversation: `1.5 BBKitchen Next.js Migration`**

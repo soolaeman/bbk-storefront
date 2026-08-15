@@ -1,3 +1,5 @@
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
+
 # BBKitchen Copy Editing Guide
 
 This is a **GUIDE**, not a prompt.
@@ -19,12 +21,12 @@ Use this guide for:
 | Area | Primary file | Typical copy |
 |---|---|---|
 | Hero | `src/components/HeroSection.tsx` | headline, CTA, MBG, Produksi Baru |
-| Service | `src/components/KitchenConsultationBanner.tsx` | service CTA |
+| Service | `src/components/KitchenConsultationBanner.tsx` | service CTA, MBG catalog CTA |
 | Product Card | `src/components/ProductCard.tsx` | READY/SOLD, Tanya WA |
 | Product Detail | `src/app/product/[slug]/page.tsx` + child components | product CTA |
 | Header | `src/components/Header.tsx` | navigation, search, CTA |
 | Footer | `src/components/Footer.tsx` | footer CTA/navigation |
-| Social | `src/components/SocialMediaSection.tsx` | social labels/copy |
+| Social | `src/components/SocialMediaSection.tsx` | social labels/copy/video cards |
 | Category | `src/components/CategoryFilter.tsx` | filter labels |
 | Local landing | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` | H1/CTA/local copy |
 
@@ -49,6 +51,7 @@ Konsultasi
 Siap Kirim
 READY
 SOLD
+PDF Katalog Dapur MBG
 ```
 
 ## Important distinction
@@ -110,10 +113,21 @@ Cari, Jual, atau Produksi Peralatan Dapur Resto & Dapur MBG
 ```
 
 ```text
+Siap Kirim
+Seluruh Indonesia
+```
+
+```text
 Lihat Unit yang Tersedia →
 ```
 
 The catalog CTA scrolls to the catalog; do not change behavior when changing its wording unless explicitly requested.
+
+### Dapur MBG catalog
+
+The service section has a separate PDF catalog CTA in addition to the direct WhatsApp CTA.
+
+Do not replace the direct WhatsApp CTA with the PDF CTA unless explicitly requested.
 
 ## Do not casually change
 

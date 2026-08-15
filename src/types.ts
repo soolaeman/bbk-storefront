@@ -21,6 +21,7 @@ export type AvailabilityStatus = 'READY' | 'SOLD' | 'BOOKED' | 'CONFIRMING';
 
 export interface Product {
   id: string;
+  slug?: string;
   sku: string;
   name: string;
   category: EquipmentCategory;

@@ -10,7 +10,7 @@ export const LocationSection: React.FC = () => {
   return (
     <section className="bg-slate-100 py-12 px-4 border-b border-slate-200">
       <div className="max-w-7xl mx-auto">
-        <div className="relative overflow-hidden grid grid-cols-1 lg:grid-cols-[0.8fr_1fr_0.35fr] gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-6 items-stretch">
           <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-center">
             <div className="inline-flex items-center gap-1.5 w-fit px-3 py-1 bg-blue-500/10 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wider">
               <MapPin className="w-3.5 h-3.5 text-blue-600" />
@@ -54,14 +54,6 @@ export const LocationSection: React.FC = () => {
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
-            />
-          </div>
-
-          <div className="relative min-h-[260px] lg:min-h-[390px] overflow-hidden flex items-end justify-end">
-            <img
-              src="/images/people/bbkitchen-chef-pointing.webp"
-              alt="Chef BBKitchen menunjuk ke lokasi"
-              className="absolute bottom-0 right-0 max-h-[85%] w-auto object-contain object-bottom z-10 pointer-events-none"
             />
           </div>
         </div>

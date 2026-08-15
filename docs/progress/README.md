@@ -4,17 +4,19 @@
 
 This folder is the **detailed progress/history layer** for the Next.js migration.
 
-`README.md` at repository root is only the current-state summary and handoff. Detailed session history belongs here.
+`README.md` at repository root is the current-state summary and handoff. Detailed session history belongs here.
 
 ## Chronology
 
-| Chat | Period / Evidence | Focus | Status | Archive |
-|---|---|---|---|---|
-| 1.1 | Exact date: **Tidak ditemukan di conversation.** | Foundation, WooCommerce migration, catalog architecture, early bottlenecks | ✅ Archived | [`CHAT-1.1.md`](CHAT-1.1.md) |
-| 1.2 | **14–15 Aug 2026** | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
-| 1.3 | **15 Aug 2026 evidence** | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
-| 1.4 | **15–16 Aug 2026 evidence** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
-| 1.5 | Next | Responsive QA, Header/search/sticky, Product Detail parity, article polish, Core System | 🚀 Next | — |
+| Chat | Period / Evidence | Duration | Focus | Status | Archive |
+|---|---|---:|---|---|---|
+| 1.1 | Exact date: **Tidak ditemukan di conversation.** | — | Foundation, WooCommerce migration, catalog architecture, early bottlenecks | ✅ Archived | [`CHAT-1.1.md`](CHAT-1.1.md) |
+| 1.2 | **14–15 Aug 2026** | — | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
+| 1.3 | **15 Aug 2026 evidence** | — | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
+| 1.4 | **15–16 Aug 2026 evidence** | — | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
+| 1.5 | **16 Aug 2026 — started 06:32:41 WIB** | Active | Responsive QA, Header/search/sticky, Product Detail parity, article polish, hardening | 🚀 Active | — |
+
+> **Duration policy:** duration is calculated only when verified start/end timestamps are available from repository/evidence. Do not estimate duration from dates alone. If start/end time cannot be verified, use `—` and write `Tidak ditemukan di repository/evidence yang tersedia.` where appropriate.
 
 ---
 
@@ -70,11 +72,53 @@ ACF/CORE SYSTEM         ⏳ carried
 
 ---
 
+## Session Timing & Evidence Rule
+
+Every migration chat should record, when verifiable:
+
+- **start date + time**
+- **end date + time**
+- **duration**
+- evidence/source for the timestamps
+
+### Duration calculation
+
+```text
+verified end timestamp
+        −
+verified start timestamp
+        ↓
+actual session duration
+```
+
+Rules:
+
+1. **Never invent or estimate a duration.**
+2. A date range such as `14–15 Aug` does **not** prove a 24-hour duration.
+3. If only dates are known, record the dates and set duration to `—`.
+4. If only a start time is known, record the start time and leave duration as `—` until an end timestamp is verified.
+5. If timestamps conflict across evidence, preserve the conflict and do not silently choose one.
+6. Use `Tidak ditemukan di repository/evidence yang tersedia.` when the required timing evidence is unavailable.
+7. Root `README.md` may show the same verified dates/durations in its Pareto progress summary, but must not create independent or conflicting timing facts.
+
+### Standard session record
+
+```text
+Session: 1.X
+Started: DD Month YYYY HH:MM:SS WIB
+Ended: DD Month YYYY HH:MM:SS WIB
+Duration: Xh Ym
+Evidence: <repository / archive / verified timestamp source>
+```
+
+---
+
 ## Rule
 
 Every migration chat should leave behind a progress record containing:
 
-- date/evidence
+- date/time evidence
+- duration when verifiable
 - Pareto top changes
 - bottlenecks
 - root causes
@@ -87,6 +131,10 @@ Every migration chat should leave behind a progress record containing:
 If a fact is unavailable, write:
 
 `Tidak ditemukan di conversation.`
+
+For timing specifically, use:
+
+`Tidak ditemukan di repository/evidence yang tersedia.`
 
 Do not replace forensic history with a clean-looking summary.
 

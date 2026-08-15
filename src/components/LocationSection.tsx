@@ -2,6 +2,7 @@ import React from 'react';
 import { ExternalLink, MapPin } from 'lucide-react';
 
 const BBKITCHEN_NAME = 'BBKitchen - Sentra Peralatan Dapur Restoran Bekas Jakarta | Bukan Baru Kitchen';
+const BBKITCHEN_ADDRESS = 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A, Belakang Masjid Al - Kahfi No.020, RT.004, Pd. Benda, Kec. Pamulang, Kota Tangerang Selatan, Banten 15434';
 const GOOGLE_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=BBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen';
 const GOOGLE_MAPS_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.491414547599!2d106.70220356838789!3d-6.330316447898614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ef825d687123%3A0x8b754a5fb317e49e!2sBBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen!5e0!3m2!1sen!2sid!4v1786814666642!5m2!1sen!2sid';
 
@@ -20,12 +21,17 @@ export const LocationSection: React.FC = () => {
               Mau Lihat Unit Langsung?
             </h2>
             <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-              Beberapa unit dapat dicek langsung. Hubungi admin terlebih dahulu untuk memastikan stok dan lokasi unit sebelum datang.
+              Unit cepat berputar. Hubungi kami sebelum datang agar kami bisa cek ketersediaan dan lokasi unit untuk Anda.
             </p>
 
             <div className="mt-6 rounded-xl bg-slate-50 border border-slate-200 p-4">
               <p className="text-xs font-bold text-slate-900">Lokasi BBKitchen</p>
-              <p className="mt-1 text-xs text-slate-600 leading-relaxed">{BBKITCHEN_NAME}</p>
+              <p className="mt-1 text-xs font-bold text-slate-700 leading-relaxed">{BBKITCHEN_NAME}</p>
+            </div>
+
+            <div className="mt-4 rounded-xl bg-white border border-slate-200 p-4">
+              <p className="text-xs font-bold text-slate-900">Alamat</p>
+              <p className="mt-1 text-xs text-slate-600 leading-relaxed">{BBKITCHEN_ADDRESS}</p>
             </div>
 
             <a

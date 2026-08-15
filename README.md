@@ -1,10 +1,8 @@
 # BBKitchen Frontend — Next.js Migration
 
-Frontend baru **Bukan Baru Kitchen / BBKitchen**.
-
 Branch aktif: `feature/nextjs-migration`
 
-> **README = peta kondisi project sekarang.** Detail history ada di `docs/progress/`.
+> **README = kondisi project sekarang.** Detail history ada di [`docs/progress/`](docs/progress/README.md).
 
 [🧭 NAVIGATOR](NAVIGATOR.md)
 
@@ -16,18 +14,27 @@ Branch aktif: `feature/nextjs-migration`
 Chat 1.1 → ✅ Archived
 Chat 1.2 → ✅ Archived
 Chat 1.3 → ✅ Archived
-Chat 1.4 → ✅ Closed / Done
+Chat 1.4 → ✅ Closed
 Chat 1.5 → 🚀 Next
 ```
 
-Last code checkpoint:
+## Last code checkpoint
 
 ```text
 26f3911f0d60c595656e85f1e9b65087bab86132
 feat: add video covers to social media cards
 ```
 
-GitHub evidence: **15 August 2026 21:24:06 UTC**.
+GitHub date: **15 August 2026 21:24:06 UTC**.
+
+## Last documentation checkpoint
+
+```text
+014ef6cba980f5f7cf60414c7bda3b77cc7c4cd8
+close Chat 1.4 forensic progress archive
+```
+
+> Subsequent documentation commits may advance the branch without changing the application-code checkpoint above.
 
 ---
 
@@ -36,16 +43,15 @@ GitHub evidence: **15 August 2026 21:24:06 UTC**.
 1. **Mobile/responsive QA** across homepage, catalog, product detail, and local pages.
 2. **Shared Header** — search typing, sticky behavior, and visual parity.
 3. **Product Detail** — match shared homepage/Header design system.
-4. **Catalog conversion** — READY/SOLD behavior, WhatsApp, and discoverability.
-5. **Local/article pages** — editorial typography and content presentation.
+4. **Local/article pages** — editorial typography and presentation.
+5. **ACF/Core System + production hardening**.
 
 Next layer:
 
-- Dapur MBG + Produksi Baru CTA consistency.
 - Related Products.
 - Authoritative ACF filtering.
-- API/runtime reliability and production hardening.
-- SEO/performance/accessibility audit.
+- SOLD → Google Sheets workflow.
+- SEO/performance/accessibility verification.
 
 ---
 
@@ -55,18 +61,18 @@ Next layer:
 |---|---|---|
 | WooCommerce data architecture | ✅ | Live source-of-truth baseline |
 | Catalog / pagination | ✅ | Server-side, 8/page baseline |
-| Product Detail | ✅ | Functional; visual parity audit remains |
-| Local hierarchical routing | ✅ | `[...slug]` verified |
-| Shared Header | ⚠️ | Integrated; interaction/parity audit remains |
-| Global search | ⚠️ | UI exists; typing/interaction needs verification |
-| Article typography | ⚠️ | Content renders; editorial parity remains |
-| Mobile QA | ⚠️ | Final cross-template verification remains |
+| Product Detail | ✅ | Functional; visual parity remains |
+| Local hierarchical routing | ✅ | `[...slug]` verified in Chat 1.3 |
+| Homepage sales positioning | ✅ | Sales-first direction locked |
 | WhatsApp contracts | ✅ | Product / MBG / Produksi Baru normalized |
 | READY / SOLD behavior | ✅ | SOLD remains discoverable |
-| Hero desktop/mobile | ✅ | Dedicated backgrounds |
-| Social video covers | ✅ | Cover-first approach |
-| Universal floating mascot | 🔒 | Explicitly rejected |
-| Core System / admin workflows | ⏳ | Future phase |
+| Hero desktop/mobile assets | ✅ | Dedicated backgrounds present |
+| Social video covers | ✅ | Cover-first approach implemented |
+| Shared Header | ⚠️ | Search typing, sticky, parity remain |
+| Article typography | ⚠️ | Editorial parity remains |
+| Mobile QA | ⚠️ | Final cross-template verification remains |
+| Universal floating mascot | 🔒 | Rejected; do not reintroduce |
+| ACF/Core System | ⏳ | Future/hardening phase |
 
 ---
 
@@ -102,6 +108,7 @@ Desktop + Mobile UX
 - Inventory business logic does not belong in presentation components.
 - SOLD Product Cards remain discoverable.
 - Homepage positioning is primarily sales.
+- Universal floating mascot composition is rejected.
 
 ---
 
@@ -113,7 +120,7 @@ Desktop + Mobile UX
 Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
 ```
 
-Direct WhatsApp from Header/Hero/Service/Footer.
+Relevant Header/Hero/Service/Footer CTA direction: **direct WhatsApp**. Service may additionally expose the PDF catalog CTA.
 
 ### Produksi Baru
 
@@ -121,7 +128,7 @@ Direct WhatsApp from Header/Hero/Service/Footer.
 Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
 ```
 
-Direct WhatsApp from Header/Hero/Service/Footer.
+Direct WhatsApp.
 
 ### Product WhatsApp
 
@@ -149,11 +156,15 @@ SOLD  → Tanya Lainnya
 ### Hero
 
 ```text
-public/images/hero/bbkitchen-hero-desktop.webp
-public/images/hero/bbkitchen-hero-mobile.webp
+Cari, Jual, atau Produksi Peralatan Dapur Resto & Dapur MBG
+
+Siap Kirim
+Seluruh Indonesia
+
+Lihat Unit yang Tersedia →
 ```
 
-`Lihat Unit yang Tersedia →` scrolls to catalog.
+The availability CTA scrolls toward the catalog.
 
 ### Social Video
 
@@ -162,7 +173,7 @@ public/images/social/youtube-shorts-cover.webp
 public/images/social/tiktok-cover.webp
 ```
 
-Target: `1280×720`, `16:9`, WebP. Cover first → play overlay → iframe after click.
+Cover first → play overlay → iframe after click.
 
 ---
 
@@ -188,7 +199,7 @@ Target: `1280×720`, `16:9`, WebP. Cover first → play overlay → iframe after
 | B-16 | 1.4 | Empty social cards | Closed |
 | B-17 | 1.4 | Duplicate WA wording | Closed |
 
-Full details: [Progress Archive](docs/progress/README.md).
+Full details: [`docs/progress/README.md`](docs/progress/README.md).
 
 ---
 
@@ -203,6 +214,7 @@ Full details: [Progress Archive](docs/progress/README.md).
 - Universal floating mascot layers.
 - Mass-changing existing SEO slugs.
 - Exposing WooCommerce/Google credentials to client code.
+- Calling documentation-only commits application-code checkpoints.
 
 ---
 
@@ -245,10 +257,13 @@ build verified
 runtime verified
 upstream verified
 UI verified
+desktop verified
 mobile verified
 ```
 
-Known non-blocking environment warning:
+For Chat 1.4 specifically, **no final post-change build/runtime verification evidence was found in the available conversation**. The last verified application-code checkpoint is `26f3911f...`.
+
+Known non-blocking environment warning carried from earlier sessions:
 
 ```text
 Next.js ignored package-lock.json in C:\Users\Lenovo
@@ -291,6 +306,8 @@ src/components/Header.tsx
 src/components/Footer.tsx
 src/components/ProductCard.tsx
 src/components/SocialMediaSection.tsx
+src/components/KitchenConsultationBanner.tsx
+src/components/HeroSection.tsx
 src/components/CategoryFilter.tsx
 src/app/page.tsx
 src/app/catalog/page.tsx
@@ -302,13 +319,13 @@ src/lib/wordpress.ts
 src/lib/woocommerce.ts
 ```
 
-For copy-location help: [📖 Guides](docs/guides/README.md).
+For copy-location help: [`docs/guides/README.md`](docs/guides/README.md).
 
 ---
 
-# 📚 DOCUMENTATION — SIMPLE MAP
+# 📚 DOCUMENTATION MAP
 
-Use the [🧭 NAVIGATOR](NAVIGATOR.md) to jump to any documentation area.
+Use [`NAVIGATOR.md`](NAVIGATOR.md) to jump to any documentation area.
 
 ```text
 NAVIGATOR.md
@@ -318,19 +335,9 @@ NAVIGATOR.md
 └── docs/prompts/   → workflow AI
 ```
 
-### Progress
+### Root shortcut
 
-- [📊 Progress Archive](docs/progress/README.md)
-
-### Guides
-
-- [📚 Guides Index](docs/guides/README.md)
-
-### Prompts
-
-- [🤖 End Session Prompt — canonical](docs/prompts/END-SESSION-PROMPT.md)
-- [📝 Update Documentation Prompt](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md)
-- [🔎 Forensic Extraction — old chats only](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
+[`end-session-prompt.md`](end-session-prompt.md) → shortcut ke canonical [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
 ---
 
@@ -345,12 +352,12 @@ Start title:
 First actions:
 
 1. Read this README.
-2. Use [🧭 NAVIGATOR](NAVIGATOR.md) to jump to any supporting documentation.
+2. Use [`NAVIGATOR.md`](NAVIGATOR.md) to jump to supporting documentation.
 3. Audit current branch/code before changing anything.
 4. Verify build/runtime state before assuming anything is broken.
 5. Follow the Pareto priorities above.
 6. Prefer `1 step = 1 file = 1 verified commit`.
-7. At session close, use the [End Session Prompt](docs/prompts/END-SESSION-PROMPT.md).
+7. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
 ### Do not repeat
 
@@ -364,7 +371,15 @@ First actions:
 
 # 📜 MIGRATION HISTORY
 
-Use [🧭 NAVIGATOR](NAVIGATOR.md) or open [Progress Archive](docs/progress/README.md).
+Use [`NAVIGATOR.md`](NAVIGATOR.md) or [`docs/progress/README.md`](docs/progress/README.md).
+
+```text
+Chat 1.1 → foundation
+Chat 1.2 → live catalog / API / SEO
+Chat 1.3 → routing / integration / visual convergence
+Chat 1.4 → sales-first homepage / CTA / visual assets
+Chat 1.5 → responsive / parity / hardening
+```
 
 ---
 
@@ -379,4 +394,5 @@ Chat 1.5 → 🚀 Next
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
+Last documentation checkpoint: 014ef6cba980f5f7cf60414c7bda3b77cc7c4cd8
 ```

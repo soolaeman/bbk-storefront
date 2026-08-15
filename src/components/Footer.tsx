@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, MapPin, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
+import { Phone, MapPin, Clock, Instagram, Facebook, Youtube, ArrowUpRight } from 'lucide-react';
 import { generateWhatsAppConsultationLink } from '../utils/formatters';
 import { EquipmentCategory } from '../types';
 
@@ -10,6 +10,8 @@ interface FooterProps {
 const ADDRESS = 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A, Belakang Masjid Al - Kahfi No.020, RT.004, Pd. Benda, Kec. Pamulang, Kota Tangerang Selatan, Banten 15434';
 const WHATSAPP = '0851 2200 1051';
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=BBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen';
+const MBG_CATALOG_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1';
+const MBG_WHATSAPP_URL = 'https://wa.me/6285122001051?text=Halo%20BBKitchen%2C%20saya%20ingin%20minta%20info%20paket%20Dapur%20MBG.';
 
 export const Footer: React.FC<FooterProps> = ({ onSelectCategory }) => {
   return (
@@ -31,22 +33,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory }) => {
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Jelajahi BBKitchen</h4>
-            <ul className="space-y-2">
-              {[
-                'Kompor & Burner',
-                'Deep Fryer',
-                'Chiller & Freezer',
-                'Oven & Bakery',
-                'Stainless Fabrication',
-                'Mesin Pemroses Makanan',
-              ].map((category) => (
-                <li key={category}>
-                  <button type="button" onClick={() => { onSelectCategory(category as EquipmentCategory); window.scrollTo({ top: 350, behavior: 'smooth' }); }} className="hover:text-amber-400 transition-colors text-left">
-                    • {category}
-                  </button>
-                </li>
-              ))}
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Layanan BBKitchen</h4>
+            <ul className="space-y-2.5">
+              <li><a href="/catalog" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Beli Unit <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Jual Unit <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={MBG_CATALOG_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Dapur MBG <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={MBG_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Tanya Paket MBG <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={generateWhatsAppConsultationLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Produksi Baru <ArrowUpRight className="w-3 h-3" /></a></li>
+              <li><a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Lokasi <ArrowUpRight className="w-3 h-3" /></a></li>
             </ul>
           </div>
 

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Flame, Utensils, Layers, Snowflake, Maximize2, Table, Wind, Cpu, Coffee, Droplets, LayoutGrid, SlidersHorizontal, RotateCcw, Search, X } from 'lucide-react';
+import React, { useEffect, useMemo } from 'react';
+import { Flame, Utensils, Layers, Snowflake, Maximize2, Table, Wind, Cpu, Coffee, Droplets, LayoutGrid, SlidersHorizontal, RotateCcw, Search, X, ChevronRight, ChevronDown } from 'lucide-react';
 import { EquipmentCategory, FilterState } from '../types';
 
 export interface CategoryFilterOption { id: number | string; name: string; icon?: string; parentId?: number; count?: number; children?: CategoryFilterOption[]; }
@@ -45,6 +45,15 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({ filterState, onF
   ));
   const conditions = ['Semua Kondisi', ...conditionValues];
   const locationValues = normalizeOptions(locationOptions, filterState.location);
+  const activeCategory = categories.find((category) => category.name === filterState.category);
+  const subcategories = useMemo(() => {
+    if (!activeCategory || filterState.category === 'Semua') return [];
+
+    const explicitChildren = activeCategory.children ?? [];
+    if (explicitChildren.length > 0) return explicitChildren;
+
+    return categories.filter((category) => category.parentId === activeCategory.id);
+  }, [activeCategory, categories, filterState.category]);
   const isFiltered = filterState.category !== 'Semua' || filterState.condition !== 'Semua Kondisi' || filterState.location !== 'Semua Lokasi' || filterState.searchQuery !== '';
 
   return (
@@ -58,31 +67,31 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({ filterState, onF
 
           <div className="relative mb-3 max-w-2xl">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              type="search"
-              id="catalog-search-input"
-              value={filterState.searchQuery}
-              onChange={(event) => onFilterChange({ searchQuery: event.target.value })}
-              placeholder="Cari unit di katalog: kompor, meja stainless, sink, chiller..."
-              className="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-10 pr-10 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-100 placeholder:text-slate-400"
-              aria-label="Cari unit di katalog BBKitchen"
-            />
-            {filterState.searchQuery && (
-              <button
-                type="button"
-                onClick={() => onFilterChange({ searchQuery: '' })}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
-                aria-label="Hapus pencarian katalog"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
+            <input type="search" id="catalog-search-input" value={filterState.searchQuery} onChange={(event) => onFilterChange({ searchQuery: event.target.value })} placeholder="Cari unit di katalog: kompor, meja stainless, sink, chiller..." className="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-10 pr-10 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-100 placeholder:text-slate-400" aria-label="Cari unit di katalog BBKitchen" />
+            {filterState.searchQuery && <button type="button" onClick={() => onFilterChange({ searchQuery: '' })} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700" aria-label="Hapus pencarian katalog"><X className="h-4 w-4" /></button>}
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
             <button type="button" id="cat-btn-semua" onClick={() => onFilterChange({ category: 'Semua' as EquipmentCategory })} className={`shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${filterState.category === 'Semua' ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 hover:border-slate-300'}`}><LayoutGrid className="w-4 h-4" /><span>Semua</span><span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-600">{totalResultsCount}</span></button>
-            {visibleCategories.map((category) => { const count = category.count ?? categoryCounts[category.name] ?? 0; const isActive = filterState.category === category.name; return <button key={category.id} type="button" id={`cat-btn-${category.name.replace(/\s+/g, '-').toLowerCase()}`} onClick={() => onFilterChange({ category: category.name as EquipmentCategory })} className={`shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${isActive ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 hover:border-slate-300'}`}><span className={isActive ? 'text-amber-400' : 'text-slate-500'}>{getCategoryIcon(category.icon)}</span><span>{category.name}</span><span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${isActive ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-200 text-slate-600'}`}>{count}</span></button>; })}
+            {visibleCategories.map((category) => { const count = category.count ?? categoryCounts[category.name] ?? 0; const isActive = filterState.category === category.name; return <button key={category.id} type="button" id={`cat-btn-${category.name.replace(/\s+/g, '-').toLowerCase()}`} onClick={() => onFilterChange({ category: category.name as EquipmentCategory })} className={`shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${isActive ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 hover:border-slate-300'}`}><span className={isActive ? 'text-amber-400' : 'text-slate-500'}>{getCategoryIcon(category.icon)}</span><span>{category.name}</span><span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${isActive ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-200 text-slate-600'}`}>{count}</span>{isActive && subcategories.length > 0 ? <ChevronDown className="w-3.5 h-3.5" /> : null}</button>; })}
           </div>
+
+          {subcategories.length > 0 && filterState.category !== 'Semua' && (
+            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/60 p-3">
+              <div className="mb-2 flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-amber-800">
+                <ChevronRight className="h-3.5 w-3.5" />
+                Subkategori {filterState.category}
+              </div>
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+                <button type="button" onClick={() => onFilterChange({ category: activeCategory?.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${filterState.category === activeCategory?.name ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>Semua {activeCategory?.name}</button>
+                {subcategories.map((subcategory) => {
+                  const count = subcategory.count ?? categoryCounts[subcategory.name] ?? 0;
+                  const isActive = filterState.category === subcategory.name;
+                  return <button key={subcategory.id} type="button" onClick={() => onFilterChange({ category: subcategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${isActive ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-white hover:border-amber-300'}`}><span>{subcategory.name}</span><span className="ml-1.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">{count}</span></button>;
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
@@ -90,15 +99,9 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({ filterState, onF
             <div className="flex items-center rounded-lg border border-slate-300 bg-white overflow-hidden">
               {conditions.map((condition) => { const active = filterState.condition === condition; return <button key={condition} type="button" id={`filter-condition-${condition.toLowerCase().replace(/\s+/g, '-')}`} onClick={() => onFilterChange({ condition })} className={`px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${active ? 'bg-slate-900 text-amber-400' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>{condition}</button>; })}
             </div>
-            <select id="filter-location-select" value={filterState.location} onChange={(e) => onFilterChange({ location: e.target.value })} className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium">
-              <option value="Semua Lokasi">Semua Lokasi</option>
-              {locationValues.length === 0 ? <option value="">Lokasi belum tersedia</option> : locationValues.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
+            <select id="filter-location-select" value={filterState.location} onChange={(e) => onFilterChange({ location: e.target.value })} className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-500 font-medium"><option value="Semua Lokasi">Semua Lokasi</option>{locationValues.length === 0 ? <option value="">Lokasi belum tersedia</option> : locationValues.map((value) => <option key={value} value={value}>{value}</option>)}</select>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-xs text-slate-500"><span>Urutkan:</span><select id="filter-sort-select" value={filterState.sortBy} onChange={(e) => onFilterChange({ sortBy: e.target.value as FilterState['sortBy'] })} className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-500 font-medium"><option value="latest">Terbaru Ditambahkan</option><option value="price_low">Harga Terendah</option><option value="price_high">Harga Tertinggi</option><option value="condition">Kondisi Tertinggi</option></select></div>
-            {isFiltered && <button type="button" id="filter-reset-btn" onClick={onResetFilters} className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors font-medium"><RotateCcw className="w-3.5 h-3.5" /><span>Reset</span></button>}
-          </div>
+          <div className="flex items-center gap-2"><div className="flex items-center gap-1.5 text-xs text-slate-500"><span>Urutkan:</span><select id="filter-sort-select" value={filterState.sortBy} onChange={(e) => onFilterChange({ sortBy: e.target.value as FilterState['sortBy'] })} className="text-xs bg-white border border-slate-300 text-slate-800 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-500 font-medium"><option value="latest">Terbaru Ditambahkan</option><option value="price_low">Harga Terendah</option><option value="price_high">Harga Tertinggi</option><option value="condition">Kondisi Tertinggi</option></select></div>{isFiltered && <button type="button" id="filter-reset-btn" onClick={onResetFilters} className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors font-medium"><RotateCcw className="w-3.5 h-3.5" /><span>Reset</span></button>}</div>
         </div>
       </div>
     </section>

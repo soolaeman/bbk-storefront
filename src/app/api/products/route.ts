@@ -88,7 +88,7 @@ function matchesUnitCodeQuery(
   const normalizedCode = normalizeUnitCode(actualCode);
   const normalizedQuery = normalizeUnitCode(query);
 
-  return Boolean(normalizedCode) && normalizedCode.startsWith(normalizedQuery);
+  return Boolean(normalizedCode) && normalizedCode === normalizedQuery;
 }
 
 async function resolveWooCommerceCategoryId(
@@ -357,8 +357,9 @@ export async function GET(request: NextRequest) {
       const metaFilterParams = new URLSearchParams(params);
 
       if (unitCodeSearch) {
+        const normalizedCode = normalizeUnitCode(searchQuery);
         metaFilterParams.delete('search');
-        metaFilterParams.delete('sku');
+        metaFilterParams.set('sku', normalizedCode);
       }
 
       const allProducts = await fetchAllProductsForMetaFiltering(metaFilterParams, authorization);

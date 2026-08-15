@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Product } from '../types';
-import { formatRupiah, generateWhatsAppProductLink } from '../utils/formatters';
+import { generateWhatsAppProductLink } from '../utils/formatters';
 import {
   X,
   Phone,
@@ -21,6 +21,23 @@ interface ProductDetailModalProps {
   isAdminMode: boolean;
   onToggleStatus?: (productId: string, newStatus: 'READY' | 'SOLD') => void;
 }
+
+const normalizeCondition = (value: string | null | undefined): 'BARU' | 'BEKAS' | null => {
+  const normalized = String(value ?? '').trim().toUpperCase();
+
+  if (!normalized) return null;
+  if (normalized === 'BEKAS' || normalized.includes('BEKAS')) return 'BEKAS';
+  if (normalized === 'BARU' || normalized.includes('BARU')) return 'BARU';
+
+  return null;
+};
+
+const getConditionLabel = (value: string | null | undefined): string => {
+  const condition = normalizeCondition(value);
+  if (condition === 'BARU') return 'Baru';
+  if (condition === 'BEKAS') return 'Bekas';
+  return 'Kondisi belum tercantum';
+};
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   product,
@@ -43,6 +60,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const isSold = product.status === 'SOLD';
   const isReady = product.status === 'READY';
   const hasPrice = product.price !== null && product.price !== undefined;
+  const conditionLabel = getConditionLabel(product.condition);
 
   const statusLabel =
     product.status === 'SOLD'
@@ -53,11 +71,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           ? 'SEDANG DIKONFIRMASI'
           : 'READY SIAP KIRIM';
 
+  const description = product.description || product.summary || 'Detail unit belum tersedia.';
+
   const handleCopyInfo = async () => {
     const text = [
       `${product.name} (SKU: ${product.sku})`,
       `Status: ${statusLabel}`,
-      `Kondisi: ${product.condition}`,
+      `Kondisi: ${conditionLabel}`,
       `Brand: ${product.brand}`,
       `Lokasi: ${product.location}`,
       product.dimensions ? `Dimensi: ${product.dimensions}` : '',
@@ -204,14 +224,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
             </div>
 
-            <div className="md:col-span-6 space-y-4 flex flex-col justify-between">
+            <div className="md:col-span-6 space-y-4 min-w-0">
               <div className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    {product.brand} • {product.category}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 truncate max-w-full">
+                    {product.category}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200">
-                    {product.condition}
+                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 shrink-0">
+                    {conditionLabel}
                   </span>
                 </div>
 
@@ -225,26 +245,28 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <div className="space-y-2 text-xs text-slate-600 bg-white border border-slate-200 rounded-xl p-3">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
-                    <span>
-                      <strong>Lokasi Unit:</strong> {product.location}
+                    <span className="min-w-0 truncate">
+                      <strong>Lokasi Unit:</strong> {product.location || 'Belum tercantum'}
                     </span>
                   </div>
                   {product.previousUsage && (
                     <div className="flex items-start gap-2">
                       <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                      <span>
-                        <strong>Riwayat / Kondisi:</strong> {product.previousUsage}
+                      <span className="min-w-0 line-clamp-2">
+                        <strong>Riwayat:</strong> {product.previousUsage}
                       </span>
                     </div>
                   )}
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  {product.description || product.summary || 'Detail unit belum tersedia.'}
-                </p>
+                <div className="max-h-32 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-3">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    {description}
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-2 pt-2">
+              <div className="space-y-2 pt-1">
                 <a
                   href={generateWhatsAppProductLink(product)}
                   target="_blank"
@@ -319,7 +341,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </div>
                 <div className="p-2.5 flex justify-between gap-4">
                   <span className="text-slate-500 font-medium">Kondisi</span>
-                  <span className="font-bold text-slate-900 text-right">{product.condition}</span>
+                  <span className="font-bold text-slate-900 text-right">{conditionLabel}</span>
                 </div>
                 {product.powerWattage && (
                   <div className="p-2.5 flex justify-between gap-4">

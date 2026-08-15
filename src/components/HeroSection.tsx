@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ShieldCheck, CheckCircle2, BadgePercent, Truck, Sparkles, Flame, Snowflake, Layers, Utensils, Table, Search } from 'lucide-react';
 import { EquipmentCategory } from '../types';
 
@@ -7,12 +7,18 @@ interface HeroSectionProps {
   onRequestUnitClick: () => void;
 }
 
-interface LiveCategory {
+interface PopularCategory {
   id: number;
   name: string;
-  parent?: number;
-  count?: number;
 }
+
+const POPULAR_CATEGORIES: PopularCategory[] = [
+  { id: 137, name: 'MEJA STAINLESS' },
+  { id: 158, name: 'SINK STAINLESS' },
+  { id: 145, name: 'RAK STAINLESS' },
+  { id: 113, name: 'HOOD STAINLESS' },
+  { id: 122, name: 'KOMPOR' },
+];
 
 function getCategoryIcon(name: string): React.ReactNode {
   const normalized = name.toLowerCase();
@@ -40,40 +46,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectCategory,
   onRequestUnitClick
 }) => {
-  const [popularCategories, setPopularCategories] = useState<LiveCategory[]>([]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadPopularCategories = async () => {
-      try {
-        const response = await fetch('/api/products?metadata=1', {
-          headers: { Accept: 'application/json' },
-          cache: 'no-store',
-        });
-
-        if (!response.ok) throw new Error(`Metadata endpoint gagal: ${response.status}`);
-
-        const data = (await response.json()) as { categories?: LiveCategory[] };
-        const categories = Array.isArray(data.categories) ? data.categories : [];
-        const ranked = categories
-          .filter((category) => category.name?.trim() && (category.parent ?? 0) === 0)
-          .sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
-          .slice(0, 5);
-
-        if (!cancelled) setPopularCategories(ranked);
-      } catch (error) {
-        console.error('Failed to load popular catalog categories:', error);
-        if (!cancelled) setPopularCategories([]);
-      }
-    };
-
-    void loadPopularCategories();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [popularCategories] = useState<PopularCategory[]>(POPULAR_CATEGORIES);
 
   return (
     <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-10 px-4 border-b border-slate-700/80">

@@ -1,13 +1,41 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Search, Loader2, PackageOpen, ArrowLeft } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Search, Loader2, PackageOpen, ArrowLeft, ChevronLeft, ChevronRight, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import { Header } from '../../components/Header';
+import { CategoryFilter, CategoryFilterOption } from '../../components/CategoryFilter';
 import { ProductCard } from '../../components/ProductCard';
-import { Product } from '../../types';
+import { Product, FilterState } from '../../types';
 import { getWooCommerceProductsResult } from '../../lib/woocommerce';
 
-const PRODUCTS_PER_PAGE = 12;
+const PRODUCTS_PER_PAGE = 8;
+
+interface CatalogMetadataCategory {
+  id: number;
+  name: string;
+  slug?: string;
+  parent?: number;
+  count?: number;
+}
+
+interface CatalogMetadata {
+  categories: CatalogMetadataCategory[];
+  conditionOptions: string[];
+  locationOptions: string[];
+  totalProducts: number | null;
+}
+
+const DEFAULT_FILTERS: FilterState = {
+  searchQuery: '',
+  category: 'Semua',
+  condition: 'Semua Kondisi',
+  location: 'Semua Lokasi',
+  powerType: 'Semua Sumber Daya',
+  statusFilter: 'READY_ONLY',
+  minPrice: null,
+  maxPrice: null,
+  sortBy: 'latest',
+};
 
 export default function CatalogPage() {
   const [query, setQuery] = useState('');
@@ -15,56 +43,187 @@ export default function CatalogPage() {
   const [totalResults, setTotalResults] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [catalogPage, setCatalogPage] = useState(1);
+  const [catalogPageInput, setCatalogPageInput] = useState('1');
+  const [totalPages, setTotalPages] = useState<number | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [metadata, setMetadata] = useState<CatalogMetadata>({
+    categories: [],
+    conditionOptions: [],
+    locationOptions: [],
+    totalProducts: null,
+  });
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState(true);
+  const [filterState, setFilterState] = useState<FilterState>(DEFAULT_FILTERS);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setQuery((params.get('search') || '').trim());
+    const search = (params.get('search') || '').trim();
+    setQuery(search);
+    setFilterState((current) => ({ ...current, searchQuery: search }));
   }, []);
 
   useEffect(() => {
     let cancelled = false;
 
-    const loadCatalog = async () => {
-      setIsLoading(true);
-      setError(null);
-
+    const loadMetadata = async () => {
+      setIsLoadingMetadata(true);
       try {
-        const result = await getWooCommerceProductsResult({
-          perPage: PRODUCTS_PER_PAGE,
-          page: 1,
-          search: query || undefined,
-          statusFilter: 'READY_ONLY',
-          sortBy: 'latest',
+        const response = await fetch('/api/products?metadata=1', {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
         });
-
+        if (!response.ok) throw new Error(`Metadata endpoint gagal: ${response.status}`);
+        const data = (await response.json()) as CatalogMetadata;
         if (!cancelled) {
-          setProducts(result.products);
-          setTotalResults(result.total);
+          setMetadata({
+            categories: Array.isArray(data.categories) ? data.categories : [],
+            conditionOptions: Array.isArray(data.conditionOptions) ? data.conditionOptions : [],
+            locationOptions: Array.isArray(data.locationOptions) ? data.locationOptions : [],
+            totalProducts: typeof data.totalProducts === 'number' ? data.totalProducts : null,
+          });
         }
-      } catch (loadError) {
-        console.error('Failed to load catalog:', loadError);
-        if (!cancelled) {
-          setProducts([]);
-          setTotalResults(null);
-          setError('Katalog sedang mengalami kendala. Silakan coba lagi.');
-        }
+      } catch (metadataError) {
+        console.error('Failed to load catalog metadata:', metadataError);
       } finally {
-        if (!cancelled) setIsLoading(false);
+        if (!cancelled) setIsLoadingMetadata(false);
       }
     };
 
-    void loadCatalog();
-
+    void loadMetadata();
     return () => {
       cancelled = true;
     };
-  }, [query]);
+  }, []);
 
-  const handleOpenDetail = (product: Product) => {
-    window.location.href = `/product/${encodeURIComponent(product.id)}`;
+  const loadProducts = async (page = 1) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await getWooCommerceProductsResult({
+        perPage: PRODUCTS_PER_PAGE,
+        page,
+        search: filterState.searchQuery.trim() || undefined,
+        category: filterState.category !== 'Semua' ? filterState.category : undefined,
+        condition: filterState.condition !== 'Semua Kondisi' ? filterState.condition : undefined,
+        location: filterState.location !== 'Semua Lokasi' ? filterState.location : undefined,
+        powerType: filterState.powerType !== 'Semua Sumber Daya' ? filterState.powerType : undefined,
+        statusFilter: filterState.statusFilter,
+        minPriceNumber: filterState.minPrice,
+        maxPriceNumber: filterState.maxPrice,
+        sortBy: filterState.sortBy,
+      });
+
+      setProducts(result.products);
+      setTotalResults(result.total);
+      setCatalogPage(page);
+      setCatalogPageInput(String(page));
+      setTotalPages(result.totalPages);
+      setHasNextPage(
+        result.totalPages !== null
+          ? page < result.totalPages
+          : result.products.length === PRODUCTS_PER_PAGE,
+      );
+    } catch (loadError) {
+      console.error('Failed to load catalog:', loadError);
+      setProducts([]);
+      setTotalResults(null);
+      setTotalPages(null);
+      setHasNextPage(false);
+      setError('Katalog sedang mengalami kendala. Silakan coba lagi.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadProducts(1);
+    // Filter state is intentionally the source of truth for every WooCommerce request.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filterState.searchQuery,
+    filterState.category,
+    filterState.condition,
+    filterState.location,
+    filterState.powerType,
+    filterState.statusFilter,
+    filterState.minPrice,
+    filterState.maxPrice,
+    filterState.sortBy,
+  ]);
+
+  const categoryCounts = useMemo(() => {
+    return products.reduce<Record<string, number>>((counts, product) => {
+      counts[product.category] = (counts[product.category] || 0) + 1;
+      return counts;
+    }, {});
+  }, [products]);
+
+  const categories = useMemo<CategoryFilterOption[]>(() => {
+    return metadata.categories
+      .filter((category) => category.name.trim() && category.name.trim() !== 'Semua')
+      .map((category) => ({
+        id: category.id,
+        name: category.name.trim(),
+        parentId: category.parent,
+        count: category.count ?? categoryCounts[category.name.trim()] ?? 0,
+      }));
+  }, [metadata.categories, categoryCounts]);
+
+  const conditionOptions = useMemo(() => (
+    Array.from(new Set(metadata.conditionOptions.map((value) => value.trim()).filter(Boolean)))
+  ), [metadata.conditionOptions]);
+
+  const locationOptions = useMemo(() => (
+    Array.from(new Set(metadata.locationOptions.map((value) => value.trim()).filter(Boolean)))
+  ), [metadata.locationOptions]);
+
+  const handleFilterChange = (updates: Partial<FilterState>) => {
+    setFilterState((current) => ({ ...current, ...updates }));
+    if (updates.searchQuery !== undefined) {
+      const nextSearch = updates.searchQuery.trim();
+      setQuery(nextSearch);
+      setCatalogPage(1);
+      setCatalogPageInput('1');
+    } else if (Object.keys(updates).some((key) => key !== 'searchQuery')) {
+      setCatalogPage(1);
+      setCatalogPageInput('1');
+    }
+  };
+
+  const handleResetFilters = () => {
+    setFilterState(DEFAULT_FILTERS);
+    setQuery('');
+    setCatalogPage(1);
+    setCatalogPageInput('1');
+  };
+
+  const goToCatalogPage = (page: number) => {
+    if (page < 1 || isLoading) return;
+    if (totalPages !== null && page > totalPages) return;
+    if (totalPages === null && page > catalogPage && !hasNextPage) return;
+    window.scrollTo({ top: 360, behavior: 'smooth' });
+    void loadProducts(page);
+  };
+
+  const handleCatalogPageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const requestedPage = Number.parseInt(catalogPageInput, 10);
+    if (!Number.isFinite(requestedPage)) {
+      setCatalogPageInput(String(catalogPage));
+      return;
+    }
+    const maxPage = totalPages ?? (hasNextPage ? requestedPage : catalogPage);
+    const targetPage = Math.min(Math.max(requestedPage, 1), maxPage);
+    setCatalogPageInput(String(targetPage));
+    goToCatalogPage(targetPage);
   };
 
   const isSearchMode = Boolean(query);
+  const displayedCount = products.length;
+  const totalCountLabel = totalResults ?? metadata.totalProducts ?? displayedCount;
+  const totalPageLabel = totalPages ?? (hasNextPage ? '…' : catalogPage);
 
   return (
     <main className="min-h-screen bg-slate-100 text-slate-900">
@@ -79,16 +238,14 @@ export default function CatalogPage() {
 
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="mb-1 text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">
-                {isSearchMode ? 'BBKitchen Search' : 'BBKitchen Catalog'}
-              </p>
+              <p className="mb-1 text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">{isSearchMode ? 'BBKitchen Search' : 'BBKitchen Catalog'}</p>
               <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                {isSearchMode ? 'Hasil Pencarian' : 'Katalog Peralatan Dapur Komersial'}
+                {isSearchMode ? 'Hasil Pencarian' : 'Katalog Peralatan Bekas Resto Komersial'}
               </h1>
               <p className="mt-2 text-sm text-slate-500">
                 {isSearchMode
                   ? <>Menampilkan hasil untuk <strong className="text-slate-900">“{query}”</strong>.</>
-                  : 'Temukan unit peralatan dapur komersial yang siap digunakan dari katalog BBKitchen.'}
+                  : 'Temukan juga beberapa unit peralatan dapur bekas, beberapa juga ada yang baru dan siap pakai.'}
               </p>
             </div>
 
@@ -99,11 +256,43 @@ export default function CatalogPage() {
           </div>
         </div>
 
+        {!isSearchMode && (
+          <CategoryFilter
+            filterState={filterState}
+            onFilterChange={handleFilterChange}
+            onResetFilters={handleResetFilters}
+            totalResultsCount={totalCountLabel}
+            categoryCounts={categoryCounts}
+            categories={categories}
+            conditionOptions={conditionOptions}
+            locationOptions={locationOptions}
+          />
+        )}
+
+        {isSearchMode && (
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+              <SlidersHorizontal className="h-4 w-4 text-amber-600" />
+              Filter pencarian
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <label className="text-xs font-semibold text-slate-500">Kategori<select value={filterState.category} onChange={(event) => handleFilterChange({ category: event.target.value as FilterState['category'] })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="Semua">Semua Kategori</option>{categories.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select></label>
+              <label className="text-xs font-semibold text-slate-500">Kondisi<select value={filterState.condition} onChange={(event) => handleFilterChange({ condition: event.target.value })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="Semua Kondisi">Semua Kondisi</option>{conditionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+              <label className="text-xs font-semibold text-slate-500">Lokasi<select value={filterState.location} onChange={(event) => handleFilterChange({ location: event.target.value })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="Semua Lokasi">Semua Lokasi</option>{locationOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+              <label className="text-xs font-semibold text-slate-500">Urutkan<select value={filterState.sortBy} onChange={(event) => handleFilterChange({ sortBy: event.target.value as FilterState['sortBy'] })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="latest">Terbaru Ditambahkan</option><option value="price_low">Harga Terendah</option><option value="price_high">Harga Tertinggi</option><option value="condition">Kondisi Tertinggi</option></select></label>
+            </div>
+            {(filterState.category !== 'Semua' || filterState.condition !== 'Semua Kondisi' || filterState.location !== 'Semua Lokasi' || filterState.sortBy !== 'latest') && (
+              <button type="button" onClick={() => handleFilterChange({ category: 'Semua', condition: 'Semua Kondisi', location: 'Semua Lokasi', sortBy: 'latest' })} className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50"><RotateCcw className="h-3.5 w-3.5" />Reset filter</button>
+            )}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex min-h-[360px] items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="flex flex-col items-center gap-3 text-center">
               <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
               <p className="text-sm font-semibold text-slate-700">Memuat katalog BBKitchen...</p>
+              {isLoadingMetadata && <p className="text-xs text-slate-500">Menyiapkan filter metadata live...</p>}
             </div>
           </div>
         ) : error ? (
@@ -115,19 +304,18 @@ export default function CatalogPage() {
             <div className="max-w-md text-center">
               <PackageOpen className="mx-auto h-10 w-10 text-slate-400" />
               <h2 className="mt-4 text-lg font-black text-slate-950">{isSearchMode ? 'Unit belum ditemukan' : 'Belum ada unit tersedia'}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                {isSearchMode
-                  ? 'Coba gunakan kata kunci lain seperti kompor, meja stainless, sink, chiller, atau hood.'
-                  : 'Silakan kembali lagi atau hubungi BBKitchen untuk kebutuhan unit tertentu.'}
-              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-500">{isSearchMode ? 'Coba gunakan kata kunci lain atau ubah filter katalog.' : 'Belum ada unit READY yang tersedia saat ini.'}</p>
               <a href="/" className="mt-5 inline-flex rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-slate-800">Kembali ke Homepage</a>
             </div>
           </div>
         ) : (
           <section>
             <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="text-lg font-black text-slate-950">{isSearchMode ? 'Unit yang Relevan' : 'Katalog Unit Dapur'}</h2>
-              <span className="text-xs font-medium text-slate-500">{products.length} unit ditampilkan</span>
+              <div>
+                <h2 className="text-lg font-black text-slate-950">{isSearchMode ? 'Unit yang Relevan' : 'Katalog Unit Dapur'}</h2>
+                <p className="mt-1 text-xs font-medium text-slate-500">Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit</p>
+              </div>
+              <span className="hidden text-xs font-medium text-slate-500 sm:block">{totalResults ?? displayedCount} unit cocok</span>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -135,11 +323,30 @@ export default function CatalogPage() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onOpenDetail={handleOpenDetail}
+                  onOpenDetail={(selectedProduct) => {
+                    window.location.href = `/product/${encodeURIComponent(selectedProduct.id)}`;
+                  }}
                   isAdminMode={false}
                 />
               ))}
             </div>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5" aria-label="Pagination katalog">
+              <button type="button" onClick={() => goToCatalogPage(catalogPage - 1)} disabled={catalogPage === 1 || isLoading} className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-slate-50">
+                <ChevronLeft className="h-4 w-4" /> Sebelumnya
+              </button>
+              <form onSubmit={handleCatalogPageSubmit} className="flex items-center gap-2">
+                <label htmlFor="catalog-page-input" className="text-xs font-semibold text-slate-500">Halaman</label>
+                <input id="catalog-page-input" type="number" min={1} max={totalPages ?? undefined} value={catalogPageInput} onChange={(event) => setCatalogPageInput(event.target.value)} disabled={isLoading} className="w-16 rounded-xl border border-slate-300 bg-white px-2.5 py-2.5 text-center text-xs font-black text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:opacity-50" aria-label="Masukkan nomor halaman katalog" />
+                <span className="text-xs font-bold text-slate-500">/ {totalPageLabel}</span>
+                <button type="submit" disabled={isLoading} className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40">Go</button>
+              </form>
+              <button type="button" onClick={() => goToCatalogPage(catalogPage + 1)} disabled={!hasNextPage || isLoading} className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-slate-50">
+                Berikutnya <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+
+            <p className="mt-3 text-center text-xs font-semibold text-slate-500">Halaman {catalogPage} dari {totalPageLabel} • Menampilkan {displayedCount} unit</p>
           </section>
         )}
       </div>

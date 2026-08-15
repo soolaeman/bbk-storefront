@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Search, Loader2, PackageOpen, ArrowLeft, ChevronLeft, ChevronRight, RotateCcw, SlidersHorizontal } from 'lucide-react';
+import { Search, Loader2, PackageOpen, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header } from '../../components/Header';
 import { CategoryFilter, CategoryFilterOption } from '../../components/CategoryFilter';
 import { ProductCard } from '../../components/ProductCard';
@@ -256,36 +256,16 @@ export default function CatalogPage() {
           </div>
         </div>
 
-        {!isSearchMode && (
-          <CategoryFilter
-            filterState={filterState}
-            onFilterChange={handleFilterChange}
-            onResetFilters={handleResetFilters}
-            totalResultsCount={totalCountLabel}
-            categoryCounts={categoryCounts}
-            categories={categories}
-            conditionOptions={conditionOptions}
-            locationOptions={locationOptions}
-          />
-        )}
-
-        {isSearchMode && (
-          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-              <SlidersHorizontal className="h-4 w-4 text-amber-600" />
-              Filter pencarian
-            </div>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <label className="text-xs font-semibold text-slate-500">Kategori<select value={filterState.category} onChange={(event) => handleFilterChange({ category: event.target.value as FilterState['category'] })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="Semua">Semua Kategori</option>{categories.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select></label>
-              <label className="text-xs font-semibold text-slate-500">Kondisi<select value={filterState.condition} onChange={(event) => handleFilterChange({ condition: event.target.value })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="Semua Kondisi">Semua Kondisi</option>{conditionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
-              <label className="text-xs font-semibold text-slate-500">Lokasi<select value={filterState.location} onChange={(event) => handleFilterChange({ location: event.target.value })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="Semua Lokasi">Semua Lokasi</option>{locationOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
-              <label className="text-xs font-semibold text-slate-500">Urutkan<select value={filterState.sortBy} onChange={(event) => handleFilterChange({ sortBy: event.target.value as FilterState['sortBy'] })} className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"><option value="latest">Terbaru Ditambahkan</option><option value="price_low">Harga Terendah</option><option value="price_high">Harga Tertinggi</option><option value="condition">Kondisi Tertinggi</option></select></label>
-            </div>
-            {(filterState.category !== 'Semua' || filterState.condition !== 'Semua Kondisi' || filterState.location !== 'Semua Lokasi' || filterState.sortBy !== 'latest') && (
-              <button type="button" onClick={() => handleFilterChange({ category: 'Semua', condition: 'Semua Kondisi', location: 'Semua Lokasi', sortBy: 'latest' })} className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50"><RotateCcw className="h-3.5 w-3.5" />Reset filter</button>
-            )}
-          </div>
-        )}
+        <CategoryFilter
+          filterState={filterState}
+          onFilterChange={handleFilterChange}
+          onResetFilters={handleResetFilters}
+          totalResultsCount={totalCountLabel}
+          categoryCounts={categoryCounts}
+          categories={categories}
+          conditionOptions={conditionOptions}
+          locationOptions={locationOptions}
+        />
 
         {isLoading ? (
           <div className="flex min-h-[360px] items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">

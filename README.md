@@ -6,6 +6,8 @@ Branch aktif: `feature/nextjs-migration`
 
 > **README = peta kondisi project sekarang.** Detail history ada di `docs/progress/`.
 
+[🧭 NAVIGATOR](NAVIGATOR.md)
+
 ---
 
 # 🏁 CURRENT CHECKPOINT
@@ -306,42 +308,29 @@ For copy-location help: [📖 Guides](docs/guides/README.md).
 
 # 📚 DOCUMENTATION — SIMPLE MAP
 
+Use the [🧭 NAVIGATOR](NAVIGATOR.md) to jump to any documentation area.
+
 ```text
-README.md
-└── "Project sekarang ada di mana?"
-
-docs/progress/
-└── "Apa yang terjadi di setiap Chat?"
-
-docs/guides/
-└── "Kalau mau mengubah sesuatu, file-nya di mana?"
-
-docs/prompts/
-└── "Workflow apa yang harus AI jalankan?"
+NAVIGATOR.md
+├── README.md       → project sekarang ada di mana
+├── docs/progress/  → apa yang terjadi di setiap Chat
+├── docs/guides/    → kalau mau mengubah/memahami sesuatu
+└── docs/prompts/   → workflow AI
 ```
 
 ### Progress
 
 - [📊 Progress Archive](docs/progress/README.md)
-- [Chat 1.1](docs/progress/CHAT-1.1.md)
-- [Chat 1.2](docs/progress/CHAT-1.2.md)
-- [Chat 1.3](docs/progress/CHAT-1.3.md)
-- [Chat 1.4](docs/progress/CHAT-1.4.md)
 
 ### Guides
 
 - [📚 Guides Index](docs/guides/README.md)
-- [Copy Editing Guide](docs/guides/COPY-EDITING-GUIDE.md)
-- [Vibe Coding Copy Guide](docs/guides/VIBE-CODING-COPY-GUIDE.md)
 
 ### Prompts
 
 - [🤖 End Session Prompt — canonical](docs/prompts/END-SESSION-PROMPT.md)
+- [📝 Update Documentation Prompt](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md)
 - [🔎 Forensic Extraction — old chats only](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md)
-
-### Shortcut
-
-- [🚪 End Session Shortcut](end-session-prompt.md)
 
 ---
 
@@ -356,7 +345,7 @@ Start title:
 First actions:
 
 1. Read this README.
-2. Read [Progress Archive](docs/progress/README.md) only when migration history is relevant.
+2. Use [🧭 NAVIGATOR](NAVIGATOR.md) to jump to any supporting documentation.
 3. Audit current branch/code before changing anything.
 4. Verify build/runtime state before assuming anything is broken.
 5. Follow the Pareto priorities above.
@@ -375,11 +364,7 @@ First actions:
 
 # 📜 MIGRATION HISTORY
 
-- [Chat 1.1](docs/progress/CHAT-1.1.md)
-- [Chat 1.2](docs/progress/CHAT-1.2.md)
-- [Chat 1.3](docs/progress/CHAT-1.3.md)
-- [Chat 1.4](docs/progress/CHAT-1.4.md)
-- [📊 Progress Archive README](docs/progress/README.md)
+Use [🧭 NAVIGATOR](NAVIGATOR.md) or open [Progress Archive](docs/progress/README.md).
 
 ---
 
@@ -395,9 +380,3 @@ Chat 1.5 → 🚀 Next
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
 ```
-
-<!--
-END-SESSION SYNTHESIS TARGET
-Root README is updated after every end session by the canonical end-session workflow.
-Keep this file short, current, and decision-oriented. Do not paste full forensic history here.
--->

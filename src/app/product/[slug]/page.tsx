@@ -193,7 +193,7 @@ export default async function ProductPage({
               {product.images.length > 0 ? (
                 product.images.map((image, index) => (
                   <div key={`${image.src}-${index}`} className="absolute inset-0">
-                    <input id={`product-gallery-${index}`} name="product-gallery" type="radio" defaultChecked={index === 0} className="peer sr-only" />
+                    <input id={`product-gallery-${index}`} name="product-gallery" type="radio" defaultChecked={index === 0} className="peer fixed left-0 top-0 h-px w-px opacity-0" />
                     <div className="pointer-events-none absolute inset-0 hidden peer-checked:block">
                       <img src={image.src} alt={image.alt || `${product.name} foto ${index + 1}`} className="h-full w-full object-contain" />
                       <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-[10px] font-black text-white shadow-md sm:text-xs">● {status === 'READY' ? 'READY SIAP KIRIM' : status}</span>
@@ -270,7 +270,7 @@ export default async function ProductPage({
         </section>
       </div>
 
-      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-4 right-4 z-50 rounded-full bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-xl transition hover:bg-emerald-400 sm:bottom-5 sm:right-5 sm:px-5 sm:text-sm">☎ Tanya Unit via WhatsApp</a>
+      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-5 right-5 z-40 rounded-full bg-emerald-600 px-4 py-3 text-xs font-black text-white shadow-lg transition hover:bg-emerald-500 sm:right-8">Tanya via WhatsApp</a>
     </main>
   );
 }

@@ -30,8 +30,8 @@ export const Footer: React.FC<FooterProps> = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-3">
             <div className="flex items-center">
-              <a href="/" aria-label="BBKitchen — Home" className="inline-flex items-center">
-                <img src="/bbkitchen-logo.webp" alt="BBKitchen — Bukan Baru Kitchen — Sentra Barang Bekas Restoran" className="h-9 w-auto max-w-[190px] object-contain sm:h-10 sm:max-w-[220px]" />
+              <a href="/" aria-label="BBKitchen — Home" className="inline-flex items-center rounded-lg bg-white px-3 py-2">
+                <img src="/bbkitchen-logo.webp" alt="BBKitchen — Bukan Baru Kitchen — Sentra Barang Bekas Restoran" className="h-8 w-auto max-w-[190px] object-contain sm:h-9 sm:max-w-[220px]" />
               </a>
             </div>
             <p className="text-slate-400 leading-relaxed text-xs">
@@ -93,13 +93,14 @@ export const Footer: React.FC<FooterProps> = () => {
             </a>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Ikuti BBKitchen</p>
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="grid grid-cols-6 gap-2">
                 {socialLinks.map((social) => (
-                  <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label} className="w-9 h-9 rounded-lg border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800 transition-colors">
+                  <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label} className="aspect-square rounded-lg border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800 transition-colors">
                     {social.icon}
                   </a>
                 ))}
               </div>
+              <p className="mt-2 text-[10px] text-slate-500 leading-relaxed">YouTube · TikTok · Instagram · Threads · Facebook · Pinterest</p>
             </div>
           </div>
         </div>

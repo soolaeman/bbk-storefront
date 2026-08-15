@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, CheckCircle2, BadgePercent, Truck, Flame, Snowflake, Layers, Utensils, Table, Search, Wrench, Factory } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, BadgePercent, Truck, Flame, Snowflake, Layers, Utensils, Table, Search } from 'lucide-react';
 import { EquipmentCategory } from '../types';
 
 interface HeroSectionProps {
@@ -71,8 +71,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
               </div>
 
               <div className="bg-slate-800/80 border border-slate-700/70 p-2.5 rounded-xl flex items-start gap-2.5">
-                <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0 mt-0.5"><Factory className="w-4 h-4" /></div>
-                <div><h4 className="text-xs font-bold text-slate-200">Produksi Baru</h4><p className="text-[11px] text-slate-400 leading-snug">Custom lewat workshop</p></div>
+                <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0 mt-0.5"><span className="text-sm font-black">✓</span></div>
+                <div><h4 className="text-xs font-bold text-slate-200">Siap Dipakai</h4><p className="text-[11px] text-slate-400 leading-snug">Unit dicek sebelum dikirim</p></div>
               </div>
             </div>
 
@@ -90,30 +90,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
                 ))}
               </div>
             </div>
-          </div>
-
-          <div className="lg:col-span-4 bg-slate-800/90 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-700">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Layanan BBKitchen</span>
-              </div>
-              <span className="text-[11px] text-slate-400">Jabodetabek &amp; Luar Kota</span>
-            </div>
-
-            <div className="space-y-2.5 text-xs text-slate-300">
-              <div className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span><span><strong>Beli Unit Bekas?</strong> Pilih unit yang tersedia dan cek detail kondisi sebelum transaksi.</span></div>
-              <div className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span><span><strong>Mau Jual Unit?</strong> Kami menerima peralatan restoran satuan maupun borongan.</span></div>
-              <div className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span><span><strong>Mau Produksi Baru?</strong> Workshop BBKitchen melayani kebutuhan equipment dapur custom.</span></div>
-            </div>
 
             <div className="pt-2">
-              <button type="button" id="hero-request-sourcing-btn" onClick={onRequestUnitClick} className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
-                <Wrench className="w-3.5 h-3.5" />
-                <span>Jual Unit ke BBKitchen</span>
+              <button type="button" id="hero-request-sourcing-btn" onClick={onRequestUnitClick} className="inline-flex items-center justify-center gap-2 py-2.5 px-5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-all">
+                <span>Lihat Unit yang Tersedia</span>
                 <span>→</span>
               </button>
             </div>
+          </div>
+
+          <div className="lg:col-span-4 relative min-h-[330px] flex items-end justify-center">
+            <img
+              src="/images/people/bbkitchen-team-thumbs-up.webp"
+              alt="Tim BBKitchen"
+              className="w-full max-w-[330px] h-auto object-contain drop-shadow-2xl lg:translate-y-8"
+            />
           </div>
         </div>
       </div>

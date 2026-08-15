@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import {
+  getWordPressCategories,
   getWordPressMedia,
   getWordPressPages,
   getWordPressPosts,
+  getWordPressTags,
+  getWordPressUsers,
+  searchWordPress,
   type WordPressQueryOptions,
 } from '../../../lib/wordpress';
 
@@ -25,7 +29,12 @@ function getQueryOptions(searchParams: URLSearchParams): WordPressQueryOptions {
     'status',
     'categories',
     'tags',
+    'include',
+    'exclude',
+    'after',
+    'before',
     'orderby',
+    'author',
   ] as const;
 
   for (const key of stringKeys) {
@@ -49,16 +58,42 @@ export async function GET(request: Request) {
       return NextResponse.json(await getWordPressPages(options));
     }
 
-    if (resource === 'media') {
-      return NextResponse.json(await getWordPressMedia(options));
-    }
-
     if (resource === 'posts') {
       return NextResponse.json(await getWordPressPosts(options));
     }
 
+    if (resource === 'media') {
+      return NextResponse.json(await getWordPressMedia(options));
+    }
+
+    if (resource === 'categories') {
+      return NextResponse.json(await getWordPressCategories(options));
+    }
+
+    if (resource === 'tags') {
+      return NextResponse.json(await getWordPressTags(options));
+    }
+
+    if (resource === 'users') {
+      return NextResponse.json(await getWordPressUsers(options));
+    }
+
+    if (resource === 'search') {
+      if (!options.search) {
+        return NextResponse.json(
+          { error: 'Parameter search wajib untuk resource search.' },
+          { status: 400 },
+        );
+      }
+
+      return NextResponse.json(await searchWordPress(options));
+    }
+
     return NextResponse.json(
-      { error: 'Resource WordPress tidak didukung.', supported: ['pages', 'posts', 'media'] },
+      {
+        error: 'Resource WordPress tidak didukung.',
+        supported: ['pages', 'posts', 'media', 'categories', 'tags', 'users', 'search'],
+      },
       { status: 400 },
     );
   } catch (error) {

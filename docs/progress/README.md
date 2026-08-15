@@ -8,15 +8,61 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 
 ## Chronology
 
-| Chat | Period / Evidence | Duration | Focus | Status | Archive |
-|---|---|---:|---|---|---|
-| 1.1 | Exact date: **Tidak ditemukan di conversation.** | — | Foundation, WooCommerce migration, catalog architecture, early bottlenecks | ✅ Archived | [`CHAT-1.1.md`](CHAT-1.1.md) |
-| 1.2 | **14–15 Aug 2026** | — | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
-| 1.3 | **15 Aug 2026 evidence** | — | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
-| 1.4 | **15–16 Aug 2026 evidence** | — | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
-| 1.5 | **16 Aug 2026 — started 06:32:41 WIB** | Active | Responsive QA, Header/search/sticky, Product Detail parity, article polish, hardening | 🚀 Active | — |
+| Chat | Period / Evidence | Start | End | Duration | Focus | Status | Archive |
+|---|---|---|---|---:|---|---|---|
+| 1.1 | Exact date: **Tidak ditemukan di conversation.** | — | — | — | Foundation, WooCommerce migration, catalog architecture, early bottlenecks | ✅ Archived | [`CHAT-1.1.md`](CHAT-1.1.md) |
+| 1.2 | **14–15 Aug 2026 evidence** | — | — | — | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
+| 1.3 | **15 Aug 2026 evidence** | — | — | — | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
+| 1.4 | **15–16 Aug 2026 evidence** | — | — | — | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
+| 1.5 | **16 Aug 2026** | 06:32:41 WIB | — | Active | Responsive QA, Header/search/sticky, Product Detail parity, article polish, hardening | 🚀 Active | — |
 
-> **Duration policy:** duration is calculated only when verified start/end timestamps are available from repository/evidence. Do not estimate duration from dates alone. If start/end time cannot be verified, use `—` and write `Tidak ditemukan di repository/evidence yang tersedia.` where appropriate.
+> **Important:** Chat 1.1's exact start timestamp is not available in the repository/evidence currently accessible. Therefore the actual elapsed working duration **from the beginning of Chat 1.1 cannot be truthfully calculated yet**.
+
+---
+
+## ⏱️ PROJECT TIMELINE — SINCE CHAT 1.1
+
+```text
+Chat 1.1 actual start
+        ↓
+        ?  ← exact timestamp not verified
+        ↓
+Earliest verifiable migration evidence
+14 August 2026 (Chat 1.2)
+        ↓
+15 August 2026
+Chat 1.3
+        ↓
+15–16 August 2026
+Chat 1.4
+        ↓
+16 August 2026
+Chat 1.5 ACTIVE
+```
+
+### Current elapsed-time status
+
+```text
+Actual elapsed duration since Chat 1.1:
+NOT VERIFIABLE
+
+Reason:
+Chat 1.1 exact start timestamp is unavailable.
+
+Earliest verifiable project evidence:
+14 August 2026
+
+Current migration date:
+16 August 2026
+
+Calendar span covered by verifiable evidence:
+≥ 2 calendar days
+
+This is NOT the same as:
+actual working duration
+```
+
+When a reliable Chat 1.1 start timestamp is recovered from conversation/GitHub evidence, the elapsed project duration can be calculated and inserted here without changing the historical archive.
 
 ---
 
@@ -100,6 +146,7 @@ Rules:
 5. If timestamps conflict across evidence, preserve the conflict and do not silently choose one.
 6. Use `Tidak ditemukan di repository/evidence yang tersedia.` when the required timing evidence is unavailable.
 7. Root `README.md` may show the same verified dates/durations in its Pareto progress summary, but must not create independent or conflicting timing facts.
+8. Project-level elapsed time may only be calculated from a verified Chat 1.1 start timestamp. Until then, show `NOT VERIFIABLE` rather than estimating.
 
 ### Standard session record
 

@@ -165,6 +165,19 @@ Pastikan yang berikut tetap akurat:
 - documentation map
 - next-chat handoff
 
+### Session timeline / progress rule
+
+Jika README menampilkan migration progress antar-session:
+
+- tampilkan tanggal tiap session jika tersedia
+- tampilkan Start / End / Duration hanya jika dapat diverifikasi
+- gunakan evidence dari session/conversation atau GitHub commit metadata
+- jika exact time tidak tersedia, tulis:
+  `Tidak ditemukan di repository/evidence yang tersedia.`
+- jika hanya tanggal/period tersedia, jangan mengubahnya menjadi durasi
+- jangan mengarang atau mengestimasi elapsed time
+- pastikan timeline konsisten dengan `docs/progress/README.md`
+
 README bukan:
 - forensic log
 - session journal
@@ -259,6 +272,7 @@ Sebelum commit:
 - tiga guides konsisten
 - Navigator konsisten dengan repository
 - README konsisten dengan current repository
+- session timeline, jika ada, konsisten dengan progress index
 
 ==================================================
 11. COMMIT
@@ -289,6 +303,7 @@ Jawab ringkas:
 3. Navigator: updated / no changes
 4. Files changed
 5. Main drift fixed
-6. Commit SHA, jika ada
-7. Unknowns / items still not provable
+6. Session timeline impact: Date / Start / End / Duration jika relevan dan terverifikasi
+7. Commit SHA, jika ada
+8. Unknowns / items still not provable
 ```

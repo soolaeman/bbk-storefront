@@ -13,7 +13,12 @@ Branch aktif: `feature/nextjs-migration`
 ```text
 Session: 1.5 BBKitchen Next.js Migration
 Started: 16 August 2026 06:32:41 WIB (Asia/Jakarta)
+Elapsed: berjalan sejak 06:32:41 WIB
+Ended: —
+Duration: —
 ```
+
+> **Elapsed time:** dihitung dari `Started` ke waktu saat README diperbarui berdasarkan timestamp update yang terverifikasi. `Duration` final hanya ditetapkan saat session memiliki `End` yang terverifikasi.
 
 ---
 
@@ -44,6 +49,20 @@ Branch head before this sync:
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
+
+---
+
+# 📈 MIGRATION PROGRESS
+
+| Session | Periode / waktu terverifikasi | Durasi | Fokus utama | Hasil utama | Status |
+|---|---|---:|---|---|---|
+| 1.1 | Tidak ditemukan di repository/evidence yang tersedia. | — | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
+| 1.2 | 14–15 Aug 2026 | — | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
+| 1.3 | 15 Aug 2026 evidence | — | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
+| 1.4 | 15–16 Aug 2026 evidence | — | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
+| 1.5 | Started 16 Aug 2026 06:32:41 WIB | Elapsed: berjalan | Responsive / Parity / Hardening | Baseline verification + mobile/Header/Product Detail parity next | 🚀 |
+
+> **Timing rule:** tanggal/period tidak otomatis menjadi durasi. Durasi final hanya dihitung dari `Start` + `End` yang terverifikasi. Untuk session aktif, README menampilkan elapsed time berdasarkan timestamp update yang benar-benar tersedia dan menyatakan sumber waktunya; ini tidak menggantikan `Duration` final.
 
 ---
 

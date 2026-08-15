@@ -1,10 +1,9 @@
 import React from 'react';
 import { ExternalLink, MapPin } from 'lucide-react';
 
-const BBKITCHEN_ADDRESS = 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A RT 004/020, Pondok Benda, Pamulang, Kota Tangerang Selatan, Banten 1534';
-const MAP_QUERY = encodeURIComponent(BBKITCHEN_ADDRESS);
-const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
-const GOOGLE_MAPS_EMBED_URL = `https://www.google.com/maps?q=${MAP_QUERY}&output=embed`;
+const BBKITCHEN_NAME = 'BBKitchen - Sentra Peralatan Dapur Restoran Bekas Jakarta | Bukan Baru Kitchen';
+const GOOGLE_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=BBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen';
+const GOOGLE_MAPS_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.491414547599!2d106.70220356838789!3d-6.330316447898614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ef825d687123%3A0x8b754a5fb317e49e!2sBBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen!5e0!3m2!1sen!2sid!4v1786814666642!5m2!1sen!2sid';
 
 export const LocationSection: React.FC = () => {
   return (
@@ -25,8 +24,8 @@ export const LocationSection: React.FC = () => {
             </p>
 
             <div className="mt-6 rounded-xl bg-slate-50 border border-slate-200 p-4">
-              <p className="text-xs font-bold text-slate-900">Alamat BBKitchen</p>
-              <p className="mt-1 text-xs text-slate-600 leading-relaxed">{BBKITCHEN_ADDRESS}</p>
+              <p className="text-xs font-bold text-slate-900">Lokasi BBKitchen</p>
+              <p className="mt-1 text-xs text-slate-600 leading-relaxed">{BBKITCHEN_NAME}</p>
             </div>
 
             <a
@@ -43,11 +42,12 @@ export const LocationSection: React.FC = () => {
 
           <div className="min-h-[320px] lg:min-h-[390px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <iframe
-              title="Lokasi BBKitchen di Tangerang Selatan"
+              title="Lokasi BBKitchen di Google Maps"
               src={GOOGLE_MAPS_EMBED_URL}
               className="w-full h-full min-h-[320px] lg:min-h-[390px] border-0"
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
             />
           </div>
         </div>

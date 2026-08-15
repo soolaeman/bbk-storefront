@@ -4,7 +4,7 @@ import {
   getWordPressPages,
   getWordPressPosts,
   type WordPressQueryOptions,
-} from '@/lib/wordpress';
+} from '../../../lib/wordpress';
 
 export const runtime = 'nodejs';
 

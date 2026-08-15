@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import { ExternalLink, Facebook, Instagram, Pin, Play, MessageCircle, Youtube } from 'lucide-react';
 
-const youtubeUrl = 'https://www.youtube.com/shorts/_uzgdL_JhXA';
 const youtubeEmbedUrl = 'https://www.youtube.com/embed/_uzgdL_JhXA?autoplay=1';
-const tiktokUrl = 'https://www.tiktok.com/@bukanbarukitchen.com/photo/7547192180746767623';
 const tiktokEmbedUrl = 'https://www.tiktok.com/player/v1/7547192180746767623?description=1&music_info=1';
 
 const socialLinks = [
@@ -21,11 +19,11 @@ export const SocialMediaSection: React.FC = () => {
   const videoPanel = (type: 'youtube' | 'tiktok') => {
     const isYoutube = type === 'youtube';
     return (
-      <div className="w-full h-full min-h-[260px] rounded-xl border border-slate-200 bg-slate-950 overflow-hidden">
+      <div className="w-full aspect-[9/16] rounded-xl border border-slate-200 bg-slate-950 overflow-hidden">
         <button
           type="button"
           onClick={() => setPlaying(current => current === type ? null : type)}
-          className="w-full h-full min-h-[260px] relative group"
+          className="w-full h-full relative group"
           aria-label={`Putar ${isYoutube ? 'YouTube Shorts' : 'TikTok'}`}
         >
           {playing === type ? (
@@ -38,13 +36,12 @@ export const SocialMediaSection: React.FC = () => {
               allowFullScreen
             />
           ) : (
-            <span className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 group-hover:bg-slate-900 transition-colors text-white p-5">
+            <span className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 group-hover:bg-slate-900 transition-colors text-white">
               <span className="w-12 h-12 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-lg">
                 {isYoutube ? <Youtube className="w-5 h-5 text-red-600" /> : <span className="font-black text-lg">♪</span>}
                 <Play className="w-3 h-3 ml-0.5 fill-current" />
               </span>
-              <span className="mt-3 text-sm font-extrabold">{isYoutube ? 'YouTube Shorts' : 'TikTok'}</span>
-              {isYoutube && <span className="mt-1 text-[10px] font-semibold text-slate-300 text-center">Shorts BBKitchen — aktivitas & unit terbaru</span>}
+              {isYoutube && <span className="mt-2 px-3 text-center text-[10px] font-semibold text-slate-300">Shorts BBKitchen — aktivitas & unit terbaru</span>}
             </span>
           )}
         </button>
@@ -60,12 +57,12 @@ export const SocialMediaSection: React.FC = () => {
           <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Ikuti Aktivitas BBKitchen</h2>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1fr_1fr_0.85fr] gap-3 items-stretch lg:min-h-[520px]">
-          <div className="h-full">{videoPanel('youtube')}</div>
-          <div className="h-full">{videoPanel('tiktok')}</div>
-          <div className="grid grid-rows-4 gap-3 h-full">
+        <div className="mt-5 grid grid-cols-1 lg:grid-cols-[9fr_9fr_6fr] gap-3 items-stretch">
+          <div>{videoPanel('youtube')}</div>
+          <div>{videoPanel('tiktok')}</div>
+          <div className="grid grid-rows-4 gap-3">
             {socialLinks.map(({ name, href, icon: Icon }) => (
-              <a key={name} href={href} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 flex items-center justify-between gap-3 hover:bg-white hover:shadow-sm transition-all">
+              <a key={name} href={href} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-200 bg-slate-50 px-4 flex items-center justify-between gap-3 hover:bg-white hover:shadow-sm transition-all min-h-0">
                 <span className="flex items-center gap-3 min-w-0">
                   <span className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-900 shrink-0"><Icon className="w-4 h-4" /></span>
                   <span className="text-xs font-extrabold text-slate-900">{name}</span>

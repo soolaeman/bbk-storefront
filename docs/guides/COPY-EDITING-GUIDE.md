@@ -21,13 +21,15 @@ Use this guide for:
 | Area | Primary file | Typical copy |
 |---|---|---|
 | Hero | `src/components/HeroSection.tsx` | headline, CTA, MBG, Produksi Baru |
-| Service | `src/components/KitchenConsultationBanner.tsx` | service CTA, MBG catalog CTA |
+| Service | `src/components/KitchenConsultationBanner.tsx` | service CTA, MBG catalog CTA, WhatsApp CTA labels |
 | Product Card | `src/components/ProductCard.tsx` | READY/SOLD, Tanya WA |
-| Product Detail | `src/app/product/[slug]/page.tsx` + child components | product CTA |
+| Product Detail | `src/app/product/[slug]/page.tsx` + child components | product CTA, related-products presentation |
 | Header | `src/components/Header.tsx` | navigation, search, CTA |
 | Footer | `src/components/Footer.tsx` | footer CTA/navigation |
 | Social | `src/components/SocialMediaSection.tsx` | social labels/copy/video cards |
-| Category | `src/components/CategoryFilter.tsx` | filter labels |
+| Testimonials | `src/components/TestimonialsSection.tsx` | testimonial heading/copy |
+| Gallery | `src/components/GallerySection.tsx` | gallery heading/copy and carousel affordance |
+| Category | `src/components/CategoryFilter.tsx` | filter/category/subcategory labels |
 | Local landing | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` | H1/CTA/local copy |
 
 ## Fastest search
@@ -47,8 +49,12 @@ WhatsApp
 Dapur MBG
 Produksi Baru
 Lihat Unit yang Tersedia
-Konsultasi
-Siap Kirim
+Cek Stok via WA
+Jual Unit via WA
+Konsultasi MBG
+Request Produksi
+Galeri BBKitchen
+Geser untuk melihat foto lainnya
 READY
 SOLD
 PDF Katalog Dapur MBG
@@ -128,6 +134,41 @@ The catalog CTA scrolls to the catalog; do not change behavior when changing its
 The service section has a separate PDF catalog CTA in addition to the direct WhatsApp CTA.
 
 Do not replace the direct WhatsApp CTA with the PDF CTA unless explicitly requested.
+
+### Homepage service WhatsApp CTA labels
+
+```text
+Beli Unit       → Cek Stok via WA
+Jual Unit       → Jual Unit via WA
+Dapur MBG       → Konsultasi MBG
+Produksi Baru   → Request Produksi
+```
+
+The service card and the WhatsApp CTA are separate clickable actions.
+
+### Catalog result copy
+
+```text
+Halaman 1 • Menampilkan {DISPLAYED} dari {TOTAL} unit BBKitchen
+```
+
+The category/subcategory buttons intentionally do not display counts; result count is communicated in the catalog summary instead.
+
+### Gallery
+
+Current gallery copy owner:
+
+`src/components/GallerySection.tsx`
+
+Current compact carousel copy:
+
+```text
+Dokumentasi BBKitchen
+Galeri BBKitchen
+Melihat lebih dekat aktivitas, peralatan, dan proses BBKitchen.
+```
+
+Desktop uses carousel controls; mobile uses native swipe. Keep wording changes separate from carousel behavior.
 
 ## Do not casually change
 

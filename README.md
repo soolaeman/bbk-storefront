@@ -45,7 +45,7 @@ GitHub date: **15 August 2026 21:24:06 UTC**.
 
 ```text
 Progress index sync:
-be14242e0d53279e958ec5c2ef299acdbd5393c0
+ebd5f93634440785400698a2297f0649c691547a
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
@@ -56,32 +56,51 @@ be14242e0d53279e958ec5c2ef299acdbd5393c0
 
 | Session | Periode / waktu terverifikasi | Start | End | Durasi | Fokus utama | Hasil utama | Status |
 |---|---|---|---|---:|---|---|---|
-| 1.1 | **14 Aug 2026** | **17:04 WIB** | — | — | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
-| 1.2 | 14–15 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
-| 1.3 | 15 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
-| 1.4 | 15–16 Aug 2026 evidence | Tidak ditemukan | Tidak ditemukan | — | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
-| 1.5 | 16 Aug 2026 | 06:32:41 WIB | — | Active | Responsive / Parity / Hardening | Baseline verification + mobile/Header/Product Detail parity next | 🚀 |
+| 1.1 | **14 Aug 2026** | **12:45 WIB** | **15:12 WIB** | **2h 27m** | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
+| 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
+| 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
+| 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
+| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | — | — | Responsive / Parity / Hardening | Baseline verification + mobile/Header/Product Detail parity next | 🚀 |
 
 ### ⏱️ Project elapsed time from Chat 1.1
 
 ```text
 Chat 1.1 verified start:
-14 August 2026 — 17:04 WIB
+14 August 2026 — 12:45 WIB
 
 Chat 1.5 verified start:
 16 August 2026 — 06:32:41 WIB
 
 Elapsed project span at Chat 1.5 start:
-1 day 13 hours 28 minutes 41 seconds
+1 day 17 hours 47 minutes 41 seconds
 
-Actual total working duration across all chats:
-NOT VERIFIABLE
+Verified working/session time through Chat 1.4:
+27 hours 59 minutes 41 seconds
 
-Reason:
-End timestamps / working intervals for earlier chats are not fully verified.
+Verified gaps between sessions:
+13 hours 48 minutes
 ```
 
-> **Important:** elapsed project span ≠ total working duration. The project elapsed span can be calculated from the verified Chat 1.1 start timestamp, but actual working duration requires verified working intervals/end timestamps.
+### How the numbers relate
+
+```text
+27h 59m 41s verified session time
++ 13h 48m verified inter-session gaps
+------------------------------------
+41h 47m 41s elapsed project span
+```
+
+> **Important:** elapsed project span ≠ total working duration. The working/session figure is the sum of verified session intervals. The elapsed project span includes the verified gaps between sessions.
+
+### Chat 1.5 timing
+
+```text
+Start: 16 August 2026 — 06:32:41 WIB
+End: —
+Duration: —
+```
+
+Chat 1.5 remains open until its end timestamp is verified.
 
 Detail timeline/evidence rule berada di [`docs/progress/README.md`](docs/progress/README.md).
 
@@ -405,11 +424,11 @@ First actions:
 Use [`NAVIGATOR.md`](NAVIGATOR.md) or [`docs/progress/README.md`](docs/progress/README.md).
 
 ```text
-Chat 1.1 → foundation — started 14 Aug 2026, 17:04 WIB
-Chat 1.2 → live catalog / API / SEO
-Chat 1.3 → routing / integration / visual convergence
-Chat 1.4 → sales-first homepage / CTA / visual assets
-Chat 1.5 → responsive / parity / hardening — started 16 Aug 2026, 06:32:41 WIB
+Chat 1.1 → foundation — 14 Aug 2026 12:45–15:12 WIB
+Chat 1.2 → live catalog / API / SEO — 14 Aug 2026 17:00–21:00 WIB
+Chat 1.3 → routing / integration / visual convergence — 14 Aug 23:00–15 Aug 03:00 WIB
+Chat 1.4 → sales-first homepage / CTA / visual assets — 15 Aug 13:00–16 Aug 06:32:41 WIB
+Chat 1.5 → responsive / parity / hardening — started 16 Aug 2026 06:32:41 WIB
 ```
 
 ---
@@ -425,5 +444,5 @@ Chat 1.5 → 🚀 Active
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Progress index checkpoint: be14242e0d53279e958ec5c2ef299acdbd5393c0
+Progress index checkpoint: ebd5f93634440785400698a2297f0649c691547a
 ```

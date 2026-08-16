@@ -124,9 +124,9 @@ Buat atau update:
 
 Isi minimal:
 
-- Date
+- Date (Search What Date is it Now)
 - Start
-- End
+- End (Search What Time is it Now)
 - Duration
 - Evidence source for timing
 - Scope
@@ -143,10 +143,8 @@ Isi minimal:
 
 ### Timeline evidence rule
 
-- `Start`, `End`, dan `Duration` hanya boleh diisi dari evidence yang benar-benar tersedia.
+- `Start`, `End`(Search What Time is it Now), dan `Duration` hanya boleh diisi dari evidence yang benar-benar tersedia.
 - Jangan mengarang atau mengestimasi exact time.
-- Jika exact time tidak tersedia, tulis:
-  `Tidak ditemukan di repository/evidence yang tersedia.`
 - Jika hanya tanggal/period yang tersedia, jangan mengubahnya menjadi durasi.
 - Jika timestamp berasal dari GitHub commit, sebutkan sumbernya sebagai GitHub evidence.
 - Duration hanya dihitung setelah Start dan End dapat diverifikasi.
@@ -232,8 +230,8 @@ Update hanya informasi current-state yang relevan:
 
 Untuk timeline/progress:
 
-- tampilkan tanggal tiap session jika tersedia
-- tampilkan Start/End/Duration hanya jika dapat diverifikasi
+- tampilkan tanggal tiap session dengan fitur search
+- tampilkan Start/End/Duration dengan fitur search 
 - jika Chat 1.1 start tidak dapat diverifikasi, tampilkan `Actual elapsed duration since Chat 1.1: NOT VERIFIABLE`
 - boleh tampilkan earliest verifiable evidence/calendar span sebagai konteks
 - jangan menyamakan calendar span dengan working duration
@@ -318,7 +316,7 @@ Catat:
 
 Date:
 Start:
-End:
+End (Search What Time is it Now):
 Duration:
 Evidence source:
 
@@ -330,7 +328,7 @@ Evidence source dapat berupa:
 
 Rules:
 
-- Exact time is preferred when verifiable.
+- Exact time is preferred when verifiable (Must Search What Time is it Now).
 - If exact time is unavailable, write:
   `Tidak ditemukan di repository/evidence yang tersedia.`
 - If only a date/period is known, record the date/period without converting it into duration.

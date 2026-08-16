@@ -128,12 +128,12 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
           </div>
 
           {subcategories.length > 0 && activeTopLevelCategory && filterState.category !== 'Semua' && (
-            <div className="mt-2 border-t border-slate-200 pt-2">
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            <div className="mt-1 border-t border-slate-200 pt-2 pb-1">
+              <div className="flex min-h-10 items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-thin">
                 <span className="sticky left-0 z-10 shrink-0 bg-white pr-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-400">
                   {activeTopLevelCategory.name}
                 </span>
-                <span aria-hidden="true" className="text-slate-300">/</span>
+                <span aria-hidden="true" className="shrink-0 text-slate-300">/</span>
                 <button type="button" onClick={() => onFilterChange({ category: activeTopLevelCategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${filterState.category === activeTopLevelCategory.name ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>Semua</button>
                 {subcategories.map((subcategory) => {
                   const count = subcategory.count ?? categoryCounts[subcategory.name] ?? 0;

@@ -1,6 +1,6 @@
 # BBKitchen Frontend — Next.js Migration
 
-Branch aktif: `feature/nextjs-migration`
+Branch aktif: `main`
 
 > **README = kondisi project sekarang.** Detail forensic history ada di [`docs/progress/`](docs/progress/README.md). Struktur file mengikuti repository aktual.
 
@@ -406,7 +406,7 @@ Chat 1.7 → NEXT
 
 First actions:
 
-1. Pull latest `feature/nextjs-migration`.
+1. Pull latest `main`.
 2. Run clean build/runtime verification on latest code.
 3. Verify desktop + mobile on homepage, catalog, Product Detail, local pages.
 4. Freeze UI baseline.
@@ -444,7 +444,7 @@ Chat 1.6 → ✅ Closed
 Chat 1.6B → 🟡 Clarified / Pending
 Chat 1.7 → ⏭️ Next
 
-Branch: feature/nextjs-migration
+Branch: main
 Last code checkpoint: 96394b9ed3596383cdba44ea27312418827872f1
 Progress index checkpoint: 64481677a530ee51be319e26a451cfd2587d0da1
 Chat 1.6B clarification checkpoint: 7810fb3c4759a3dda8077fca2cb811b87900da85

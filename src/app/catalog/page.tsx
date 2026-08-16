@@ -294,7 +294,7 @@ export default function CatalogPage() {
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-black text-slate-950">{isSearchMode ? 'Unit yang Relevan' : 'Katalog Unit Dapur'}</h2>
-                <p className="mt-1 text-xs font-medium text-slate-500">Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit</p>
+                <p className="mt-1 text-xs font-medium text-slate-500">Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit BBKitchen</p>
               </div>
               <span className="hidden text-xs font-medium text-slate-500 sm:block">{totalResults ?? displayedCount} unit cocok</span>
             </div>
@@ -332,7 +332,7 @@ export default function CatalogPage() {
               </button>
             </div>
 
-            <p className="mt-3 text-center text-xs font-semibold text-slate-500">Halaman {catalogPage} dari {totalPageLabel} • Menampilkan {displayedCount} unit</p>
+            <p className="mt-3 text-center text-xs font-semibold text-slate-500">Halaman {catalogPage} dari {totalPageLabel} • Menampilkan {displayedCount} unit BBKitchen</p>
           </section>
         )}
       </div>

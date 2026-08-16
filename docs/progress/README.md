@@ -15,6 +15,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
+| 1.6 | **16 Aug 2026** | **Tidak ditemukan di repository/evidence yang tersedia.** | **19:43:16 WIB** | **—** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
 
@@ -49,6 +50,9 @@ Chat 1.4 END / Chat 1.5 START
         ↓
 16 Aug 2026 07:20 WIB
 Chat 1.5 END
+        ↓
+16 Aug 2026 19:43:16 WIB
+Chat 1.6 END
 ```
 
 ### Project time summary
@@ -57,15 +61,11 @@ Chat 1.5 END
 Verified session working time through Chat 1.5:
 28 hours 47 minutes 0 seconds
 
-Elapsed project span:
-14 Aug 2026 12:45 WIB
-→
-16 Aug 2026 07:20 WIB
-=
-42 hours 35 minutes 0 seconds
+Chat 1.6 working duration:
+NOT VERIFIABLE (verified Start unavailable)
 
-Verified inter-session gap time:
-13 hours 48 minutes 0 seconds
+Actual elapsed duration since Chat 1.1:
+NOT VERIFIABLE as working duration.
 ```
 
 > **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.
@@ -91,7 +91,7 @@ Chat 1.5
 Documentation / repository orientation / session hardening
    ↓
 Chat 1.6
-Baseline verification / responsive QA
+Responsive QA / shared UI / homepage UX polish / gallery
 ```
 
 ---
@@ -101,29 +101,27 @@ Baseline verification / responsive QA
 ```text
 DATA ARCHITECTURE       ✅ established
 ROUTING                 ✅ established
-CATALOG                 ✅ established baseline
+CATALOG                 ✅ converged baseline
 PRODUCT DETAIL          ✅ functional baseline
 HOMEPAGE POSITIONING    ✅ sales-first
-CTA CONTRACTS           ✅ normalized
-SOCIAL VIDEO COVERS     ✅ implemented
-MASCOT UNIVERSAL LAYER  🔒 rejected
+SHARED FOOTER           ✅ integrated across key templates
+RELATED PRODUCTS        ✅ implemented baseline
+GALLERY                 ✅ compact carousel direction locked
+MOBILE UX PATTERNS      ✅ direction locked
 
-MOBILE QA               ⚠️ next
-HEADER SEARCH/STICKY    ⚠️ carried
-PRODUCT DETAIL PARITY   ⚠️ carried
-ARTICLE TYPOGRAPHY      ⚠️ carried
+FINAL UI REGRESSION     ⚠️ pending after latest UI commits
+BACKEND INTEGRATION     ⏳ next phase
 ACF/CORE SYSTEM         ⏳ carried
+PRODUCTION HARDENING    ⏳ carried
 ```
 
 ---
 
 ## Current Pareto Focus
 
-1. Mobile/responsive QA.
-2. Shared Header/search/sticky/parity.
-3. Product Detail design parity.
-4. Article/local presentation.
-5. ACF/Core System + production hardening.
+1. Final clean build/runtime/mobile regression against latest UI commits.
+2. WordPress/WooCommerce/Core System integration while preserving existing contracts.
+3. SEO, security, performance, and production hardening after integration.
 
 ---
 
@@ -155,7 +153,7 @@ Rules:
 5. If timestamps conflict across evidence, preserve the conflict and do not silently choose one.
 6. Use `Tidak ditemukan di repository/evidence yang tersedia.` when the required timing evidence is unavailable.
 7. Root `README.md` may show the same verified dates/durations in its Pareto progress summary, but must not create independent or conflicting timing facts.
-8. Project-level elapsed time may be calculated from a verified Chat 1.1 start timestamp even when individual session working durations remain unknown; label it **elapsed project span**, never **working duration**.
+8. Project-level elapsed time must distinguish working/session duration from calendar/elapsed span and must not be presented as working duration without verified session boundaries.
 
 ### Standard session record
 

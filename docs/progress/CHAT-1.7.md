@@ -2,9 +2,9 @@
 
 ## Status
 
-**OPEN / SESSION STARTED**
+**OPEN / STEP 1 CLEAN VERIFICATION COMPLETED**
 
-This archive is created at session start and serves as the forensic record for Chat 1.7.
+This archive is the forensic record for Chat 1.7.
 
 ---
 
@@ -22,19 +22,23 @@ Evidence source: Current conversation/session timestamp available for this migra
 
 ## Session Goal
 
-PENDING — derived from the current user request after repository orientation.
+Establish a clean verification baseline for the latest `feature/nextjs-migration` checkpoint before proceeding to SEO takeover or backend/admin integration.
 
 ## Scope
 
-PENDING — do not expand beyond the user's request.
+Build/runtime evidence plus user-provided desktop/mobile visual regression screenshots for the current homepage, catalog, and product detail surfaces.
 
 ## Out of Scope
 
-Application-code implementation before orientation and verification are complete.
+No application-code implementation during Step 1.
 
 ## Success Criteria
 
-PENDING — to be finalized from the current request and verified repository state.
+- Latest repository state identified.
+- Application structure/package baseline verified.
+- No application-code change introduced by session bootstrap.
+- Localhost visual/runtime evidence reviewed.
+- Desktop and mobile visual QA accepted by user.
 
 ---
 
@@ -48,7 +52,17 @@ Post-session clarification: Chat 1.6B
 Current session: Chat 1.7
 ```
 
-### Last code checkpoint
+### Session bootstrap commit
+
+```text
+7f82484bf7f5fae13932a4d91ce5a387b852e5f9
+```
+
+`docs: bootstrap Chat 1.7 session forensic archive`
+
+This commit only created `docs/progress/CHAT-1.7.md`; no application code was changed.
+
+### Last application-code checkpoint before session bootstrap
 
 ```text
 96394b9ed3596383cdba44ea27312418827872f1
@@ -57,7 +71,7 @@ fix: make gallery carousel responsive with mobile swipe
 
 GitHub evidence: 16 August 2026 19:35:59 WIB.
 
-### Last documentation checkpoints
+### Documentation checkpoints
 
 ```text
 Progress index: 64481677a530ee51be319e26a451cfd2587d0da1
@@ -80,13 +94,70 @@ RELATED PRODUCTS        ✅ implemented baseline
 GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
 
-FINAL UI REGRESSION     ⚠️ pending after latest UI commits
+STEP 1 VISUAL QA        ✅ accepted by user
+DESKTOP UI QA           ✅ accepted by user
+MOBILE UI QA            ✅ accepted by user
 PUBLIC SEO TAKEOVER     ⏳ clarified in 1.6B; audit pending
 ADMIN CONTROL LAYER     ⏳ clarified in 1.6B; implementation pending
 BACKEND INTEGRATION     ⏳ next phase
 ACF/CORE SYSTEM         ⏳ carried
 PRODUCTION HARDENING    ⏳ carried
 ```
+
+---
+
+## Step 1 — Clean Verification Result
+
+### Repository / structural verification
+
+```text
+Branch:                  ✅ feature/nextjs-migration
+Session archive:         ✅ present
+Next.js structure:       ✅ src/app present
+Components/lib layers:  ✅ src/components + src/lib present
+package.json:            ✅ Next.js / React 19 / TypeScript scripts present
+Application-code delta:  ✅ none from session bootstrap
+GitHub CI status:        ⚠️ no status checks returned for bootstrap commit
+```
+
+### Runtime / screenshot evidence
+
+User supplied localhost screenshots for the current running site covering:
+
+```text
+Homepage                 ✅
+Catalog                  ✅
+Product Detail            ✅
+Desktop Product Detail    ✅
+Desktop Catalog           ✅
+Desktop Homepage          ✅
+Mobile Homepage           ✅
+Mobile Catalog            ✅
+Mobile Product Detail     ✅
+```
+
+### Visual QA assessment
+
+```text
+Layout / hierarchy       ✅
+Header / navigation      ✅
+Product cards            ✅
+Product gallery           ✅
+Product detail sections   ✅
+Related products          ✅
+Footer                    ✅
+Mobile responsiveness     ✅
+Desktop responsiveness    ✅
+Obvious overflow/breakage ✅ not observed
+```
+
+**User acceptance:** `AMAN / PUAS` — user explicitly accepted the current visual result and did not request further UI fixes.
+
+### Build verification limitation
+
+A direct `npm run build` execution was **not independently run by this ChatGPT execution environment** because the available runtime environment could not resolve/fetch the GitHub working copy. Therefore this session does **not** claim an independently executed build PASS.
+
+This distinction is intentional: screenshot/runtime evidence is accepted for visual QA, but build verification remains separate until an actual build command result is available.
 
 ---
 
@@ -125,18 +196,20 @@ PRODUCTION HARDENING    ⏳ carried
 
 ---
 
-## Verification Baseline
+## Verification Baseline After Step 1
 
 ```text
-Build verified:           ✅ last evidence from Chat 1.6 starting state; latest UI checkpoint needs clean regression
-Localhost/runtime verified: ⚠️ needs final regression on latest checkpoint
-Upstream verified:        ⚠️ pending / issue history carried
-Desktop verified:         ⚠️ final regression pending
-Mobile verified:          ⚠️ final regression pending
-SEO takeover verified:    ⏳ pending audit
-Admin auth verified:      ⏳ pending implementation
-Server authorization:     ⏳ pending implementation
-Mutation/upstream write:  ⏳ pending implementation
+Repository state identified:     ✅
+Visual/runtime evidence:         ✅ user supplied localhost screenshots
+Desktop QA:                      ✅ user accepted
+Mobile QA:                       ✅ user accepted
+Regression UI:                   ✅ no requested fixes
+Build command independently run: ⚠️ pending
+CI/status checks:                ⚠️ none returned for bootstrap commit
+SEO takeover verified:           ⏳ pending audit
+Admin auth verified:             ⏳ pending implementation
+Server authorization:            ⏳ pending implementation
+Mutation/upstream write:         ⏳ pending implementation
 ```
 
 `Code exists` is not treated as verification.
@@ -145,34 +218,45 @@ Mutation/upstream write:  ⏳ pending implementation
 
 ## Top 20% Changes
 
-Pending session work.
+- Session bootstrap archive established.
+- Clean verification baseline established.
+- Current homepage/catalog/product-detail UI accepted on desktop and mobile.
 
 ## Top 20% Bottlenecks
 
-Pending session work.
+- Independent build execution still requires a real working copy/runtime capable of installing/resolving dependencies.
+- SEO takeover audit remains the next architecture-sensitive checkpoint.
+- Authenticated admin mutation layer remains unimplemented.
 
 ## Top 20% Decisions
 
-Pending session work beyond the locked baseline above.
+- **Do not reopen accepted UI work without new evidence.**
+- Proceed to architecture/backend work rather than polishing already accepted screens.
+- Keep build verification explicitly separate from visual QA.
 
 ---
 
 ## Application / Repository Change Audit
 
-No application-code changes made during session bootstrap.
+No application-code changes made during Step 1.
+
+Only documentation archive updates were made in this session.
 
 ---
 
-## Session Plan
+## Session Plan After Step 1
 
-1. First priority: establish a clean current-state verification baseline from the latest `feature/nextjs-migration` checkpoint.
-2. Verification point: distinguish build/runtime/UI results before any takeover or integration implementation.
-3. Next priority: execute the user's session-specific goal without expanding scope.
+1. Step 1 clean verification: **COMPLETED / ACCEPTED**.
+2. Next priority: public WordPress URL + SEO surface audit.
+3. Then: authenticated WordPress admin control layer and server-authorized mutation path.
+4. Then: WooCommerce / ACF / BBK Core System integration.
 
 ---
 
 ## Forensic Notes
 
 - Session archive created before application implementation work, per canonical START-SESSION workflow.
-- Exact start timestamp is based on current conversation/session timestamp evidence, not message count, calendar span, or estimation.
+- Screenshot evidence was supplied by the user from localhost and reviewed as visual/runtime evidence.
+- User explicitly accepted the current UI as safe/satisfactory; no visual fix was requested.
+- Build PASS is not claimed because no independent `npm run build` command result was available in this execution environment.
 - End timestamp and duration remain pending until session close.

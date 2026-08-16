@@ -10,59 +10,62 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 
 | Chat | Period / Evidence | Start | End | Duration | Focus | Status | Archive |
 |---|---|---|---|---:|---|---|---|
-| 1.1 | **14 Aug 2026** | **17:04 WIB** | — | — | Foundation, WooCommerce migration, catalog architecture, early bottlenecks | ✅ Archived | [`CHAT-1.1.md`](CHAT-1.1.md) |
-| 1.2 | **14–15 Aug 2026 evidence** | — | — | — | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
-| 1.3 | **15 Aug 2026 evidence** | — | — | — | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
-| 1.4 | **15–16 Aug 2026 evidence** | — | — | — | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
-| 1.5 | **16 Aug 2026** | 06:32:41 WIB | — | Active | Responsive QA, Header/search/sticky, Product Detail parity, article polish, hardening | 🚀 Active | — |
+| 1.1 | **14 Aug 2026** | **12:45 WIB** | **15:12 WIB** | **2h 27m** | Foundation, WooCommerce migration, catalog architecture, early bottlenecks | ✅ Archived | [`CHAT-1.1.md`](CHAT-1.1.md) |
+| 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
+| 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
+| 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
+| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | — | **Active** | Responsive QA, Header/search/sticky, Product Detail parity, article polish, hardening | 🚀 Active | — |
 
-> Chat 1.1 start is now verified from the session evidence supplied for this project: **14 August 2026, 17:04 WIB**. Its end time is still not verified, so its individual working duration remains `—`.
+> **Canonical timing source for session tracking:** the session times supplied and confirmed in this migration workflow. Individual session duration is calculated only from the stated Start/End timestamps.
 
 ---
 
 ## ⏱️ PROJECT TIMELINE — SINCE CHAT 1.1
 
 ```text
-14 August 2026 — 17:04 WIB
+14 Aug 2026 12:45 WIB
 Chat 1.1 START
         ↓
-14–15 August 2026
-Chat 1.2
+14 Aug 2026 15:12 WIB
+Chat 1.1 END
         ↓
-15 August 2026
-Chat 1.3
+14 Aug 2026 17:00 WIB
+Chat 1.2 START
         ↓
-15–16 August 2026
-Chat 1.4
+14 Aug 2026 21:00 WIB
+Chat 1.2 END
         ↓
-16 August 2026 — 06:32:41 WIB
-Chat 1.5 START
+14 Aug 2026 23:00 WIB
+Chat 1.3 START
+        ↓
+15 Aug 2026 03:00 WIB
+Chat 1.3 END
+        ↓
+15 Aug 2026 13:00 WIB
+Chat 1.4 START
+        ↓
+16 Aug 2026 06:32:41 WIB
+Chat 1.4 END / Chat 1.5 START
 ```
 
-### Current elapsed-time status
+### Project time summary
 
 ```text
-Chat 1.1 verified start:
-14 August 2026 — 17:04 WIB
+Verified session working time through Chat 1.4:
+27 hours 59 minutes 41 seconds
 
-Chat 1.5 verified start:
-16 August 2026 — 06:32:41 WIB
+Elapsed project span:
+14 Aug 2026 12:45 WIB
+→
+16 Aug 2026 06:32:41 WIB
+=
+41 hours 47 minutes 41 seconds
 
-Elapsed project span at Chat 1.5 start:
-1 day 13 hours 28 minutes 41 seconds
-
-Important:
-This is elapsed calendar/project span between verified timestamps,
-NOT total working time.
-
-Actual total working duration across all chats:
-NOT VERIFIABLE
-
-Reason:
-End timestamps / working intervals for earlier chats are not fully verified.
+Non-working / gap time between verified sessions:
+13 hours 48 minutes
 ```
 
-Project-level elapsed time may now be calculated from the verified Chat 1.1 start timestamp, but it must always be labeled as **elapsed project span**, not total working duration.
+> **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.
 
 ---
 
@@ -140,13 +143,13 @@ actual session duration
 Rules:
 
 1. **Never invent or estimate a duration.**
-2. A date range such as `14–15 Aug` does **not** prove a 24-hour duration.
-3. If only dates are known, record the dates and set duration to `—`.
-4. If only a start time is known, record the start time and leave duration to `—` until an end timestamp is verified.
+2. A date range such as `14–15 Aug` does not define duration by itself.
+3. Duration is calculated from the explicit Start and End timestamps recorded for the session.
+4. If only a Start timestamp is known, End and Duration remain `—`.
 5. If timestamps conflict across evidence, preserve the conflict and do not silently choose one.
-6. Use `Tidak ditemukan di repository/evidence yang tersedia.` when the required timing evidence is unavailable.
-7. Root `README.md` may show the same verified dates/durations in its Pareto progress summary, but must not create independent or conflicting timing facts.
-8. Project-level elapsed time may be calculated from a verified Chat 1.1 start timestamp even when individual session working durations remain unknown; label it **elapsed project span**, never **working duration**.
+6. Use `Tidak ditemukan di repository/evidence yang tersedia.` when required timing evidence is unavailable.
+7. Root `README.md` must mirror the same verified timing facts shown here and must not invent independent timing facts.
+8. Project-level elapsed time may be calculated from verified session boundaries, but must remain labeled as **elapsed project span**, never **working duration**.
 
 ### Standard session record
 
@@ -155,7 +158,7 @@ Session: 1.X
 Started: DD Month YYYY HH:MM:SS WIB
 Ended: DD Month YYYY HH:MM:SS WIB
 Duration: Xh Ym
-Evidence: <repository / conversation / verified timestamp source>
+Evidence: <conversation / repository / verified timestamp source>
 ```
 
 ---

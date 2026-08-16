@@ -15,7 +15,7 @@
 | Tahu **file mana yang harus diedit** | [`docs/guides/README.md`](docs/guides/README.md) | Peta guide untuk memahami lokasi file dan perubahan yang aman. |
 | **Mulai session baru** | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Canonical orientation workflow sebelum coding, termasuk bootstrap `CHAT-X.Y.md` + session timestamp. |
 | **Menutup session** | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Canonical forensic close, documentation audit, verification, dan handoff. |
-| Sinkronisasi dokumentasi saja | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + README + Navigator terhadap repository terkini. |
+| Sinkronisasi dokumentasi saja | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + README + Navigator + START SESSION SOP terhadap repository terkini. |
 
 ---
 
@@ -42,6 +42,8 @@
 | [`docs/progress/CHAT-1.4.md`](docs/progress/CHAT-1.4.md) | Forensic history Chat 1.4 | Saat perlu memahami homepage sales positioning, CTA, hero assets, mascot dead end, dan social video covers. |
 | [`docs/progress/CHAT-1.5.md`](docs/progress/CHAT-1.5.md) | Forensic history Chat 1.5 | Saat perlu memahami documentation orientation, timeline synchronization, dan session-hardening work. |
 | [`docs/progress/CHAT-1.6.md`](docs/progress/CHAT-1.6.md) | Forensic history Chat 1.6 | Saat perlu memahami responsive UI polish, shared Footer, related products, service/testimonial/gallery carousel work. |
+| [`docs/progress/CHAT-1.6B.md`](docs/progress/CHAT-1.6B.md) | Clarification layer after Chat 1.6 | Saat perlu memahami launch architecture clarification setelah Chat 1.6. |
+| [`docs/progress/CHAT-1.7.md`](docs/progress/CHAT-1.7.md) | Forensic history Chat 1.7 | Saat perlu memahami clean verification baseline, branch finalization, prompt/documentation audit, dan session close. |
 
 > **Rule:** `docs/progress/` = sejarah. Untuk kondisi terbaru, pakai root `README.md`.
 
@@ -65,7 +67,7 @@
 |---|---|---|
 | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Bootstrap timestamp + `CHAT-X.Y.md`, orientasi repository, documentation, verification sebelum coding | **Awal setiap migration chat/session baru.** |
 | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: forensic extraction, repository audit, documentation audit, verification, dan handoff | **Akhir setiap migration chat/session normal.** |
-| [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README + Navigator terhadap repository terkini | Saat dokumentasi perlu diselaraskan tanpa forensic session close. |
+| [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README + Navigator + START SESSION SOP terhadap repository terkini | Saat dokumentasi perlu diselaraskan tanpa forensic session close. |
 | [`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Mengekstrak history dari chat lama / transcript yang tidak lengkap | Saat mengarsipkan atau memperbaiki history session lama. |
 
 > **Prompt = instruksi untuk AI.** Source of truth project tetap berada di code, root `README.md`, dan progress archive sesuai konteksnya.

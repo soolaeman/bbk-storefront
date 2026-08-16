@@ -51,25 +51,27 @@ function stripHtml(value: string) {
   return value.replace(/<[^>]+>/g, '').trim();
 }
 
+function toBreadcrumbLabel(value: string) {
+  return value
+    .split('-')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function getBreadcrumbItems(slugPath: string[], page: LocationPageData) {
   return [
-    {
-      label: 'Home',
-      href: '/',
-    },
+    { label: 'Home', href: '/' },
     {
       label: 'Jual Barang Bekas Restoran',
       href: '/jual-barang-bekas-restoran',
     },
-    ...slugPath.slice(0, -1).map((segment) => ({
-      label: segment
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' '),
-      href: `/jual-barang-bekas-restoran/${slugPath.slice(0, slugPath.indexOf(segment) + 1).join('/')}`,
+    ...slugPath.slice(0, -1).map((segment, index) => ({
+      label: toBreadcrumbLabel(segment),
+      href: `/jual-barang-bekas-restoran/${slugPath.slice(0, index + 1).join('/')}`,
     })),
     {
-      label: stripHtml(page.title.rendered),
+      label: toBreadcrumbLabel(stripHtml(page.title.rendered)),
       href: null,
     },
   ];
@@ -103,8 +105,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
       <Header />
       <main className="bg-white">
         <article className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-6 text-slate-500">
+          <nav aria-label="Breadcrumb" className="mb-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm sm:px-5">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm leading-6">
               {breadcrumbItems.map((item, index) => {
                 const isCurrent = item.href === null;
 
@@ -123,7 +125,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
                     ) : (
                       <Link
                         href={item.href}
-                        className="font-medium transition-colors hover:text-slate-900"
+                        className="font-medium text-slate-600 transition-colors hover:text-slate-950"
                       >
                         {item.label}
                       </Link>
@@ -134,7 +136,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
             </ol>
           </nav>
 
-          <header className="mb-8 border-b border-slate-200 pb-6">
+          <header className="mb-10 border-b border-slate-200 pb-8">
             <h1
               className="max-w-4xl text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
               dangerouslySetInnerHTML={{ __html: page.title.rendered }}
@@ -142,7 +144,19 @@ export default async function LocationPage({ params }: LocationPageProps) {
           </header>
 
           <div
-            className="prose max-w-none overflow-hidden text-[15px] leading-7 text-slate-700 sm:text-base sm:leading-8 [&_h1]:mb-6 [&_h1]:mt-10 [&_h1]:text-3xl [&_h1]:font-black [&_h1]:leading-tight [&_h1]:text-slate-900 [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:leading-tight [&_h2]:text-slate-900 [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:leading-tight [&_h3]:text-slate-900 [&_p]:mb-5 [&_p]:leading-7 [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_a]:break-words [&_a]:font-semibold [&_a]:text-emerald-700 [&_a]:underline [&_blockquote]:my-6 [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:pl-5 [&_blockquote]:italic [&_strong]:font-bold [&_img]:!mx-auto [&_img]:!h-auto [&_img]:!max-w-full [&_figure]:!mx-auto [&_figure]:!max-w-full [&_figcaption]:mt-2 [&_figcaption]:text-center [&_figcaption]:text-sm [&_figcaption]:text-slate-500 [&_iframe]:!mx-auto [&_iframe]:!max-w-full [&_iframe]:!max-w-full [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:text-sm [&_video]:!mx-auto [&_video]:!max-w-full"
+            className="prose prose-slate max-w-none overflow-hidden text-[15px] leading-7 sm:text-base sm:leading-8
+              [&_h1]:mb-6 [&_h1]:mt-10 [&_h1]:text-3xl [&_h1]:font-black [&_h1]:leading-tight [&_h1]:text-slate-900
+              [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:rounded-xl [&_h2]:border-l-4 [&_h2]:border-emerald-500 [&_h2]:bg-slate-50 [&_h2]:px-4 [&_h2]:py-3 [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:leading-tight [&_h2]:text-slate-900
+              [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:rounded-lg [&_h3]:bg-slate-50 [&_h3]:px-3 [&_h3]:py-2 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:leading-tight [&_h3]:text-slate-900
+              [&_p]:mb-6 [&_p]:leading-8 [&_p]:text-slate-700
+              [&_ul]:my-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6
+              [&_ol]:my-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6
+              [&_li]:my-0 [&_li]:pl-1
+              [&_a]:break-words [&_a]:font-semibold [&_a]:text-emerald-700 [&_a]:underline [&_a]:underline-offset-2
+              [&_blockquote]:my-8 [&_blockquote]:rounded-xl [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:bg-emerald-50 [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:italic
+              [&_strong]:font-bold [&_img]:!mx-auto [&_img]:!h-auto [&_img]:!max-w-full
+              [&_figure]:!mx-auto [&_figure]:!max-w-full [&_figcaption]:mt-2 [&_figcaption]:text-center [&_figcaption]:text-sm [&_figcaption]:text-slate-500
+              [&_iframe]:!mx-auto [&_iframe]:!max-w-full [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:text-sm [&_video]:!mx-auto [&_video]:!max-w-full"
             dangerouslySetInnerHTML={{ __html: page.content.rendered }}
           />
         </article>

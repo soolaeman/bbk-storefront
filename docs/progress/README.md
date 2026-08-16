@@ -17,9 +17,9 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
 | 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
 | 1.6B | **16 Aug 2026** | **19:45 WIB** | **20:16 WIB** | **31m** | Post-session launch architecture clarification: public Next.js takeover/SEO + authenticated WordPress admin controls | 🟡 Clarified / Pending | [`CHAT-1.6B.md`](CHAT-1.6B.md) |
-| 1.8 | **17 Aug 2026** | — | **06:18 WIB** | — | GitHub branch finalization, prompt/documentation audit, end-session handoff | ⚠️ Closed with documentation debt | [`CHAT-1.8.md`](CHAT-1.8.md) |
+| 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean verification baseline, GitHub branch finalization, prompt/documentation audit, end-session handoff | ✅ Closed with documentation debt | [`CHAT-1.7.md`](CHAT-1.7.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. `1.8` has no verified Start timestamp, so Duration remains `—`.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. Chat 1.7 Start/End are recorded from current session evidence.
 
 ---
 
@@ -65,8 +65,11 @@ Chat 1.6B START
 16 Aug 2026 20:16 WIB
 Chat 1.6B END
         ↓
-17 Aug 2026
-Chat 1.8 CLOSED
+17 Aug 2026 03:30 WIB
+Chat 1.7 START
+        ↓
+17 Aug 2026 06:18 WIB
+Chat 1.7 END
 ```
 
 ### Project time summary
@@ -81,17 +84,20 @@ Chat 1.6 working duration:
 Chat 1.6B working duration:
 31 minutes
 
-Verified session working time through Chat 1.6B:
-33 hours 16 minutes 16 seconds
+Chat 1.7 working duration:
+2 hours 48 minutes
+
+Verified session working time through Chat 1.7:
+36 hours 04 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
-55 hours 31 minutes 16 seconds through Chat 1.6B
+65 hours 33 minutes 0 seconds
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB
 ```
 
-> **Important:** `session working time` and `project elapsed span` are different measurements. Chat 1.8 is excluded from the working-time total because its Start timestamp is not verified.
+> **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.
 
 ---
 
@@ -120,10 +126,7 @@ Chat 1.6B
 Launch architecture clarification
    ↓
 Chat 1.7
-Implementation of clarified launch requirements
-   ↓
-Chat 1.8
-GitHub branch finalization + documentation/session close
+Clean verification + GitHub branch finalization + documentation audit
 ```
 
 ---
@@ -141,7 +144,9 @@ RELATED PRODUCTS        ✅ implemented baseline
 GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
 
-FINAL UI REGRESSION     ⚠️ pending after latest UI commits
+STEP 1 VISUAL QA        ✅ accepted by user
+DESKTOP UI QA           ✅ accepted by user
+MOBILE UI QA            ✅ accepted by user
 PUBLIC SEO TAKEOVER     ⏳ clarified in 1.6B; audit pending
 ADMIN CONTROL LAYER     ⏳ clarified in 1.6B; implementation pending
 BACKEND INTEGRATION     ⏳ next phase

@@ -16,7 +16,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
 | 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
-| 1.6B | **16 Aug 2026** | — | — | — | Post-session launch architecture clarification: public Next.js takeover/SEO + authenticated WordPress admin controls | 🟡 Clarified / Pending | [`CHAT-1.6B.md`](CHAT-1.6B.md) |
+| 1.6B | **16 Aug 2026** | **19:45 WIB** | **20:16 WIB** | **31m** | Post-session launch architecture clarification: public Next.js takeover/SEO + authenticated WordPress admin controls | 🟡 Clarified / Pending | [`CHAT-1.6B.md`](CHAT-1.6B.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. `1.6B` is a clarification layer, not a replacement for Chat 1.6 forensic history.
 
@@ -57,6 +57,12 @@ Chat 1.6 START
         ↓
 16 Aug 2026 19:43:16 WIB
 Chat 1.6 END
+        ↓
+16 Aug 2026 19:45 WIB
+Chat 1.6B START
+        ↓
+16 Aug 2026 20:16 WIB
+Chat 1.6B END
 ```
 
 ### Project time summary
@@ -68,11 +74,14 @@ Verified session working time through Chat 1.5:
 Chat 1.6 working duration:
 3 hours 58 minutes 16 seconds
 
-Verified session working time through Chat 1.6:
-32 hours 45 minutes 16 seconds
+Chat 1.6B working duration:
+31 minutes
+
+Verified session working time through Chat 1.6B:
+33 hours 16 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
-54 hours 58 minutes 16 seconds
+55 hours 31 minutes 16 seconds
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB

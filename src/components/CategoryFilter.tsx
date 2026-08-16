@@ -128,14 +128,17 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
           </div>
 
           {subcategories.length > 0 && activeTopLevelCategory && filterState.category !== 'Semua' && (
-            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/60 p-3">
-              <div className="mb-2 flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-amber-800"><ChevronRight className="h-3.5 w-3.5" />Subkategori {activeTopLevelCategory.name}</div>
+            <div className="mt-2 border-t border-slate-200 pt-2">
               <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-                <button type="button" onClick={() => onFilterChange({ category: activeTopLevelCategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${filterState.category === activeTopLevelCategory.name ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>Semua {activeTopLevelCategory.name}</button>
+                <span className="sticky left-0 z-10 shrink-0 bg-white pr-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-400">
+                  {activeTopLevelCategory.name}
+                </span>
+                <span aria-hidden="true" className="text-slate-300">/</span>
+                <button type="button" onClick={() => onFilterChange({ category: activeTopLevelCategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${filterState.category === activeTopLevelCategory.name ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>Semua</button>
                 {subcategories.map((subcategory) => {
                   const count = subcategory.count ?? categoryCounts[subcategory.name] ?? 0;
                   const isActive = filterState.category === subcategory.name;
-                  return <button key={subcategory.id} type="button" onClick={() => onFilterChange({ category: subcategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${isActive ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-white hover:border-amber-300'}`}><span>{subcategory.name}</span><span className="ml-1.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">{count}</span></button>;
+                  return <button key={subcategory.id} type="button" onClick={() => onFilterChange({ category: subcategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${isActive ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'}`}><span>{subcategory.name}</span><span className="ml-1.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">{count}</span></button>;
                 })}
               </div>
             </div>

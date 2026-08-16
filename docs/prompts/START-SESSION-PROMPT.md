@@ -3,7 +3,7 @@
 # BBKitchen — Canonical Start-Session Prompt
 
 > **Use this prompt at the beginning of every migration chat.**
-> Purpose: make the new chat orient itself from the **actual repository state + current documentation** before changing code.
+> Purpose: make the new chat orient itself from the **actual repository state + current documentation** before changing code, while creating the session forensic record immediately so the start timestamp is never lost.
 
 Copy-paste this prompt at the start of every migration chat.
 
@@ -20,61 +20,57 @@ feature/nextjs-migration
 
 JANGAN langsung mengubah application code.
 JANGAN mengandalkan memory atau asumsi dari chat sebelumnya.
-Lakukan repository orientation, documentation audit, current-state verification, lalu buat session plan.
+Lakukan session-start timestamp capture + progress archive bootstrap terlebih dahulu, kemudian repository orientation, documentation audit, current-state verification, lalu buat session plan.
 
 ==================================================
-0. IMMEDIATE SESSION TIMESTAMP + PROGRESS FILE
+0. IMMEDIATE SESSION TIMESTAMP + PROGRESS FILE — WAJIB
 ==================================================
 
-Ini WAJIB dilakukan segera saat session resmi dimulai, sebelum coding atau perubahan application code.
+Begitu session baru resmi dimulai, lakukan ini SEBELUM coding atau perubahan application code:
 
 1. Tentukan nomor session berikutnya dari repository.
 2. Cari archive session terakhir di `docs/progress/CHAT-X.Y.md`.
-3. Cari evidence timestamp yang tersedia untuk session saat ini menggunakan:
+3. Gunakan fitur search/evidence yang tersedia untuk mencari timestamp aktual saat session dimulai. Prioritaskan:
    - current conversation/session timestamp jika tersedia
    - repository/GitHub evidence yang relevan
-   - GitHub commit timestamp hanya jika memang merupakan evidence yang valid
+   - GitHub commit timestamp hanya sebagai evidence pendukung dan wajib diberi label `GitHub evidence`
 4. Jangan menggunakan message count, skipped messages, calendar span, atau asumsi sebagai timestamp.
-5. Jika exact start timestamp tersedia dari conversation/session evidence, CATAT langsung sebagai `Start`.
+5. Jika exact start timestamp tersedia dari conversation/session evidence, CATAT langsung sebagai `Start` dalam format WIB.
 6. Jika exact start timestamp belum tersedia, tulis:
    `Tidak ditemukan di repository/evidence yang tersedia.`
-   Jangan menunggu sampai end-session untuk mengisi start jika evidence sudah tersedia.
+   Jangan mengarang atau mengestimasi.
 7. SEGERA buat file:
    `docs/progress/CHAT-X.Y.md`
    untuk session yang sedang dimulai, sebelum implementation work.
-8. File progress awal WAJIB memuat section berikut secara eksplisit:
+8. File progress awal WAJIB memuat section berikut secara eksplisit dan menggunakan format CANONICAL ini:
 
 ## Date / Session Timeline
 
 ```text
 Session: X.Y
-Started: DD Month YYYY
-Start time: HH:MM:SS WIB
-Ended: belum
-Duration: belum
-Evidence source: <exact source/evidence>
+Started: DD Month YYYY HH:MM:SS WIB
+Ended: PENDING
+Duration: PENDING
+Evidence source: <exact source/evidence used for Start>
 ```
 
-9. Jika start timestamp tidak tersedia saat file dibuat:
+9. Jika exact start timestamp tidak tersedia saat file dibuat:
 
 ```text
 Session: X.Y
-Started: DD Month YYYY
-Start time: Tidak ditemukan di repository/evidence yang tersedia.
-Ended: belum
-Duration: belum
-Evidence source: Timestamp evidence unavailable at session start.
+Started: Tidak ditemukan di repository/evidence yang tersedia.
+Ended: PENDING
+Duration: PENDING
+Evidence source: Tidak ditemukan di repository/evidence yang tersedia.
 ```
 
 10. Setelah file dibuat, gunakan file tersebut sebagai forensic session record sepanjang session.
-11. Saat end-session, update file yang sama dengan verified End + Duration dan lengkapi forensic history.
+11. Saat end-session, update file yang sama dengan verified `Ended` + `Duration` dan lengkapi forensic history.
 12. Jangan membuat archive session baru di akhir jika file session tersebut sudah dibuat di awal.
 13. Dokumentasi start-session harus dipisahkan dari application-code checkpoint. Membuat file progress tidak boleh dianggap sebagai application-code checkpoint.
 
-Tujuan rule ini:
-- session start timestamp tidak boleh hilang karena baru dicari saat session ditutup
-- setiap session selalu memiliki `CHAT-X.Y.md` sejak awal
-- timeline dapat direkonstruksi dari evidence tanpa estimasi
+PRINSIP UTAMA:
+`Session starts → search timestamp evidence → create CHAT-X.Y.md → fill Date / Session Timeline → then inspect/code.`
 
 ==================================================
 1. ORIENTASI DOKUMENTASI
@@ -279,6 +275,7 @@ Selama session berjalan:
 - `docs/progress/README.md` adalah synthesis/timeline index, bukan pengganti archive detail
 - `docs/progress/CHAT-X.Y.md` adalah forensic session history
 - timeline facts must flow from evidence → progress index → root README without contradiction
+- session archive sudah harus ada sejak awal session; jangan menunggu END SESSION untuk membuat file pertama kali
 
 Jangan melakukan dokumentasi palsu hanya untuk memenuhi checklist.
 
@@ -299,7 +296,8 @@ Evidence source:
 Rules:
 
 - `Start` WAJIB dicari dan dicatat saat session resmi dimulai, bukan hanya saat session ditutup.
-- Pada awal session, lakukan timestamp evidence search terlebih dahulu. Cari exact start timestamp dari current conversation/session evidence dan repository/GitHub evidence yang relevan.
+- Pada awal session, lakukan timestamp evidence search terlebih dahulu menggunakan fitur search/evidence yang tersedia.
+- Cari exact start timestamp dari current conversation/session evidence dan repository/GitHub evidence yang relevan.
 - Jika exact start timestamp tersedia, masukkan ke `docs/progress/CHAT-X.Y.md` segera.
 - Jika exact start timestamp tidak tersedia, tulis:
   `Tidak ditemukan di repository/evidence yang tersedia.`
@@ -352,6 +350,7 @@ Sebelum coding, jawab ringkas:
 8. Session start timestamp
 9. Project elapsed-time status since Chat 1.1
 10. First implementation step
+11. Progress archive created: `docs/progress/CHAT-X.Y.md`
 
 Jika ada data yang tidak dapat diverifikasi:
 `Tidak ditemukan di repository/evidence yang tersedia.`

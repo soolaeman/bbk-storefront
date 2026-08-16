@@ -16,6 +16,8 @@ Product Card         → src/components/ProductCard.tsx
 Product Detail       → src/app/product/[slug]/page.tsx
 Location / Article   → src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
 Social               → src/components/SocialMediaSection.tsx
+Testimonials         → src/components/TestimonialsSection.tsx
+Gallery              → src/components/GallerySection.tsx
 Category             → src/components/CategoryFilter.tsx
 Footer               → src/components/Footer.tsx
 ```
@@ -31,14 +33,55 @@ Footer               → src/components/Footer.tsx
 | Search placeholder | `src/components/Header.tsx` |
 | MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / `KitchenConsultationBanner.tsx` / `Footer.tsx` |
 | MBG PDF catalog CTA | `src/components/KitchenConsultationBanner.tsx` |
+| Service WhatsApp CTA | `src/components/KitchenConsultationBanner.tsx` |
 | Produksi Baru wording | same CTA owners as above |
 | READY/SOLD button | `src/components/ProductCard.tsx` |
 | Product WhatsApp message | search globally for `Halo Tim BBKitchen` |
 | Product Detail CTA | `src/app/product/[slug]/page.tsx` + child component |
 | Social copy / video cards | `src/components/SocialMediaSection.tsx` |
+| Testimonial heading/copy | `src/components/TestimonialsSection.tsx` |
+| Gallery heading/copy | `src/components/GallerySection.tsx` |
 | Footer wording | `src/components/Footer.tsx` |
 | Category labels | `src/components/CategoryFilter.tsx` |
 | Local article H1/copy | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` |
+| Catalog result summary | `src/App.tsx` / `src/app/catalog/page.tsx` — inspect current owner before editing |
+
+## Current homepage service CTA labels
+
+```text
+Beli Unit       → Cek Stok via WA
+Jual Unit       → Jual Unit via WA
+Dapur MBG       → Konsultasi MBG
+Produksi Baru   → Request Produksi
+```
+
+The service card remains clickable while the WhatsApp CTA has its own action.
+
+## Catalog copy
+
+Current result summary uses:
+
+```text
+Halaman 1 • Menampilkan {DISPLAYED} dari {TOTAL} unit BBKitchen
+```
+
+Category/subcategory button counts are intentionally omitted.
+
+## Gallery copy
+
+Current gallery text lives in:
+
+```text
+src/components/GallerySection.tsx
+```
+
+Core copy:
+
+```text
+Dokumentasi BBKitchen
+Galeri BBKitchen
+Melihat lebih dekat aktivitas, peralatan, dan proses BBKitchen.
+```
 
 ## Fast search
 

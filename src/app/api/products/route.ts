@@ -6,6 +6,7 @@ const WOOCOMMERCE_API_URL =
 
 const METADATA_PER_PAGE = 100;
 const PRODUCT_META_FILTER_PAGE_SIZE = 100;
+const PRODUCT_CACHE_REVALIDATE_SECONDS = 60;
 
 const ACF_STATUS_OPTIONS = ['READY', 'DP', 'SOLD'] as const;
 const ACF_CONDITION_OPTIONS = ['BARU', 'BEKAS'] as const;
@@ -112,7 +113,7 @@ async function resolveWooCommerceCategoryId(
         Accept: 'application/json',
         Authorization: authorization,
       },
-      cache: 'no-store',
+      next: { revalidate: PRODUCT_CACHE_REVALIDATE_SECONDS },
     },
   );
 
@@ -392,14 +393,14 @@ export async function GET(request: NextRequest) {
           Accept: 'application/json',
           Authorization: authorization,
         },
-        cache: 'no-store',
+        next: { revalidate: PRODUCT_CACHE_REVALIDATE_SECONDS },
       },
     );
 
     const body = await response.text();
     const headers = new Headers({
       'Content-Type': response.headers.get('content-type') || 'application/json',
-      'Cache-Control': 'no-store',
+      'Cache-Control': `public, s-maxage=${PRODUCT_CACHE_REVALIDATE_SECONDS}, stale-while-revalidate=300`,
     });
 
     const total = response.headers.get('X-WP-Total');

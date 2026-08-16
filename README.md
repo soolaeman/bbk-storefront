@@ -8,17 +8,17 @@ Branch aktif: `feature/nextjs-migration`
 
 ---
 
-# 🕒 LAST SESSION — CHAT 1.5
+# 🕒 LAST SESSION — CHAT 1.6
 
 ```text
-Session: 1.5 BBKitchen Next.js Migration
-Started: 16 August 2026 06:32:41 WIB (Asia/Jakarta)
-Ended: 16 August 2026 07:20 WIB
-Duration: 47 minutes 19 seconds
+Session: 1.6 BBKitchen Next.js Migration
+Started: Tidak ditemukan di repository/evidence yang tersedia.
+Ended: 16 August 2026 19:43:16 WIB
+Duration: Tidak dapat diverifikasi.
 Status: CLOSED
 ```
 
-> Chat 1.5 was a documentation/repository-orientation session. Application verification baseline was intentionally deferred to the next session.
+> Chat 1.6 focused on responsive/UI polish, shared Footer rollout, related products, service/testimonial/gallery carousel behavior, and homepage visual convergence. Final clean regression after the latest UI changes remains pending.
 
 ---
 
@@ -30,28 +30,27 @@ Chat 1.2 → ✅ Archived
 Chat 1.3 → ✅ Archived
 Chat 1.4 → ✅ Closed
 Chat 1.5 → ✅ Closed
-Chat 1.6 → ⏭️ Next
+Chat 1.6 → ✅ Closed
+Chat 1.7 → ⏭️ Next
 ```
 
 ## Last code checkpoint
 
 ```text
-26f3911f0d60c595656e85f1e9b65087bab86132
-feat: add video covers to social media cards
+96394b9ed3596383cdba44ea27312418827872f1
+fix: make gallery carousel responsive with mobile swipe
 ```
 
-GitHub date: **15 August 2026 21:24:06 UTC**.
+GitHub evidence: **16 August 2026 12:35:59 UTC (19:35:59 WIB)**.
 
 ## Current documentation checkpoint
 
 ```text
 Progress index:
-2aa51cbdaba12f6f847bab88f203914506717054
-Chat 1.5 archive:
-498cc8269bf959f6b46f1ed8f517dc9f11db5905
+b22931be911ac3c37bcbe75855c0b0b462241ceb
+Chat 1.6 archive:
+5af0475d9486132d2ad66365924416096d9a90a2
 ```
-
-> Documentation-only commits may advance the branch without changing the application-code checkpoint above.
 
 ---
 
@@ -64,57 +63,60 @@ Chat 1.5 archive:
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
+| 1.6 | **16 Aug 2026** | **Tidak ditemukan di repository/evidence yang tersedia.** | **19:43:16 WIB** | **—** | Responsive QA / UX polish / gallery | Shared Footer, related products, responsive category UX, service/testimonial/gallery carousels | ✅ |
 
-### ⏱️ Project elapsed time from Chat 1.1
+### ⏱️ Project elapsed time since Chat 1.1
 
 ```text
-Verified session working time through Chat 1.5:
+Verified working/session time through Chat 1.5:
 28 hours 47 minutes 0 seconds
 
-Verified elapsed project span:
-14 Aug 2026 12:45 WIB
-→
-16 Aug 2026 07:20 WIB
-=
-42 hours 35 minutes
+Chat 1.6 working duration:
+NOT VERIFIABLE (verified Start unavailable)
 
-Verified inter-session gaps through Chat 1.5 start:
-13 hours 48 minutes
+Actual elapsed duration since Chat 1.1:
+NOT VERIFIABLE as working duration.
+
+Earliest verifiable migration evidence:
+14 August 2026 12:45 WIB
+
+Calendar span through Chat 1.6 end:
+14 August 2026 12:45 WIB
+→
+16 August 2026 19:43:16 WIB
 ```
 
-> **Important:** elapsed project span ≠ total working duration. The working/session figure is the sum of verified session intervals; the elapsed span includes verified time between sessions.
+> **Important:** elapsed/calendar span ≠ working duration. Do not use calendar span as a proxy for time spent working.
 
 ---
 
-# 🚀 NEXT ACTION — CHAT 1.6
+# 🚀 NEXT ACTION — CHAT 1.7
 
-**Verify the current application build + localhost/runtime baseline before changing application code.**
+**Final UI verification / WordPress-WooCommerce integration preparation.**
 
-Then continue in Pareto order:
+Recommended first sequence:
 
 ```text
-1. Mobile / responsive QA
-2. Shared Header: search + sticky + visual parity
-3. Product Detail shared-design parity
+1. Clean build/runtime/mobile regression on latest UI checkpoint
+2. Freeze UI baseline
+3. Begin WordPress / WooCommerce / Core System integration
+4. Preserve existing product, inventory, slug, SEO, READY/SOLD, and WhatsApp contracts
 ```
-
-Do not treat `code exists` as `verified`.
 
 ---
 
 # 🎯 CURRENT PRIORITIES — PARETO
 
-1. **Mobile/responsive QA** across homepage, catalog, product detail, and local pages.
-2. **Shared Header** — search typing, sticky behavior, and visual parity.
-3. **Product Detail** — match shared homepage/Header design system.
-4. **Local/article pages** — editorial typography and presentation.
-5. **ACF authoritative filtering + Core System / production hardening**.
+1. **Final regression verification** across homepage, catalog, Product Detail, local pages, desktop, and mobile.
+2. **Backend/source-of-truth integration** with WordPress/WooCommerce/Core System.
+3. **Production hardening** — SEO, security, performance, accessibility, deployment.
 
 ### Next layer
 
-- Related Products.
+- ACF authoritative filtering.
+- Related Products refinement if evidence requires.
 - SOLD → Google Sheets workflow.
-- SEO/performance/accessibility verification.
+- Final production SEO/performance verification.
 
 ---
 
@@ -124,20 +126,19 @@ Do not treat `code exists` as `verified`.
 |---|---|---|
 | WooCommerce data architecture | ✅ | ✅ Established baseline |
 | Catalog / pagination | ✅ | ✅ Server-side, 8/page baseline |
-| Product Detail | ✅ Functional | ⚠️ Visual/shared-Header parity pending |
-| Local hierarchical routing | ✅ | ✅ `[...slug]` verified in Chat 1.3 |
+| Product Detail | ✅ Functional | ⚠️ Final cross-template UI regression pending |
+| Local hierarchical routing | ✅ | ✅ `[...slug]` verified |
 | Homepage sales positioning | ✅ | 🔒 Direction locked |
-| WhatsApp contracts | ✅ | 🔒 Contracts locked |
-| READY / SOLD behavior | ✅ | 🔒 Contract locked; SOLD discoverable |
-| Hero desktop/mobile assets | ✅ | ✅ Assets present; final mobile QA pending |
-| Social video covers | ✅ | ⚠️ Mobile/runtime QA pending |
-| Shared Header | ✅ Integrated | ⚠️ Search typing, sticky behavior, parity pending |
-| Article typography | ✅ Content rendering exists | ⚠️ Editorial parity pending |
-| Mobile QA | ⏳ | ⚠️ Final cross-template verification pending |
-| Universal floating mascot | ❌ Rejected | 🔒 Do not reintroduce |
-| ACF/Core System | ⏳ | ⏳ Deferred / hardening phase |
-
-**Important:** no final post-1.4 build/runtime/mobile verification evidence is recorded in the available evidence. The application-code checkpoint therefore remains `26f3911...` until a new code checkpoint is verified.
+| Shared Footer | ✅ | ✅ User-verified across key templates |
+| Related Products | ✅ | ✅ User-verified baseline |
+| Catalog responsive navigation | ✅ | ✅ User-verified desktop/mobile direction |
+| Service cards + WhatsApp CTAs | ✅ | ✅ User-verified |
+| Testimonials mobile slider | ✅ | ⚠️ Latest correction needs final regression |
+| Gallery | ✅ Compact carousel | ⚠️ Latest UI correction needs final regression |
+| Shared Header | ✅ Integrated | ⚠️ Search typing, sticky behavior, parity remain carried |
+| Article typography | ✅ Content rendering exists | ⚠️ Editorial parity remains carried |
+| ACF/Core System | ⏳ | ⏳ Deferred to integration/hardening |
+| Production deployment | ⏳ | ⏳ Deferred |
 
 ---
 
@@ -190,12 +191,13 @@ Hero catalog CTA→ scroll to catalog
 Social videos   → cover first → play → iframe
 ```
 
-### Locked direction
+### Session 1.6 additions
 
-- **Dapur MBG:** direct WhatsApp; service may additionally expose the PDF catalog CTA.
-- **Produksi Baru:** direct WhatsApp.
-- **Product WhatsApp:** normalized multiline unit metadata contract.
-- **Hero:** sales-first positioning with `Siap Kirim / Seluruh Indonesia` and catalog CTA.
+- Catalog category/subcategory counts removed from buttons.
+- Desktop category/subcategory navigation wraps; mobile remains horizontal-scroll friendly.
+- Service cards keep mobile swipe + desktop grid; WhatsApp CTA has service-specific copy.
+- Testimonials use mobile card-per-slide carousel.
+- Gallery uses compact 4-card desktop carousel + mobile swipe across all 16 gallery images.
 
 Do not change routing, SEO, inventory, or message contracts during ordinary copy/UI edits.
 
@@ -227,6 +229,7 @@ Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them 
 - Mass-changing existing SEO slugs.
 - Exposing WooCommerce/Google credentials to client code.
 - Calling documentation-only commits application-code checkpoints.
+- Replacing compact homepage sections with oversized editorial layouts without a clear UX reason.
 
 ---
 
@@ -234,22 +237,23 @@ Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them 
 
 ### NOW
 
-- Mobile QA across homepage, catalog, Product Detail, and local pages.
-- Header search interaction + sticky behavior + parity.
-- Product Detail shared Header/design parity.
+- Clean final build/runtime/mobile regression after latest UI commits.
+- Shared Header search interaction + sticky behavior + parity.
+- Product Detail final shared-design parity.
 - Article/local editorial typography.
 
 ### NEXT
 
+- WordPress/WooCommerce/Core System integration.
 - Authoritative ACF filtering.
-- Related Products.
-- Admin/Core System workflow.
-- SOLD → Google Sheets.
+- Related Products refinement if needed.
+- SOLD → Google Sheets workflow.
 
 ### LATER
 
 - Production performance/accessibility hardening.
 - SEO verification and deeper measurement.
+- Deployment/caching/image optimization verification.
 
 ---
 
@@ -289,18 +293,20 @@ mobile verified
 ```text
 public/images/hero/bbkitchen-hero-desktop.webp
 public/images/hero/bbkitchen-hero-mobile.webp
-public/images/people/bbkitchen-team-thumbs-up.webp
 public/images/people/bbkitchen-chef-presenting.webp
 public/images/people/bbkitchen-chef-pointing.webp
 public/images/people/bbkitchen-chef-trust.webp
 public/images/social/youtube-shorts-cover.webp
 public/images/social/tiktok-cover.webp
+public/images/gallery/gallery-01.webp … gallery-16.webp
 
 src/components/Header.tsx
 src/components/Footer.tsx
 src/components/ProductCard.tsx
 src/components/SocialMediaSection.tsx
 src/components/KitchenConsultationBanner.tsx
+src/components/TestimonialsSection.tsx
+src/components/GallerySection.tsx
 src/components/HeroSection.tsx
 src/components/CategoryFilter.tsx
 src/app/page.tsx
@@ -308,7 +314,6 @@ src/app/catalog/page.tsx
 src/app/product/[slug]/page.tsx
 src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
 src/app/api/products/route.ts
-src/data/products.ts
 src/lib/wordpress.ts
 src/lib/woocommerce.ts
 ```
@@ -339,28 +344,30 @@ NAVIGATOR.md
 
 ---
 
-# 🚀 CHAT 1.6 HANDOFF
+# 🚀 CHAT 1.7 HANDOFF
 
 Start title:
 
 ```text
-1.6 BBKitchen Next.js Migration — Baseline Verification / Responsive QA
+1.7 BBKitchen Next.js Migration — Final UI Verification / WordPress-WooCommerce Integration
 ```
 
 Current session:
 
 ```text
-Chat 1.5 → CLOSED
-Chat 1.6 → NEXT
+Chat 1.6 → CLOSED
+Chat 1.7 → NEXT
 ```
 
 First actions:
 
-1. Verify current build/runtime baseline.
-2. Audit mobile/responsive behavior.
-3. Address Shared Header bottleneck before broader parity work.
-4. Prefer `1 step = 1 file = 1 verified commit`.
-5. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
+1. Pull latest `feature/nextjs-migration`.
+2. Run clean build/runtime verification on latest code.
+3. Verify desktop + mobile on homepage, catalog, Product Detail, local pages.
+4. Freeze UI baseline.
+5. Begin WordPress/WooCommerce/Core System integration without weakening existing contracts.
+
+At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
 ---
 
@@ -372,7 +379,7 @@ Chat 1.2 → live catalog / API / SEO — 14 Aug 2026 17:00–21:00 WIB
 Chat 1.3 → routing / integration / visual convergence — 14 Aug 23:00–15 Aug 03:00 WIB
 Chat 1.4 → sales-first homepage / CTA / visual assets — 15 Aug 13:00–16 Aug 06:32:41 WIB
 Chat 1.5 → documentation / repository orientation / session hardening — 16 Aug 2026 06:32:41–07:20 WIB
-Chat 1.6 → baseline verification / responsive QA — NEXT
+Chat 1.6 → responsive QA / shared UI / homepage UX polish / gallery — 16 Aug 2026, end 19:43:16 WIB
 ```
 
 ---
@@ -385,10 +392,11 @@ Chat 1.2 → forensic archived
 Chat 1.3 → forensic archived
 Chat 1.4 → ✅ Closed
 Chat 1.5 → ✅ Closed
-Chat 1.6 → ⏭️ Next
+Chat 1.6 → ✅ Closed
+Chat 1.7 → ⏭️ Next
 
 Branch: feature/nextjs-migration
-Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Progress index checkpoint: 2aa51cbdaba12f6f847bab88f203914506717054
-Chat 1.5 archive checkpoint: 498cc8269bf959f6b46f1ed8f517dc9f11db5905
+Last code checkpoint: 96394b9ed3596383cdba44ea27312418827872f1
+Progress index checkpoint: b22931be911ac3c37bcbe75855c0b0b462241ceb
+Chat 1.6 archive checkpoint: 5af0475d9486132d2ad66365924416096d9a90a2
 ```

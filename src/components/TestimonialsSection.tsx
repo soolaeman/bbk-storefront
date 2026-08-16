@@ -44,13 +44,13 @@ export const TestimonialsSection: React.FC = () => {
             {testimonials.map((testimonial) => (
               <article
                 key={`${testimonial.name}-${testimonial.company}`}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col min-w-[88%] shrink-0 snap-start md:min-w-0 md:shrink md:snap-none"
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col min-w-0 w-[88%] max-w-[88%] flex-[0_0_88%] snap-start md:w-auto md:max-w-none md:flex-none md:min-w-0 md:shrink md:snap-none"
               >
                 <div className="flex items-center gap-1 text-amber-500 mb-4" aria-label="5 dari 5 bintang">
                   {[0, 1, 2, 3, 4].map((star) => <Star key={star} className="w-4 h-4 fill-current" />)}
                 </div>
 
-                <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
+                <blockquote className="text-sm text-slate-700 leading-relaxed flex-1 break-words">
                   “{testimonial.text}”
                 </blockquote>
 

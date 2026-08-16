@@ -158,7 +158,7 @@ SCOPE:
 OUT OF SCOPE:
 
 SUCCESS CRITERIA:
-```
+
 
 Jangan memperluas scope sendiri.
 

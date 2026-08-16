@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Header } from '../../../components/Header';
+import { Footer } from '../../../components/Footer';
 
 const WOOCOMMERCE_API_URL =
   process.env.WOOCOMMERCE_API_URL ||
@@ -271,6 +272,7 @@ export default async function ProductPage({
       </div>
 
       <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-5 right-5 z-40 rounded-full bg-emerald-600 px-4 py-3 text-xs font-black text-white shadow-lg transition hover:bg-emerald-500 sm:right-8">Tanya via WhatsApp</a>
+      <Footer onSelectCategory={() => undefined} />
     </main>
   );
 }

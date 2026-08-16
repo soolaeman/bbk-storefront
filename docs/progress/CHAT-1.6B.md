@@ -9,6 +9,18 @@ Chat 1.6B is a post-session clarification layer. It does **not** rewrite or alte
 
 ---
 
+## Date / Session Timeline
+
+```text
+Session: 1.6B
+Started: 16 August 2026 19:45 WIB
+Ended: 16 August 2026 20:16 WIB
+Duration: 31 minutes
+Evidence source: Conversation timestamp supplied for the 1.6B clarification session
+```
+
+---
+
 ## Purpose
 
 Capture two launch-critical requirements clarified after Chat 1.6:

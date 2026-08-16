@@ -105,27 +105,33 @@ export default async function LocationPage({ params }: LocationPageProps) {
       <Header />
       <main className="bg-white">
         <article className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          <nav aria-label="Breadcrumb" className="mb-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm sm:px-5">
-            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm leading-6">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-8 rounded-2xl border border-slate-200/80 bg-white px-3 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.06)] ring-1 ring-slate-900/[0.02] sm:px-4"
+          >
+            <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs leading-6 sm:text-sm">
               {breadcrumbItems.map((item, index) => {
                 const isCurrent = item.href === null;
 
                 return (
-                  <li key={`${item.label}-${index}`} className="flex items-center gap-2">
+                  <li key={`${item.label}-${index}`} className="flex min-w-0 items-center gap-1.5">
                     {index > 0 ? (
-                      <span aria-hidden="true" className="text-slate-300">
+                      <span aria-hidden="true" className="px-0.5 text-slate-300">
                         /
                       </span>
                     ) : null}
 
                     {isCurrent ? (
-                      <span aria-current="page" className="font-semibold text-slate-900">
+                      <span
+                        aria-current="page"
+                        className="max-w-full truncate rounded-lg bg-slate-900 px-2.5 py-1 font-semibold text-white shadow-sm sm:px-3"
+                      >
                         {item.label}
                       </span>
                     ) : (
                       <Link
                         href={item.href}
-                        className="font-medium text-slate-600 transition-colors hover:text-slate-950"
+                        className="rounded-lg px-2 py-1 font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 sm:px-2.5"
                       >
                         {item.label}
                       </Link>

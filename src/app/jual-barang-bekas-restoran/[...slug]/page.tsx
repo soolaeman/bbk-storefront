@@ -151,18 +151,21 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
           <div
             className="prose prose-slate max-w-none overflow-hidden text-[15px] leading-7 sm:text-base sm:leading-8
-              [&_h1]:mb-6 [&_h1]:mt-10 [&_h1]:text-3xl [&_h1]:font-black [&_h1]:leading-tight [&_h1]:text-slate-900
-              [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:rounded-xl [&_h2]:border-l-4 [&_h2]:border-emerald-500 [&_h2]:bg-slate-50 [&_h2]:px-4 [&_h2]:py-3 [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:leading-tight [&_h2]:text-slate-900
-              [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:rounded-lg [&_h3]:bg-slate-50 [&_h3]:px-3 [&_h3]:py-2 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:leading-tight [&_h3]:text-slate-900
-              [&_p]:mb-6 [&_p]:leading-8 [&_p]:text-slate-700
-              [&_ul]:my-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6
-              [&_ol]:my-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6
-              [&_li]:my-0 [&_li]:pl-1
-              [&_a]:break-words [&_a]:font-semibold [&_a]:text-emerald-700 [&_a]:underline [&_a]:underline-offset-2
-              [&_blockquote]:my-8 [&_blockquote]:rounded-xl [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:bg-emerald-50 [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:italic
-              [&_strong]:font-bold [&_img]:!mx-auto [&_img]:!h-auto [&_img]:!max-w-full
+              [&_h1]:mb-7 [&_h1]:mt-12 [&_h1]:text-3xl [&_h1]:font-black [&_h1]:leading-tight [&_h1]:tracking-tight [&_h1]:text-slate-950
+              [&_h2]:mb-5 [&_h2]:mt-12 [&_h2]:border-l-4 [&_h2]:border-emerald-500 [&_h2]:bg-gradient-to-r [&_h2]:from-slate-50 [&_h2]:to-white [&_h2]:px-4 [&_h2]:py-3 [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:leading-tight [&_h2]:tracking-tight [&_h2]:text-slate-950 [&_h2]:shadow-[0_1px_0_rgba(15,23,42,0.03)] sm:[&_h2]:text-[1.65rem]
+              [&_h3]:mb-3 [&_h3]:mt-9 [&_h3]:border-b [&_h3]:border-slate-200 [&_h3]:pb-2 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:leading-tight [&_h3]:text-slate-900
+              [&_p]:mb-5 [&_p]:max-w-4xl [&_p]:leading-8 [&_p]:text-slate-700
+              [&_ul]:my-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-6
+              [&_ol]:my-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:pl-6
+              [&_li]:my-0 [&_li]:pl-1 [&_li]:leading-7
+              [&_a]:break-words [&_a]:font-semibold [&_a]:text-emerald-700 [&_a]:underline [&_a]:decoration-emerald-300 [&_a]:underline-offset-4 [&_a]:transition-colors hover:[&_a]:text-emerald-800
+              [&_blockquote]:my-8 [&_blockquote]:rounded-r-xl [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:bg-emerald-50/70 [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:font-medium [&_blockquote]:italic [&_blockquote]:text-slate-700
+              [&_strong]:font-bold [&_strong]:text-slate-900
+              [&_img]:!mx-auto [&_img]:!h-auto [&_img]:!max-w-full [&_img]:rounded-xl
               [&_figure]:!mx-auto [&_figure]:!max-w-full [&_figcaption]:mt-2 [&_figcaption]:text-center [&_figcaption]:text-sm [&_figcaption]:text-slate-500
-              [&_iframe]:!mx-auto [&_iframe]:!max-w-full [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:text-sm [&_video]:!mx-auto [&_video]:!max-w-full"
+              [&_hr]:my-10 [&_hr]:border-slate-200
+              [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:rounded-xl [&_table]:border [&_table]:border-slate-200 [&_table]:text-sm
+              [&_iframe]:!mx-auto [&_iframe]:!max-w-full [&_video]:!mx-auto [&_video]:!max-w-full"
             dangerouslySetInnerHTML={{ __html: page.content.rendered }}
           />
         </article>

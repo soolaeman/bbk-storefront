@@ -12,7 +12,7 @@ Ekstrak engineering history dari conversation ini.
 Repository:
 soolaeman/Front-End-BBKitchen
 Branch:
-feature/nextjs-migration
+main
 
 RULE UTAMA:
 Jangan membuat summary generik.

@@ -9,24 +9,13 @@ const galleryImages = Array.from({ length: 16 }, (_, index) => ({
 }));
 
 const DESKTOP_VISIBLE = 4;
-const MOBILE_VISIBLE = 1;
+const maxDesktopIndex = galleryImages.length - DESKTOP_VISIBLE;
 
 export const GallerySection: React.FC = () => {
   const [index, setIndex] = useState(0);
-  const maxDesktopIndex = galleryImages.length - DESKTOP_VISIBLE;
-  const maxMobileIndex = galleryImages.length - MOBILE_VISIBLE;
 
-  const goPrevious = () => {
-    setIndex((current) => Math.max(current - 1, 0));
-  };
-
-  const goNext = () => {
-    setIndex((current) => Math.min(current + 1, maxDesktopIndex));
-  };
-
-  const goTo = (nextIndex: number) => {
-    setIndex(Math.min(Math.max(nextIndex, 0), maxDesktopIndex));
-  };
+  const goPrevious = () => setIndex((current) => Math.max(current - 1, 0));
+  const goNext = () => setIndex((current) => Math.min(current + 1, maxDesktopIndex));
 
   return (
     <section className="bg-white border-y border-slate-200 py-10 sm:py-12">
@@ -66,17 +55,16 @@ export const GallerySection: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative overflow-hidden">
+        {/* Desktop: compact 4-card carousel */}
+        <div className="hidden sm:block overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-out"
-            style={{
-              transform: `translateX(calc(-${index} * (25% + 0.75rem)))`,
-            }}
+            style={{ transform: `translateX(-${index * 25}%)` }}
           >
             {galleryImages.map((image) => (
               <div
                 key={image.src}
-                className="shrink-0 basis-full sm:basis-[calc((100%-2.25rem)/4)] mr-3 sm:mr-3 last:mr-0"
+                className="shrink-0 basis-[calc((100%-2.25rem)/4)] mr-3"
               >
                 <div className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
                   <div className="relative aspect-[4/3] overflow-hidden">
@@ -84,7 +72,7 @@ export const GallerySection: React.FC = () => {
                       src={image.src}
                       alt={image.alt}
                       fill
-                      sizes="(min-width: 640px) 25vw, 100vw"
+                      sizes="25vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                   </div>
@@ -94,12 +82,32 @@ export const GallerySection: React.FC = () => {
           </div>
         </div>
 
+        {/* Mobile: native swipe carousel */}
+        <div className="sm:hidden -mx-4 px-4 overflow-x-auto snap-x snap-mandatory flex gap-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {galleryImages.map((image) => (
+            <div key={image.src} className="shrink-0 basis-[88%] snap-center">
+              <div className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="88vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="mt-4 flex items-center justify-between gap-4">
           <p className="text-xs text-slate-400">
-            Geser untuk melihat dokumentasi lainnya →
+            <span className="hidden sm:inline">Gunakan tombol untuk melihat dokumentasi lainnya →</span>
+            <span className="sm:hidden">Geser untuk melihat foto lainnya →</span>
           </p>
 
-          <div className="flex items-center gap-1.5" aria-label="Navigasi galeri">
+          <div className="hidden sm:flex items-center gap-1.5" aria-label="Navigasi galeri">
             {Array.from({ length: Math.ceil(galleryImages.length / DESKTOP_VISIBLE) }).map((_, dot) => {
               const dotIndex = Math.min(dot * DESKTOP_VISIBLE, maxDesktopIndex);
               const active = Math.abs(index - dotIndex) < DESKTOP_VISIBLE;
@@ -108,7 +116,7 @@ export const GallerySection: React.FC = () => {
                 <button
                   key={dotIndex}
                   type="button"
-                  onClick={() => goTo(dotIndex)}
+                  onClick={() => setIndex(dotIndex)}
                   aria-label={`Buka galeri ${dot + 1}`}
                   className={`h-1.5 rounded-full transition-all ${
                     active ? 'w-5 bg-slate-900' : 'w-1.5 bg-slate-300 hover:bg-slate-400'
@@ -117,25 +125,6 @@ export const GallerySection: React.FC = () => {
               );
             })}
           </div>
-        </div>
-
-        <div className="sm:hidden mt-3 flex justify-between gap-2">
-          <button
-            type="button"
-            onClick={() => setIndex((current) => Math.max(current - 1, 0))}
-            disabled={index === 0}
-            className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 disabled:opacity-35"
-          >
-            ← Sebelumnya
-          </button>
-          <button
-            type="button"
-            onClick={() => setIndex((current) => Math.min(current + 1, maxMobileIndex))}
-            disabled={index >= maxMobileIndex}
-            className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 disabled:opacity-35"
-          >
-            Berikutnya →
-          </button>
         </div>
       </div>
     </section>

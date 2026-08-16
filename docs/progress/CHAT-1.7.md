@@ -22,7 +22,7 @@ Evidence source: Current conversation/session timestamp available for this migra
 
 ## Session Goal
 
-Establish a clean verification baseline for the latest `feature/nextjs-migration` checkpoint before proceeding to SEO takeover or backend/admin integration.
+Establish a clean verification baseline for the latest `main` checkpoint before proceeding to SEO takeover or backend/admin integration.
 
 ## Scope
 
@@ -46,7 +46,7 @@ No application-code implementation during Step 1.
 
 ```text
 Repository: soolaeman/Front-End-BBKitchen
-Branch: feature/nextjs-migration
+Branch: main
 Last closed session: Chat 1.6
 Post-session clarification: Chat 1.6B
 Current session: Chat 1.7
@@ -111,7 +111,7 @@ PRODUCTION HARDENING    ⏳ carried
 ### Repository / structural verification
 
 ```text
-Branch:                  ✅ feature/nextjs-migration
+Branch:                  ✅ main
 Session archive:         ✅ present
 Next.js structure:       ✅ src/app present
 Components/lib layers:  ✅ src/components + src/lib present

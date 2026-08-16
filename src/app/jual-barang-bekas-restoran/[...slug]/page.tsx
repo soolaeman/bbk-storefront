@@ -59,7 +59,7 @@ function toBreadcrumbLabel(value: string) {
     .join(' ');
 }
 
-function getBreadcrumbItems(slugPath: string[], page: LocationPageData) {
+function getBreadcrumbItems(slugPath: string[]) {
   return [
     { label: 'Home', href: '/' },
     {
@@ -71,7 +71,7 @@ function getBreadcrumbItems(slugPath: string[], page: LocationPageData) {
       href: `/jual-barang-bekas-restoran/${slugPath.slice(0, index + 1).join('/')}`,
     })),
     {
-      label: toBreadcrumbLabel(stripHtml(page.title.rendered)),
+      label: toBreadcrumbLabel(slugPath[slugPath.length - 1] ?? ''),
       href: null,
     },
   ];
@@ -98,7 +98,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
   if (!page) notFound();
 
-  const breadcrumbItems = getBreadcrumbItems(slug, page);
+  const breadcrumbItems = getBreadcrumbItems(slug);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">

@@ -13,8 +13,8 @@ Branch aktif: `feature/nextjs-migration`
 ```text
 Session: 1.5 BBKitchen Next.js Migration
 Started: 16 August 2026 06:32:41 WIB (Asia/Jakarta)
-Ended: Tidak ditemukan di repository/evidence yang tersedia.
-Duration: —
+Ended: 16 August 2026 07:20 WIB
+Duration: 47 minutes 19 seconds
 Status: CLOSED
 ```
 
@@ -46,9 +46,9 @@ GitHub date: **15 August 2026 21:24:06 UTC**.
 
 ```text
 Progress index:
-3c1d3ae872adceca4fcf5d68f67be69fc3471e5a
+2aa51cbdaba12f6f847bab88f203914506717054
 Chat 1.5 archive:
-e37f324b6ba0a9d596e53462fe8281b9ceea129f
+498cc8269bf959f6b46f1ed8f517dc9f11db5905
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
@@ -63,29 +63,26 @@ e37f324b6ba0a9d596e53462fe8281b9ceea129f
 | 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
-| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **—** | **—** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
+| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
 
 ### ⏱️ Project elapsed time from Chat 1.1
 
 ```text
-Verified session working time through Chat 1.4:
-27 hours 59 minutes 41 seconds
+Verified session working time through Chat 1.5:
+28 hours 47 minutes 0 seconds
 
-Chat 1.5 working duration:
-NOT VERIFIABLE
-
-Verified elapsed project span through Chat 1.5 start:
+Verified elapsed project span:
 14 Aug 2026 12:45 WIB
 →
-16 Aug 2026 06:32:41 WIB
+16 Aug 2026 07:20 WIB
 =
-41 hours 47 minutes 41 seconds
+42 hours 35 minutes
 
 Verified inter-session gaps through Chat 1.5 start:
 13 hours 48 minutes
 ```
 
-> **Important:** elapsed project span ≠ total working duration. Chat 1.5 has no verified End timestamp, so its duration is intentionally `—`.
+> **Important:** elapsed project span ≠ total working duration. The working/session figure is the sum of verified session intervals; the elapsed span includes verified time between sessions.
 
 ---
 
@@ -374,7 +371,7 @@ Chat 1.1 → foundation — 14 Aug 2026 12:45–15:12 WIB
 Chat 1.2 → live catalog / API / SEO — 14 Aug 2026 17:00–21:00 WIB
 Chat 1.3 → routing / integration / visual convergence — 14 Aug 23:00–15 Aug 03:00 WIB
 Chat 1.4 → sales-first homepage / CTA / visual assets — 15 Aug 13:00–16 Aug 06:32:41 WIB
-Chat 1.5 → documentation / repository orientation / session hardening — 16 Aug 2026 06:32:41 WIB → end not verified
+Chat 1.5 → documentation / repository orientation / session hardening — 16 Aug 2026 06:32:41–07:20 WIB
 Chat 1.6 → baseline verification / responsive QA — NEXT
 ```
 
@@ -392,6 +389,6 @@ Chat 1.6 → ⏭️ Next
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Progress index checkpoint: 3c1d3ae872adceca4fcf5d68f67be69fc3471e5a
-Chat 1.5 archive checkpoint: e37f324b6ba0a9d596e53462fe8281b9ceea129f
+Progress index checkpoint: 2aa51cbdaba12f6f847bab88f203914506717054
+Chat 1.5 archive checkpoint: 498cc8269bf959f6b46f1ed8f517dc9f11db5905
 ```

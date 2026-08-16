@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN / STEP 1 CLEAN VERIFICATION COMPLETED**
+**CLOSED / COMPLETED WITH DOCUMENTATION DEBT**
 
 This archive is the forensic record for Chat 1.7.
 
@@ -13,8 +13,8 @@ This archive is the forensic record for Chat 1.7.
 ```text
 Session: 1.7
 Started: 17 August 2026 03:30:00 WIB
-Ended: PENDING
-Duration: PENDING
+Ended: 17 August 2026 06:18:00 WIB
+Duration: 2h 48m
 Evidence source: Current conversation/session timestamp available for this migration session
 ```
 
@@ -22,23 +22,15 @@ Evidence source: Current conversation/session timestamp available for this migra
 
 ## Session Goal
 
-Establish a clean verification baseline for the latest `main` checkpoint before proceeding to SEO takeover or backend/admin integration.
+Establish a clean verification baseline for the latest `main` checkpoint before proceeding to SEO takeover or backend/admin integration, then finalize the repository branch transition and documentation workflow.
 
 ## Scope
 
-Build/runtime evidence plus user-provided desktop/mobile visual regression screenshots for the current homepage, catalog, and product detail surfaces.
+Build/runtime evidence plus user-provided desktop/mobile visual regression screenshots for the current homepage, catalog, and product detail surfaces; repository branch transition; operational prompt audit; and session-close documentation.
 
 ## Out of Scope
 
-No application-code implementation during Step 1.
-
-## Success Criteria
-
-- Latest repository state identified.
-- Application structure/package baseline verified.
-- No application-code change introduced by session bootstrap.
-- Localhost visual/runtime evidence reviewed.
-- Desktop and mobile visual QA accepted by user.
+No application-code implementation during this session.
 
 ---
 
@@ -70,14 +62,6 @@ fix: make gallery carousel responsive with mobile swipe
 ```
 
 GitHub evidence: 16 August 2026 19:35:59 WIB.
-
-### Documentation checkpoints
-
-```text
-Progress index: 64481677a530ee51be319e26a451cfd2587d0da1
-Chat 1.6B clarification: 7810fb3c4759a3dda8077fca2cb811b87900da85
-Chat 1.6 archive: 296373e3410b5be9a3b829a7c2012f0a86d04d73
-```
 
 ---
 
@@ -125,8 +109,8 @@ GitHub CI status:        ⚠️ no status checks returned for bootstrap commit
 User supplied localhost screenshots for the current running site covering:
 
 ```text
-Homepage                 ✅
-Catalog                  ✅
+Homepage                  ✅
+Catalog                   ✅
 Product Detail            ✅
 Desktop Product Detail    ✅
 Desktop Catalog           ✅
@@ -139,16 +123,16 @@ Mobile Product Detail     ✅
 ### Visual QA assessment
 
 ```text
-Layout / hierarchy       ✅
-Header / navigation      ✅
-Product cards            ✅
-Product gallery           ✅
-Product detail sections   ✅
-Related products          ✅
-Footer                    ✅
-Mobile responsiveness     ✅
-Desktop responsiveness    ✅
-Obvious overflow/breakage ✅ not observed
+Layout / hierarchy        ✅
+Header / navigation       ✅
+Product cards             ✅
+Product gallery            ✅
+Product detail sections    ✅
+Related products           ✅
+Footer                     ✅
+Mobile responsiveness      ✅
+Desktop responsiveness     ✅
+Obvious overflow/breakage  ✅ not observed
 ```
 
 **User acceptance:** `AMAN / PUAS` — user explicitly accepted the current visual result and did not request further UI fixes.
@@ -158,6 +142,40 @@ Obvious overflow/breakage ✅ not observed
 A direct `npm run build` execution was **not independently run by this ChatGPT execution environment** because the available runtime environment could not resolve/fetch the GitHub working copy. Therefore this session does **not** claim an independently executed build PASS.
 
 This distinction is intentional: screenshot/runtime evidence is accepted for visual QA, but build verification remains separate until an actual build command result is available.
+
+---
+
+## Repository Branch Transition
+
+The repository workflow was consolidated from the historical migration branch to the canonical `main` branch during this session.
+
+```text
+feature/nextjs-migration
+        ↓ rename
+      main
+```
+
+`main` is now the default/active GitHub workflow branch. Historical branch names in forensic archives are retained where they describe the state at the time of the archived session.
+
+Vercel deployment was intentionally not resumed during this repository cleanup.
+
+---
+
+## Operational Documentation Audit
+
+Audited `docs/prompts/` and `docs/guides/` for active references to `feature/nextjs-migration`.
+
+```text
+docs/guides/
+    ✅ no active branch reference requiring replacement
+
+docs/prompts/
+    ⚠️ branch-reference cleanup was identified
+    ✅ END-SESSION-PROMPT.md currently declares Branch: main
+    ⚠️ START-SESSION-PROMPT.md requires restoration/verification before the next implementation session
+```
+
+Historical `feature/nextjs-migration` references in `docs/progress/` remain historical unless they are explicitly current operational instructions.
 
 ---
 
@@ -178,6 +196,7 @@ This distinction is intentional: screenshot/runtime evidence is accepted for vis
 - B-14 — Product Detail shared Header parity — carried.
 - B-15 — Public WordPress renderer/SEO surface must be audited before Next.js takeover.
 - B-16 — Authenticated WordPress admin control layer not yet implemented.
+- `docs/prompts/START-SESSION-PROMPT.md` — restoration/verification required before next implementation session.
 
 ---
 
@@ -193,13 +212,15 @@ This distinction is intentional: screenshot/runtime evidence is accepted for vis
 - Authenticated admin mutations must be authorized server-side.
 - `READY ↔ SOLD` is an admin control transition, not a replacement for the broader status contract.
 - Telegram URL must come from ACF, not a hardcoded frontend URL.
+- `main` is the canonical active GitHub workflow branch.
 
 ---
 
-## Verification Baseline After Step 1
+## Verification Baseline After Session Close
 
 ```text
 Repository state identified:     ✅
+Default branch:                  ✅ main
 Visual/runtime evidence:         ✅ user supplied localhost screenshots
 Desktop QA:                      ✅ user accepted
 Mobile QA:                       ✅ user accepted
@@ -210,6 +231,7 @@ SEO takeover verified:           ⏳ pending audit
 Admin auth verified:             ⏳ pending implementation
 Server authorization:            ⏳ pending implementation
 Mutation/upstream write:         ⏳ pending implementation
+Operational prompt audit:        ⚠️ START prompt restoration pending
 ```
 
 `Code exists` is not treated as verification.
@@ -218,21 +240,25 @@ Mutation/upstream write:         ⏳ pending implementation
 
 ## Top 20% Changes
 
-- Session bootstrap archive established.
-- Clean verification baseline established.
+- Session bootstrap and clean verification baseline established.
 - Current homepage/catalog/product-detail UI accepted on desktop and mobile.
+- GitHub workflow branch consolidated from `feature/nextjs-migration` to `main`.
+- Operational documentation audit performed; canonical end-session prompt is configured for `main`.
 
 ## Top 20% Bottlenecks
 
 - Independent build execution still requires a real working copy/runtime capable of installing/resolving dependencies.
 - SEO takeover audit remains the next architecture-sensitive checkpoint.
 - Authenticated admin mutation layer remains unimplemented.
+- START session prompt restoration remains a documentation debt.
 
 ## Top 20% Decisions
 
 - **Do not reopen accepted UI work without new evidence.**
 - Proceed to architecture/backend work rather than polishing already accepted screens.
 - Keep build verification explicitly separate from visual QA.
+- Use `main` as the single active GitHub workflow branch.
+- Preserve historical branch names in forensic archives where they document past state.
 
 ---
 
@@ -240,23 +266,26 @@ Mutation/upstream write:         ⏳ pending implementation
 
 No application-code changes made during Step 1.
 
-Only documentation archive updates were made in this session.
+Repository/documentation changes during this session were limited to branch/workflow and session documentation state; no product/application behavior was intentionally changed.
 
 ---
 
-## Session Plan After Step 1
+## Session Plan / Handoff
 
 1. Step 1 clean verification: **COMPLETED / ACCEPTED**.
-2. Next priority: public WordPress URL + SEO surface audit.
-3. Then: authenticated WordPress admin control layer and server-authorized mutation path.
-4. Then: WooCommerce / ACF / BBK Core System integration.
+2. Repository workflow consolidation: **COMPLETED — `main` is canonical**.
+3. Next priority: restore and verify `docs/prompts/START-SESSION-PROMPT.md`.
+4. Then: public WordPress URL + SEO surface audit.
+5. Then: authenticated WordPress admin control layer and server-authorized mutation path.
+6. Then: WooCommerce / ACF / BBK Core System integration.
 
 ---
 
 ## Forensic Notes
 
-- Session archive created before application implementation work, per canonical START-SESSION workflow.
+- Session archive was created before application implementation work, per canonical START-SESSION workflow.
 - Screenshot evidence was supplied by the user from localhost and reviewed as visual/runtime evidence.
 - User explicitly accepted the current UI as safe/satisfactory; no visual fix was requested.
 - Build PASS is not claimed because no independent `npm run build` command result was available in this execution environment.
-- End timestamp and duration remain pending until session close.
+- Session End is recorded from the current conversation/session evidence; Start was present in the session archive as 03:30 WIB.
+- Chat 1.8 is not a separate session; its temporary close archive is removed and its relevant repository/documentation facts are incorporated into this Chat 1.7 archive.

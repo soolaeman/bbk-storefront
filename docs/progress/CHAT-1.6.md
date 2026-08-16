@@ -30,7 +30,7 @@ Bring the current Next.js frontend to a visually acceptable responsive baseline,
 
 Starting evidence showed:
 
-- Branch: `feature/nextjs-migration`
+- Branch: `main`
 - Working tree had a local `tsconfig.json` modification plus local/untracked environment artifacts.
 - `npm run build` completed successfully with Next.js 16.3.1 / Turbopack.
 - `npm run dev` returned HTTP 200 for `/`.
@@ -105,7 +105,7 @@ gallery-15.webp
 gallery-16.webp
 ```
 
-Repository evidence confirms the gallery asset folder exists on `feature/nextjs-migration` and the first files are present.
+Repository evidence confirms the gallery asset folder exists on `main` and the first files are present.
 
 ---
 

@@ -14,7 +14,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API, metadata, live catalog, pagination, product detail, SEO/ACF contracts | ✅ Archived | [`CHAT-1.2.md`](CHAT-1.2.md) |
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
-| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **—** | **—** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
+| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
 
@@ -47,29 +47,25 @@ Chat 1.4 START
 16 Aug 2026 06:32:41 WIB
 Chat 1.4 END / Chat 1.5 START
         ↓
+16 Aug 2026 07:20 WIB
 Chat 1.5 END
-        ↓
-Tidak ditemukan di repository/evidence yang tersedia.
 ```
 
 ### Project time summary
 
 ```text
-Verified session working time through Chat 1.4:
-27 hours 59 minutes 41 seconds
+Verified session working time through Chat 1.5:
+28 hours 47 minutes 0 seconds
 
-Chat 1.5 working duration:
-NOT VERIFIABLE
-
-Elapsed project span through verified Chat 1.5 start:
+Elapsed project span:
 14 Aug 2026 12:45 WIB
 →
-16 Aug 2026 06:32:41 WIB
+16 Aug 2026 07:20 WIB
 =
-41 hours 47 minutes 41 seconds
+42 hours 35 minutes 0 seconds
 
-Verified inter-session gap time through Chat 1.5 start:
-13 hours 48 minutes
+Verified inter-session gap time:
+13 hours 48 minutes 0 seconds
 ```
 
 > **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.

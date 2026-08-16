@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Flame, Utensils, Layers, Snowflake, Maximize2, Table, Wind, Cpu, Coffee, Droplets, LayoutGrid, SlidersHorizontal, RotateCcw, Search, X, ChevronRight, ChevronDown } from 'lucide-react';
+import { Flame, Utensils, Layers, Snowflake, Maximize2, Table, Wind, Cpu, Coffee, Droplets, LayoutGrid, SlidersHorizontal, RotateCcw, Search, X, ChevronDown } from 'lucide-react';
 import { EquipmentCategory, FilterState } from '../types';
 
 export interface CategoryFilterOption {
@@ -118,7 +118,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             )}
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin lg:flex-wrap lg:overflow-visible">
             <button type="button" id="cat-btn-semua" onClick={() => onFilterChange({ category: 'Semua' as EquipmentCategory })} className={`shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${filterState.category === 'Semua' ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 hover:border-slate-300'}`}><LayoutGrid className="w-4 h-4" /><span>Semua</span><span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-600">{totalResultsCount}</span></button>
             {visibleCategories.map((category) => {
               const count = category.count ?? categoryCounts[category.name] ?? 0;
@@ -128,12 +128,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
           </div>
 
           {subcategories.length > 0 && activeTopLevelCategory && filterState.category !== 'Semua' && (
-            <div className="mt-1 border-t border-slate-200 pt-2 pb-1">
-              <div className="flex min-h-10 items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-thin">
-                <span className="sticky left-0 z-10 shrink-0 bg-white pr-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-400">
+            <div className="mt-2 border-t border-slate-200 pt-2 pb-1">
+              <div className="flex min-h-10 flex-wrap items-center gap-2 lg:gap-2 overflow-x-auto pb-1 whitespace-nowrap scrollbar-thin lg:overflow-visible lg:whitespace-normal">
+                <span className="shrink-0 w-full bg-white pr-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-400 lg:pb-1">
                   {activeTopLevelCategory.name}
                 </span>
-                <span aria-hidden="true" className="shrink-0 text-slate-300">/</span>
                 <button type="button" onClick={() => onFilterChange({ category: activeTopLevelCategory.name as EquipmentCategory })} className={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${filterState.category === activeTopLevelCategory.name ? 'border-slate-900 bg-slate-900 text-amber-400' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>Semua</button>
                 {subcategories.map((subcategory) => {
                   const count = subcategory.count ?? categoryCounts[subcategory.name] ?? 0;

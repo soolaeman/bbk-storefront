@@ -5,7 +5,8 @@
 
 ## Date
 
-**15 August 2026 evidence.** Exact session start/end time: **Tidak ditemukan di conversation.**
+14 Aug 2026 23:00 → 15 Aug 2026 03:00 WIB
+Duration: 4h
 
 ---
 

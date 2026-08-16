@@ -16,8 +16,9 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
 | 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
+| 1.6B | **16 Aug 2026** | — | — | — | Post-session launch architecture clarification: public Next.js takeover/SEO + authenticated WordPress admin controls | 🟡 Clarified / Pending | [`CHAT-1.6B.md`](CHAT-1.6B.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. `1.6B` is a clarification layer, not a replacement for Chat 1.6 forensic history.
 
 ---
 
@@ -101,6 +102,12 @@ Documentation / repository orientation / session hardening
    ↓
 Chat 1.6
 Responsive QA / shared UI / homepage UX polish / gallery
+   ↓
+Chat 1.6B
+Launch architecture clarification
+   ↓
+Chat 1.7
+Implementation of clarified launch requirements
 ```
 
 ---
@@ -119,6 +126,8 @@ GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
 
 FINAL UI REGRESSION     ⚠️ pending after latest UI commits
+PUBLIC SEO TAKEOVER     ⏳ clarified in 1.6B; audit pending
+ADMIN CONTROL LAYER     ⏳ clarified in 1.6B; implementation pending
 BACKEND INTEGRATION     ⏳ next phase
 ACF/CORE SYSTEM         ⏳ carried
 PRODUCTION HARDENING    ⏳ carried
@@ -128,9 +137,9 @@ PRODUCTION HARDENING    ⏳ carried
 
 ## Current Pareto Focus
 
-1. Final clean build/runtime/mobile regression against latest UI commits.
-2. WordPress/WooCommerce/Core System integration while preserving existing contracts.
-3. SEO, security, performance, and production hardening after integration.
+1. Audit WordPress public URLs + SEO surface before defining the Next.js takeover strategy.
+2. Implement an authenticated WordPress admin control layer for READY ↔ SOLD and ACF Telegram actions.
+3. Integrate WooCommerce / ACF / BBK Core System while preserving existing contracts, then proceed to production hardening.
 
 ---
 

@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Search, Loader2, PackageOpen, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header } from '../../components/Header';
+import { Footer } from '../../components/Footer';
 import { CategoryFilter, CategoryFilterOption } from '../../components/CategoryFilter';
 import { ProductCard } from '../../components/ProductCard';
 import { Product, FilterState } from '../../types';
@@ -226,7 +227,7 @@ export default function CatalogPage() {
   const totalPageLabel = totalPages ?? (hasNextPage ? '…' : catalogPage);
 
   return (
-    <main className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="min-h-screen bg-slate-100 text-slate-900">
       <Header />
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
@@ -335,6 +336,8 @@ export default function CatalogPage() {
           </section>
         )}
       </div>
-    </main>
+
+      <Footer onSelectCategory={() => undefined} />
+    </div>
   );
 }

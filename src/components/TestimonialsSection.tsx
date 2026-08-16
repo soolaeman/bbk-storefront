@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquareQuote, Star } from 'lucide-react';
+import { MessageSquareQuote, Star, ArrowRight } from 'lucide-react';
 
 const testimonials = [
   {
@@ -35,9 +35,17 @@ export const TestimonialsSection: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:hidden flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 -mt-2">
+            <span>Geser untuk lihat cerita lainnya</span>
+            <ArrowRight className="w-3 h-3" />
+          </div>
+
+          <div className="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-2 md:pb-0 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {testimonials.map((testimonial) => (
-              <article key={`${testimonial.name}-${testimonial.company}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col">
+              <article
+                key={`${testimonial.name}-${testimonial.company}`}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col min-w-[88%] shrink-0 snap-start md:min-w-0 md:shrink md:snap-none"
+              >
                 <div className="flex items-center gap-1 text-amber-500 mb-4" aria-label="5 dari 5 bintang">
                   {[0, 1, 2, 3, 4].map((star) => <Star key={star} className="w-4 h-4 fill-current" />)}
                 </div>

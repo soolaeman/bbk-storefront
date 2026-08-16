@@ -16,8 +16,7 @@ Repository:
 soolaeman/Front-End-BBKitchen
 
 Branch:
-feature/nextjs-migration
-
+main
 JANGAN langsung membuat summary.
 Lakukan forensic session close, repository audit, documentation audit, verification, lalu handoff.
 

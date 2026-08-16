@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
@@ -89,6 +90,29 @@ async function getProduct(slug: string): Promise<WooCommerceProduct | null> {
   return products[0] ?? null;
 }
 
+async function getRelatedProducts(product: WooCommerceProduct): Promise<WooCommerceProduct[]> {
+  const authorization = getAuthorization();
+  const categoryId = product.categories[0]?.id;
+  if (!authorization || !categoryId) return [];
+
+  const params = new URLSearchParams({
+    status: 'publish',
+    category: String(categoryId),
+    exclude: String(product.id),
+    per_page: '4',
+    orderby: 'date',
+    order: 'desc',
+  });
+
+  const response = await fetch(`${WOOCOMMERCE_API_URL}/products?${params.toString()}`, {
+    headers: { Accept: 'application/json', Authorization: authorization },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) return [];
+  return (await response.json()) as WooCommerceProduct[];
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -125,6 +149,7 @@ export default async function ProductPage({
   const product = await getProduct(slug);
   if (!product) notFound();
 
+  const relatedProducts = await getRelatedProducts(product);
   const rawCondition = getMeta(product, 'kondisi_unit');
   const rawStatus = getMeta(product, 'status_unit');
   const location = getMeta(product, 'lokasi_unit');
@@ -269,10 +294,51 @@ export default async function ProductPage({
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">SKU</p><p className="mt-1 font-black text-slate-950">{kodeUnit}</p></div>
           </div>
         </section>
+
+        {relatedProducts.length > 0 && (
+          <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-7" aria-labelledby="related-products-heading">
+            <div className="mb-5 flex flex-col gap-2 border-b border-slate-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">Pilihan Lain di Kategori Ini</p>
+                <h2 id="related-products-heading" className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Produk Terkait</h2>
+              </div>
+              <Link href="/catalog" className="text-xs font-bold text-emerald-700 hover:text-emerald-800">Lihat semua katalog →</Link>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+              {relatedProducts.map((relatedProduct) => (
+                <Link
+                  key={relatedProduct.id}
+                  href={`/product/${encodeURIComponent(relatedProduct.slug)}`}
+                  className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
+                >
+                  <div className="aspect-square overflow-hidden bg-slate-100">
+                    {relatedProduct.images[0]?.src ? (
+                      <img
+                        src={relatedProduct.images[0].src}
+                        alt={relatedProduct.images[0].alt || relatedProduct.name}
+                        className="h-full w-full object-contain transition duration-300 group-hover:scale-[1.02]"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center px-3 text-center text-xs font-semibold text-slate-400">Foto belum tersedia</div>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <p className="mb-1 line-clamp-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">{relatedProduct.categories[0]?.name || category}</p>
+                    <h3 className="line-clamp-2 text-sm font-black leading-5 text-slate-900 transition group-hover:text-emerald-800">{relatedProduct.name}</h3>
+                    <p className="mt-2 text-xs font-bold text-slate-500">Lihat detail →</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
-      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-5 right-5 z-40 rounded-full bg-emerald-600 px-4 py-3 text-xs font-black text-white shadow-lg transition hover:bg-emerald-500 sm:right-8">Tanya via WhatsApp</a>
       <Footer onSelectCategory={() => undefined} />
+
+      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-5 right-5 z-40 rounded-full bg-emerald-600 px-4 py-3 text-xs font-black text-white shadow-lg transition hover:bg-emerald-500 sm:right-8">Tanya via WhatsApp</a>
     </main>
   );
 }

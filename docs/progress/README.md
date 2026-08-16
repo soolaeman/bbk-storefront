@@ -15,7 +15,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Catch-all local routing, Header integration, article rendering, visual convergence | ✅ Archived | [`CHAT-1.3.md`](CHAT-1.3.md) |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Homepage sales positioning, CTA normalization, hero assets, mascot dead end, social video covers | ✅ Closed | [`CHAT-1.4.md`](CHAT-1.4.md) |
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | ✅ Closed | [`CHAT-1.5.md`](CHAT-1.5.md) |
-| 1.6 | **16 Aug 2026** | **Tidak ditemukan di repository/evidence yang tersedia.** | **19:43:16 WIB** | **—** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
+| 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
 
@@ -51,6 +51,9 @@ Chat 1.4 END / Chat 1.5 START
 16 Aug 2026 07:20 WIB
 Chat 1.5 END
         ↓
+16 Aug 2026 15:45 WIB
+Chat 1.6 START
+        ↓
 16 Aug 2026 19:43:16 WIB
 Chat 1.6 END
 ```
@@ -62,10 +65,16 @@ Verified session working time through Chat 1.5:
 28 hours 47 minutes 0 seconds
 
 Chat 1.6 working duration:
-NOT VERIFIABLE (verified Start unavailable)
+3 hours 58 minutes 16 seconds
 
-Actual elapsed duration since Chat 1.1:
-NOT VERIFIABLE as working duration.
+Verified session working time through Chat 1.6:
+32 hours 45 minutes 16 seconds
+
+Actual elapsed duration since Chat 1.1 start:
+54 hours 58 minutes 16 seconds
+
+Earliest verifiable migration evidence:
+14 August 2026 12:45 WIB
 ```
 
 > **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.

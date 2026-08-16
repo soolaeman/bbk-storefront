@@ -5,7 +5,8 @@
 
 ## Date
 
-Exact start/end date: **Tidak ditemukan di conversation.**
+Exact start/end date: 14 Aug 2026 12:45 → 15:12 WIB
+Duration: 2h 27m
 
 ---
 

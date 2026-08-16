@@ -8,17 +8,17 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 LAST SESSION — CHAT 1.6
+# 🕒 LAST SESSION — CHAT 1.7
 
 ```text
-Session: 1.6 BBKitchen Next.js Migration
-Started: 16 August 2026 15:45 WIB
-Ended: 16 August 2026 19:43:16 WIB
-Duration: 3h 58m 16s
-Status: CLOSED
+Session: 1.7 BBKitchen Next.js Migration
+Started: 17 August 2026 03:30:00 WIB
+Ended: 17 August 2026 06:18:00 WIB
+Duration: 2h 48m
+Status: CLOSED WITH DOCUMENTATION DEBT
 ```
 
-> Chat 1.6 focused on responsive/UI polish, shared Footer rollout, related products, service/testimonial/gallery carousel behavior, and homepage visual convergence. Final clean regression after the latest UI changes remains pending.
+> Chat 1.7 established the current `main` workflow, completed Step 1 visual/runtime evidence review, finalized the GitHub branch transition, and synchronized operational documentation. The session did not resume Vercel deployment. `START-SESSION-PROMPT.md` has now been synchronized to the `main` workflow; `README.md` is being aligned with the Chat 1.7 close state.
 
 ---
 
@@ -32,7 +32,7 @@ Chat 1.4 → ✅ Closed
 Chat 1.5 → ✅ Closed
 Chat 1.6 → ✅ Closed
 Chat 1.6B → 🟡 Clarified / Pending
-Chat 1.7 → ⏭️ Next
+Chat 1.7 → ✅ Closed
 ```
 
 ## Last code checkpoint
@@ -42,17 +42,22 @@ Chat 1.7 → ⏭️ Next
 fix: make gallery carousel responsive with mobile swipe
 ```
 
-GitHub evidence: **16 August 2026 12:35:59 UTC (19:35:59 WIB)**.
+GitHub evidence: **16 August 2026 19:35:59 WIB**.
 
 ## Current documentation checkpoint
 
 ```text
-Progress index:
-64481677a530ee51be319e26a451cfd2587d0da1
-Chat 1.6B clarification:
-7810fb3c4759a3dda8077fca2cb811b87900da85
-Chat 1.6 archive:
-296373e3410b5be9a3b829a7c2012f0a86d04d73
+Chat 1.7 archive:
+f37b6c6b5aebb2333ad15bed04e46b33435591da
+
+Progress index sync:
+c1814f7e478e3e7ec8d53505843d162daaf3858d
+
+Navigator sync:
+5d2961320078ad84509a4d5700dbf2a8b37068fe
+
+START-SESSION sync:
+1675661d7396c20271e7779ebf4f8f58428d4926
 ```
 
 ---
@@ -68,6 +73,7 @@ Chat 1.6 archive:
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
 | 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA / UX polish / gallery | Shared Footer, related products, responsive category UX, service/testimonial/gallery carousels | ✅ |
 | 1.6B | **16 Aug 2026** | — | — | — | Launch architecture clarification | Single public Next.js renderer + authenticated WordPress admin controls | 🟡 |
+| 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean visual/runtime verification, GitHub branch finalization, documentation synchronization | `main` established as active workflow; operational prompt workflow synchronized | ✅ |
 
 ### ⏱️ Project elapsed time since Chat 1.1
 
@@ -78,11 +84,14 @@ Verified working/session time through Chat 1.5:
 Chat 1.6 working duration:
 3 hours 58 minutes 16 seconds
 
-Verified working/session time through Chat 1.6:
-32 hours 45 minutes 16 seconds
+Chat 1.7 working duration:
+2 hours 48 minutes
+
+Verified working/session time through Chat 1.7:
+35 hours 55 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
-54 hours 58 minutes 16 seconds
+65 hours 33 minutes 0 seconds
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB
@@ -92,20 +101,18 @@ Earliest verifiable migration evidence:
 
 ---
 
-# 🚀 NEXT ACTION — CHAT 1.7
+# 🚀 NEXT ACTION — CHAT 1.8
 
-**Final UI verification / public SEO takeover audit / WordPress-WooCommerce-Core System integration preparation.**
+**Final documentation verification / restore any remaining operational SOP drift / then resume product-performance or launch-preparation work.**
 
 Recommended first sequence:
 
 ```text
-1. Clean build/runtime/mobile regression on latest UI checkpoint
-2. Freeze UI baseline
-3. Audit WordPress public URLs + SEO surface
-4. Map existing SEO URLs/slugs to Next.js public routes
-5. Define evidence-based redirect / disable / canonical strategy
-6. Implement authenticated WordPress admin control layer
-7. Begin WooCommerce / ACF / BBK Core System integration
+1. Pull latest `main`.
+2. Verify docs/prompts/START-SESSION-PROMPT.md contains only current `main` workflow references.
+3. Run final documentation drift audit if any operational SOP remains stale.
+4. Freeze the verified documentation baseline.
+5. Resume the next product/performance or SEO/backend priority.
 ```
 
 ---
@@ -114,7 +121,7 @@ Recommended first sequence:
 
 1. **Public SEO takeover audit** — establish exactly what WordPress currently exposes/indexes before switching the public renderer.
 2. **Authenticated admin control layer** — WordPress admin can toggle READY ↔ SOLD and open the product's ACF Telegram link from Product Card and Product Detail.
-3. **Backend/source-of-truth integration** — WooCommerce / ACF / BBK Core System while preserving existing contracts, followed by production hardening.
+3. **Backend/source-of-truth integration / performance hardening** — WooCommerce / ACF / BBK Core System while preserving existing contracts.
 
 ---
 
@@ -270,6 +277,7 @@ Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them 
 
 ### NOW
 
+- Final documentation verification of operational SOPs.
 - Clean final build/runtime/mobile regression after latest UI commits.
 - Shared Header search interaction + sticky behavior + parity.
 - Product Detail final shared-design parity.
@@ -281,7 +289,7 @@ Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them 
 - Authenticated WordPress admin control layer.
 - WordPress/WooCommerce/Core System integration.
 - Authoritative ACF filtering.
-- Related Products refinement if needed.
+- WooCommerce API performance/cache hardening where needed.
 - SOLD → Google Sheets workflow.
 
 ### LATER
@@ -378,7 +386,7 @@ NAVIGATOR.md
 
 ### Session workflow
 
-- [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) → canonical orientation prompt untuk membuka session baru.
+- [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) → canonical orientation prompt untuk membuka session baru dan membuat archive awal.
 - [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) → canonical forensic close/handoff prompt untuk menutup session.
 - [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) → documentation-only synchronization workflow.
 
@@ -388,20 +396,19 @@ NAVIGATOR.md
 
 ---
 
-# 🚀 CHAT 1.7 HANDOFF
+# 🚀 CHAT 1.8 HANDOFF
 
 Start title:
 
 ```text
-1.7 BBKitchen Next.js Migration — Final UI Verification / WordPress-WooCommerce Integration
+1.8 BBKitchen Next.js Migration — Final Documentation Verification / Product Performance & Launch Preparation
 ```
 
 Current session:
 
 ```text
-Chat 1.6 → CLOSED
-Chat 1.6B → CLARIFIED / PENDING
-Chat 1.7 → NEXT
+Chat 1.7 → CLOSED
+Chat 1.8 → NEXT
 ```
 
 First actions:
@@ -409,44 +416,25 @@ First actions:
 1. Pull latest `main`.
 2. Run clean build/runtime verification on latest code.
 3. Verify desktop + mobile on homepage, catalog, Product Detail, local pages.
-4. Freeze UI baseline.
-5. Audit WordPress public URLs, canonical/sitemap/indexability, and existing SEO route surface.
-6. Implement the authenticated WordPress admin control layer without weakening existing contracts.
-7. Begin WooCommerce/WP/ACF/Core System integration.
+4. Confirm operational prompt workflow references only `main`.
+5. Freeze documentation baseline.
+6. Audit WordPress public URLs, canonical/sitemap/indexability, and existing SEO route surface.
+7. Resume WooCommerce/WP/ACF/Core System integration and performance hardening.
 
 At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
 ---
 
-# 📜 MIGRATION HISTORY
+# 📜 MIGRATION TIMELINE
 
 ```text
-Chat 1.1 → foundation — 14 Aug 2026 12:45–15:12 WIB
-Chat 1.2 → live catalog / API / SEO — 14 Aug 2026 17:00–21:00 WIB
-Chat 1.3 → routing / integration / visual convergence — 14 Aug 23:00–15 Aug 03:00 WIB
-Chat 1.4 → sales-first homepage / CTA / visual assets — 15 Aug 13:00–16 Aug 06:32:41 WIB
-Chat 1.5 → documentation / repository orientation / session hardening — 16 Aug 2026 06:32:41–07:20 WIB
-Chat 1.6 → responsive QA / shared UI / homepage UX polish / gallery — 16 Aug 2026 15:45–19:43:16 WIB
-Chat 1.6B → post-session launch architecture clarification — 16 Aug 2026
-```
-
----
-
-# FINAL CHECKPOINT
-
-```text
-Chat 1.1 → forensic archived
-Chat 1.2 → forensic archived
-Chat 1.3 → forensic archived
-Chat 1.4 → ✅ Closed
-Chat 1.5 → ✅ Closed
-Chat 1.6 → ✅ Closed
-Chat 1.6B → 🟡 Clarified / Pending
-Chat 1.7 → ⏭️ Next
-
-Branch: main
-Last code checkpoint: 96394b9ed3596383cdba44ea27312418827872f1
-Progress index checkpoint: 64481677a530ee51be319e26a451cfd2587d0da1
-Chat 1.6B clarification checkpoint: 7810fb3c4759a3dda8077fca2cb811b87900da85
-Chat 1.6 archive checkpoint: 296373e3410b5be9a3b829a7c2012f0a86d04d73
+Chat 1.1 → Foundation
+Chat 1.2 → Live API / Metadata / SEO
+Chat 1.3 → Routing / Integration
+Chat 1.4 → Sales-first homepage / assets
+Chat 1.5 → Documentation / session hardening
+Chat 1.6 → Responsive UI / homepage UX / gallery
+Chat 1.6B → Launch architecture clarification
+Chat 1.7 → Clean verification + main branch + docs sync
+Chat 1.8 → Next: performance / SEO / backend integration
 ```

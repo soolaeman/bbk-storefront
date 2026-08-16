@@ -8,17 +8,17 @@ Branch aktif: `feature/nextjs-migration`
 
 ---
 
-# 🕒 SESSION START
+# 🕒 LAST SESSION — CHAT 1.5
 
 ```text
 Session: 1.5 BBKitchen Next.js Migration
 Started: 16 August 2026 06:32:41 WIB (Asia/Jakarta)
-Elapsed: berjalan sejak 06:32:41 WIB
-Ended: —
+Ended: Tidak ditemukan di repository/evidence yang tersedia.
 Duration: —
+Status: CLOSED
 ```
 
-> **Elapsed time:** untuk session aktif, hanya boleh dihitung dari `Start` ke timestamp update yang benar-benar terverifikasi. `Duration` final hanya ditetapkan saat session memiliki `End` yang terverifikasi.
+> Chat 1.5 was a documentation/repository-orientation session. Application verification baseline was intentionally deferred to the next session.
 
 ---
 
@@ -29,7 +29,8 @@ Chat 1.1 → ✅ Archived
 Chat 1.2 → ✅ Archived
 Chat 1.3 → ✅ Archived
 Chat 1.4 → ✅ Closed
-Chat 1.5 → 🚀 Active
+Chat 1.5 → ✅ Closed
+Chat 1.6 → ⏭️ Next
 ```
 
 ## Last code checkpoint
@@ -44,8 +45,10 @@ GitHub date: **15 August 2026 21:24:06 UTC**.
 ## Current documentation checkpoint
 
 ```text
-Progress index sync:
-ebd5f93634440785400698a2297f0649c691547a
+Progress index:
+3c1d3ae872adceca4fcf5d68f67be69fc3471e5a
+Chat 1.5 archive:
+e37f324b6ba0a9d596e53462fe8281b9ceea129f
 ```
 
 > Documentation-only commits may advance the branch without changing the application-code checkpoint above.
@@ -60,65 +63,45 @@ ebd5f93634440785400698a2297f0649c691547a
 | 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
-| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | — | — | Responsive / Parity / Hardening | Baseline verification + mobile/Header/Product Detail parity next | 🚀 |
+| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **—** | **—** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
 
 ### ⏱️ Project elapsed time from Chat 1.1
 
 ```text
-Chat 1.1 verified start:
-14 August 2026 — 12:45 WIB
-
-Chat 1.5 verified start:
-16 August 2026 — 06:32:41 WIB
-
-Elapsed project span at Chat 1.5 start:
-1 day 17 hours 47 minutes 41 seconds
-
-Verified working/session time through Chat 1.4:
+Verified session working time through Chat 1.4:
 27 hours 59 minutes 41 seconds
 
-Verified gaps between sessions:
+Chat 1.5 working duration:
+NOT VERIFIABLE
+
+Verified elapsed project span through Chat 1.5 start:
+14 Aug 2026 12:45 WIB
+→
+16 Aug 2026 06:32:41 WIB
+=
+41 hours 47 minutes 41 seconds
+
+Verified inter-session gaps through Chat 1.5 start:
 13 hours 48 minutes
 ```
 
-### How the numbers relate
-
-```text
-27h 59m 41s verified session time
-+ 13h 48m verified inter-session gaps
-------------------------------------
-41h 47m 41s elapsed project span
-```
-
-> **Important:** elapsed project span ≠ total working duration. The working/session figure is the sum of verified session intervals. The elapsed project span includes the verified gaps between sessions.
-
-### Chat 1.5 timing
-
-```text
-Start: 16 August 2026 — 06:32:41 WIB
-End: —
-Duration: —
-```
-
-Chat 1.5 remains open until its end timestamp is verified.
-
-Detail timeline/evidence rule berada di [`docs/progress/README.md`](docs/progress/README.md).
+> **Important:** elapsed project span ≠ total working duration. Chat 1.5 has no verified End timestamp, so its duration is intentionally `—`.
 
 ---
 
-# 🚀 NEXT ACTION
+# 🚀 NEXT ACTION — CHAT 1.6
 
 **Verify the current application build + localhost/runtime baseline before changing application code.**
 
-Do not treat `code exists` as `verified`.
-
-After baseline verification, continue in Pareto order:
+Then continue in Pareto order:
 
 ```text
 1. Mobile / responsive QA
 2. Shared Header: search + sticky + visual parity
 3. Product Detail shared-design parity
 ```
+
+Do not treat `code exists` as `verified`.
 
 ---
 
@@ -302,31 +285,6 @@ desktop verified
 mobile verified
 ```
 
-Known non-blocking environment warning carried from earlier sessions:
-
-```text
-Next.js ignored package-lock.json in C:\Users\Lenovo
-because it is outside the Git repository.
-```
-
----
-
-# 🔍 SEO BASELINE
-
-GSC snapshot supplied for 15 August 2026:
-
-```text
-16 months
-Clicks        ~1.01K
-Impressions   ~28.1K
-CTR           3.6%
-Avg position  9.5
-Indexed       ~2.29K
-Not indexed   ~413
-```
-
-Preserve URL, slug, search intent, canonical/schema/internal linking. Never mass-redirect or mass-noindex without mapping/audit.
-
 ---
 
 # 📦 IMPORTANT FILES / ASSETS
@@ -358,8 +316,6 @@ src/lib/wordpress.ts
 src/lib/woocommerce.ts
 ```
 
-For copy-location help: [`docs/guides/README.md`](docs/guides/README.md).
-
 ---
 
 # 📚 DOCUMENTATION MAP
@@ -386,19 +342,19 @@ NAVIGATOR.md
 
 ---
 
-# 🚀 CHAT 1.5 HANDOFF
+# 🚀 CHAT 1.6 HANDOFF
 
 Start title:
 
 ```text
-1.5 BBKitchen Next.js Migration
+1.6 BBKitchen Next.js Migration — Baseline Verification / Responsive QA
 ```
 
 Current session:
 
 ```text
-Started: 16 August 2026 06:32:41 WIB
-Status: ACTIVE
+Chat 1.5 → CLOSED
+Chat 1.6 → NEXT
 ```
 
 First actions:
@@ -409,26 +365,17 @@ First actions:
 4. Prefer `1 step = 1 file = 1 verified commit`.
 5. At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
-### Do not repeat
-
-- Do not return to mock catalog.
-- Do not invent frontend-only inventory truth.
-- Do not mass-change SEO slugs.
-- Do not reintroduce universal floating mascot layers.
-- Do not claim verification without evidence.
-
 ---
 
 # 📜 MIGRATION HISTORY
-
-Use [`NAVIGATOR.md`](NAVIGATOR.md) or [`docs/progress/README.md`](docs/progress/README.md).
 
 ```text
 Chat 1.1 → foundation — 14 Aug 2026 12:45–15:12 WIB
 Chat 1.2 → live catalog / API / SEO — 14 Aug 2026 17:00–21:00 WIB
 Chat 1.3 → routing / integration / visual convergence — 14 Aug 23:00–15 Aug 03:00 WIB
 Chat 1.4 → sales-first homepage / CTA / visual assets — 15 Aug 13:00–16 Aug 06:32:41 WIB
-Chat 1.5 → responsive / parity / hardening — started 16 Aug 2026 06:32:41 WIB
+Chat 1.5 → documentation / repository orientation / session hardening — 16 Aug 2026 06:32:41 WIB → end not verified
+Chat 1.6 → baseline verification / responsive QA — NEXT
 ```
 
 ---
@@ -440,9 +387,11 @@ Chat 1.1 → forensic archived
 Chat 1.2 → forensic archived
 Chat 1.3 → forensic archived
 Chat 1.4 → ✅ Closed
-Chat 1.5 → 🚀 Active
+Chat 1.5 → ✅ Closed
+Chat 1.6 → ⏭️ Next
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 26f3911f0d60c595656e85f1e9b65087bab86132
-Progress index checkpoint: ebd5f93634440785400698a2297f0649c691547a
+Progress index checkpoint: 3c1d3ae872adceca4fcf5d68f67be69fc3471e5a
+Chat 1.5 archive checkpoint: e37f324b6ba0a9d596e53462fe8281b9ceea129f
 ```

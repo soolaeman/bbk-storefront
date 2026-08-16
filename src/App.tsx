@@ -9,6 +9,7 @@ import { RequestUnitModal } from './components/RequestUnitModal';
 import { AdminPanelModal } from './components/AdminPanelModal';
 import { KitchenConsultationBanner } from './components/KitchenConsultationBanner';
 import { TestimonialsSection } from './components/TestimonialsSection';
+import { GallerySection } from './components/GallerySection';
 import { LocationSection } from './components/LocationSection';
 import { SocialMediaSection } from './components/SocialMediaSection';
 import { FAQSection } from './components/FAQSection';
@@ -90,6 +91,7 @@ export default function App() {
         <div className="mt-8"><KitchenConsultationBanner /></div>
       </main>
       <TestimonialsSection />
+      <GallerySection />
       <LocationSection />
       <SocialMediaSection />
       <FAQSection />

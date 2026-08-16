@@ -12,9 +12,9 @@ Branch aktif: `feature/nextjs-migration`
 
 ```text
 Session: 1.6 BBKitchen Next.js Migration
-Started: Tidak ditemukan di repository/evidence yang tersedia.
+Started: 16 August 2026 15:45 WIB
 Ended: 16 August 2026 19:43:16 WIB
-Duration: Tidak dapat diverifikasi.
+Duration: 3h 58m 16s
 Status: CLOSED
 ```
 
@@ -47,9 +47,9 @@ GitHub evidence: **16 August 2026 12:35:59 UTC (19:35:59 WIB)**.
 
 ```text
 Progress index:
-b22931be911ac3c37bcbe75855c0b0b462241ceb
+47c4042c8eec27ad1365089dabc73181a6b593cc
 Chat 1.6 archive:
-5af0475d9486132d2ad66365924416096d9a90a2
+296373e3410b5be9a3b829a7c2012f0a86d04d73
 ```
 
 ---
@@ -63,7 +63,7 @@ Chat 1.6 archive:
 | 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
 | 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
 | 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
-| 1.6 | **16 Aug 2026** | **Tidak ditemukan di repository/evidence yang tersedia.** | **19:43:16 WIB** | **—** | Responsive QA / UX polish / gallery | Shared Footer, related products, responsive category UX, service/testimonial/gallery carousels | ✅ |
+| 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA / UX polish / gallery | Shared Footer, related products, responsive category UX, service/testimonial/gallery carousels | ✅ |
 
 ### ⏱️ Project elapsed time since Chat 1.1
 
@@ -72,18 +72,16 @@ Verified working/session time through Chat 1.5:
 28 hours 47 minutes 0 seconds
 
 Chat 1.6 working duration:
-NOT VERIFIABLE (verified Start unavailable)
+3 hours 58 minutes 16 seconds
 
-Actual elapsed duration since Chat 1.1:
-NOT VERIFIABLE as working duration.
+Verified working/session time through Chat 1.6:
+32 hours 45 minutes 16 seconds
+
+Actual elapsed duration since Chat 1.1 start:
+54 hours 58 minutes 16 seconds
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB
-
-Calendar span through Chat 1.6 end:
-14 August 2026 12:45 WIB
-→
-16 August 2026 19:43:16 WIB
 ```
 
 > **Important:** elapsed/calendar span ≠ working duration. Do not use calendar span as a proxy for time spent working.
@@ -379,7 +377,7 @@ Chat 1.2 → live catalog / API / SEO — 14 Aug 2026 17:00–21:00 WIB
 Chat 1.3 → routing / integration / visual convergence — 14 Aug 23:00–15 Aug 03:00 WIB
 Chat 1.4 → sales-first homepage / CTA / visual assets — 15 Aug 13:00–16 Aug 06:32:41 WIB
 Chat 1.5 → documentation / repository orientation / session hardening — 16 Aug 2026 06:32:41–07:20 WIB
-Chat 1.6 → responsive QA / shared UI / homepage UX polish / gallery — 16 Aug 2026, end 19:43:16 WIB
+Chat 1.6 → responsive QA / shared UI / homepage UX polish / gallery — 16 Aug 2026 15:45–19:43:16 WIB
 ```
 
 ---
@@ -397,6 +395,6 @@ Chat 1.7 → ⏭️ Next
 
 Branch: feature/nextjs-migration
 Last code checkpoint: 96394b9ed3596383cdba44ea27312418827872f1
-Progress index checkpoint: b22931be911ac3c37bcbe75855c0b0b462241ceb
-Chat 1.6 archive checkpoint: 5af0475d9486132d2ad66365924416096d9a90a2
+Progress index checkpoint: 47c4042c8eec27ad1365089dabc73181a6b593cc
+Chat 1.6 archive checkpoint: 296373e3410b5be9a3b829a7c2012f0a86d04d73
 ```

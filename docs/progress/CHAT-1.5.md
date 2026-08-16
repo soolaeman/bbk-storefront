@@ -9,9 +9,9 @@
 ```text
 Session: 1.5
 Started: 16 August 2026 06:32:41 WIB
-Ended: Tidak ditemukan di repository/evidence yang tersedia.
-Duration: —
-Evidence source: Chat 1.5 session start timestamp supplied in the migration workflow; end timestamp not independently recorded.
+Ended: 16 August 2026 07:20 WIB
+Duration: 47 minutes 19 seconds
+Evidence source: Session end timestamp supplied by the user in this migration workflow.
 ```
 
 ---
@@ -91,13 +91,13 @@ Verified `docs/progress/README.md` contains:
 1.2  14 Aug 2026 17:00 → 21:00 WIB          4h
 1.3  14 Aug 2026 23:00 → 15 Aug 03:00 WIB   4h
 1.4  15 Aug 2026 13:00 → 16 Aug 06:32:41    17h 32m 41s
-1.5  16 Aug 2026 06:32:41 → —               Active
+1.5  16 Aug 2026 06:32:41 → 07:20 WIB       47m 19s
 ```
 
-Verified blob:
+Verified blob at last inspected state before this final archive update:
 
 ```text
-50a8fc6b1f608bf07f7b16a8b189e49b8b89d927
+2aa51cbdaba12f6f847bab88f203914506717054
 ```
 
 ## Historical archives
@@ -165,27 +165,28 @@ Chat 1.5 remained documentation/process focused.
 
 # 7. Project Timing Summary
 
-Verified working/session time through Chat 1.4:
+Verified working/session time through Chat 1.5:
 
 ```text
 2h 27m
 + 4h
 + 4h
 + 17h 32m 41s
-= 27h 59m 41s
++ 47m 19s
+= 28h 47m 0s
 ```
 
-Elapsed project span from Chat 1.1 start to Chat 1.5 start:
+Elapsed project span from Chat 1.1 start to Chat 1.5 end:
 
 ```text
 14 Aug 2026 12:45 WIB
 →
-16 Aug 2026 06:32:41 WIB
+16 Aug 2026 07:20 WIB
 =
-41h 47m 41s
+42h 35m
 ```
 
-Verified inter-session gap time:
+Verified inter-session gap time through Chat 1.5 start:
 
 ```text
 13h 48m
@@ -257,15 +258,10 @@ Do not modify application code before baseline verification establishes the actu
 ```text
 Session: 1.5
 Status: CLOSED
-End time: Tidak ditemukan di repository/evidence yang tersedia.
-Duration: —
+Start: 16 August 2026 06:32:41 WIB
+End: 16 August 2026 07:20 WIB
+Duration: 47 minutes 19 seconds
 
 Last application-code checkpoint:
 26f3911f0d60c595656e85f1e9b65087bab86132
-
-Root README blob verified:
-ff6b68b985be53468da6d86fd370742f1eaa9303
-
-Progress index blob verified:
-50a8fc6b1f608bf07f7b16a8b189e49b8b89d927
 ```

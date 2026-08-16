@@ -6,11 +6,10 @@
 
 ```text
 Session: 1.6
-Started: 16 August 2026
-Start time: Tidak ditemukan di repository/evidence yang tersedia.
+Started: 16 August 2026 15:45 WIB
 Ended: 16 August 2026 19:43:16 WIB
-Duration: Tidak dapat diverifikasi.
-Evidence source: Current session context + verified GitHub commit timestamps; exact session start not available.
+Duration: 3h 58m 16s
+Evidence source: Session start timestamp supplied in the migration workflow + verified GitHub/end-session timestamp.
 ```
 
 ---
@@ -202,7 +201,7 @@ refactor: turn homepage gallery into compact carousel
 
 The latest code checkpoint above was verified via GitHub commit metadata.
 
-Documentation updates for this session are created after this forensic close.
+Documentation timing correction was applied after the original session close because the session start timestamp was subsequently confirmed as 15:45 WIB.
 
 ---
 
@@ -211,7 +210,7 @@ Documentation updates for this session are created after this forensic close.
 ```text
 UI / Homepage UX              ✅ visually converged baseline
 Catalog UX                    ✅ converged baseline
-Product Detail UX             ✅ converged baseline
+Product Detail UX             ✅ functional baseline
 Shared Footer                 ✅ shared across key templates
 Gallery                       ✅ compact carousel direction locked
 Mobile interaction patterns   ✅ direction locked
@@ -252,9 +251,9 @@ The user explicitly stated overall satisfaction with the current UI direction an
 ```text
 Session: 1.6
 Status: CLOSED
-Start: Tidak ditemukan di repository/evidence yang tersedia.
+Start: 16 August 2026 15:45 WIB
 End: 16 August 2026 19:43:16 WIB
-Duration: Tidak dapat diverifikasi.
+Duration: 3h 58m 16s
 
 Latest application-code checkpoint:
 96394b9ed3596383cdba44ea27312418827872f1

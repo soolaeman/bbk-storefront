@@ -60,7 +60,7 @@ Repository:
 soolaeman/Front-End-BBKitchen
 
 Branch:
-feature/nextjs-migration
+main
 
 Saya ingin menyinkronkan dokumentasi manusia/vibe-coder,
 current-state README, Navigator, dan START SESSION workflow

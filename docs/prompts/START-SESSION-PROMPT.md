@@ -18,9 +18,63 @@ soolaeman/Front-End-BBKitchen
 Branch:
 feature/nextjs-migration
 
-JANGAN langsung mengubah code.
+JANGAN langsung mengubah application code.
 JANGAN mengandalkan memory atau asumsi dari chat sebelumnya.
 Lakukan repository orientation, documentation audit, current-state verification, lalu buat session plan.
+
+==================================================
+0. IMMEDIATE SESSION TIMESTAMP + PROGRESS FILE
+==================================================
+
+Ini WAJIB dilakukan segera saat session resmi dimulai, sebelum coding atau perubahan application code.
+
+1. Tentukan nomor session berikutnya dari repository.
+2. Cari archive session terakhir di `docs/progress/CHAT-X.Y.md`.
+3. Cari evidence timestamp yang tersedia untuk session saat ini menggunakan:
+   - current conversation/session timestamp jika tersedia
+   - repository/GitHub evidence yang relevan
+   - GitHub commit timestamp hanya jika memang merupakan evidence yang valid
+4. Jangan menggunakan message count, skipped messages, calendar span, atau asumsi sebagai timestamp.
+5. Jika exact start timestamp tersedia dari conversation/session evidence, CATAT langsung sebagai `Start`.
+6. Jika exact start timestamp belum tersedia, tulis:
+   `Tidak ditemukan di repository/evidence yang tersedia.`
+   Jangan menunggu sampai end-session untuk mengisi start jika evidence sudah tersedia.
+7. SEGERA buat file:
+   `docs/progress/CHAT-X.Y.md`
+   untuk session yang sedang dimulai, sebelum implementation work.
+8. File progress awal WAJIB memuat section berikut secara eksplisit:
+
+## Date / Session Timeline
+
+```text
+Session: X.Y
+Started: DD Month YYYY
+Start time: HH:MM:SS WIB
+Ended: belum
+Duration: belum
+Evidence source: <exact source/evidence>
+```
+
+9. Jika start timestamp tidak tersedia saat file dibuat:
+
+```text
+Session: X.Y
+Started: DD Month YYYY
+Start time: Tidak ditemukan di repository/evidence yang tersedia.
+Ended: belum
+Duration: belum
+Evidence source: Timestamp evidence unavailable at session start.
+```
+
+10. Setelah file dibuat, gunakan file tersebut sebagai forensic session record sepanjang session.
+11. Saat end-session, update file yang sama dengan verified End + Duration dan lengkapi forensic history.
+12. Jangan membuat archive session baru di akhir jika file session tersebut sudah dibuat di awal.
+13. Dokumentasi start-session harus dipisahkan dari application-code checkpoint. Membuat file progress tidak boleh dianggap sebagai application-code checkpoint.
+
+Tujuan rule ini:
+- session start timestamp tidak boleh hilang karena baru dicari saat session ditutup
+- setiap session selalu memiliki `CHAT-X.Y.md` sejak awal
+- timeline dapat direkonstruksi dari evidence tanpa estimasi
 
 ==================================================
 1. ORIENTASI DOKUMENTASI
@@ -158,7 +212,7 @@ SCOPE:
 OUT OF SCOPE:
 
 SUCCESS CRITERIA:
-
+```
 
 Jangan memperluas scope sendiri.
 
@@ -244,7 +298,11 @@ Evidence source:
 
 Rules:
 
-- `Start` wajib dicatat saat session resmi dimulai jika waktu aktual tersedia.
+- `Start` WAJIB dicari dan dicatat saat session resmi dimulai, bukan hanya saat session ditutup.
+- Pada awal session, lakukan timestamp evidence search terlebih dahulu. Cari exact start timestamp dari current conversation/session evidence dan repository/GitHub evidence yang relevan.
+- Jika exact start timestamp tersedia, masukkan ke `docs/progress/CHAT-X.Y.md` segera.
+- Jika exact start timestamp tidak tersedia, tulis:
+  `Tidak ditemukan di repository/evidence yang tersedia.`
 - `End` dan `Duration` ditentukan saat session ditutup, bukan diprediksi.
 - Duration hanya dihitung dari verified Start + verified End.
 - Jika exact time tidak tersedia, tulis:
@@ -252,6 +310,7 @@ Rules:
 - Jika hanya tanggal/period yang tersedia, jangan mengubahnya menjadi durasi.
 - Jangan mengestimasi duration dari message count, skipped messages, calendar span, atau asumsi.
 - GitHub commit timestamp boleh menjadi evidence timestamp, tetapi labeli sebagai GitHub evidence.
+- GitHub commit timestamp TIDAK otomatis sama dengan session start timestamp.
 - Jika timestamp conflict, preserve the conflict; jangan silently choose one.
 - Root `README.md` dan `docs/progress/README.md` harus konsisten dengan timeline yang sudah terverifikasi.
 
@@ -296,4 +355,6 @@ Sebelum coding, jawab ringkas:
 
 Jika ada data yang tidak dapat diverifikasi:
 `Tidak ditemukan di repository/evidence yang tersedia.`
+
+JANGAN mulai coding sebelum `docs/progress/CHAT-X.Y.md` session saat ini sudah dibuat dan section `Date / Session Timeline` sudah terisi sesuai evidence yang tersedia.
 ```

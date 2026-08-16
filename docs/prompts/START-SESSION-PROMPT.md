@@ -1,4 +1,3 @@
-````md
 # BBKitchen Next.js Migration — START SESSION PROMPT
 
 You are continuing the BBKitchen Next.js Migration project.
@@ -22,7 +21,7 @@ Before writing, modifying, or executing application code:
 
 ```text
 docs/progress/CHAT-X.Y.md
-````
+```
 
 5. The progress file MUST be created before coding begins.
 6. Record the initial timeline using:
@@ -467,14 +466,14 @@ npm run build
 When the user asks to test the changes locally:
 
 ```bash
-git pull origin feature/nextjs-migration
+git pull origin main
 npm run dev
 ```
 
 Always provide the Git pull command after making changes on GitHub:
 
 ```bash
-git pull origin feature/nextjs-migration
+git pull origin main
 ```
 
 Do not assume the user remembers the command.
@@ -550,7 +549,7 @@ Evidence source: ...
 9. Provide the user with:
 
 ```bash
-git pull origin feature/nextjs-migration
+git pull origin main
 ```
 
 if GitHub changes were made.

@@ -109,12 +109,12 @@ export default async function LocationPage({ params }: LocationPageProps) {
             aria-label="Breadcrumb"
             className="mb-8 rounded-2xl border border-slate-200/80 bg-white px-3 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.06)] ring-1 ring-slate-900/[0.02] sm:px-4"
           >
-            <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs leading-6 sm:text-sm">
+            <ol className="flex flex-nowrap items-center gap-x-1.5 overflow-x-auto text-xs leading-6 sm:text-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {breadcrumbItems.map((item, index) => {
                 const isCurrent = item.href === null;
 
                 return (
-                  <li key={`${item.label}-${index}`} className="flex min-w-0 items-center gap-1.5">
+                  <li key={`${item.label}-${index}`} className="flex shrink-0 items-center gap-1.5 whitespace-nowrap">
                     {index > 0 ? (
                       <span aria-hidden="true" className="px-0.5 text-slate-300">
                         /
@@ -124,7 +124,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
                     {isCurrent ? (
                       <span
                         aria-current="page"
-                        className="max-w-full truncate rounded-lg bg-slate-900 px-2.5 py-1 font-semibold text-white shadow-sm sm:px-3"
+                        className="rounded-lg bg-slate-900 px-2.5 py-1 font-semibold text-white shadow-sm sm:px-3"
                       >
                         {item.label}
                       </span>
@@ -165,7 +165,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
               [&_figure]:!mx-auto [&_figure]:!max-w-full [&_figcaption]:mt-2 [&_figcaption]:text-center [&_figcaption]:text-sm [&_figcaption]:text-slate-500
               [&_hr]:my-10 [&_hr]:border-slate-200
               [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:rounded-xl [&_table]:border [&_table]:border-slate-200 [&_table]:text-sm
-              [&_iframe]:!mx-auto [&_iframe]:!max-w-full [&_video]:!mx-auto [&_video]:!max-w-full"
+              [&_iframe]:!mx-auto [&_iframe]:!max-w-full [&_iframe]:!max-w-full [&_video]:!mx-auto [&_video]:!max-w-full"
             dangerouslySetInnerHTML={{ __html: page.content.rendered }}
           />
         </article>

@@ -39,12 +39,12 @@ export const KitchenConsultationBanner: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-1 px-1 scrollbar-thin lg:grid lg:grid-cols-2 lg:overflow-visible lg:mx-0 lg:px-0 lg:snap-none">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <a
               href={buyUnitLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-[88%] shrink-0 snap-start rounded-2xl border border-emerald-500/30 bg-emerald-700/15 hover:border-emerald-400/70 p-5 transition-all lg:w-auto lg:shrink lg:snap-none"
+              className="group rounded-2xl border border-emerald-500/30 bg-emerald-700/15 hover:border-emerald-400/70 p-5 transition-all"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -55,13 +55,17 @@ export const KitchenConsultationBanner: React.FC = () => {
                 </div>
                 <ArrowRight className="w-5 h-5 text-emerald-400 shrink-0 transition-transform group-hover:translate-x-1" />
               </div>
+              <span className="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white group-hover:bg-emerald-500 transition-colors">
+                <MessageCircle className="w-4 h-4" />
+                Tanya via WhatsApp
+              </span>
             </a>
 
             <a
               href={sellUnitLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-[88%] shrink-0 snap-start rounded-2xl border border-amber-500/30 bg-slate-950/70 hover:border-amber-400/70 p-5 transition-all lg:w-auto lg:shrink lg:snap-none"
+              className="group rounded-2xl border border-amber-500/30 bg-slate-950/70 hover:border-amber-400/70 p-5 transition-all"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -72,9 +76,13 @@ export const KitchenConsultationBanner: React.FC = () => {
                 </div>
                 <ArrowRight className="w-5 h-5 text-amber-400 shrink-0 transition-transform group-hover:translate-x-1" />
               </div>
+              <span className="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white group-hover:bg-emerald-500 transition-colors">
+                <MessageCircle className="w-4 h-4" />
+                Tanya via WhatsApp
+              </span>
             </a>
 
-            <div className="group w-[88%] shrink-0 snap-start rounded-2xl border border-sky-500/30 bg-sky-700/10 hover:border-sky-400/70 p-5 transition-all lg:w-auto lg:shrink lg:snap-none">
+            <div className="group rounded-2xl border border-sky-500/30 bg-sky-700/10 hover:border-sky-400/70 p-5 transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <FileText className="w-6 h-6 text-sky-400 mb-3" />
@@ -110,7 +118,7 @@ export const KitchenConsultationBanner: React.FC = () => {
               href={productionLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-[88%] shrink-0 snap-start rounded-2xl border border-purple-500/30 bg-purple-700/10 hover:border-purple-400/70 p-5 transition-all lg:w-auto lg:shrink lg:snap-none"
+              className="group rounded-2xl border border-purple-500/30 bg-purple-700/10 hover:border-purple-400/70 p-5 transition-all"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -121,12 +129,12 @@ export const KitchenConsultationBanner: React.FC = () => {
                 </div>
                 <ArrowRight className="w-5 h-5 text-purple-400 shrink-0 transition-transform group-hover:translate-x-1" />
               </div>
+              <span className="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white group-hover:bg-emerald-500 transition-colors">
+                <MessageCircle className="w-4 h-4" />
+                Tanya via WhatsApp
+              </span>
             </a>
           </div>
-
-          <p className="text-center text-[11px] font-semibold text-slate-400 lg:hidden">
-            Geser untuk lihat layanan lainnya →
-          </p>
         </div>
       </div>
     </section>

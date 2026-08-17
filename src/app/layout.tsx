@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import '../index.css';
 
+const SITE_URL = 'https://bukanbarukitchen.com';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.bukanbarukitchen.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'BBKitchen — Peralatan Dapur Komersial',
     template: '%s | BBKitchen',
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     title: 'BBKitchen — Peralatan Dapur Komersial',
     description:
       'Peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
-    url: 'https://www.bukanbarukitchen.com',
+    url: SITE_URL,
   },
 };
 

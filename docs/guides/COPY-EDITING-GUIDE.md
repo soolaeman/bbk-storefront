@@ -4,37 +4,42 @@
 
 This is a **GUIDE**, not a prompt.
 
-Use it when you want to understand **where copy/text lives and what is safe to change** without asking an AI to execute a workflow.
-
-## Purpose
-
-Use this guide for:
-
-- finding UI copy
-- locating the responsible component/file
-- understanding label vs action vs WhatsApp message
-- checking locked copy contracts
-- avoiding accidental changes to routing/data/SEO contracts
+Use it when you want to understand **where copy/text lives and what is safe to change** without changing routing, API contracts, inventory logic, or SEO behavior.
 
 ## Quick map
 
 | Area | Primary file | Typical copy |
 |---|---|---|
-| Hero | `src/components/HeroSection.tsx` | headline, CTA, MBG, Produksi Baru |
-| Service | `src/components/KitchenConsultationBanner.tsx` | service CTA, MBG catalog CTA, WhatsApp CTA labels |
+| Hero | `src/components/HeroSection.tsx` | headline, CTA, value copy |
+| Service | `src/components/KitchenConsultationBanner.tsx` | service CTA and WhatsApp labels |
 | Product Card | `src/components/ProductCard.tsx` | READY/SOLD, Tanya WA |
-| Product Detail | `src/app/product/[slug]/page.tsx` + child components | product CTA, related-products presentation |
+| Product Detail | `src/app/product/[slug]/page.tsx` + child components | product CTA, related-product presentation |
 | Header | `src/components/Header.tsx` | navigation, search, CTA |
 | Footer | `src/components/Footer.tsx` | footer CTA/navigation |
 | Social | `src/components/SocialMediaSection.tsx` | social labels/copy/video cards |
 | Testimonials | `src/components/TestimonialsSection.tsx` | testimonial heading/copy |
 | Gallery | `src/components/GallerySection.tsx` | gallery heading/copy and carousel affordance |
 | Category | `src/components/CategoryFilter.tsx` | filter/category/subcategory labels |
-| Local landing | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` | H1/CTA/local copy |
+| Local landing | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` | local H1/CTA/copy |
+
+## Text vs logic
+
+```text
+LABEL / TEXT
+= visible wording
+
+ACTION / ROUTING
+= what happens when clicked
+
+MESSAGE
+= WhatsApp/external message payload
+```
+
+Changing a label does not automatically change its action.
 
 ## Fastest search
 
-VS Code:
+In VS Code:
 
 ```text
 Ctrl + Shift + F
@@ -57,25 +62,9 @@ Galeri BBKitchen
 Geser untuk melihat foto lainnya
 READY
 SOLD
-PDF Katalog Dapur MBG
 ```
 
-## Important distinction
-
-```text
-LABEL / TEXT
-= visible wording
-
-ACTION / ROUTING
-= what happens on click
-
-MESSAGE
-= WhatsApp/external message
-```
-
-Changing a label does **not** automatically mean changing its action.
-
-## Locked current contracts
+## Current locked copy contracts
 
 ### Dapur MBG
 
@@ -112,7 +101,7 @@ READY → Tanya WA
 SOLD  → Tanya Lainnya
 ```
 
-### Hero
+### Homepage hero
 
 ```text
 Cari, Jual, atau Produksi Peralatan Dapur Resto & Dapur MBG
@@ -127,15 +116,9 @@ Seluruh Indonesia
 Lihat Unit yang Tersedia →
 ```
 
-The catalog CTA scrolls to the catalog; do not change behavior when changing its wording unless explicitly requested.
+The catalog CTA scrolls to the catalog. Keep behavior separate from wording edits.
 
-### Dapur MBG catalog
-
-The service section has a separate PDF catalog CTA in addition to the direct WhatsApp CTA.
-
-Do not replace the direct WhatsApp CTA with the PDF CTA unless explicitly requested.
-
-### Homepage service WhatsApp CTA labels
+### Homepage service CTA labels
 
 ```text
 Beli Unit       → Cek Stok via WA
@@ -144,7 +127,7 @@ Dapur MBG       → Konsultasi MBG
 Produksi Baru   → Request Produksi
 ```
 
-The service card and the WhatsApp CTA are separate clickable actions.
+The service card and WhatsApp CTA are separate clickable actions.
 
 ### Catalog result copy
 
@@ -152,7 +135,7 @@ The service card and the WhatsApp CTA are separate clickable actions.
 Halaman 1 • Menampilkan {DISPLAYED} dari {TOTAL} unit BBKitchen
 ```
 
-The category/subcategory buttons intentionally do not display counts; result count is communicated in the catalog summary instead.
+Category/subcategory button counts are intentionally omitted.
 
 ### Gallery
 
@@ -160,19 +143,59 @@ Current gallery copy owner:
 
 `src/components/GallerySection.tsx`
 
-Current compact carousel copy:
-
 ```text
 Dokumentasi BBKitchen
 Galeri BBKitchen
 Melihat lebih dekat aktivitas, peralatan, dan proses BBKitchen.
 ```
 
-Desktop uses carousel controls; mobile uses native swipe. Keep wording changes separate from carousel behavior.
+## Backend / sourced values
+
+Do not document dynamic product/business data as hardcoded frontend copy when it comes from WordPress, WooCommerce, ACF, or Core System.
+
+Examples include:
+
+```text
+Product name
+Price
+SKU
+Category
+Images
+Stock/status
+kode_unit
+status_unit
+kondisi_unit
+lokasi_unit
+link_telegram
+```
+
+These remain backend/source-of-truth concerns.
+
+## Admin-control distinction
+
+The current project has an **admin-control requirement/foundation**, not proof that the privileged workflow is fully implemented.
+
+Keep these separate:
+
+```text
+visible public copy
+admin-only label
+action behavior
+backend mutation
+ACF-sourced value
+authentication / authorization
+```
+
+The intended authenticated workflow is:
+
+```text
+READY ↔ SOLD
+Buka Telegram → ACF-backed product Telegram link
+```
+
+Do not claim this is fully implemented unless repository evidence proves authentication, server authorization, mutation, and upstream refresh behavior.
 
 ## Do not casually change
-
-These are not ordinary copy:
 
 ```text
 /product/[slug]
@@ -186,6 +209,8 @@ category slugs
 status values
 condition values
 ```
+
+These affect routing, data, or SEO rather than ordinary copy.
 
 ## Safe copy-edit workflow
 
@@ -205,4 +230,4 @@ Build
 Verify UI if applicable
 ```
 
-For an AI-assisted workflow, use the appropriate prompt under `docs/prompts/` instead of treating this guide as an instruction prompt.
+For AI-assisted workflows, use the appropriate prompt under `docs/prompts/` instead of treating this guide as an execution prompt.

@@ -13,7 +13,7 @@
 | Tahu **project sekarang ada di mana** | [`README.md`](README.md) | Dashboard kondisi terbaru, prioritas Pareto, architecture, bottleneck, technical debt, dan handoff. |
 | Tahu **apa yang terjadi di tiap chat** | [`docs/progress/README.md`](docs/progress/README.md) | Index sejarah migration dan ringkasan progress lintas session. |
 | Tahu **file mana yang harus diedit** | [`docs/guides/README.md`](docs/guides/README.md) | Peta guide untuk memahami lokasi file dan perubahan yang aman. |
-| **Mulai session baru** | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Canonical orientation workflow sebelum coding, termasuk bootstrap `CHAT-X.Y.md` + session timestamp. |
+| **Mulai session baru** | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Canonical session-bootstrap workflow sebelum coding, termasuk `CHAT-X.Y.md` + timestamp evidence. |
 | **Menutup session** | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Canonical forensic close, documentation audit, verification, dan handoff. |
 | Sinkronisasi dokumentasi saja | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + README + Navigator + START SESSION SOP terhadap repository terkini. |
 
@@ -44,6 +44,7 @@
 | [`docs/progress/CHAT-1.6.md`](docs/progress/CHAT-1.6.md) | Forensic history Chat 1.6 | Saat perlu memahami responsive UI polish, shared Footer, related products, service/testimonial/gallery carousel work. |
 | [`docs/progress/CHAT-1.6B.md`](docs/progress/CHAT-1.6B.md) | Clarification layer after Chat 1.6 | Saat perlu memahami launch architecture clarification setelah Chat 1.6. |
 | [`docs/progress/CHAT-1.7.md`](docs/progress/CHAT-1.7.md) | Forensic history Chat 1.7 | Saat perlu memahami clean verification baseline, branch finalization, prompt/documentation audit, dan session close. |
+| [`docs/progress/CHAT-1.8.md`](docs/progress/CHAT-1.8.md) | Forensic history Chat 1.8 | Saat perlu memahami Recent Posts, runtime diagnostics, Dewaweb dead end, DNS blocker, dan Chat 1.9 handoff. |
 
 > **Rule:** `docs/progress/` = sejarah. Untuk kondisi terbaru, pakai root `README.md`.
 

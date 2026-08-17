@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const WOOCOMMERCE_API_URL =
+const WOOCOMMERCE_API_URL = (
   process.env.WOOCOMMERCE_API_URL ||
-  'https://www.bukanbarukitchen.com/wp-json/wc/v3';
+  'https://bukanbarukitchen.com/wp-json/wc/v3'
+).replace(/^https?:\/\/www\./i, 'https://').replace(/\/$/, '');
 
 const METADATA_PER_PAGE = 100;
 const PRODUCT_META_FILTER_PAGE_SIZE = 100;

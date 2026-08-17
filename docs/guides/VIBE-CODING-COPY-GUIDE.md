@@ -2,29 +2,30 @@
 
 # BBKitchen Vibe Coding Guide — Copy Locations
 
-> For a non-developer / vibe-coding workflow: use this file to answer **“I want to change this wording — where is the file?”**
+> Untuk user non-developer / vibe coding: file ini menjawab **“gue mau mengubah tulisan ini — file mana yang harus dicek?”**
 
-This is a **GUIDE**, not a prompt. It explains locations and contracts; it does not instruct an AI to execute a session workflow.
+Ini **GUIDE**, bukan prompt. Guide menjelaskan lokasi copy dan batas aman perubahan; workflow AI/session tetap ada di `docs/prompts/`.
 
-## Quick map
+## Peta cepat
 
 ```text
 Hero                 → src/components/HeroSection.tsx
 Header               → src/components/Header.tsx
 Service              → src/components/KitchenConsultationBanner.tsx
 Product Card         → src/components/ProductCard.tsx
-Product Detail       → src/app/product/[slug]/page.tsx
+Product Detail       → src/app/product/[slug]/page.tsx + child components
 Location / Article   → src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
 Social               → src/components/SocialMediaSection.tsx
 Testimonials         → src/components/TestimonialsSection.tsx
 Gallery              → src/components/GallerySection.tsx
 Category             → src/components/CategoryFilter.tsx
 Footer               → src/components/Footer.tsx
+Recent Posts         → src/components/RecentPostsSection.tsx
 ```
 
-## If you want to change...
+## Kalau mau mengubah...
 
-| You want to change | First file to inspect |
+| Yang mau diubah | File pertama yang dicek |
 |---|---|
 | Hero headline | `src/components/HeroSection.tsx` |
 | Hero CTA | `src/components/HeroSection.tsx` |
@@ -34,9 +35,9 @@ Footer               → src/components/Footer.tsx
 | MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / `KitchenConsultationBanner.tsx` / `Footer.tsx` |
 | MBG PDF catalog CTA | `src/components/KitchenConsultationBanner.tsx` |
 | Service WhatsApp CTA | `src/components/KitchenConsultationBanner.tsx` |
-| Produksi Baru wording | same CTA owners as above |
+| Produksi Baru wording | file CTA owner di atas |
 | READY/SOLD button | `src/components/ProductCard.tsx` |
-| Product WhatsApp message | search globally for `Halo Tim BBKitchen` |
+| Product WhatsApp message | cari global `Halo Tim BBKitchen` |
 | Product Detail CTA | `src/app/product/[slug]/page.tsx` + child component |
 | Social copy / video cards | `src/components/SocialMediaSection.tsx` |
 | Testimonial heading/copy | `src/components/TestimonialsSection.tsx` |
@@ -44,7 +45,8 @@ Footer               → src/components/Footer.tsx
 | Footer wording | `src/components/Footer.tsx` |
 | Category labels | `src/components/CategoryFilter.tsx` |
 | Local article H1/copy | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` |
-| Catalog result summary | `src/App.tsx` / `src/app/catalog/page.tsx` — inspect current owner before editing |
+| Recent Posts heading/copy | `src/components/RecentPostsSection.tsx` |
+| Catalog result summary | audit `src/app/catalog/page.tsx` dan current imported components sebelum edit |
 
 ## Current homepage service CTA labels
 
@@ -55,17 +57,17 @@ Dapur MBG       → Konsultasi MBG
 Produksi Baru   → Request Produksi
 ```
 
-The service card remains clickable while the WhatsApp CTA has its own action.
+Service card dan WhatsApp CTA adalah action yang berbeda. Jangan mengubah action hanya karena ingin mengganti label.
 
 ## Catalog copy
 
-Current result summary uses:
+Current result summary:
 
 ```text
 Halaman 1 • Menampilkan {DISPLAYED} dari {TOTAL} unit BBKitchen
 ```
 
-Category/subcategory button counts are intentionally omitted.
+Category/subcategory button counts sengaja tidak ditampilkan.
 
 ## Gallery copy
 
@@ -83,30 +85,40 @@ Galeri BBKitchen
 Melihat lebih dekat aktivitas, peralatan, dan proses BBKitchen.
 ```
 
-## Fast search
+## Recent Posts
 
-In VS Code press:
+Recent Posts homepage section lives in:
+
+```text
+src/components/RecentPostsSection.tsx
+```
+
+Jangan menganggap post title/excerpt sebagai hardcoded frontend copy jika nilainya berasal dari WordPress API.
+
+## Cara mencari copy paling cepat
+
+Di VS Code tekan:
 
 ```text
 Ctrl + Shift + F
 ```
 
-Search the exact wording you see on the website.
+Cari persis tulisan yang terlihat di website.
 
-## Three things to keep separate
+## Pisahkan 3 hal ini
 
 ```text
 TEXT
-= what you see
+= tulisan yang terlihat
 
 ACTION
-= what happens when clicked
+= apa yang terjadi saat diklik
 
 MESSAGE
-= what gets sent to WhatsApp
+= pesan yang dikirim ke WhatsApp
 ```
 
-If you only want to change wording, do not automatically change the action.
+Kalau hanya mau mengganti tulisan, jangan otomatis mengubah action.
 
 ## Current WhatsApp contracts
 
@@ -122,7 +134,7 @@ Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur M
 Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru
 ```
 
-**Product inquiry** uses the multiline product contract defined in `docs/guides/COPY-EDITING-GUIDE.md`.
+**Product inquiry** menggunakan contract multiline yang ada di `docs/guides/COPY-EDITING-GUIDE.md`.
 
 ## Current status buttons
 
@@ -131,11 +143,11 @@ READY → Tanya WA
 SOLD  → Tanya Lainnya
 ```
 
-Do not disable a SOLD product card just because its button text changes.
+Jangan menonaktifkan Product Card SOLD hanya karena wording tombol berubah.
 
-## Do not touch casually
+## Jangan disentuh sembarangan
 
-If you see these, stop and ask before changing them:
+Kalau ketemu ini, berhenti dan cek requirement dulu:
 
 ```text
 slug
@@ -149,12 +161,14 @@ canonical
 schema
 ```
 
-These can affect data, routing, or SEO rather than just copy.
+Hal-hal tersebut bisa memengaruhi data, routing, atau SEO — bukan sekadar copy.
 
-## AI request template
+Untuk admin controls, `isAdminMode` bukan bukti authentication. Jangan mengubah permission, status mutation, API, atau ACF contract hanya untuk mengganti tulisan.
 
-If you want ChatGPT/Codex to make a simple copy change, you can say:
+## Template permintaan AI sederhana
 
-> “Cari semua occurrence copy `[COPY LAMA]` di frontend. Saya hanya ingin mengganti wording menjadi `[COPY BARU]`. Jangan ubah action, routing, data contract, SEO, atau component architecture. Tunjukkan file yang berubah, jalankan build, lalu laporkan hasilnya.”
+Kalau ingin meminta ChatGPT/Codex mengganti copy:
 
-For full session closing and documentation, use prompts under `docs/prompts/`.
+> “Cari semua occurrence copy `[COPY LAMA]` di frontend. Saya hanya ingin mengganti wording menjadi `[COPY BARU]`. Jangan ubah action, routing, data contract, SEO, authentication, permission, atau component architecture. Tunjukkan file yang berubah, jalankan build, lalu laporkan hasilnya.”
+
+Untuk workflow session dan dokumentasi, gunakan prompt di `docs/prompts/`.

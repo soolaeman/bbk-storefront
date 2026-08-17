@@ -7,17 +7,26 @@ import { Footer } from '../../components/Footer';
 const SITE_URL = 'https://bukanbarukitchen.com';
 const CATALOG_PDF_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?usp=drivesdk';
 const WHATSAPP_URL = 'https://wa.me/6285122001051?text=Halo%20Tim%20BBKitchen%2C%20saya%20ingin%20konsultasi%20kebutuhan%20peralatan%20Dapur%20MBG.';
+const BGN_JUKNIS_URL = 'https://bgn.go.id/juknis';
 
 export const metadata: Metadata = {
-  title: 'Dapur MBG — Solusi Peralatan Dapur Komersial | BBKitchen',
+  title: 'Peralatan Dapur MBG & Equipment SPPG | BBKitchen',
   description:
-    'Solusi equipment dapur MBG untuk preparation, cooking, washing, storage, packing, dan exhaust. Konsultasikan kebutuhan dapur Anda dengan BBKitchen.',
+    'Peralatan dapur MBG dan equipment SPPG untuk preparation, cooking, washing, storage, packing, dan exhaust. Lihat paket dan katalog BBKitchen.',
+  keywords: [
+    'peralatan dapur MBG',
+    'equipment dapur MBG',
+    'peralatan SPPG',
+    'equipment SPPG',
+    'paket dapur MBG',
+    'dapur MBG',
+  ],
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: `${SITE_URL}/dapur-mbg` },
   openGraph: {
-    title: 'Dapur MBG — Solusi Peralatan Dapur Komersial | BBKitchen',
+    title: 'Peralatan Dapur MBG & Equipment SPPG | BBKitchen',
     description:
-      'Solusi equipment dapur MBG untuk preparation, cooking, washing, storage, packing, dan exhaust.',
+      'Peralatan dapur MBG dan equipment SPPG untuk preparation, cooking, washing, storage, packing, dan exhaust.',
     url: `${SITE_URL}/dapur-mbg`,
     type: 'website',
   },
@@ -39,9 +48,19 @@ const benefits = [
   'Konsultasi kebutuhan sebelum menentukan equipment',
 ];
 
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Dapur MBG', item: `${SITE_URL}/dapur-mbg` },
+  ],
+};
+
 export default function DapurMbgPage() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 font-sans">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Header simple />
 
       <main>
@@ -50,8 +69,8 @@ export default function DapurMbgPage() {
           <div className="relative max-w-7xl mx-auto px-4 py-16 sm:py-20 lg:py-24">
             <div className="max-w-3xl">
               <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-400">BBKitchen • Dapur MBG</p>
-              <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02]">Solusi Peralatan Dapur MBG</h1>
-              <p className="mt-6 max-w-2xl text-sm sm:text-base leading-7 text-slate-300">Siapkan dapur produksi dengan equipment yang tepat untuk mendukung proses persiapan, memasak, pencucian, packing, hingga penyimpanan.</p>
+              <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02]">Peralatan Dapur MBG &amp; Equipment SPPG</h1>
+              <p className="mt-6 max-w-2xl text-sm sm:text-base leading-7 text-slate-300">Solusi equipment dapur komersial untuk mendukung preparation, cooking, washing, storage, packing, dan exhaust sesuai kebutuhan operasional dapur.</p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
                 <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-white hover:bg-emerald-400 transition-colors">Konsultasi Kebutuhan Dapur <ArrowRight className="w-4 h-4" /></a>
                 <Link href="#equipment" className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-white/5 px-5 py-3 text-sm font-bold text-slate-200 hover:bg-white/10 transition-colors">Lihat Equipment</Link>
@@ -62,9 +81,9 @@ export default function DapurMbgPage() {
 
         <section id="equipment" className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
           <div className="max-w-2xl">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Equipment</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl font-black tracking-tight">Bukan Sekadar Peralatan, Tapi Kebutuhan Dapur</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">BBKitchen menyediakan berbagai equipment untuk membantu melengkapi kebutuhan dapur MBG sesuai area kerja dan kebutuhan operasional.</p>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Peralatan Dapur MBG</p>
+            <h2 className="mt-2 text-2xl sm:text-3xl font-black tracking-tight">Equipment untuk Setiap Area Kerja</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">BBKitchen menyediakan berbagai equipment untuk membantu melengkapi kebutuhan dapur MBG dan SPPG sesuai area kerja dan kebutuhan operasional.</p>
           </div>
           <div className="mt-8 grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {equipmentGroups.map(({ title, description, icon: Icon }) => (
@@ -80,18 +99,31 @@ export default function DapurMbgPage() {
         <section className="bg-white border-y border-slate-200">
           <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 grid lg:grid-cols-[1.15fr_0.85fr] gap-8 items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Layout</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Layout Dapur MBG</p>
               <h2 className="mt-2 text-2xl sm:text-3xl font-black tracking-tight">Dapur yang Terorganisir Dimulai dari Layout</h2>
-              <p className="mt-4 text-sm leading-6 text-slate-600">Konsep layout dapur MBG dapat mencakup area penerimaan barang, persiapan, pencucian, dapur, packing, gudang, serta area pendukung lainnya.</p>
+              <p className="mt-4 text-sm leading-6 text-slate-600">Konsep layout dapat mencakup area penerimaan dan penyortiran bahan, gudang, persiapan, ruang masak, pemorsian dan pengemasan, pencucian, hingga loading area.</p>
               <div className="mt-5 flex flex-wrap gap-2">
-                {['Penerimaan', 'Persiapan', 'Pencucian', 'Dapur', 'Packing', 'Gudang'].map((item) => <span key={item} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">{item}</span>)}
+                {['Penerimaan', 'Persiapan', 'Pencucian', 'Dapur', 'Packing', 'Gudang', 'Loading'].map((item) => <span key={item} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">{item}</span>)}
               </div>
             </div>
             <div className="rounded-3xl bg-slate-950 p-6 sm:p-8 text-white">
               <Utensils className="w-8 h-8 text-emerald-400" />
               <h3 className="mt-5 text-xl font-black">Mulai dari kebutuhan dapurnya.</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-400">Diskusikan kapasitas, kondisi ruang, alur kerja, dan equipment yang dibutuhkan sebelum menentukan komposisi dapur.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-400">Kapasitas, kondisi ruang, alur kerja, dan equipment perlu dipertimbangkan sebelum menentukan komposisi dapur.</p>
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-black text-emerald-400 hover:text-emerald-300">Konsultasikan Layout <ArrowRight className="w-4 h-4" /></a>
+            </div>
+          </div>
+        </section>
+
+        <section className="max-w-7xl mx-auto px-4 py-10 sm:py-12">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">Referensi SPPG</p>
+                <h2 className="mt-1 text-lg sm:text-xl font-black">Kebutuhan Dapur Mengikuti Kondisi Operasional</h2>
+                <p className="mt-2 max-w-3xl text-xs sm:text-sm leading-5 text-slate-600">Pedoman BGN menyebut kebutuhan peralatan dapur disusun berdasarkan masukan dan evaluasi SPPG yang telah beroperasi. Karena itu, komposisi equipment sebaiknya disesuaikan dengan kapasitas dan kondisi dapur, bukan sekadar mengikuti satu paket.</p>
+              </div>
+              <a href={BGN_JUKNIS_URL} target="_blank" rel="noopener noreferrer" className="shrink-0 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-black text-slate-800 hover:bg-slate-100 transition-colors">Lihat Juknis BGN <ArrowRight className="w-3.5 h-3.5" /></a>
             </div>
           </div>
         </section>

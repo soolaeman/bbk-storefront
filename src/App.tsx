@@ -9,7 +9,6 @@ import { RequestUnitModal } from './components/RequestUnitModal';
 import { AdminPanelModal } from './components/AdminPanelModal';
 import { KitchenConsultationBanner } from './components/KitchenConsultationBanner';
 import { TestimonialsSection } from './components/TestimonialsSection';
-import { RecentPostsSection } from './components/RecentPostsSection';
 import { GallerySection } from './components/GallerySection';
 import { LocationSection } from './components/LocationSection';
 import { SocialMediaSection } from './components/SocialMediaSection';
@@ -95,7 +94,6 @@ export default function App() {
       <GallerySection />
       <LocationSection />
       <SocialMediaSection />
-      <RecentPostsSection />
       <FAQSection />
       <Footer onSelectCategory={(category) => handleFilterChange({ category })} />
       {selectedProduct && <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onToggleStatus={handleToggleStatus} isAdminMode={isAdminMode} />}

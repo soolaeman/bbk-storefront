@@ -18,8 +18,9 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA, shared Footer, catalog UX, related products, service/testimonial/gallery polish | ✅ Closed | [`CHAT-1.6.md`](CHAT-1.6.md) |
 | 1.6B | **16 Aug 2026** | **19:45 WIB** | **20:16 WIB** | **31m** | Post-session launch architecture clarification: public Next.js takeover/SEO + authenticated WordPress admin controls | 🟡 Clarified / Pending | [`CHAT-1.6B.md`](CHAT-1.6B.md) |
 | 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean verification baseline, GitHub branch finalization, prompt/documentation audit, end-session handoff | ✅ Closed with documentation debt | [`CHAT-1.7.md`](CHAT-1.7.md) |
+| 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts, Vercel/API runtime diagnostics, DNS investigation, hosting fallback evaluation | 🛑 Closed — DNS blocked | [`CHAT-1.8.md`](CHAT-1.8.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. Chat 1.7 Start/End are recorded from current session evidence.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. Chat 1.8 End is recorded at minute precision from current session evidence.
 
 ---
 
@@ -70,6 +71,12 @@ Chat 1.7 START
         ↓
 17 Aug 2026 06:18 WIB
 Chat 1.7 END
+        ↓
+17 Aug 2026 06:30 WIB
+Chat 1.8 START
+        ↓
+17 Aug 2026 16:54 WIB
+Chat 1.8 END
 ```
 
 ### Project time summary
@@ -87,11 +94,14 @@ Chat 1.6B working duration:
 Chat 1.7 working duration:
 2 hours 48 minutes
 
-Verified session working time through Chat 1.7:
-36 hours 04 minutes 16 seconds
+Chat 1.8 working duration:
+10 hours 24 minutes
+
+Verified session working time through Chat 1.8:
+46 hours 28 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
-65 hours 33 minutes 0 seconds
+76 hours 09 minutes
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB
@@ -127,6 +137,9 @@ Launch architecture clarification
    ↓
 Chat 1.7
 Clean verification + GitHub branch finalization + documentation audit
+   ↓
+Chat 1.8
+Recent Posts + runtime diagnostics + DNS blocker isolation
 ```
 
 ---
@@ -143,24 +156,25 @@ SHARED FOOTER           ✅ integrated across key templates
 RELATED PRODUCTS        ✅ implemented baseline
 GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
+RECENT POSTS            ✅ implemented baseline
 
 STEP 1 VISUAL QA        ✅ accepted by user
 DESKTOP UI QA           ✅ accepted by user
 MOBILE UI QA            ✅ accepted by user
-PUBLIC SEO TAKEOVER     ⏳ clarified in 1.6B; audit pending
-ADMIN CONTROL LAYER     ⏳ clarified in 1.6B; implementation pending
-BACKEND INTEGRATION     ⏳ next phase
+PUBLIC SEO TAKEOVER     ⏳ audit pending
+ADMIN CONTROL LAYER     ⏳ implementation pending
+BACKEND INTEGRATION     ⏳ blocked by upstream DNS resolution
 ACF/CORE SYSTEM         ⏳ carried
-PRODUCTION HARDENING    ⏳ carried
+PRODUCTION HARDENING    ⏳ blocked by upstream verification
 ```
 
 ---
 
 ## Current Pareto Focus
 
-1. Audit WordPress public URLs + SEO surface before defining the Next.js takeover strategy.
-2. Implement an authenticated WordPress admin control layer for READY ↔ SOLD and ACF Telegram actions.
-3. Integrate WooCommerce / ACF / BBK Core System while preserving existing contracts, then proceed to production hardening.
+1. Restore healthy authoritative DNS for `bukanbarukitchen.com` and verify delegation/zone consistency.
+2. Re-test WordPress/WooCommerce upstream and Next.js API routes locally and on Vercel after DNS recovery.
+3. Resume public SEO takeover audit, authenticated admin control layer, and backend hardening only after upstream connectivity is proven.
 
 ---
 

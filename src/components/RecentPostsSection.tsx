@@ -57,8 +57,6 @@ export const RecentPostsSection: React.FC = () => {
     return () => { cancelled = true; };
   }, []);
 
-  if (!isLoading && (error || posts.length === 0)) return null;
-
   const goTo = (index: number) => {
     if (posts.length === 0) return;
     setActiveIndex((index + posts.length) % posts.length);
@@ -92,6 +90,12 @@ export const RecentPostsSection: React.FC = () => {
           <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 flex items-center justify-center gap-2 text-xs font-semibold text-slate-500">
             <Loader2 className="w-4 h-4 animate-spin" />
             Memuat artikel terbaru...
+          </div>
+        ) : error || posts.length === 0 ? (
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 text-center">
+            <Newspaper className="mx-auto w-6 h-6 text-slate-400" />
+            <p className="mt-3 text-sm font-bold text-slate-700">Artikel terbaru belum tersedia.</p>
+            <p className="mt-1 text-xs text-slate-500">Konten akan tampil otomatis saat koneksi ke WordPress tersedia.</p>
           </div>
         ) : (
           <>

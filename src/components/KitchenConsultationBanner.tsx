@@ -3,6 +3,7 @@ import { ArrowRight, FileText, Factory, MessageCircle, PackageCheck, Store, Exte
 import { generateWhatsAppConsultationLink, generateWhatsAppCustomLink } from '../utils/formatters';
 
 const MBG_CATALOG_URL = 'https://drive.google.com/file/d/1z7AQFK96ZgiyVbYAklXcaeULMK_zhbTS/view?pli=1';
+const MBG_PAGE_URL = '/dapur-mbg';
 
 export const KitchenConsultationBanner: React.FC = () => {
   const buyUnitLink = generateWhatsAppConsultationLink('Saya mau beli peralatan dapur resto dari BBKitchen. Saya ingin cek unit yang tersedia.');
@@ -32,7 +33,7 @@ export const KitchenConsultationBanner: React.FC = () => {
             </div>
 
             <div className="relative w-[88%] shrink-0 snap-start lg:w-auto lg:shrink lg:snap-none">
-              <a href={MBG_CATALOG_URL} target="_blank" rel="noopener noreferrer" className="group block h-full rounded-2xl border border-sky-500/30 bg-sky-700/10 hover:border-sky-400/70 p-5 pb-20 transition-all"><div className="flex items-start justify-between gap-4"><div><FileText className="w-6 h-6 text-sky-400 mb-3" /><p className="text-[10px] uppercase tracking-[0.16em] text-sky-300 font-bold">3 • Dapur MBG</p><h3 className="text-lg font-black text-white mt-1">Paket Peralatan Dapur MBG</h3><p className="text-xs text-slate-400 mt-2">Lihat katalog atau hubungi BBKitchen via WhatsApp untuk kebutuhan peralatan dapur MBG.</p></div><ArrowRight className="w-5 h-5 text-sky-400 shrink-0" /></div></a>
+              <a href={MBG_PAGE_URL} className="group block h-full rounded-2xl border border-sky-500/30 bg-sky-700/10 hover:border-sky-400/70 p-5 pb-20 transition-all"><div className="flex items-start justify-between gap-4"><div><FileText className="w-6 h-6 text-sky-400 mb-3" /><p className="text-[10px] uppercase tracking-[0.16em] text-sky-300 font-bold">3 • Dapur MBG</p><h3 className="text-lg font-black text-white mt-1">Paket Peralatan Dapur MBG</h3><p className="text-xs text-slate-400 mt-2">Lihat halaman Dapur MBG untuk kebutuhan peralatan, layout, paket, dan katalog BBKitchen.</p></div><ArrowRight className="w-5 h-5 text-sky-400 shrink-0 transition-transform group-hover:translate-x-1" /></div></a>
               <div className="absolute left-5 bottom-5 flex flex-wrap gap-2"><a href={mbgLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white hover:bg-emerald-500 transition-colors"><MessageCircle className="w-4 h-4" />Konsultasi MBG</a><a href={MBG_CATALOG_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-sky-400/40 bg-sky-950/50 px-3.5 py-2.5 text-xs font-bold text-sky-200 hover:bg-sky-900/70 transition-colors"><ExternalLink className="w-4 h-4" />PDF Katalog</a></div>
             </div>
 

@@ -37,6 +37,7 @@ const MBG_WHATSAPP_LINK = generateWhatsAppCustomLink(
 const PRODUCTION_WHATSAPP_LINK = generateWhatsAppCustomLink(
   'Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru',
 );
+const BLOG_URL = 'https://bukanbarukitchen.com/blog';
 
 export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -213,6 +214,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
               <div className="flex items-center gap-5">
                 <a href="/" className="transition-colors hover:text-emerald-700">Home</a>
                 <a href="/catalog" className="transition-colors hover:text-emerald-700">Katalog</a>
+                <a href={BLOG_URL} className="transition-colors hover:text-emerald-700">Blog</a>
                 <button type="button" onClick={openMbgWhatsApp} className="transition-colors hover:text-emerald-700">Dapur MBG</button>
                 <button type="button" onClick={handleProductionClick} className="transition-colors hover:text-emerald-700">Mau Produksi Baru?</button>
               </div>
@@ -225,6 +227,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
               <nav className="grid gap-1 text-sm font-semibold text-slate-700" aria-label="Navigasi mobile">
                 <a href="/" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Home</a>
                 <a href="/catalog" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Katalog</a>
+                <a href={BLOG_URL} onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2.5 hover:bg-slate-50">Blog</a>
                 <button type="button" onClick={openMbgWhatsApp} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Dapur MBG</button>
                 <button type="button" onClick={handleProductionClick} className="rounded-lg px-3 py-2.5 text-left hover:bg-slate-50">Mau Produksi Baru?</button>
               </nav>

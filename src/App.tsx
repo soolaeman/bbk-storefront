@@ -92,10 +92,10 @@ export default function App() {
         <div className="mt-8"><KitchenConsultationBanner /></div>
       </main>
       <TestimonialsSection />
-      <RecentPostsSection />
       <GallerySection />
       <LocationSection />
       <SocialMediaSection />
+      <RecentPostsSection />
       <FAQSection />
       <Footer onSelectCategory={(category) => handleFilterChange({ category })} />
       {selectedProduct && <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onToggleStatus={handleToggleStatus} isAdminMode={isAdminMode} />}

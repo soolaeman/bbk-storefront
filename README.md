@@ -63,6 +63,11 @@ Chat 1.8 archive:
 Progress index sync:
 602b671051699f8b72d17323c212ddfc93018eef
 
+Documentation sync before this README refresh:
+- COPY-EDITING-GUIDE.md → f9675c2792ad37144dd254476909defc90243e6b
+- VIBE-CODING-COPY-GUIDE.md → 45a7de20ff4bd5dc61520609db0623176e3e6bcd
+- NAVIGATOR.md → 878a460b2c891ac05f8ae9fc069b5cb7fe062457
+
 Canonical END-SESSION prompt:
 29f5d4925de894b84eb374c8e58c4f885b542e56
 ```

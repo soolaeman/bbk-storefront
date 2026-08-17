@@ -25,10 +25,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  icons: {
-    icon: '/BBKitchen.ico',
-    shortcut: '/BBKitchen.ico',
-  },
   openGraph: {
     type: 'website',
     locale: 'id_ID',

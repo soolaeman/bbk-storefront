@@ -8,17 +8,17 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 LAST SESSION — CHAT 1.7
+# 🕒 LAST SESSION — CHAT 1.8
 
 ```text
-Session: 1.7 BBKitchen Next.js Migration
-Started: 17 August 2026 03:30:00 WIB
-Ended: 17 August 2026 06:18:00 WIB
-Duration: 2h 48m
-Status: CLOSED WITH DOCUMENTATION DEBT
+Session: 1.8 BBKitchen Next.js Migration
+Started: 17 August 2026 06:30 WIB
+Ended: 17 August 2026 16:54 WIB
+Duration: 10h 24m
+Status: CLOSED — DNS / UPSTREAM BLOCKED
 ```
 
-> Chat 1.7 established the current `main` workflow, completed Step 1 visual/runtime evidence review, finalized the GitHub branch transition, and synchronized operational documentation. The session did not resume Vercel deployment. `START-SESSION-PROMPT.md` has now been synchronized to the `main` workflow; `README.md` is being aligned with the Chat 1.7 close state.
+> Chat 1.8 added and verified the Recent Posts homepage baseline, enabled Vercel Speed Insights, investigated Vercel and local 502s, evaluated an alternative Dewaweb Warrior staging path, and isolated the current runtime blocker to DNS resolution of `bukanbarukitchen.com`. The next session should fix/verify DNS authority and delegation before changing application architecture.
 
 ---
 
@@ -33,65 +33,70 @@ Chat 1.5 → ✅ Closed
 Chat 1.6 → ✅ Closed
 Chat 1.6B → 🟡 Clarified / Pending
 Chat 1.7 → ✅ Closed
+Chat 1.8 → 🛑 Closed — DNS blocked
 ```
 
 ## Last code checkpoint
 
 ```text
-96394b9ed3596383cdba44ea27312418827872f1
-fix: make gallery carousel responsive with mobile swipe
+faa03e509e8b2af72c769ac8bef21fcb4510766d
+fix: use apex WooCommerce API fallback
 ```
 
-GitHub evidence: **16 August 2026 19:35:59 WIB**.
+GitHub evidence: **17 August 2026 07:50:34 WIB**.
+
+Related code checkpoint:
+
+```text
+a318dddec8f4be32957e51cbed74a656187db963
+fix: use apex WordPress API fallback
+```
+
+GitHub evidence: **17 August 2026 07:50:18 WIB**.
 
 ## Current documentation checkpoint
 
 ```text
-Chat 1.7 archive:
-f37b6c6b5aebb2333ad15bed04e46b33435591da
+Chat 1.8 archive:
+20fa9042c01990a5c8397256e48dfc6786a0957b
 
 Progress index sync:
-c1814f7e478e3e7ec8d53505843d162daaf3858d
+602b671051699f8b72d17323c212ddfc93018eef
 
-Navigator sync:
-5d2961320078ad84509a4d5700dbf2a8b37068fe
-
-START-SESSION sync:
-1675661d7396c20271e7779ebf4f8f58428d4926
+Canonical END-SESSION prompt:
+29f5d4925de894b84eb374c8e58c4f885b542e56
 ```
 
 ---
 
 # 📈 MIGRATION PROGRESS
 
-| Session | Periode / waktu terverifikasi | Start | End | Durasi | Fokus utama | Hasil utama | Status |
-|---|---|---|---|---:|---|---|---|
-| 1.1 | **14 Aug 2026** | **12:45 WIB** | **15:12 WIB** | **2h 27m** | Foundation | WooCommerce source of truth, server-side API boundary, pagination baseline | ✅ |
-| 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API / Metadata / SEO | Live catalog contract, metadata endpoint, Product Detail + SEO foundation | ✅ |
-| 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | `[...slug]`, shared Header integration, visual convergence foundation | ✅ |
-| 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | Sales-first homepage, CTA contracts, hero/social assets | ✅ |
-| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / repository orientation / session hardening | Timing/documentation synchronization; application verification deferred | ✅ |
-| 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA / UX polish / gallery | Shared Footer, related products, responsive category UX, service/testimonial/gallery carousels | ✅ |
-| 1.6B | **16 Aug 2026** | — | — | — | Launch architecture clarification | Single public Next.js renderer + authenticated WordPress admin controls | 🟡 |
-| 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean visual/runtime verification, GitHub branch finalization, documentation synchronization | `main` established as active workflow; operational prompt workflow synchronized | ✅ |
+| Session | Period / time | Start | End | Duration | Focus | Status |
+|---|---|---|---|---:|---|---|
+| 1.1 | **14 Aug 2026** | **12:45 WIB** | **15:12 WIB** | **2h 27m** | Foundation | ✅ |
+| 1.2 | **14 Aug 2026** | **17:00 WIB** | **21:00 WIB** | **4h** | API / Metadata / SEO | ✅ |
+| 1.3 | **14–15 Aug 2026** | **14 Aug 23:00 WIB** | **15 Aug 03:00 WIB** | **4h** | Routing / Integration | ✅ |
+| 1.4 | **15–16 Aug 2026** | **15 Aug 13:00 WIB** | **16 Aug 06:32:41 WIB** | **17h 32m 41s** | Sales / Conversion | ✅ |
+| 1.5 | **16 Aug 2026** | **06:32:41 WIB** | **07:20 WIB** | **47m 19s** | Documentation / session hardening | ✅ |
+| 1.6 | **16 Aug 2026** | **15:45 WIB** | **19:43:16 WIB** | **3h 58m 16s** | Responsive QA / UX / gallery | ✅ |
+| 1.6B | **16 Aug 2026** | — | — | — | Launch architecture clarification | 🟡 |
+| 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean verification / main branch / docs | ✅ |
+| 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts / runtime diagnostics / DNS | 🛑 |
 
 ### ⏱️ Project elapsed time since Chat 1.1
 
 ```text
-Verified working/session time through Chat 1.5:
-28 hours 47 minutes 0 seconds
-
-Chat 1.6 working duration:
-3 hours 58 minutes 16 seconds
-
-Chat 1.7 working duration:
-2 hours 48 minutes
-
 Verified working/session time through Chat 1.7:
-35 hours 55 minutes 16 seconds
+36 hours 04 minutes 16 seconds
+
+Chat 1.8 working duration:
+10 hours 24 minutes
+
+Verified working/session time through Chat 1.8:
+46 hours 28 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
-65 hours 33 minutes 0 seconds
+76 hours 09 minutes
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB
@@ -101,27 +106,11 @@ Earliest verifiable migration evidence:
 
 ---
 
-# 🚀 NEXT ACTION — CHAT 1.8
-
-**Final documentation verification / restore any remaining operational SOP drift / then resume product-performance or launch-preparation work.**
-
-Recommended first sequence:
-
-```text
-1. Pull latest `main`.
-2. Verify docs/prompts/START-SESSION-PROMPT.md contains only current `main` workflow references.
-3. Run final documentation drift audit if any operational SOP remains stale.
-4. Freeze the verified documentation baseline.
-5. Resume the next product/performance or SEO/backend priority.
-```
-
----
-
 # 🎯 CURRENT PRIORITIES — PARETO
 
-1. **Public SEO takeover audit** — establish exactly what WordPress currently exposes/indexes before switching the public renderer.
-2. **Authenticated admin control layer** — WordPress admin can toggle READY ↔ SOLD and open the product's ACF Telegram link from Product Card and Product Detail.
-3. **Backend/source-of-truth integration / performance hardening** — WooCommerce / ACF / BBK Core System while preserving existing contracts.
+1. **DNS recovery** — verify authoritative nameservers, delegation, SOA, and zone consistency for `bukanbarukitchen.com`.
+2. **Upstream API verification** — after DNS recovery, re-test WordPress, WooCommerce, `/api/posts`, `/api/products`, and metadata locally and on Vercel.
+3. **Launch hardening** — resume WordPress public URL/SEO audit, authenticated admin controls, and WooCommerce/ACF/Core System integration only after upstream connectivity is proven.
 
 ---
 
@@ -131,7 +120,7 @@ Recommended first sequence:
 |---|---|---|
 | WooCommerce data architecture | ✅ | ✅ Established baseline |
 | Catalog / pagination | ✅ | ✅ Server-side, 8/page baseline |
-| Product Detail | ✅ Functional | ⚠️ Final cross-template UI regression pending |
+| Product Detail | ✅ Functional | ⚠️ Final cross-template regression pending |
 | Local hierarchical routing | ✅ | ✅ `[...slug]` verified |
 | Homepage sales positioning | ✅ | 🔒 Direction locked |
 | Shared Footer | ✅ | ✅ User-verified across key templates |
@@ -139,13 +128,14 @@ Recommended first sequence:
 | Catalog responsive navigation | ✅ | ✅ User-verified desktop/mobile direction |
 | Service cards + WhatsApp CTAs | ✅ | ✅ User-verified |
 | Testimonials mobile slider | ✅ | ⚠️ Latest correction needs final regression |
-| Gallery | ✅ Compact carousel | ⚠️ Latest UI correction needs final regression |
-| Shared Header | ✅ Integrated | ⚠️ Search typing, sticky behavior, parity remain carried |
-| Article typography | ✅ Content rendering exists | ⚠️ Editorial parity remains carried |
-| Public SEO takeover | ⏳ Clarified | ⏳ WordPress URL/indexability audit pending |
-| Authenticated admin controls | ⏳ Clarified | ⏳ Real WordPress authentication + server authorization pending |
+| Gallery | ✅ Compact carousel | ⚠️ Latest correction needs final regression |
+| Recent Posts | ✅ Implemented | ✅ Placement/UI baseline verified locally |
+| Shared Header | ✅ Integrated | ⚠️ Search typing, sticky behavior, parity carried |
+| Article typography | ✅ Content rendering exists | ⚠️ Editorial parity carried |
+| WordPress public SEO takeover | ⏳ | ⏳ URL/indexability audit pending |
+| Authenticated admin controls | ⏳ | ⏳ Authentication/server authorization pending |
 | ACF/Core System | ⏳ | ⏳ Deferred to integration/hardening |
-| Production deployment | ⏳ | ⏳ Deferred |
+| Production runtime | ⏳ | 🛑 Blocked by DNS resolution |
 
 ---
 
@@ -190,53 +180,6 @@ Recommended first sequence:
 - Homepage positioning is primarily sales.
 - Universal floating mascot composition is rejected.
 
-### Authenticated admin control layer — clarified in Chat 1.6B
-
-For an authenticated WordPress admin, Next.js Product Card and Product Detail must support:
-
-```text
-READY ↔ SOLD
-
-Buka Telegram
-    ↓
-ACF-backed product Telegram link
-```
-
-Requirements:
-
-- Public visitors must not receive admin controls.
-- `READY ↔ SOLD` is the requested admin transition; existing product status contract is not reduced to only those two statuses.
-- Telegram URL comes from ACF, not a hardcoded frontend URL.
-- Status mutations must be authorized server-side.
-- A frontend `isAdminMode` flag alone is not authentication or authorization.
-- WordPress/ACF/Core System remains source of truth for mutations.
-- Current UI/state foundations are not evidence that the authenticated control layer is implemented.
-
----
-
-# 🔒 LOCKED UX CONTRACTS — SUMMARY
-
-Canonical full wording lives in [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md).
-
-```text
-Dapur MBG       → direct WhatsApp
-Produksi Baru   → direct WhatsApp
-READY           → Tanya WA
-SOLD            → Tanya Lainnya
-Hero catalog CTA→ scroll to catalog
-Social videos   → cover first → play → iframe
-```
-
-### Session 1.6 additions
-
-- Catalog category/subcategory counts removed from buttons.
-- Desktop category/subcategory navigation wraps; mobile remains horizontal-scroll friendly.
-- Service cards keep mobile swipe + desktop grid; WhatsApp CTA has service-specific copy.
-- Testimonials use mobile card-per-slide carousel.
-- Gallery uses compact 4-card desktop carousel + mobile swipe across all 16 gallery images.
-
-Do not change routing, SEO, inventory, or message contracts during ordinary copy/UI edits.
-
 ---
 
 # ⚠️ ACTIVE BOTTLENECKS
@@ -244,30 +187,43 @@ Do not change routing, SEO, inventory, or message contracts during ordinary copy
 | ID | Problem | Status |
 |---|---|---|
 | B-3 | ACF REST / authoritative inventory metadata filtering | ⚠️ Carried |
-| B-6 | WooCommerce upstream connectivity 502/reset history | ⚠️ Carried; root cause not proven |
+| B-6 | WooCommerce / WordPress upstream DNS resolution and 502 history | 🛑 Active — `ENOTFOUND bukanbarukitchen.com` observed locally and on Vercel |
 | B-12 | Article/local editorial typography | ⚠️ Carried |
 | B-13 | Header search interaction | ⚠️ Carried |
 | B-14 | Product Detail shared Header parity | ⚠️ Carried |
-| B-15 | Public WordPress renderer/SEO surface must be audited before Next.js takeover | ⚠️ New launch requirement |
-| B-16 | Authenticated WordPress admin control layer not yet implemented | ⚠️ New launch requirement |
+| B-15 | Public WordPress renderer/SEO surface must be audited before Next.js takeover | ⚠️ Launch requirement |
+| B-16 | Authenticated WordPress admin control layer not yet implemented | ⚠️ Launch requirement |
 
-Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them without new evidence.
+### B-6 evidence summary
+
+```text
+Vercel API route:
+502 → upstream fetch failure → ENOTFOUND bukanbarukitchen.com
+
+Local Next.js API route:
+502 → upstream fetch failure → ENOTFOUND bukanbarukitchen.com
+
+Public DNS A lookups previously observed:
+103.185.53.66 from 1.1.1.1 / 8.8.8.8 / 9.9.9.9
+
+Direct authoritative-server queries:
+ns1.ezydomain.com → no normal A/SOA answer; SOA timed out
+ns2.ezydomain.com → no normal A/SOA answer; SOA timed out
+```
+
+The current evidence points to DNS delegation/authoritative-zone instability, not a Next.js rendering bug.
 
 ---
 
 # 🚫 DO NOT REPEAT
 
-- Mock catalog as source of truth.
-- Frontend-only inventory/category truth.
-- Single `[location]` route for hierarchical WordPress URLs.
-- Treating stale `.next` artifacts as source architecture failure.
+- Treating browser console 502s as proof of a Next.js frontend problem.
+- Rewriting API routes to hide a DNS resolution failure.
+- Regenerating WooCommerce credentials without evidence of an authentication failure.
+- Treating Vercel Deployment Protection `302` as the root cause of upstream API failure.
+- Using the protected branch deployment URL as the sole unauthenticated API test.
+- Continuing the Dewaweb Warrior hosting experiment without a compatible runtime/platform baseline.
 - Treating `next build` success as proof upstream runtime is healthy.
-- Importing interactive Client Components as pure Server Components.
-- Universal floating mascot layers.
-- Mass-changing existing SEO slugs.
-- Exposing WooCommerce/Google credentials to client code.
-- Calling documentation-only commits application-code checkpoints.
-- Replacing compact homepage sections with oversized editorial layouts without a clear UX reason.
 - Treating `isAdminMode` as proof of WordPress authentication.
 - Disabling WordPress public routes before auditing their SEO/indexability role.
 
@@ -277,19 +233,20 @@ Resolved historical bottlenecks remain in `docs/progress/`; do not re-open them 
 
 ### NOW
 
-- Final documentation verification of operational SOPs.
-- Clean final build/runtime/mobile regression after latest UI commits.
+- DNS authority/delegation recovery and verification.
+- Re-test local and Vercel WordPress/WooCommerce API connectivity.
+- Clean final build/runtime/mobile regression after upstream recovery.
 - Shared Header search interaction + sticky behavior + parity.
 - Product Detail final shared-design parity.
 - Article/local editorial typography.
-- Audit WordPress public URL + SEO surface.
 
 ### NEXT
 
+- Public WordPress URL + SEO surface audit.
 - Authenticated WordPress admin control layer.
 - WordPress/WooCommerce/Core System integration.
 - Authoritative ACF filtering.
-- WooCommerce API performance/cache hardening where needed.
+- WooCommerce API performance/cache hardening.
 - SOLD → Google Sheets workflow.
 
 ### LATER
@@ -355,6 +312,7 @@ public/images/gallery/gallery-01.webp … gallery-16.webp
 src/components/Header.tsx
 src/components/Footer.tsx
 src/components/ProductCard.tsx
+src/components/RecentPostsSection.tsx
 src/components/SocialMediaSection.tsx
 src/components/KitchenConsultationBanner.tsx
 src/components/TestimonialsSection.tsx
@@ -365,6 +323,7 @@ src/app/page.tsx
 src/app/catalog/page.tsx
 src/app/product/[slug]/page.tsx
 src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
+src/app/api/posts/route.ts
 src/app/api/products/route.ts
 src/lib/wordpress.ts
 src/lib/woocommerce.ts
@@ -396,30 +355,29 @@ NAVIGATOR.md
 
 ---
 
-# 🚀 CHAT 1.8 HANDOFF
+# 🚀 CHAT 1.9 HANDOFF
 
 Start title:
 
 ```text
-1.8 BBKitchen Next.js Migration — Final Documentation Verification / Product Performance & Launch Preparation
+1.9 BBKitchen Next.js Migration — DNS Recovery & Production API Verification
 ```
 
 Current session:
 
 ```text
-Chat 1.7 → CLOSED
-Chat 1.8 → NEXT
+Chat 1.8 → CLOSED — DNS BLOCKED
+Chat 1.9 → NEXT
 ```
 
 First actions:
 
-1. Pull latest `main`.
-2. Run clean build/runtime verification on latest code.
-3. Verify desktop + mobile on homepage, catalog, Product Detail, local pages.
-4. Confirm operational prompt workflow references only `main`.
-5. Freeze documentation baseline.
-6. Audit WordPress public URLs, canonical/sitemap/indexability, and existing SEO route surface.
-7. Resume WooCommerce/WP/ACF/Core System integration and performance hardening.
+1. Verify authoritative DNS/delegation for `bukanbarukitchen.com`.
+2. Confirm stable A/NS/SOA responses from multiple public resolvers.
+3. Re-test WordPress public REST and WooCommerce endpoints.
+4. Re-test local `/api/posts`, `/api/products`, and metadata.
+5. Re-test Vercel API routes.
+6. Only after upstream recovery, resume production hardening / SEO takeover audit.
 
 At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
 
@@ -436,5 +394,6 @@ Chat 1.5 → Documentation / session hardening
 Chat 1.6 → Responsive UI / homepage UX / gallery
 Chat 1.6B → Launch architecture clarification
 Chat 1.7 → Clean verification + main branch + docs sync
-Chat 1.8 → Next: performance / SEO / backend integration
+Chat 1.8 → Recent Posts + runtime diagnostics + DNS blocker isolation
+Chat 1.9 → DNS recovery + production API verification
 ```

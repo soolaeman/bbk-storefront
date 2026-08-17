@@ -14,7 +14,12 @@ interface RecentPost {
 }
 
 function stripHtml(value: string): string {
-  return value.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  const text = value.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  if (typeof document === 'undefined') return text;
+
+  const decoder = document.createElement('textarea');
+  decoder.innerHTML = text;
+  return decoder.value;
 }
 
 function formatDate(value: string): string {

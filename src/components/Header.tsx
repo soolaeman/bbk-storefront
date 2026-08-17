@@ -12,6 +12,7 @@ const SEARCH_RESULT_LIMIT = 3;
 const PRODUCTION_WHATSAPP_LINK = generateWhatsAppCustomLink('Halo BBKitchen, mohon info peralatan dapur/restoran custom atau produksi baru');
 const BLOG_URL = 'https://bukanbarukitchen.com/blog';
 const MBG_PAGE_URL = '/dapur-mbg';
+const PRODUCTION_PAGE_URL = '/produksi-baru';
 
 export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -51,8 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); const query = searchInput.trim(); if (!query) return; setSearchOpen(false); window.location.href = `/catalog?search=${encodeURIComponent(query)}`; };
   const handleSearchResultClick = (product: HeaderSearchProduct) => { setSearchOpen(false); window.location.href = `/product/${encodeURIComponent(product.slug)}`; };
-  const handleProductionClick = () => { window.open(PRODUCTION_WHATSAPP_LINK, '_blank', 'noopener,noreferrer'); setMobileMenuOpen(false); };
-  const goToMbgPage = () => { window.location.href = MBG_PAGE_URL; setMobileMenuOpen(false); };
+  const handleProductionClick = () => { window.location.href = PRODUCTION_PAGE_URL; setMobileMenuOpen(false); };
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur">

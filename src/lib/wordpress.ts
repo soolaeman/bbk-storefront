@@ -1,6 +1,9 @@
-const WORDPRESS_API_URL =
+const DEFAULT_WORDPRESS_API_URL = 'https://bukanbarukitchen.com/wp-json/wp/v2';
+
+const WORDPRESS_API_URL = (
   process.env.WORDPRESS_API_URL ||
-  'https://www.bukanbarukitchen.com/wp-json/wp/v2';
+  DEFAULT_WORDPRESS_API_URL
+).replace(/^https?:\/\/www\./i, 'https://').replace(/\/$/, '');
 
 export interface WordPressRenderedField {
   rendered: string;
@@ -104,8 +107,6 @@ function buildQuery(options?: WordPressQueryOptions): string {
   if (options?.tags) params.set('tags', options.tags);
   if (options?.include) params.set('include', options.include);
   if (options?.exclude) params.set('exclude', options.exclude);
-  if (options?.after) params.set('after', options.after);
-  if (options?.before) params.set('before', options.before);
   if (options?.orderby) params.set('orderby', options.orderby);
   if (options?.order) params.set('order', options.order);
 

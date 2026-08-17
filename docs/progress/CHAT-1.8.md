@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN / BOOTSTRAPPED**
+**CLOSED — BLOCKED BY DNS / UPSTREAM RESOLUTION**
 
 This archive is the forensic record for Chat 1.8.
 
@@ -13,182 +13,246 @@ This archive is the forensic record for Chat 1.8.
 ```text
 Session: 1.8
 Started: 17 August 2026 06:30:00 WIB
-Ended: PENDING
-Duration: PENDING
-Evidence source: Current conversation/session timestamp available for this migration session
+Ended: 17 August 2026 16:45:48 WIB
+Duration: 10h 15m 48s
+Evidence source: Start from existing Chat 1.8 archive / current-session evidence; End from current user-session time evidence at close.
 ```
-
----
 
 ## Session Goal
 
-Final documentation verification / restore any remaining operational SOP drift, then resume the next product-performance or launch-preparation priority from the Chat 1.7 handoff.
+Resume Chat 1.7 handoff, add/verify the Recent Posts homepage work, harden deployment/runtime integration, and investigate production/backend connectivity issues.
 
-## Scope
+## Scope Actually Completed
 
-Session bootstrap, repository/documentation orientation, verification of the current `main` state, and preparation for the next Pareto implementation step.
-
-## Out of Scope
-
-No application-code implementation has been performed during bootstrap.
+- Verified `main` repository state and continued from the Chat 1.8 baseline.
+- Recent Posts section was added to the homepage and positioned above FAQ in the documented workflow.
+- WordPress post excerpt decoding was corrected so HTML entities no longer render as `&hellip;`-style text in the UI.
+- Vercel Speed Insights was enabled.
+- Investigated Vercel and local runtime failures for WooCommerce / WordPress API routes.
+- Attempted a Dewaweb Warrior Node.js staging deployment as an alternative host; this was abandoned after runtime/platform incompatibilities.
+- Isolated the current blocker to DNS resolution of `bukanbarukitchen.com` from both Vercel and local Node runtime.
 
 ---
 
-## Orientation Baseline
+## Top 20% Changes
+
+1. **Recent Posts homepage integration** — section added and positioned above FAQ; runtime fallback behavior keeps the section visible during API failure.
+2. **WordPress excerpt normalization** — decoded WordPress HTML entities in post excerpts.
+3. **Vercel observability** — Speed Insights dependency/component enabled.
+4. **Backend diagnostics** — `/api/products`, `/api/posts`, and metadata runtime failures traced to DNS resolution rather than frontend rendering.
+5. **Hosting fallback investigation** — Dewaweb Warrior staging path tested and rejected due to Node/GLIBC/Turbopack/package-environment incompatibilities.
+
+---
+
+## File / Component / Route History
+
+### Changed / created during this session
 
 ```text
-Repository: soolaeman/Front-End-BBKitchen
-Branch: main
-Last closed session: Chat 1.7
-Current session: Chat 1.8
+src/components/RecentPostsSection.tsx
+src/app/api/posts/route.ts
+src/app/api/products/route.ts
+src/app/layout.tsx
+package.json
 ```
 
-### Previous checkpoints
+### Relevant route/API surface
 
 ```text
-Last application-code checkpoint:
-96394b9ed3596383cdba44ea27312418827872f1
-fix: make gallery carousel responsive with mobile swipe
-
-Last documented Chat 1.7 archive:
-f37b6c6b5aebb2333ad15bed04e46b33435591da
-
-Last progress index sync:
-c1814f7e478e3e7ec8d53505843d162daaf3858d
-
-Last Navigator sync:
-5d2961320078ad84509a4d5700dbf2a8b37068fe
-
-Last START-SESSION SOP sync:
-1675661d7396c20271e7779ebf4f8f58428d4926
-
-Latest root README sync commit:
-9faf6b74b56aece811a2858e9fe3ef6c9e1fbc49
+/
+/api/posts
+/api/products
+/api/wordpress
+/catalog
+/jual-barang-bekas-restoran/[...slug]
+/product/[slug]
 ```
+
+The current `/api/products` route uses `WC_CONSUMER_KEY` + `WC_CONSUMER_SECRET`, then fetches `https://bukanbarukitchen.com/wp-json/wc/v3`. 
 
 ---
 
-## Repository / Documentation Verification
+## Status Classification
 
-Verified on `main` before implementation:
+### DONE / VERIFIED
+
+- Recent Posts homepage section exists in `main` and was visually verified locally.
+- Recent Posts placement above FAQ was verified.
+- `npm run build` passed locally on the normal project environment during the session before the DNS issue surfaced.
+- Vercel Deployment Protection was inspected; branch/deployment URL authentication explained the external `curl` 302.
+- WordPress public REST API endpoint was reachable from the local machine.
+
+### DONE / CODE ONLY / PARTIAL
+
+- Vercel Speed Insights: implemented; deployment wiring exists.
+- WordPress/WooCommerce upstream integration: code exists, but upstream runtime verification is blocked.
+
+### BLOCKED
+
+- Vercel `/api/products` and `/api/posts` upstream requests.
+- Local `/api/products` and `/api/posts` upstream requests.
+- WooCommerce metadata loading.
+- Recent Posts runtime loading.
+- Final production runtime verification.
+
+### FAILED / ABORTED
+
+- Dewaweb Warrior Node.js staging deployment.
+
+---
+
+## Root Cause / Bottleneck Register
+
+### B-6 — WooCommerce / WordPress upstream connectivity
 
 ```text
-README.md                         ✅ current-state dashboard available
-NAVIGATOR.md                      ✅ documentation map available
-docs/progress/README.md           ✅ Chat 1.7 is latest closed session
-docs/progress/CHAT-1.7.md         ✅ latest forensic archive verified
-docs/guides/README.md             ✅ guide index verified
-docs/guides/COPY-EDITING-GUIDE.md  ✅ current copy map verified
-docs/prompts/START-SESSION-PROMPT.md ✅ current `main` bootstrap SOP verified
-docs/prompts/END-SESSION-PROMPT.md   ✅ canonical close workflow verified
-docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md ✅ current sync workflow verified
+Symptom:
+/api/products, /api/posts, Yoast metadata all return 502.
+
+Observed root cause:
+Node fetch fails before HTTP request completion with:
+getaddrinfo ENOTFOUND bukanbarukitchen.com
+
+Evidence:
+- Vercel Function Logs show ENOTFOUND for hostname bukanbarukitchen.com.
+- Local Next.js runtime shows the identical ENOTFOUND error.
+- Local curl to WordPress previously reached the server and returned HTTP 200 for /wp-json/wp/v2/posts and HTTP 401 for /wp-json/wc/v3/products without credentials, proving the endpoints themselves respond when DNS/network resolution succeeds.
+- Public DNS A lookups previously returned 103.185.53.66 from 1.1.1.1, 8.8.8.8, and 9.9.9.9.
+- Direct queries to ns1.ezydomain.com and ns2.ezydomain.com did not return a normal A/SOA answer for the domain and SOA queries timed out.
+
+Status:
+BLOCKED — DNS delegation/authoritative-zone inconsistency suspected; CS/DNS provider verification required.
 ```
 
-The progress index explicitly records Chat 1.7 as closed and Chat 1.8 as the next session. fileciteturn2file0
-
----
-
-## Current Migration Position
+### New hosting dead end
 
 ```text
-DATA ARCHITECTURE       ✅ established
-ROUTING                 ✅ established
-CATALOG                 ✅ converged baseline
-PRODUCT DETAIL          ✅ functional baseline
-HOMEPAGE POSITIONING    ✅ sales-first
-SHARED FOOTER           ✅ integrated across key templates
-RELATED PRODUCTS        ✅ implemented baseline
-GALLERY                 ✅ compact carousel direction locked
-MOBILE UX PATTERNS      ✅ direction locked
-
-PUBLIC SEO TAKEOVER     ⏳ audit pending
-ADMIN CONTROL LAYER     ⏳ implementation pending
-BACKEND INTEGRATION     ⏳ next phase
-ACF/CORE SYSTEM         ⏳ carried
-PRODUCTION HARDENING    ⏳ carried
+Dewaweb Warrior staging:
+- Node 18.20.8 was initially active; incompatible with Next 16.3.1 requirements.
+- Node 20.20.2 became available after recreating the Node application.
+- npm install succeeded on Node 20.
+- next build failed because the server GLIBC lacks GLIBC_2.29 and Turbopack native bindings were unavailable.
+- Webpack workaround then exposed Dewaweb npm/devDependency environment issues.
+- Staging was deleted/abandoned.
 ```
 
 ---
 
-## Current Pareto
+## Failed Approaches / Dead Ends
 
-1. Audit WordPress public URLs + SEO surface before defining the Next.js takeover strategy.
-2. Implement an authenticated WordPress admin control layer for READY ↔ SOLD and ACF Telegram actions.
-3. Integrate WooCommerce / ACF / BBK Core System while preserving existing contracts, then proceed to production hardening.
-
----
-
-## Session Bootstrap Verification
-
-```text
-Correct session number determined:     ✅ Chat 1.8
-Current canonical branch:              ✅ main
-Progress archive created first:       ✅
-Application code changed in bootstrap: ❌ none
-```
-
-The canonical START-SESSION SOP requires the session archive to exist before application coding begins and requires timestamp evidence to be recorded without invention. fileciteturn6file0
+1. Treating the Vercel `302` as the cause of the `/api/products` 502. It was Deployment Protection on the branch deployment URL; authenticated browser requests reached the API and exposed the real upstream error.
+2. Repeatedly changing WooCommerce credentials before proving the upstream error. The route catches `fetch()` failures; the observed failure is DNS `ENOTFOUND`, not an HTTP 401/403 response.
+3. Attempting to force the Dewaweb Warrior environment to host the current Next 16.3.1 stack. Node/GLIBC/Turbopack/npm environment constraints made it unsuitable.
+4. Assuming the problem was frontend/Next.js because the browser showed console errors. The server route was executing; the upstream hostname could not resolve.
 
 ---
 
-## Carried-Forward Technical Debt
+## Locked Decisions
 
-- B-3 — ACF REST / authoritative inventory metadata filtering — carried.
-- B-6 — WooCommerce upstream connectivity 502/reset history — carried; root cause not proven.
-- B-12 — Article/local editorial typography — carried.
-- B-13 — Header search interaction — carried.
-- B-14 — Product Detail shared Header parity — carried.
-- B-15 — Public WordPress renderer/SEO surface must be audited before Next.js takeover.
-- B-16 — Authenticated WordPress admin control layer not yet implemented.
-
----
-
-## Locked Decisions Relevant to Chat 1.8
-
-- `main` is the canonical active GitHub workflow branch.
-- Next.js is the public experience layer and intended single public renderer.
+- `main` remains the canonical active GitHub workflow branch.
+- Next.js remains the public experience layer.
 - WordPress/WooCommerce/ACF/BBK Core System remains backend/admin source of truth.
-- Existing SEO URL/slug intent remains locked unless new technical evidence requires change.
-- SOLD Product Cards remain discoverable.
-- READY ↔ SOLD is an authenticated-admin transition, not a replacement for the broader status contract.
-- Telegram URL must come from ACF, not a hardcoded frontend URL.
-- A frontend `isAdminMode` flag is not authentication or authorization.
-- Approved UI should not be revisited without regression evidence.
-- AI-assisted development must be documented honestly; do not claim line-by-line manual authorship.
+- Do not modify application source to work around the current DNS problem until DNS authority is corrected and the upstream path is re-tested.
+- Do not continue the Dewaweb Warrior staging hosting experiment unless the hosting platform later provides a compatible runtime/platform baseline.
+- Do not interpret a successful `next build` as proof of upstream runtime health.
 
 ---
 
-## Verification State
+## Verification
 
 ```text
-Repository orientation:             ✅
-Documentation orientation:          ✅
-Session bootstrap:                  ✅
-Application code implementation:    ⏳ not started
-Build verification:                 ⏳ pending until implementation/testing
-Runtime verification:               ⏳ pending until implementation/testing
-SEO audit:                           ⏳ pending
-WordPress authentication:           ⏳ pending
-Server authorization:               ⏳ pending
-Mutation/upstream write verification: ⏳ pending
+Repository / GitHub state:     ✅ verified
+Recent Posts UI:               ✅ locally verified
+Recent Posts position:         ✅ above FAQ
+Vercel deployment build:       ✅ build completed
+Vercel API invocation:         ✅ route reached after SSO
+Vercel upstream fetch:         ❌ ENOTFOUND
+Local Next.js startup:         ✅
+Local upstream fetch:          ❌ ENOTFOUND
+WordPress public REST API:     ✅ reachable when DNS/network resolution succeeds
+WooCommerce authenticated API: ⏳ not revalidated after DNS instability
+Desktop visual baseline:       ✅ previously accepted
+Mobile visual baseline:        ✅ previously accepted
+Production runtime:            ❌ blocked by DNS
 ```
 
 ---
 
-## Handoff from Chat 1.7
+## Pareto Bottlenecks
 
-Chat 1.7 closed with the explicit recommendation to restore/verify operational SOP drift, then proceed to public WordPress URL + SEO surface audit, followed by authenticated WordPress admin controls and backend integration. fileciteturn3file0
+1. **DNS authority / delegation instability** for `bukanbarukitchen.com`.
+2. **Upstream production verification blocked** because Vercel and local Node cannot resolve the WordPress hostname.
+3. **Dewaweb Warrior incompatibility** with the current Next 16.3.1 / GLIBC / npm environment.
+
+## Pareto Decisions
+
+1. Keep `main` + Vercel as the primary application workflow.
+2. Fix/verify DNS before changing application code.
+3. Do not repeat the Warrior hosting experiment without a compatible runtime baseline.
 
 ---
 
-## Next Step
+## Handoff
 
-**STEP 1 — Final documentation/SOP verification, then lock the documentation baseline before moving into the first architecture-sensitive implementation task.**
+### Current state
+
+```text
+Frontend / UI work:
+GOOD / largely converged.
+
+Backend / upstream runtime:
+BLOCKED by DNS resolution.
+
+Primary production stack:
+GitHub main → Vercel → WordPress/WooCommerce.
+```
+
+### Next priority order
+
+1. Have Dewaweb/Ezydomain verify authoritative DNS zone and delegation for `bukanbarukitchen.com`.
+2. After DNS is healthy, re-test locally:
+   - `https://bukanbarukitchen.com/wp-json/wp/v2/posts`
+   - `https://bukanbarukitchen.com/wp-json/wc/v3/products`
+   - local `/api/posts`
+   - local `/api/products?metadata=1`
+3. Re-test Vercel `/api/posts` and `/api/products` and verify upstream response.
+4. Only then resume production hardening or alternative hosting evaluation.
+
+### Things NOT to repeat
+
+- Do not rewrite Next.js APIs to hide a DNS problem.
+- Do not regenerate WooCommerce credentials without evidence of an auth failure.
+- Do not use the protected branch deployment URL as the sole unauthenticated API test.
+- Do not spend further time on Warrior staging until runtime compatibility is established.
+
+### Next conversation title
+
+```text
+1.9 BBKitchen Next.js Migration — DNS Recovery & Production API Verification
+```
 
 ---
 
-## Forensic Notes
+## Git Checkpoint
 
-- Chat 1.8 is a new live session; the previous temporary Chat 1.8 close archive had been removed and its relevant facts folded into Chat 1.7, as recorded in the Chat 1.7 archive.
-- This archive is created before application-code implementation in accordance with the current session bootstrap SOP.
-- The session start timestamp is taken from current conversation/session evidence available at bootstrap; it is not inferred from a Git commit timestamp.
+Latest code commits observed during the session:
+
+```text
+faa03e509e8b2af72c769ac8bef21fcb4510766d
+fix: use apex WooCommerce API fallback
+
+Created: 17 August 2026 07:50:34 WIB (GitHub evidence)
+
+A318DDDEC... / a318dddec8f4be32957e51cbed74a656187db963
+fix: use apex WordPress API fallback
+
+Created: 17 August 2026 07:50:18 WIB (GitHub evidence)
+```
+
+Current application checkpoint is the latest code commit on `main` observed before documentation close.
+
+---
+
+## Documentation Note
+
+The repository currently shows `end-session-prompt.md` absent on `main`, despite the canonical end-session prompt requiring that shortcut to remain available. This is documentation debt to restore in the next session if the shortcut is required by the workflow.

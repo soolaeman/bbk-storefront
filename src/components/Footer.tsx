@@ -54,7 +54,6 @@ export const Footer: React.FC<FooterProps> = () => {
               <li><a href={MBG_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Dapur MBG <ArrowUpRight className="w-3 h-3" /></a></li>
               <li><a href={MBG_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Tanya Paket MBG <ArrowUpRight className="w-3 h-3" /></a></li>
               <li><a href={PRODUCTION_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Produksi Baru <ArrowUpRight className="w-3 h-3" /></a></li>
-              <li><a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors">Lokasi <ArrowUpRight className="w-3 h-3" /></a></li>
             </ul>
           </div>
 

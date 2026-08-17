@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import App from '../App';
 
-const DEFAULT_SITE_URL = 'https://www.bukanbarukitchen.com';
-const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || DEFAULT_SITE_URL;
+const DEFAULT_SITE_URL = 'https://bukanbarukitchen.com';
+const WORDPRESS_URL = (process.env.NEXT_PUBLIC_WORDPRESS_URL || DEFAULT_SITE_URL)
+  .replace(/^https?:\/\/www\./i, 'https://');
 
 interface YoastHeadResponse {
   head?: string;

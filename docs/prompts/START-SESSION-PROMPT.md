@@ -14,17 +14,18 @@ Branch:
 
 Before writing, modifying, or executing application code:
 
-1. Determine the current Chat/session number from the latest project progress.
-2. Search available repository/conversation evidence for the actual session start timestamp.
-3. Do NOT assume the timestamp from the current clock unless no better session-start evidence exists.
-4. Immediately create:
+1. Determine the next Chat/session number from the latest `docs/progress/README.md`.
+2. Search repository/conversation evidence for the actual session-start timestamp.
+3. Do **not** treat the current clock as historical session-start evidence when stronger evidence exists.
+4. Do **not** invent timestamps.
+5. Immediately create:
 
 ```text
 docs/progress/CHAT-X.Y.md
 ```
 
-5. The progress file MUST be created before coding begins.
-6. Record the initial timeline using:
+6. The progress file MUST exist before coding begins.
+7. Record the initial timeline using:
 
 ```md
 ## Date / Session Timeline
@@ -87,16 +88,6 @@ CHAT-X.YB.md
 
 instead of rewriting the original archive.
 
-Example:
-
-```text
-CHAT-1.6.md
-        ↓
-CHAT-1.6B.md
-        ↓
-CHAT-1.7.md
-```
-
 ---
 
 # 4. PARETO WORKFLOW
@@ -134,19 +125,6 @@ NICE TO HAVE
 
 Do not expand scope merely because a potential improvement is noticed.
 
-If the user says:
-
-```text
-aman
-nais
-good
-next
-```
-
-treat the approved result as locked unless there is evidence of regression.
-
-Do not redesign approved UI without evidence.
-
 ---
 
 # 5. UI FREEZE PRINCIPLE
@@ -178,13 +156,11 @@ Production hardening
 Launch
 ```
 
-Not endless visual polishing.
-
 ---
 
 # 6. CURRENT BBKITCHEN ARCHITECTURE
 
-The intended architecture is:
+Current intended architecture:
 
 ```text
                     PUBLIC DOMAIN
@@ -193,50 +169,58 @@ The intended architecture is:
                         v
                      NEXT.JS
                         |
-             +----------+----------+
-             |          |          |
-            Home     Catalog    Product
-             |
-             | live product data
-             v
-      WordPress / WooCommerce
-             |
-             +-- ACF
-             +-- BBK Core System
-             +-- Admin
+                server-side API fetch
+                        |
+                        v
+             origin.bukanbarukitchen.com
+                        |
+                        v
+      WordPress / WooCommerce / ACF / Core System
+                        |
+                        v
+                     Admin
 ```
 
-Next.js is the intended public experience layer.
+Current facts:
 
-WordPress remains the backend/admin source of truth.
-
-Do NOT convert Next.js into a WordPress theme unless explicitly requested.
-
-Do NOT replace WordPress/WooCommerce/ACF/Core System merely because Next.js is becoming the public renderer.
+- Next.js is the public experience/rendering layer.
+- WordPress/WooCommerce/ACF/Core System remains the backend/admin source of truth.
+- The existing WordPress installation remains at `/home/bukanbar/public_html` on DewaWeb.
+- `jkt10.dewaweb.com` and `103.185.53.66` were verified during Chat 2.0 as default-server responses, not proven BBKitchen WordPress origins.
+- `origin.bukanbarukitchen.com` is the preferred backend/origin strategy, but its DewaWeb configuration is **not yet verified**.
+- Do not create a second WordPress installation merely to solve the origin problem.
 
 ---
 
-# 7. PUBLIC FRONTEND / SEO TAKEOVER
+# 7. PUBLIC URL / SEO TAKEOVER
 
-The final architecture must avoid two competing public renderers.
+The public URL contract is sitemap-driven.
 
-Target:
+Preserve these patterns unless new evidence requires a change:
+
+```text
+/katalog
+/shop/[slug]
+/product-category/[...slug]
+WordPress page/post paths via catch-all resolution
+```
+
+Do not use `/product/[slug]` as the public product URL contract merely because an older renderer or historical document references it.
+
+The final public architecture must avoid two competing public renderers:
 
 ```text
 https://www.bukanbarukitchen.com/
         ↓
      NEXT.JS
         ↓
- ONE public homepage
+ ONE public renderer
 ```
-
-The approved Next.js homepage copy does not need to match the legacy WordPress homepage copy.
 
 Before production launch, audit:
 
 ```text
 homepage
-/shop
 product archives
 category archives
 attachment pages
@@ -248,7 +232,7 @@ indexed legacy URLs
 
 Do not invent redirect/disable/canonical decisions before the current WordPress public surface is audited.
 
-Preserve existing SEO URL/slug intent unless evidence requires a change.
+A Next.js route existing is not proof that the corresponding WordPress public URL is redirected, disabled, canonicalized, or de-indexed.
 
 ---
 
@@ -268,17 +252,14 @@ Product Card + Product Detail
 Admin Controls
 ```
 
-Required controls:
-
-### A. Product status
-
-Authenticated WordPress admins can:
+Required controls remain:
 
 ```text
 READY ↔ SOLD
+Buka Telegram → ACF-backed product Telegram link
 ```
 
-The existing product status contract must remain intact:
+The existing status contract remains:
 
 ```text
 READY
@@ -287,35 +268,9 @@ BOOKED
 CONFIRMING
 ```
 
-Only the READY ↔ SOLD transition is being added/clarified for the current admin workflow.
+`isAdminMode` is NOT authentication. Privileged mutations must be authorized server-side.
 
-### B. Telegram
-
-Authenticated WordPress admins can click:
-
-```text
-Buka Telegram
-```
-
-The destination MUST come from the product's ACF Telegram field.
-
-Do not hardcode operational Telegram URLs in the frontend.
-
-### C. Security
-
-A frontend state such as:
-
-```text
-isAdminMode
-```
-
-is NOT authentication.
-
-Privileged mutations must be authorized server-side.
-
-Public users must not receive usable admin controls.
-
-The WordPress authentication/authorization relationship must be verified before claiming this feature is implemented.
+Current repository/project evidence does not prove the complete authenticated workflow is implemented; do not claim it is complete without authentication, authorization, mutation, and refresh evidence.
 
 ---
 
@@ -332,9 +287,7 @@ BBK Core System
 Next.js
 ```
 
-Next.js should consume and render the authoritative data.
-
-For example:
+Examples:
 
 ```text
 Product
@@ -349,7 +302,7 @@ Telegram link
 
 must not be duplicated as an independent source of truth in frontend code.
 
-Marketing/UI copy that is intentionally owned by the Next.js frontend may remain in Next.js.
+Marketing/UI copy intentionally owned by Next.js may remain in Next.js.
 
 ---
 
@@ -357,7 +310,7 @@ Marketing/UI copy that is intentionally owned by the Next.js frontend may remain
 
 This project uses an AI-assisted development workflow.
 
-Do NOT falsely represent the project as manually coded line-by-line by the human developer.
+Do not falsely represent the project as manually coded line-by-line by the human developer.
 
 The development model is:
 
@@ -380,25 +333,12 @@ Human verification
 Iteration
 ```
 
-For future portfolio documentation, describe the workflow honestly as:
+Use honest descriptions such as:
 
 ```text
 AI-assisted development
-```
-
-or:
-
-```text
 AI-assisted / vibe-coding workflow
 ```
-
-Do not claim:
-
-```text
-"I manually wrote every line of code."
-```
-
-unless that is actually true.
 
 ---
 
@@ -422,26 +362,9 @@ Upstream data behavior
 Security / permission behavior
 ```
 
-For backend-connected features, verify both:
+For backend-connected features, verify both frontend behavior and WordPress/WooCommerce/ACF/Core System behavior.
 
-```text
-Frontend result
-+
-WordPress/WooCommerce/ACF/Core System result
-```
-
-For SEO changes, verify:
-
-```text
-URL
-canonical
-metadata
-redirect
-indexability
-sitemap
-```
-
-as applicable.
+For SEO changes, verify URL, canonical, metadata, redirect, indexability, and sitemap as applicable.
 
 For deployment changes, distinguish:
 
@@ -453,7 +376,15 @@ Vercel deployment state
 Production HTTP response
 ```
 
-A GitHub commit is not proof that Vercel has deployed it. A successful Vercel build is not proof that production runtime or upstream APIs are healthy.
+A GitHub commit is not proof that Vercel deployed it. A successful Vercel build is not proof that production runtime or upstream APIs are healthy.
+
+For the current origin blocker, verify the DewaWeb origin **before** changing Vercel upstream environment variables:
+
+```text
+origin.bukanbarukitchen.com/wp-json/
+origin.bukanbarukitchen.com/wp-json/wc/v3/products
+origin.bukanbarukitchen.com/wp-json/bbk/v1/*
+```
 
 ---
 
@@ -475,7 +406,7 @@ git status
 npm run build
 ```
 
-When the user asks to test the changes locally:
+When the user asks to test changes locally:
 
 ```bash
 git pull origin main
@@ -487,8 +418,6 @@ Always provide the Git pull command after making changes on GitHub:
 ```bash
 git pull origin main
 ```
-
-Do not assume the user remembers the command.
 
 ---
 
@@ -568,9 +497,114 @@ if GitHub changes were made.
 
 Never invent a duration.
 
+### Timing discipline
+
+Distinguish:
+
+```text
+SESSION WORKING TIME
+vs
+CALENDAR / ELAPSED TIME
+```
+
+Use:
+
+```text
+verified End timestamp
+        -
+verified Start timestamp
+        =
+actual session duration
+```
+
+If only a date is available:
+
+```text
+Duration: —
+```
+
+If only Start is available:
+
+```text
+Duration: PENDING
+```
+
+If evidence conflicts:
+
+- do not silently choose one;
+- preserve the conflict;
+- flag it for verification.
+
+Historical timestamps belong to the progress archive; this prompt defines future-session behavior.
+
 ---
 
-# 16. CORE PRINCIPLE
+# 16. STATUS DISCIPLINE
+
+Use:
+
+```text
+✅ verified
+⚠️ partial / needs QA
+⏳ pending / deferred
+🔒 locked
+❌ failed / rejected
+```
+
+Do not equate:
+
+```text
+code exists
+build verified
+runtime verified
+upstream verified
+UI verified
+mobile verified
+security verified
+SEO verified
+production verified
+```
+
+Unknown facts must be recorded as:
+
+`Tidak ditemukan di repository/evidence yang tersedia.`
+
+---
+
+# 17. CURRENT SESSION / DOCUMENTATION RULES
+
+Keep the documentation layers separate:
+
+```text
+START-SESSION-PROMPT.md
+→ rules for bootstrapping a new session
+
+docs/progress/CHAT-X.Y.md
+→ forensic facts/history for one session
+
+docs/progress/README.md
+→ synthesis/timeline for all migration sessions
+
+README.md
+→ current project dashboard
+
+NAVIGATOR.md
+→ documentation map
+```
+
+Do not rewrite historical progress merely to match current architecture or SOP changes.
+
+Clarification sessions may use:
+
+```text
+CHAT-X.YB.md
+```
+
+when a post-session clarification needs its own historical layer.
+
+---
+
+# 18. CORE PRINCIPLE
 
 The objective is NOT:
 

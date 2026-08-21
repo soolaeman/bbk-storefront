@@ -15,6 +15,9 @@ Service              → src/components/KitchenConsultationBanner.tsx
 Product Card         → src/components/ProductCard.tsx
 Product Detail       → src/app/product/[slug]/page.tsx + child components
 Location / Article   → src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
+Dapur MBG            → src/app/dapur-mbg/page.tsx
+Jual Unit            → src/app/jual-unit/page.tsx
+Produksi Baru        → src/app/produksi-baru/page.tsx
 Social               → src/components/SocialMediaSection.tsx
 Testimonials         → src/components/TestimonialsSection.tsx
 Gallery              → src/components/GallerySection.tsx
@@ -33,9 +36,11 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 | Header menu text | `src/components/Header.tsx` |
 | Search placeholder | `src/components/Header.tsx` |
 | MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / `KitchenConsultationBanner.tsx` / `Footer.tsx` |
-| MBG PDF catalog CTA | `src/components/KitchenConsultationBanner.tsx` |
+| MBG page copy | `src/app/dapur-mbg/page.tsx` |
+| MBG PDF catalog CTA | `src/app/dapur-mbg/page.tsx` |
 | Service WhatsApp CTA | `src/components/KitchenConsultationBanner.tsx` |
-| Produksi Baru wording | file CTA owner di atas |
+| Jual Unit page copy | `src/app/jual-unit/page.tsx` |
+| Produksi Baru wording | `src/app/produksi-baru/page.tsx` |
 | READY/SOLD button | `src/components/ProductCard.tsx` |
 | Product WhatsApp message | cari global `Halo Tim BBKitchen` |
 | Product Detail CTA | `src/app/product/[slug]/page.tsx` + child component |
@@ -58,6 +63,33 @@ Produksi Baru   → Request Produksi
 ```
 
 Service card dan WhatsApp CTA adalah action yang berbeda. Jangan mengubah action hanya karena ingin mengganti label.
+
+## Current landing-page positioning
+
+### Dapur MBG
+
+```text
+Peralatan Dapur MBG & Equipment SPPG
+```
+
+### Jual Unit
+
+```text
+Jual Peralatan Dapur Bekas ke BBKitchen
+```
+
+Relationship yang harus tetap jelas:
+
+```text
+CLIENT → MENJUAL UNIT
+BBKITCHEN → REVIEW / MEMBELI
+```
+
+Jangan menggunakan copy “jual unit” atau “beli unit” secara ambigu jika konteks actor-nya bisa tertukar.
+
+### Produksi Baru
+
+Halaman ini menjelaskan custom kitchen equipment / produksi baru dan CTA request produksi. Jangan mengubah copy menjadi alur jual/beli unit bekas.
 
 ## Catalog copy
 

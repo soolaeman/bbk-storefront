@@ -21,8 +21,9 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts, Vercel/API runtime diagnostics, DNS investigation, hosting fallback evaluation | 🛑 Closed — DNS blocked | [`CHAT-1.8.md`](CHAT-1.8.md) |
 | 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages, navigation, favicon handoff | ✅ Closed | [`CHAT-1.9.md`](CHAT-1.9.md) |
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
+| 2.1 | **21 Aug 2026** | **Start unavailable** | **18:19 WIB** | **—** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. Chat 2.1 start is not verifiable from the repository/evidence available at close.
 
 ---
 
@@ -91,6 +92,12 @@ Chat 2.0 START
         ↓
 21 Aug 2026 10:29 WIB
 Chat 2.0 END
+        ↓
+21 Aug 2026
+Chat 2.1 — start unavailable
+        ↓
+21 Aug 2026 18:19 WIB
+Chat 2.1 END
 ```
 
 ### Project time summary
@@ -101,6 +108,9 @@ Verified session working time through Chat 1.9:
 
 Chat 2.0 working duration:
 1 hour 53 minutes
+
+Chat 2.1 working duration:
+— (Start not verifiable)
 
 Verified session working time through Chat 2.0:
 51 hours 25 minutes 16 seconds
@@ -151,6 +161,9 @@ Landing pages + navigation + favicon handoff
    ↓
 Chat 2.0
 Origin/API separation + DewaWeb support handoff
+   ↓
+Chat 2.1
+Origin document-root correction + `/katalog` recovery + WooCommerce REST auth isolation
 ```
 
 ---
@@ -160,8 +173,8 @@ Origin/API separation + DewaWeb support handoff
 ```text
 DATA ARCHITECTURE       ✅ established
 ROUTING                 ✅ established
-CATALOG                 ✅ sitemap-driven baseline
-PRODUCT DETAIL          ⚠️ runtime upstream blocked
+CATALOG                 ⚠️ route accessible; dynamic WooCommerce data blocked
+PRODUCT DETAIL          ⚠️ runtime upstream auth blocked
 HOMEPAGE POSITIONING    ✅ sales-first
 SHARED FOOTER           ✅ integrated across key templates
 RELATED PRODUCTS        ✅ implemented baseline
@@ -172,19 +185,16 @@ RECENT POSTS            ✅ implemented baseline
 SITEMAP ROUTING         ✅ implemented
 PUBLIC SEO TAKEOVER     ⏳ audit pending
 ADMIN CONTROL LAYER     ⏳ implementation pending
-BACKEND ORIGIN          🛑 blocked — DewaWeb support
-PRODUCTION HARDENING    🛑 blocked by upstream origin verification
+BACKEND ORIGIN          ✅ verified — origin.bukanbarukitchen.com → existing WordPress
+WOOCOMMERCE REST AUTH   🛑 blocked — 401
+PRODUCTION HARDENING    🛑 blocked by WooCommerce REST authentication
 ```
-
----
 
 ## Current Pareto Focus
 
-1. Obtain and verify a DewaWeb origin hostname for the existing `/home/bukanbar/public_html` WordPress installation.
-2. Test WordPress REST and WooCommerce REST through that origin before changing Vercel environment variables.
-3. Align Next.js server-side fetches with the verified origin, then run sitemap-driven production verification.
-
----
+1. Isolate direct-origin WooCommerce REST authentication with the existing/new key.
+2. Once authenticated product listing succeeds, verify `/api/products`, catalog metadata/filters, and `/shop/[slug]` product detail.
+3. Align remaining WooCommerce server-side fetches to the proven authentication mechanism, then run sitemap-driven production verification.
 
 ## Rule
 

@@ -5,10 +5,10 @@
 ```text
 Session: 2.1
 Date: 21 August 2026
-Started: Tidak ditemukan di repository/evidence yang tersedia.
+Started: 21 August 2026 13:25 WIB
 Ended: 21 August 2026 18:19 WIB
-Duration: —
-Evidence source: End timestamp from the conversation/current-session clock evidence; verified session start timestamp was not found in repository/evidence.
+Duration: 4h 54m
+Evidence source: Start timestamp supplied by user; End timestamp from the conversation/current-session clock evidence.
 ```
 
 ## Scope

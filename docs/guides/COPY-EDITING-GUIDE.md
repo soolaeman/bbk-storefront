@@ -21,6 +21,10 @@ Use it when you want to understand **where copy/text lives and what is safe to c
 | Gallery | `src/components/GallerySection.tsx` | gallery heading/copy and carousel affordance |
 | Category | `src/components/CategoryFilter.tsx` | filter/category/subcategory labels |
 | Local landing | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` | local H1/CTA/copy |
+| Dapur MBG | `src/app/dapur-mbg/page.tsx` | MBG/SPPG landing-page copy, equipment categories, catalog CTA |
+| Jual Unit | `src/app/jual-unit/page.tsx` | sell-to-BBKitchen copy, process, FAQ, CTA |
+| Produksi Baru | `src/app/produksi-baru/page.tsx` | custom production copy, process, FAQ, CTA |
+| Recent Posts | `src/components/RecentPostsSection.tsx` | homepage post-section copy |
 
 ## Text vs logic
 
@@ -53,13 +57,13 @@ Tanya Lainnya
 WhatsApp
 Dapur MBG
 Produksi Baru
+Jual Unit ke BBKitchen
+Lihat Katalog Paket
 Lihat Unit yang Tersedia
 Cek Stok via WA
-Jual Unit via WA
 Konsultasi MBG
 Request Produksi
-Galeri BBKitchen
-Geser untuk melihat foto lainnya
+GalerI BBKitchen
 READY
 SOLD
 ```
@@ -68,8 +72,16 @@ SOLD
 
 ### Dapur MBG
 
+Page H1:
+
 ```text
-Halo Tim BBKitchen, saya ingin bertanya perihal info kebutuhan peralatan dapur MBG dari BBKitchen.
+Peralatan Dapur MBG & Equipment SPPG
+```
+
+Page subheadline:
+
+```text
+Solusi peralatan dapur komersial untuk kebutuhan preparation, cooking, washing, storage, packing, dan exhaust pada operasional Dapur MBG/SPPG.
 ```
 
 ### Produksi Baru
@@ -93,6 +105,16 @@ Kondisi: {BARU|BEKAS}
 
 Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.
 ```
+
+### Jual Unit
+
+Primary page positioning:
+
+```text
+Jual Peralatan Dapur Bekas ke BBKitchen
+```
+
+The relationship is explicit: **client sells → BBKitchen reviews/buys**. Do not write ambiguous copy that could imply BBKitchen is selling the client's unit.
 
 ### READY / SOLD
 

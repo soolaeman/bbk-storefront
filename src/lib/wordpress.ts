@@ -1,9 +1,9 @@
-const DEFAULT_WORDPRESS_API_URL = 'https://bukanbarukitchen.com/wp-json/wp/v2';
+const DEFAULT_WORDPRESS_API_URL = 'https://www.bukanbarukitchen.com/wp-json/wp/v2';
 
 const WORDPRESS_API_URL = (
   process.env.WORDPRESS_API_URL ||
   DEFAULT_WORDPRESS_API_URL
-).replace(/^https?:\/\/www\./i, 'https://').replace(/\/$/, '');
+).replace(/\/$/, '');
 
 export interface WordPressRenderedField {
   rendered: string;
@@ -121,52 +121,36 @@ async function fetchWordPress<T>(resource: string, options?: WordPressQueryOptio
   });
 
   if (!response.ok) {
-    throw new Error(
-      `WordPress REST API gagal: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`WordPress REST API gagal: ${response.status} ${response.statusText}`);
   }
 
   return (await response.json()) as T;
 }
 
-export async function getWordPressPages(
-  options?: WordPressQueryOptions,
-): Promise<WordPressPage[]> {
+export async function getWordPressPages(options?: WordPressQueryOptions): Promise<WordPressPage[]> {
   return fetchWordPress<WordPressPage[]>('pages', options);
 }
 
-export async function getWordPressPosts(
-  options?: WordPressQueryOptions,
-): Promise<WordPressPost[]> {
+export async function getWordPressPosts(options?: WordPressQueryOptions): Promise<WordPressPost[]> {
   return fetchWordPress<WordPressPost[]>('posts', options);
 }
 
-export async function getWordPressMedia(
-  options?: WordPressQueryOptions,
-): Promise<WordPressMedia[]> {
+export async function getWordPressMedia(options?: WordPressQueryOptions): Promise<WordPressMedia[]> {
   return fetchWordPress<WordPressMedia[]>('media', options);
 }
 
-export async function getWordPressCategories(
-  options?: WordPressQueryOptions,
-): Promise<WordPressTerm[]> {
+export async function getWordPressCategories(options?: WordPressQueryOptions): Promise<WordPressTerm[]> {
   return fetchWordPress<WordPressTerm[]>('categories', options);
 }
 
-export async function getWordPressTags(
-  options?: WordPressQueryOptions,
-): Promise<WordPressTerm[]> {
+export async function getWordPressTags(options?: WordPressQueryOptions): Promise<WordPressTerm[]> {
   return fetchWordPress<WordPressTerm[]>('tags', options);
 }
 
-export async function getWordPressUsers(
-  options?: WordPressQueryOptions,
-): Promise<WordPressUser[]> {
+export async function getWordPressUsers(options?: WordPressQueryOptions): Promise<WordPressUser[]> {
   return fetchWordPress<WordPressUser[]>('users', options);
 }
 
-export async function searchWordPress(
-  options?: WordPressQueryOptions,
-): Promise<WordPressSearchResult[]> {
+export async function searchWordPress(options?: WordPressQueryOptions): Promise<WordPressSearchResult[]> {
   return fetchWordPress<WordPressSearchResult[]>('search', options);
 }

@@ -45,6 +45,7 @@
 | [`docs/progress/CHAT-1.6B.md`](docs/progress/CHAT-1.6B.md) | Clarification layer after Chat 1.6 | Saat perlu memahami launch architecture clarification setelah Chat 1.6. |
 | [`docs/progress/CHAT-1.7.md`](docs/progress/CHAT-1.7.md) | Forensic history Chat 1.7 | Saat perlu memahami clean verification baseline, branch finalization, prompt/documentation audit, dan session close. |
 | [`docs/progress/CHAT-1.8.md`](docs/progress/CHAT-1.8.md) | Forensic history Chat 1.8 | Saat perlu memahami Recent Posts, runtime diagnostics, Dewaweb dead end, DNS blocker, dan Chat 1.9 handoff. |
+| [`docs/progress/CHAT-1.9.md`](docs/progress/CHAT-1.9.md) | Forensic history Chat 1.9 | Saat perlu memahami landing-page work, favicon investigation, Vercel deployment state, dan Chat 2.0 handoff. |
 
 > **Rule:** `docs/progress/` = sejarah. Untuk kondisi terbaru, pakai root `README.md`.
 
@@ -55,7 +56,7 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/guides/README.md`](docs/guides/README.md) | Index semua human/vibe-coding guides | Saat belum tahu guide mana yang relevan. |
-| [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, atau gallery copy. |
+| [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, MBG, Jual Unit, Produksi Baru, atau gallery copy. |
 | [`docs/guides/VIBE-CODING-COPY-GUIDE.md`](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi sederhana untuk user non-developer / vibe coding | Saat mau mengubah copy tanpa perlu memahami seluruh architecture. |
 
 > **Guide = menjelaskan.** Guide bukan instruksi eksekusi AI.

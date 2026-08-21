@@ -2,11 +2,13 @@
 
 ## Date / Session Timeline
 
+```text
 Session: 2.0
 Started: 21 August 2026 08:36:00 WIB
-Ended: PENDING
-Duration: PENDING
-Evidence source: User-confirmed session start time in the current conversation.
+Ended: Pending
+Duration: Pending
+Evidence source: User-confirmed session start and closing time in the current conversation.
+```
 
 ## Pareto Objective
 

@@ -36,6 +36,7 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/progress/README.md`](docs/progress/README.md) | Index dan ringkasan seluruh progress migration | Saat ingin melihat gambaran sejarah tanpa membaca semua chat. |
+| [`docs/progress/CHAT-2.1.md`](docs/progress/CHAT-2.1.md) | Forensic history Chat 2.1 | Saat perlu memahami origin document-root correction, `/katalog` restoration, WooCommerce REST auth blocker, dan Chat 2.2 handoff. |
 | [`docs/progress/CHAT-2.0.md`](docs/progress/CHAT-2.0.md) | Forensic history Chat 2.0 | Saat perlu memahami Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, dan support-ticket handoff. |
 | [`docs/progress/CHAT-1.9.md`](docs/progress/CHAT-1.9.md) | Forensic history Chat 1.9 | Saat perlu memahami landing-page work, favicon investigation, Vercel deployment state, dan Chat 2.0 handoff. |
 | [`docs/progress/CHAT-1.8.md`](docs/progress/CHAT-1.8.md) | Forensic history Chat 1.8 | Saat perlu memahami Recent Posts, runtime diagnostics, Dewaweb dead end, DNS blocker, dan Chat 1.9 handoff. |

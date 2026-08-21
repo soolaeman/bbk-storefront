@@ -1,9 +1,11 @@
-const DEFAULT_WORDPRESS_API_URL = 'https://www.bukanbarukitchen.com/wp-json/wp/v2';
+const DEFAULT_WORDPRESS_ORIGIN_URL = 'https://jkt10.dewaweb.com/wp-json/wp/v2';
+const DEFAULT_WORDPRESS_HOST = 'www.bukanbarukitchen.com';
 
 const WORDPRESS_API_URL = (
   process.env.WORDPRESS_API_URL ||
-  DEFAULT_WORDPRESS_API_URL
+  DEFAULT_WORDPRESS_ORIGIN_URL
 ).replace(/\/$/, '');
+const WORDPRESS_HOST = process.env.WORDPRESS_API_URL ? undefined : DEFAULT_WORDPRESS_HOST;
 
 export interface WordPressRenderedField {
   rendered: string;
@@ -116,7 +118,10 @@ function buildQuery(options?: WordPressQueryOptions): string {
 
 async function fetchWordPress<T>(resource: string, options?: WordPressQueryOptions): Promise<T> {
   const response = await fetch(`${WORDPRESS_API_URL}/${resource}${buildQuery(options)}`, {
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      ...(WORDPRESS_HOST ? { Host: WORDPRESS_HOST } : {}),
+    },
     next: { revalidate: 300 },
   });
 

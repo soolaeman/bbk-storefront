@@ -13,7 +13,7 @@ Use it when you want to understand **where copy/text lives and what is safe to c
 | Hero | `src/components/HeroSection.tsx` | headline, CTA, value copy |
 | Service | `src/components/KitchenConsultationBanner.tsx` | service CTA and WhatsApp labels |
 | Product Card | `src/components/ProductCard.tsx` | READY/SOLD, Tanya WA |
-| Product Detail | `src/app/product/[slug]/page.tsx` + child components | product CTA, related-product presentation |
+| Product Detail | current `/shop/[slug]` route + existing product renderer | product CTA, related-product presentation |
 | Header | `src/components/Header.tsx` | navigation, search, CTA |
 | Footer | `src/components/Footer.tsx` | footer CTA/navigation |
 | Social | `src/components/SocialMediaSection.tsx` | social labels/copy/video cards |
@@ -25,6 +25,19 @@ Use it when you want to understand **where copy/text lives and what is safe to c
 | Jual Unit | `src/app/jual-unit/page.tsx` | sell-to-BBKitchen copy, process, FAQ, CTA |
 | Produksi Baru | `src/app/produksi-baru/page.tsx` | custom production copy, process, FAQ, CTA |
 | Recent Posts | `src/components/RecentPostsSection.tsx` | homepage post-section copy |
+
+## Quick route warning
+
+The current public URL contract is sitemap-driven:
+
+```text
+/katalog
+/shop/[slug]
+/product-category/[...slug]
+[...slug] → WordPress page/post fallback
+```
+
+Do not use the older `/product/[slug]` route as the public product URL contract merely because an older guide or renderer still references that path. Product-detail implementation/renderer ownership is currently an integration item and must not be inferred beyond repository evidence.
 
 ## Text vs logic
 
@@ -63,7 +76,7 @@ Lihat Unit yang Tersedia
 Cek Stok via WA
 Konsultasi MBG
 Request Produksi
-GalerI BBKitchen
+Galeri BBKitchen
 READY
 SOLD
 ```
@@ -220,8 +233,10 @@ Do not claim this is fully implemented unless repository evidence proves authent
 ## Do not casually change
 
 ```text
-/product/[slug]
-/jual-barang-bekas-restoran/[...slug]
+/katalog
+/shop/[slug]
+/product-category/[...slug]
+WordPress catch-all paths
 SKU
 slug
 canonical

@@ -3,10 +3,10 @@
 ## Date / Session Timeline
 
 Session: 2.0
-Started: Tidak ditemukan di repository/evidence yang tersedia.
+Started: 21 August 2026 08:36:00 WIB
 Ended: PENDING
 Duration: PENDING
-Evidence source: Repository progress archive shows Chat 1.9 as the latest closed session; current conversation start timestamp is not preserved as a repository/session evidence source.
+Evidence source: User-confirmed session start time in the current conversation.
 
 ## Pareto Objective
 
@@ -37,6 +37,8 @@ Initial repository documentation review completed before application-code change
 ## Git Checkpoint
 
 Progress record created before application-code modification, per `START-SESSION-PROMPT.md`.
+
+Chat 2.0 start time subsequently confirmed by the user as **21 August 2026 08:36:00 WIB**.
 
 ## Next Step
 

@@ -8,8 +8,15 @@ They are not execution prompts.
 
 ## Guides
 
-- [Copy Editing Guide](COPY-EDITING-GUIDE.md) — technical map for finding and changing copy safely, including service, MBG, Jual Unit, Produksi Baru, catalog, and gallery copy owners.
-- [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) — simplified guide for non-developers / vibe coding, including current page and copy locations plus actor-safe Jual Unit wording.
+- [Copy Editing Guide](COPY-EDITING-GUIDE.md) — technical map for finding and changing copy safely, including service, MBG, Jual Unit, Produksi Baru, catalog, product detail, and gallery copy ownership.
+- [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) — simplified guide for non-developers / vibe coding, including current page/copy locations, routing/contract warnings, and actor-safe Jual Unit wording.
+
+## Current architecture note
+
+- Public website/rendering is owned by Next.js on `bukanbarukitchen.com`.
+- WordPress/WooCommerce/ACF remains the backend/admin source of truth.
+- The production backend-origin strategy is currently pending DewaWeb support; do not assume `jkt10.dewaweb.com` or `103.185.53.66` are valid WordPress API origins.
+- Existing WordPress/WooCommerce API paths remain part of the backend contract; changing public API origin is an infrastructure concern, not a copy-editing task.
 
 ## Guides vs Prompts
 

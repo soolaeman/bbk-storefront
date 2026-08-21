@@ -8,8 +8,8 @@ They are not execution prompts.
 
 ## Guides
 
-- [Copy Editing Guide](COPY-EDITING-GUIDE.md) — technical map for finding and changing copy safely, including current service/gallery/catalog copy owners.
-- [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) — simplified guide for non-developers / vibe coding, including current copy locations.
+- [Copy Editing Guide](COPY-EDITING-GUIDE.md) — technical map for finding and changing copy safely, including service, MBG, Jual Unit, Produksi Baru, catalog, and gallery copy owners.
+- [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) — simplified guide for non-developers / vibe coding, including current page and copy locations plus actor-safe Jual Unit wording.
 
 ## Guides vs Prompts
 

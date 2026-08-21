@@ -15,8 +15,9 @@ They are not execution prompts.
 
 - Public website/rendering is owned by Next.js on `bukanbarukitchen.com`.
 - WordPress/WooCommerce/ACF remains the backend/admin source of truth.
-- The production backend-origin strategy is currently pending DewaWeb support; do not assume `jkt10.dewaweb.com` or `103.185.53.66` are valid WordPress API origins.
-- Existing WordPress/WooCommerce API paths remain part of the backend contract; changing public API origin is an infrastructure concern, not a copy-editing task.
+- `origin.bukanbarukitchen.com` is the verified backend/API origin mapped to the existing `/home/bukanbar/public_html` WordPress installation.
+- WordPress REST is reachable through the origin, including the `wc/v3` namespace, but authenticated WooCommerce product listing remains blocked by a `401 woocommerce_rest_cannot_view` response.
+- Existing WordPress/WooCommerce API paths remain backend contracts; changing authentication or API origin is an infrastructure concern, not a copy-editing task.
 
 ## Guides vs Prompts
 

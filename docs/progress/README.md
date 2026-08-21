@@ -1,5 +1,3 @@
-[🧭 NAVIGATOR](../../NAVIGATOR.md)
-
 # BBKitchen Progress Archive
 
 This folder is the **detailed progress/history layer** for the Next.js migration.
@@ -21,9 +19,9 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts, Vercel/API runtime diagnostics, DNS investigation, hosting fallback evaluation | 🛑 Closed — DNS blocked | [`CHAT-1.8.md`](CHAT-1.8.md) |
 | 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages, navigation, favicon handoff | ✅ Closed | [`CHAT-1.9.md`](CHAT-1.9.md) |
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
-| 2.1 | **21 Aug 2026** | **Start unavailable** | **18:19 WIB** | **—** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
+| 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. Chat 2.1 start is not verifiable from the repository/evidence available at close.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
 
 ---
 
@@ -93,8 +91,8 @@ Chat 2.0 START
 21 Aug 2026 10:29 WIB
 Chat 2.0 END
         ↓
-21 Aug 2026
-Chat 2.1 — start unavailable
+21 Aug 2026 13:25 WIB
+Chat 2.1 START
         ↓
 21 Aug 2026 18:19 WIB
 Chat 2.1 END
@@ -110,10 +108,10 @@ Chat 2.0 working duration:
 1 hour 53 minutes
 
 Chat 2.1 working duration:
-— (Start not verifiable)
+4 hours 54 minutes
 
-Verified session working time through Chat 2.0:
-51 hours 25 minutes 16 seconds
+Verified session working time through Chat 2.1:
+56 hours 19 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE
@@ -165,8 +163,6 @@ Origin/API separation + DewaWeb support handoff
 Chat 2.1
 Origin document-root correction + `/katalog` recovery + WooCommerce REST auth isolation
 ```
-
----
 
 ## Current Migration Position
 

@@ -13,7 +13,7 @@ Hero                 → src/components/HeroSection.tsx
 Header               → src/components/Header.tsx
 Service              → src/components/KitchenConsultationBanner.tsx
 Product Card         → src/components/ProductCard.tsx
-Product Detail       → src/app/product/[slug]/page.tsx + child components
+Product Detail       → current /shop/[slug] route + existing product renderer
 Location / Article   → src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
 Dapur MBG            → src/app/dapur-mbg/page.tsx
 Jual Unit            → src/app/jual-unit/page.tsx
@@ -43,7 +43,7 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 | Produksi Baru wording | `src/app/produksi-baru/page.tsx` |
 | READY/SOLD button | `src/components/ProductCard.tsx` |
 | Product WhatsApp message | cari global `Halo Tim BBKitchen` |
-| Product Detail CTA | `src/app/product/[slug]/page.tsx` + child component |
+| Product Detail CTA | current `/shop/[slug]` route + existing product renderer |
 | Social copy / video cards | `src/components/SocialMediaSection.tsx` |
 | Testimonial heading/copy | `src/components/TestimonialsSection.tsx` |
 | Gallery heading/copy | `src/components/GallerySection.tsx` |
@@ -51,7 +51,18 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 | Category labels | `src/components/CategoryFilter.tsx` |
 | Local article H1/copy | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` |
 | Recent Posts heading/copy | `src/components/RecentPostsSection.tsx` |
-| Catalog result summary | audit `src/app/catalog/page.tsx` dan current imported components sebelum edit |
+| Catalog result summary | audit the current `/katalog` route and its imported components before editing |
+
+## Current public URL contract
+
+```text
+/katalog
+/shop/[slug]
+/product-category/[...slug]
+WordPress page/post paths via catch-all resolution
+```
+
+Kalau cuma ingin mengubah tulisan, jangan mengubah URL/path tersebut.
 
 ## Current homepage service CTA labels
 

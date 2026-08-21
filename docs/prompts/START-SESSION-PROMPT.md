@@ -443,6 +443,18 @@ sitemap
 
 as applicable.
 
+For deployment changes, distinguish:
+
+```text
+GitHub source state
+        ↓
+Vercel deployment state
+        ↓
+Production HTTP response
+```
+
+A GitHub commit is not proof that Vercel has deployed it. A successful Vercel build is not proof that production runtime or upstream APIs are healthy.
+
 ---
 
 # 12. GITHUB WORKFLOW

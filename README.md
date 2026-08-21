@@ -13,9 +13,9 @@ Branch aktif: `main`
 ```text
 Session: 2.1 BBKitchen Next.js Migration
 Date: 21 August 2026
-Start: Tidak ditemukan di repository/evidence yang tersedia.
+Start: 13:25 WIB
 End: 18:19 WIB
-Duration: —
+Duration: 4h 54m
 Status: BLOCKED — WooCommerce REST authentication
 ```
 
@@ -44,19 +44,13 @@ Chat 2.1 → 🛑 Closed — WooCommerce REST authentication
 
 ```text
 Chat 2.1 archive:
-e70483aea8c2f94d800610a5e2fbf9bd10b387cf
+4cd09fdf546c3bc7de68e993e0544c4540076aae
 
 Progress index:
-77427c6cb7478e723cc24628caf83bbf810db133
+7e830e37c448ddc3de7e224cd07aa5edf496209a
 
 Latest code checkpoint:
 39c691fcba3bdcb5093c799daa3303fdf6e1ac6f
-
-Documentation sync commits:
-4dd5995bf02720fbed9209d0dcbed3d8e07f87fc  README current-state sync
-8f842b40097c808147b665b663b20642d3362c7c  START SESSION SOP sync
-d5446e1195431a862fd3e1b9bf5fbd016dc0f323  Guides index sync
-b9a9e9ebad2f902ff55ab12a1572e15b85cc1565  Navigator sync
 
 Canonical END-SESSION prompt:
 29f5d4925de894b84eb374c8e58c4f885b542e56
@@ -79,7 +73,7 @@ Canonical END-SESSION prompt:
 | 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts / runtime diagnostics / DNS | 🛑 |
 | 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages / navigation / favicon | ✅ |
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Origin/API diagnostics / DewaWeb support | 🟡 Superseded by Chat 2.1 |
-| 2.1 | **21 Aug 2026** | **—** | **18:19 WIB** | **—** | Origin correction, `/katalog` restore, WooCommerce auth isolation | 🛑 |
+| 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin correction, `/katalog` restore, WooCommerce auth isolation | 🛑 |
 
 ### ⏱️ Verified working/session time
 
@@ -91,7 +85,10 @@ Chat 2.0:
 1 hour 53 minutes
 
 Chat 2.1:
-Duration not verifiable because the session-start timestamp is not verified.
+4 hours 54 minutes
+
+Verified session working time through Chat 2.1:
+56 hours 19 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE

@@ -36,16 +36,17 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/progress/README.md`](docs/progress/README.md) | Index dan ringkasan seluruh progress migration | Saat ingin melihat gambaran sejarah tanpa membaca semua chat. |
-| [`docs/progress/CHAT-1.1.md`](docs/progress/CHAT-1.1.md) | Forensic history Chat 1.1 | Saat perlu memahami foundation dan bottleneck awal. |
-| [`docs/progress/CHAT-1.2.md`](docs/progress/CHAT-1.2.md) | Forensic history Chat 1.2 | Saat perlu memahami WooCommerce/API/ACF/SEO migration. |
-| [`docs/progress/CHAT-1.3.md`](docs/progress/CHAT-1.3.md) | Forensic history Chat 1.3 | Saat perlu memahami catch-all routing, Header, article integration, dan visual convergence. |
-| [`docs/progress/CHAT-1.4.md`](docs/progress/CHAT-1.4.md) | Forensic history Chat 1.4 | Saat perlu memahami homepage sales positioning, CTA, hero assets, mascot dead end, dan social video covers. |
-| [`docs/progress/CHAT-1.5.md`](docs/progress/CHAT-1.5.md) | Forensic history Chat 1.5 | Saat perlu memahami documentation orientation, timeline synchronization, dan session-hardening work. |
-| [`docs/progress/CHAT-1.6.md`](docs/progress/CHAT-1.6.md) | Forensic history Chat 1.6 | Saat perlu memahami responsive UI polish, shared Footer, related products, service/testimonial/gallery carousel work. |
-| [`docs/progress/CHAT-1.6B.md`](docs/progress/CHAT-1.6B.md) | Clarification layer after Chat 1.6 | Saat perlu memahami launch architecture clarification setelah Chat 1.6. |
-| [`docs/progress/CHAT-1.7.md`](docs/progress/CHAT-1.7.md) | Forensic history Chat 1.7 | Saat perlu memahami clean verification baseline, branch finalization, prompt/documentation audit, dan session close. |
-| [`docs/progress/CHAT-1.8.md`](docs/progress/CHAT-1.8.md) | Forensic history Chat 1.8 | Saat perlu memahami Recent Posts, runtime diagnostics, Dewaweb dead end, DNS blocker, dan Chat 1.9 handoff. |
+| [`docs/progress/CHAT-2.0.md`](docs/progress/CHAT-2.0.md) | Forensic history Chat 2.0 | Saat perlu memahami Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, dan support-ticket handoff. |
 | [`docs/progress/CHAT-1.9.md`](docs/progress/CHAT-1.9.md) | Forensic history Chat 1.9 | Saat perlu memahami landing-page work, favicon investigation, Vercel deployment state, dan Chat 2.0 handoff. |
+| [`docs/progress/CHAT-1.8.md`](docs/progress/CHAT-1.8.md) | Forensic history Chat 1.8 | Saat perlu memahami Recent Posts, runtime diagnostics, Dewaweb dead end, DNS blocker, dan Chat 1.9 handoff. |
+| [`docs/progress/CHAT-1.7.md`](docs/progress/CHAT-1.7.md) | Forensic history Chat 1.7 | Saat perlu memahami clean verification baseline, branch finalization, prompt/documentation audit, dan session close. |
+| [`docs/progress/CHAT-1.6B.md`](docs/progress/CHAT-1.6B.md) | Clarification layer after Chat 1.6 | Saat perlu memahami launch architecture clarification setelah Chat 1.6. |
+| [`docs/progress/CHAT-1.6.md`](docs/progress/CHAT-1.6.md) | Forensic history Chat 1.6 | Saat perlu memahami responsive UI polish, shared Footer, related products, service/testimonial/gallery carousel work. |
+| [`docs/progress/CHAT-1.5.md`](docs/progress/CHAT-1.5.md) | Forensic history Chat 1.5 | Saat perlu memahami documentation orientation, timeline synchronization, dan session-hardening work. |
+| [`docs/progress/CHAT-1.4.md`](docs/progress/CHAT-1.4.md) | Forensic history Chat 1.4 | Saat perlu memahami homepage sales positioning, CTA, hero assets, mascot dead end, dan social video covers. |
+| [`docs/progress/CHAT-1.3.md`](docs/progress/CHAT-1.3.md) | Forensic history Chat 1.3 | Saat perlu memahami catch-all routing, Header, article integration, dan visual convergence. |
+| [`docs/progress/CHAT-1.2.md`](docs/progress/CHAT-1.2.md) | Forensic history Chat 1.2 | Saat perlu memahami WooCommerce/API/ACF/SEO migration. |
+| [`docs/progress/CHAT-1.1.md`](docs/progress/CHAT-1.1.md) | Forensic history Chat 1.1 | Saat perlu memahami foundation dan bottleneck awal. |
 
 > **Rule:** `docs/progress/` = sejarah. Untuk kondisi terbaru, pakai root `README.md`.
 
@@ -56,7 +57,7 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/guides/README.md`](docs/guides/README.md) | Index semua human/vibe-coding guides | Saat belum tahu guide mana yang relevan. |
-| [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, MBG, Jual Unit, Produksi Baru, atau gallery copy. |
+| [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, MBG, Jual Unit, Produksi Baru, product detail, atau gallery copy. |
 | [`docs/guides/VIBE-CODING-COPY-GUIDE.md`](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi sederhana untuk user non-developer / vibe coding | Saat mau mengubah copy tanpa perlu memahami seluruh architecture. |
 
 > **Guide = menjelaskan.** Guide bukan instruksi eksekusi AI.

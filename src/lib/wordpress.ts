@@ -1,10 +1,10 @@
-const DEFAULT_WORDPRESS_ORIGIN_URL = 'https://jkt10.dewaweb.com/wp-json/wp/v2';
+const DEFAULT_WORDPRESS_ORIGIN_URL = 'https://jkt10.dewaweb.com';
 const DEFAULT_WORDPRESS_HOST = 'www.bukanbarukitchen.com';
 
-const WORDPRESS_API_URL = (
+const WORDPRESS_API_ORIGIN = (
   process.env.WORDPRESS_API_URL ||
   DEFAULT_WORDPRESS_ORIGIN_URL
-).replace(/\/$/, '');
+).replace(/\/$/, '').replace(/\/wp-json\/wp\/v2$/i, '');
 const WORDPRESS_HOST = process.env.WORDPRESS_API_URL ? undefined : DEFAULT_WORDPRESS_HOST;
 
 export interface WordPressRenderedField {
@@ -112,12 +112,18 @@ function buildQuery(options?: WordPressQueryOptions): string {
   if (options?.orderby) params.set('orderby', options.orderby);
   if (options?.order) params.set('order', options.order);
 
-  const query = params.toString();
-  return query ? `?${query}` : '';
+  return params.toString();
+}
+
+function buildWordPressUrl(resource: string, options?: WordPressQueryOptions): string {
+  const params = new URLSearchParams({ rest_route: `/wp/v2/${resource}` });
+  const query = buildQuery(options);
+  if (query) new URLSearchParams(query).forEach((value, key) => params.set(key, value));
+  return `${WORDPRESS_API_ORIGIN}/?${params.toString()}`;
 }
 
 async function fetchWordPress<T>(resource: string, options?: WordPressQueryOptions): Promise<T> {
-  const response = await fetch(`${WORDPRESS_API_URL}/${resource}${buildQuery(options)}`, {
+  const response = await fetch(buildWordPressUrl(resource, options), {
     headers: {
       Accept: 'application/json',
       ...(WORDPRESS_HOST ? { Host: WORDPRESS_HOST } : {}),

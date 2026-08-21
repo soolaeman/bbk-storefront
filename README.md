@@ -52,8 +52,11 @@ Progress index:
 Latest code checkpoint:
 39c691fcba3bdcb5093c799daa3303fdf6e1ac6f
 
-Last README/docs sync:
-<updated below in this commit>
+Documentation sync commits:
+4dd5995bf02720fbed9209d0dcbed3d8e07f87fc  README current-state sync
+8f842b40097c808147b665b663b20642d3362c7c  START SESSION SOP sync
+d5446e1195431a862fd3e1b9bf5fbd016dc0f323  Guides index sync
+b9a9e9ebad2f902ff55ab12a1572e15b85cc1565  Navigator sync
 
 Canonical END-SESSION prompt:
 29f5d4925de894b84eb374c8e58c4f885b542e56

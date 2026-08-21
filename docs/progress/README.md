@@ -19,8 +19,10 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.6B | **16 Aug 2026** | **19:45 WIB** | **20:16 WIB** | **31m** | Post-session launch architecture clarification: public Next.js takeover/SEO + authenticated WordPress admin controls | 🟡 Clarified / Pending | [`CHAT-1.6B.md`](CHAT-1.6B.md) |
 | 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean verification baseline, GitHub branch finalization, prompt/documentation audit, end-session handoff | ✅ Closed with documentation debt | [`CHAT-1.7.md`](CHAT-1.7.md) |
 | 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts, Vercel/API runtime diagnostics, DNS investigation, hosting fallback evaluation | 🛑 Closed — DNS blocked | [`CHAT-1.8.md`](CHAT-1.8.md) |
+| 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages, navigation, favicon handoff | ✅ Closed | [`CHAT-1.9.md`](CHAT-1.9.md) |
+| 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps. Chat 1.8 End is recorded at minute precision from current session evidence.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
 
 ---
 
@@ -77,31 +79,34 @@ Chat 1.8 START
         ↓
 17 Aug 2026 16:54 WIB
 Chat 1.8 END
+        ↓
+17 Aug 2026 19:10 WIB
+Chat 1.9 START
+        ↓
+17 Aug 2026 22:14 WIB
+Chat 1.9 END
+        ↓
+21 Aug 2026 08:36 WIB
+Chat 2.0 START
+        ↓
+21 Aug 2026 10:29 WIB
+Chat 2.0 END
 ```
 
 ### Project time summary
 
 ```text
-Verified session working time through Chat 1.5:
-28 hours 47 minutes 0 seconds
+Verified session working time through Chat 1.9:
+49 hours 32 minutes 16 seconds
 
-Chat 1.6 working duration:
-3 hours 58 minutes 16 seconds
+Chat 2.0 working duration:
+1 hour 53 minutes
 
-Chat 1.6B working duration:
-31 minutes
-
-Chat 1.7 working duration:
-2 hours 48 minutes
-
-Chat 1.8 working duration:
-10 hours 24 minutes
-
-Verified session working time through Chat 1.8:
-46 hours 28 minutes 16 seconds
+Verified session working time through Chat 2.0:
+51 hours 25 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
-76 hours 09 minutes
+NOT VERIFIABLE
 
 Earliest verifiable migration evidence:
 14 August 2026 12:45 WIB
@@ -140,6 +145,12 @@ Clean verification + GitHub branch finalization + documentation audit
    ↓
 Chat 1.8
 Recent Posts + runtime diagnostics + DNS blocker isolation
+   ↓
+Chat 1.9
+Landing pages + navigation + favicon handoff
+   ↓
+Chat 2.0
+Origin/API separation + DewaWeb support handoff
 ```
 
 ---
@@ -149,8 +160,8 @@ Recent Posts + runtime diagnostics + DNS blocker isolation
 ```text
 DATA ARCHITECTURE       ✅ established
 ROUTING                 ✅ established
-CATALOG                 ✅ converged baseline
-PRODUCT DETAIL          ✅ functional baseline
+CATALOG                 ✅ sitemap-driven baseline
+PRODUCT DETAIL          ⚠️ runtime upstream blocked
 HOMEPAGE POSITIONING    ✅ sales-first
 SHARED FOOTER           ✅ integrated across key templates
 RELATED PRODUCTS        ✅ implemented baseline
@@ -158,65 +169,20 @@ GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
 RECENT POSTS            ✅ implemented baseline
 
-STEP 1 VISUAL QA        ✅ accepted by user
-DESKTOP UI QA           ✅ accepted by user
-MOBILE UI QA            ✅ accepted by user
+SITEMAP ROUTING         ✅ implemented
 PUBLIC SEO TAKEOVER     ⏳ audit pending
 ADMIN CONTROL LAYER     ⏳ implementation pending
-BACKEND INTEGRATION     ⏳ blocked by upstream DNS resolution
-ACF/CORE SYSTEM         ⏳ carried
-PRODUCTION HARDENING    ⏳ blocked by upstream verification
+BACKEND ORIGIN          🛑 blocked — DewaWeb support
+PRODUCTION HARDENING    🛑 blocked by upstream origin verification
 ```
 
 ---
 
 ## Current Pareto Focus
 
-1. Restore healthy authoritative DNS for `bukanbarukitchen.com` and verify delegation/zone consistency.
-2. Re-test WordPress/WooCommerce upstream and Next.js API routes locally and on Vercel after DNS recovery.
-3. Resume public SEO takeover audit, authenticated admin control layer, and backend hardening only after upstream connectivity is proven.
-
----
-
-## Session Timing & Evidence Rule
-
-Every migration chat should record, when verifiable:
-
-- **start date + time**
-- **end date + time**
-- **duration**
-- evidence/source for the timestamps
-
-### Duration calculation
-
-```text
-verified end timestamp
-        −
-verified start timestamp
-        ↓
-actual session duration
-```
-
-Rules:
-
-1. **Never invent or estimate a duration.**
-2. A date range such as `14–15 Aug` does **not** prove a 24-hour duration.
-3. If only dates are known, record the dates and set duration to `—`.
-4. If only a start time is known, record the start time and leave duration to `—` until an end timestamp is verified.
-5. If timestamps conflict across evidence, preserve the conflict and do not silently choose one.
-6. Use `Tidak ditemukan di repository/evidence yang tersedia.` when the required timing evidence is unavailable.
-7. Root `README.md` may show the same verified dates/durations in its Pareto progress summary, but must not create independent or conflicting timing facts.
-8. Project-level elapsed time must distinguish working/session duration from calendar/elapsed span and must not be presented as working duration without verified session boundaries.
-
-### Standard session record
-
-```text
-Session: 1.X
-Started: DD Month YYYY HH:MM:SS WIB
-Ended: DD Month YYYY HH:MM:SS WIB
-Duration: Xh Ym
-Evidence: <repository / conversation / verified timestamp source>
-```
+1. Obtain and verify a DewaWeb origin hostname for the existing `/home/bukanbar/public_html` WordPress installation.
+2. Test WordPress REST and WooCommerce REST through that origin before changing Vercel environment variables.
+3. Align Next.js server-side fetches with the verified origin, then run sitemap-driven production verification.
 
 ---
 
@@ -244,17 +210,3 @@ For timing specifically, use:
 `Tidak ditemukan di repository/evidence yang tersedia.`
 
 Do not replace forensic history with a clean-looking summary.
-
-## Relationship to README
-
-```text
-Detailed session archive
-        ↓
-docs/progress/CHAT-X.Y.md
-        ↓
-Pareto synthesis
-        ↓
-README.md
-        ↓
-Current project state + next handoff
-```

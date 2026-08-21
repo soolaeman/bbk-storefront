@@ -4,135 +4,207 @@
 
 ```text
 Session: 2.1
+Date: 21 August 2026
 Started: Tidak ditemukan di repository/evidence yang tersedia.
-Ended: PENDING
-Duration: PENDING
-Evidence source: Session-start timestamp tidak terverifikasi di repository/evidence yang tersedia.
+Ended: 21 August 2026 18:19 WIB
+Duration: —
+Evidence source: End timestamp from the conversation/current-session clock evidence; verified session start timestamp was not found in repository/evidence.
 ```
 
-## Pareto Objective
+## Scope
 
-**1 BIG GOAL:** Melanjutkan BBKitchen migration dari Chat 2.0 dengan menyelesaikan blocker origin DewaWeb secara evidence-first sebelum mengubah upstream Next.js/Vercel.
-
-### Top priorities
-
-1. Verifikasi apakah `origin.bukanbarukitchen.com` sudah dibuat/dapat diakses dan apakah benar menuju `/home/bukanbar/public_html`.
-2. Uji WordPress REST, WooCommerce REST, dan BBK custom endpoints melalui origin sebelum mengubah `WOOCOMMERCE_API_URL` atau environment upstream lain.
-3. Setelah origin terbukti sehat, baru selaraskan seluruh server-side fetch Next.js dan lakukan production verification berbasis sitemap.
+**1 BIG GOAL:** Resolve and verify the WordPress origin separation for the existing BBKitchen installation, then determine the remaining WooCommerce REST authentication blocker without repeating unnecessary DNS/database changes.
 
 ## Starting State
 
 - Branch/source of truth: `main`.
-- Chat 2.0 ditutup pada 21 August 2026 10:29 WIB dengan blocker DewaWeb origin support.
-- Public domain `www.bukanbarukitchen.com` tetap dimaksudkan sebagai public Next.js/Vercel renderer.
-- WordPress/WooCommerce/ACF/Core System tetap menjadi backend/admin source of truth.
-- Existing WordPress installation tetap berada di `/home/bukanbar/public_html` pada DewaWeb.
-- `jkt10.dewaweb.com` dan `103.185.53.66` sebelumnya terbukti hanya default-server responses, bukan origin BBKitchen yang tervalidasi.
-- Preferred backend/origin strategy: `origin.bukanbarukitchen.com`.
+- Chat 2.0 had closed with the origin strategy blocked on DewaWeb support.
+- Public domain `www.bukanbarukitchen.com` is the Next.js/Vercel public renderer.
+- Existing WordPress/WooCommerce installation remains at `/home/bukanbar/public_html`.
+- Preferred backend/origin hostname: `origin.bukanbarukitchen.com`.
+- A fresh WordPress state had initially been visible at the new origin hostname and was determined to be the wrong installation.
 
-## Origin Correction + Verification — 21 August 2026
+## Top 20% Changes
 
-### Initial mismatch
+1. **Origin document root was corrected** from the fresh origin directory to the existing `/home/bukanbar/public_html` installation. cPanel confirmed the document root update.
+2. **Existing BBKitchen WordPress was re-verified through the origin** using `https://origin.bukanbarukitchen.com/wp-json/`; the response exposed the existing BBKitchen site identity, `wc/v3`, and `bbk/v1` namespaces.
+3. **Public catalog routing was repaired**: `/katalog` was restored to the actual catalog implementation after a redirect loop had been introduced. The public `/katalog` route is now user-verified as accessible.
+4. **WooCommerce REST credentials were regenerated** on the existing BBKitchen WooCommerce installation for user `admbbk` with `Read` permission, and the new credentials were placed in Vercel environment variables.
 
-DewaWeb first created `origin.bukanbarukitchen.com` with a separate/fresh WordPress state. User evidence showed generic **My WordPress Blog**, WooCommerce setup wizard, generic plugins, and no known BBKitchen product catalog.
+## File / Route / API History
 
-### Self-service correction
+### Code changes performed in this session
 
-cPanel Domain Manager showed the origin document root as `/home/bukanbar/origin.bukanbarukitchen.com` and exposed **New Document Root**.
+- `src/app/catalog/page.tsx`
+  - Restored the catalog page implementation instead of a self-redirect that caused `/katalog` → `/katalog` recursion.
+  - Commit created during the session: `a512d1c9175c5ed8be6a0312e4357df6cd8f889b`.
+- `src/app/api/products/route.ts`
+  - Updated the server-side WooCommerce proxy to use WooCommerce query-string authentication (`consumer_key` + `consumer_secret`) rather than relying on an Authorization header that may be stripped by the upstream hosting layer.
+  - Commit created during the session: `39c691fcba3bdcb5093c799daa3303fdf6e1ac6f`.
 
-User changed the document root to `public_html`. cPanel confirmed:
+### Repository audit findings carried forward
 
-`Success: You have successfully updated the document root to “/home/bukanbar/public_html” for the “origin.bukanbarukitchen.com” domain.`
+- `src/app/wp-json/wc/v3/[...slug]/route.ts` still uses Basic Authorization and is not yet aligned with the `/api/products` query-auth strategy.
+- `src/app/product/[slug]/page.tsx` still performs direct WooCommerce server-side requests with Basic Authorization instead of using one consistent proxy path.
+- `src/lib/woocommerce.ts` routes catalog browser requests through `/api/products`, which is the intended server-side credential boundary.
+- `src/lib/wordpress.ts` uses the origin + `rest_route` pattern for WordPress REST fetches.
+- `src/app/katalog/page.tsx` remains a thin re-export of `../catalog/page`, which is now working because the actual implementation has been restored.
 
-This means the origin hostname now points at the existing BBKitchen web root without moving or cloning files.
-
-### REST verification after correction
-
-User opened:
-
-`https://origin.bukanbarukitchen.com/wp-json/`
-
-The response is the existing BBKitchen WordPress REST index, including:
-
-- `name`: `Sentra Jual Barang Bekas`
-- `url`: `https://www.bukanbarukitchen.com`
-- `home`: `https://www.bukanbarukitchen.com`
-- existing WordPress REST namespaces including `wc/v3`
-- existing BBK custom namespace `bbk/v1`
-- existing site REST routes and configuration consistent with the BBKitchen backend.
-
-This is strong direct browser evidence that the corrected origin now serves the **existing BBKitchen WordPress installation**, not the fresh WordPress instance.
-
-User then opened:
-
-`https://origin.bukanbarukitchen.com/wp-json/wc/v3/products`
-
-Response:
-
-`{"code":"woocommerce_rest_cannot_view","message":"Sorry, you cannot list resources.","data":{"status":401}}`
-
-This is the expected authentication barrier for the WooCommerce REST products endpoint and confirms the request is reaching the existing WooCommerce REST layer.
-
-## Current Architecture State
+## Data / Architecture Contracts
 
 ```text
+PUBLIC
 www.bukanbarukitchen.com
         ↓
-Vercel / Next.js public renderer
-
+Vercel / Next.js
+        ↓ server-side API fetch
+ORIGIN
 origin.bukanbarukitchen.com
         ↓
 /home/bukanbar/public_html
         ↓
-existing BBKitchen WordPress
-        ↓
-existing WooCommerce / ACF / BBK endpoints
+existing WordPress + WooCommerce + ACF + BBK APIs
 ```
 
-No second WordPress source of truth is required.
+Locked facts:
 
-## Decision
+- `origin.bukanbarukitchen.com` is the backend/origin hostname, not a second WordPress source of truth.
+- WordPress/WooCommerce/ACF remains the backend/admin source of truth.
+- Next.js remains the public renderer.
+- Public catalog route remains `/katalog`.
+- Product public route remains `/shop/[slug]` per the sitemap contract.
+- Existing REST contracts remain `/wp-json/`, `/wp-json/wc/v3/`, and `/wp-json/bbk/v1/*`.
 
-The origin/document-root blocker is now **RESOLVED**.
+## Bottlenecks / Symptoms / Root Cause / Resolution
 
-Do not use or configure the previously created fresh WordPress installation. It is now bypassed by the corrected document root.
+### Origin separation — RESOLVED ✅
 
-Next blocker is authentication only: create a WooCommerce REST API key on the **existing BBKitchen WooCommerce installation** and test authenticated product access through `origin.bukanbarukitchen.com`.
+**Symptom:** `origin.bukanbarukitchen.com` initially showed a fresh/generic WordPress installation rather than BBKitchen.
 
-## Verification Status
+**Root cause:** The origin hostname initially pointed to `/home/bukanbar/origin.bukanbarukitchen.com` rather than the existing BBKitchen web root.
 
-- Session bootstrap file created before application-code changes: ✅
-- Historical session timestamp reconstructed from repository evidence: ❌ Tidak ditemukan.
-- DewaWeb origin hostname exists: ✅
-- Origin document root corrected to `/home/bukanbar/public_html`: ✅ cPanel confirmation
-- Origin serves existing BBKitchen WordPress: ✅ Direct REST browser evidence
-- Existing BBK custom REST namespace visible: ✅ `bbk/v1`
-- Existing WooCommerce namespace visible: ✅ `wc/v3`
-- WooCommerce products endpoint reachable: ✅
-- WooCommerce products endpoint authenticated: ❌ 401 — expected until API credentials are supplied
-- WooCommerce credentials generated: ⏳ Next step
-- Vercel `WOOCOMMERCE_API_URL` changed: ❌ Intentionally not yet
-- Application runtime/build verification: ⏳ Pending authenticated origin test
+**Resolution:** cPanel document root was changed to `/home/bukanbar/public_html` and confirmed successful. Direct REST evidence then showed the existing BBKitchen WordPress installation through the origin.
 
-## Current Work
+**Lesson:** Do not clone/migrate the WordPress installation just to create an origin hostname; point the origin hostname to the existing web root.
 
-**NEXT:** Generate a WooCommerce REST API key from the existing BBKitchen WooCommerce admin and perform an authenticated request against `origin.bukanbarukitchen.com/wp-json/wc/v3/products`.
+### `/katalog` redirect loop — RESOLVED ✅
 
-Do not share the Consumer Secret in chat. It should be stored directly in the appropriate server-side secret/environment configuration.
+**Symptom:** Browser returned `ERR_TOO_MANY_REDIRECTS` for `/katalog`.
 
-## Git Checkpoint
+**Root cause:** `src/app/catalog/page.tsx` redirected to `/katalog`, while `src/app/katalog/page.tsx` re-exported that page, creating recursion.
 
-- Session bootstrap commit: `ef457782fac365da4c44c22b7a866ac9b5544f94`
-- Origin mismatch documentation commit: `2efacfb516206d3b0e7df2210b42e6f2bd1b5893`
-- Confirmed separate-installation documentation commit: `b7eb55faae0e1cd7f23700e2639b354571dfbc6c`
-- Corrected origin verification documentation commit: PENDING
+**Resolution:** Restored the full catalog page implementation in `src/app/catalog/page.tsx`.
 
-## Handoff / Next Step
+### WooCommerce REST authentication — BLOCKED ❌
 
-1. Open the **existing BBKitchen** WordPress admin via the corrected origin.
-2. Go to WooCommerce → Settings → Advanced → REST API.
-3. Create a key with the minimum required permission for server-side catalog reads (typically Read).
-4. Keep Consumer Key and Consumer Secret private.
-5. Use the credentials to test `/wp-json/wc/v3/products` through the corrected origin.
-6. After authenticated REST succeeds, update Vercel `WOOCOMMERCE_API_URL` to `https://origin.bukanbarukitchen.com` and configure the server-side credentials.
-7. Run production sitemap-driven verification.
+**Symptom:** Both unauthenticated and authenticated product-listing attempts returned:
+
+```json
+{"code":"woocommerce_rest_cannot_view","message":"Sorry, you cannot list resources.","data":{"status":401}}
+```
+
+**Verified facts:**
+
+- `/wp-json/` through origin works.
+- `wc/v3` namespace is present.
+- `/wp-json/wc/v3/products` is reachable.
+- WordPress user `admbbk` is an Administrator.
+- WooCommerce REST key was created on the existing BBKitchen installation with `Read` permission.
+- New Consumer Key/Secret were placed in Vercel and a redeployment was created.
+- Direct authenticated product-listing through the origin with the new credentials still returned 401.
+
+**Current root cause:** Not yet conclusively identified. Evidence now points to the WooCommerce REST authentication path at the WordPress/WooCommerce/server layer rather than the domain/origin routing itself. Do not claim a final root cause until a successful/failed authenticated direct-origin test is further isolated.
+
+## Failed Approaches / Dead Ends
+
+1. Treating the initial fresh WordPress state at `origin.bukanbarukitchen.com` as a new backend installation. Rejected; the correct solution was to point the origin document root at the existing BBKitchen installation.
+2. Changing the WordPress table prefix case as a presumed database fix. This caused a temporary WordPress admin access problem and was reverted. Do not repeat.
+3. Repeatedly editing WooCommerce database tables while the actual remaining blocker is REST authentication. Stop database changes unless new evidence requires them.
+4. Repeatedly generating credentials without first isolating the direct-origin authentication behavior. One new key was generated this session; further key generation is deferred.
+5. Treating the `/wp-json/wc/v3/products` 401 response without credentials as proof that the endpoint itself is broken. The endpoint is reachable; 401 is an authentication response.
+
+## Status Classification
+
+| Area | Status | Verification |
+|---|---|---|
+| Origin hostname exists | DONE / VERIFIED | Browser/cPanel evidence |
+| Origin points to existing BBKitchen `/home/bukanbar/public_html` | DONE / VERIFIED | cPanel confirmation + REST identity |
+| WordPress REST `/wp-json/` | DONE / VERIFIED | Direct browser test |
+| WooCommerce namespace `wc/v3` | DONE / VERIFIED | Direct browser test |
+| Existing BBK custom namespace `bbk/v1` | DONE / VERIFIED | Direct browser test |
+| `/katalog` route | DONE / VERIFIED | User opened production route successfully |
+| Catalog implementation | DONE / CODE ONLY | Code restored; production data still blocked by WooCommerce auth |
+| `/api/products` query-auth proxy | DONE / CODE ONLY | Code present in `main`; production endpoint still returns 401 |
+| WooCommerce REST authenticated listing | BLOCKED | Direct authenticated origin request still 401 |
+| Vercel catalog data loading | BLOCKED | Depends on authenticated WooCommerce REST |
+| Full production catalog verification | BLOCKED | Upstream auth unresolved |
+| Guides | NO CHANGE | Current guide architecture note remains relevant to this session; no copy-editing guide became stale based on repository audit |
+| Prompts | NO CHANGE | Canonical end-session and start-session prompts remain structurally valid |
+
+## Verification Layers
+
+- **Code:** ✅ changes were made in `main`.
+- **Build:** ⏳ not independently verified in this session after the final code/documentation writes.
+- **Localhost runtime:** Tidak ditemukan di conversation.
+- **Upstream origin:** ✅ WordPress REST reachable; WooCommerce authenticated listing remains blocked.
+- **Desktop UI:** ✅ `/katalog` user-verified as accessible.
+- **Mobile UI:** Tidak ditemukan di conversation/evidence for this session.
+- **Production WooCommerce data:** ❌ blocked by 401 authentication.
+
+## Top 20% Bottlenecks
+
+1. WooCommerce REST authentication at the origin remains unresolved.
+2. Server-side WooCommerce authentication strategy is inconsistent across `/api/products`, the compatibility route, and product-detail fetching.
+3. Production catalog cannot be fully verified until authenticated WooCommerce product listing succeeds.
+
+## Top 20% Decisions
+
+1. **Keep `origin.bukanbarukitchen.com` as the backend/origin hostname mapped to `/home/bukanbar/public_html`.**
+2. **Do not create a second WordPress installation or change database/table prefixes again.**
+3. **Treat WooCommerce REST authentication as the next Pareto blocker before further frontend work.**
+
+## Technical Debt
+
+- Align all server-side WooCommerce consumers to one authenticated proxy mechanism.
+- Audit/fix `src/app/wp-json/wc/v3/[...slug]/route.ts` Basic Auth path.
+- Audit/fix direct WooCommerce fetches in `src/app/product/[slug]/page.tsx`.
+- Complete production catalog, metadata/filter, and product-detail verification after auth is fixed.
+- Preserve and later audit origin noindex/robots SEO hygiene.
+- Existing unrelated carried bottlenecks B-3, B-12, B-13, B-14, B-15, B-16, B-17 remain deferred.
+
+## Git Checkpoints
+
+```text
+Origin/documentation bootstrap history:
+ef457782fac365da4c44c22b7a866ac9b5544f94
+2efacfb516206d3b0e7df2210b42e6f2bd1b5893
+b7eb55faae0e1cd7f23700e2639b354571dfbc6c
+
+Session code commits:
+a512d1c9175c5ed8be6a0312e4357df6cd8f889b  restore catalog implementation
+39c691fcba3bdcb5093c799daa3303fdf6e1ac6f  query-auth WooCommerce proxy
+```
+
+## Handoff
+
+### Current state
+
+Origin/backend separation is successfully established. The public domain is on Vercel/Next.js and the existing WordPress/WooCommerce installation is served through `origin.bukanbarukitchen.com`. `/katalog` is reachable, but dynamic product listing is blocked by WooCommerce REST authentication.
+
+### Next priority order
+
+1. Isolate the direct-origin WooCommerce authentication failure with the existing/new key without changing database, URL architecture, or creating more users/keys.
+2. Once authenticated product listing succeeds, verify `/api/products`, catalog metadata, filters, and `/shop/[slug]` product detail.
+3. Align remaining WooCommerce server-side fetch routes to the proven authentication mechanism, then run sitemap-driven production verification.
+
+### Things NOT to repeat
+
+- Do not repoint the main public domain away from Vercel.
+- Do not clone the existing WordPress installation into a second backend.
+- Do not change WordPress table-prefix case.
+- Do not keep regenerating WooCommerce keys without a new piece of evidence.
+- Do not make additional database changes for the current REST authentication problem.
+
+### Next conversation title
+
+**Chat 2.2 — WooCommerce REST Authentication Isolation & Production Catalog Verification**

@@ -8,17 +8,17 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 LAST SESSION — CHAT 1.8
+# 🕒 LAST SESSION — CHAT 1.9
 
 ```text
-Session: 1.8 BBKitchen Next.js Migration
-Started: 17 August 2026 06:30 WIB
-Ended: 17 August 2026 16:54 WIB
-Duration: 10h 24m
-Status: CLOSED — DNS / UPSTREAM BLOCKED
+Session: 1.9 BBKitchen Next.js Migration
+Started: 17 August 2026 19:10 WIB
+Ended: 17 August 2026 22:14 WIB
+Duration: 3h 04m
+Status: CLOSED — Vercel / favicon handoff carried
 ```
 
-> Chat 1.8 added and verified the Recent Posts homepage baseline, enabled Vercel Speed Insights, investigated Vercel and local 502s, evaluated an alternative Dewaweb Warrior staging path, and isolated the current runtime blocker to DNS resolution of `bukanbarukitchen.com`. The next session should fix/verify DNS authority and delegation before changing application architecture.
+> Chat 1.9 added/updated the Dapur MBG, Jual Unit, and Produksi Baru landing-page work, aligned header/footer/service navigation, investigated favicon delivery, and removed the old `src/app/favicon.ico` in preparation for `public/favicon.ico`. Production favicon delivery was not verified at close.
 
 ---
 
@@ -34,39 +34,17 @@ Chat 1.6 → ✅ Closed
 Chat 1.6B → 🟡 Clarified / Pending
 Chat 1.7 → ✅ Closed
 Chat 1.8 → 🛑 Closed — DNS blocked
+Chat 1.9 → ✅ Closed — landing pages / favicon handoff
 ```
-
-## Last code checkpoint
-
-```text
-faa03e509e8b2af72c769ac8bef21fcb4510766d
-fix: use apex WooCommerce API fallback
-```
-
-GitHub evidence: **17 August 2026 07:50:34 WIB**.
-
-Related code checkpoint:
-
-```text
-a318dddec8f4be32957e51cbed74a656187db963
-fix: use apex WordPress API fallback
-```
-
-GitHub evidence: **17 August 2026 07:50:18 WIB**.
 
 ## Current documentation checkpoint
 
 ```text
-Chat 1.8 archive:
-20fa9042c01990a5c8397256e48dfc6786a0957b
+Chat 1.9 archive:
+c9678bbda8c9cb93efc3b8ebd9b139924bf5603c
 
-Progress index sync:
-602b671051699f8b72d17323c212ddfc93018eef
-
-Documentation sync before this README refresh:
-- COPY-EDITING-GUIDE.md → f9675c2792ad37144dd254476909defc90243e6b
-- VIBE-CODING-COPY-GUIDE.md → 45a7de20ff4bd5dc61520609db0623176e3e6bcd
-- NAVIGATOR.md → 878a460b2c891ac05f8ae9fc069b5cb7fe062457
+Latest documentation sync:
+README / guides / Navigator are being synchronized in this update.
 
 Canonical END-SESSION prompt:
 29f5d4925de894b84eb374c8e58c4f885b542e56
@@ -87,24 +65,19 @@ Canonical END-SESSION prompt:
 | 1.6B | **16 Aug 2026** | — | — | — | Launch architecture clarification | 🟡 |
 | 1.7 | **17 Aug 2026** | **03:30 WIB** | **06:18 WIB** | **2h 48m** | Clean verification / main branch / docs | ✅ |
 | 1.8 | **17 Aug 2026** | **06:30 WIB** | **16:54 WIB** | **10h 24m** | Recent Posts / runtime diagnostics / DNS | 🛑 |
+| 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages / navigation / favicon | ✅ |
 
-### ⏱️ Project elapsed time since Chat 1.1
+### ⏱️ Verified working/session time
 
 ```text
-Verified working/session time through Chat 1.7:
-36 hours 04 minutes 16 seconds
-
-Chat 1.8 working duration:
-10 hours 24 minutes
-
-Verified working/session time through Chat 1.8:
+Through Chat 1.8:
 46 hours 28 minutes 16 seconds
 
-Actual elapsed duration since Chat 1.1 start:
-76 hours 09 minutes
+Chat 1.9:
+3 hours 04 minutes
 
-Earliest verifiable migration evidence:
-14 August 2026 12:45 WIB
+Through Chat 1.9:
+49 hours 32 minutes 16 seconds
 ```
 
 > **Important:** elapsed/calendar span ≠ working duration. Do not use calendar span as a proxy for time spent working.
@@ -113,9 +86,9 @@ Earliest verifiable migration evidence:
 
 # 🎯 CURRENT PRIORITIES — PARETO
 
-1. **DNS recovery** — verify authoritative nameservers, delegation, SOA, and zone consistency for `bukanbarukitchen.com`.
-2. **Upstream API verification** — after DNS recovery, re-test WordPress, WooCommerce, `/api/posts`, `/api/products`, and metadata locally and on Vercel.
-3. **Launch hardening** — resume WordPress public URL/SEO audit, authenticated admin controls, and WooCommerce/ACF/Core System integration only after upstream connectivity is proven.
+1. **Vercel deployment verification** — ensure production is deploying the latest `main` state.
+2. **Favicon production verification** — upload the intended favicon to `public/favicon.ico`, deploy, and verify `/favicon.ico` successfully.
+3. **DNS + upstream API verification** — resume authoritative DNS, WordPress/WooCommerce upstream, local API, and Vercel API verification after deployment/favicons are settled.
 
 ---
 
@@ -132,15 +105,17 @@ Earliest verifiable migration evidence:
 | Related Products | ✅ | ✅ User-verified baseline |
 | Catalog responsive navigation | ✅ | ✅ User-verified desktop/mobile direction |
 | Service cards + WhatsApp CTAs | ✅ | ✅ User-verified |
-| Testimonials mobile slider | ✅ | ⚠️ Latest correction needs final regression |
-| Gallery | ✅ Compact carousel | ⚠️ Latest correction needs final regression |
+| Dapur MBG landing page | ✅ | ⚠️ Production verification pending |
+| Jual Unit landing page | ✅ | ⚠️ Production verification pending |
+| Produksi Baru landing page | ✅ | ⚠️ Production verification pending |
 | Recent Posts | ✅ Implemented | ✅ Placement/UI baseline verified locally |
 | Shared Header | ✅ Integrated | ⚠️ Search typing, sticky behavior, parity carried |
 | Article typography | ✅ Content rendering exists | ⚠️ Editorial parity carried |
 | WordPress public SEO takeover | ⏳ | ⏳ URL/indexability audit pending |
 | Authenticated admin controls | ⏳ | ⏳ Authentication/server authorization pending |
 | ACF/Core System | ⏳ | ⏳ Deferred to integration/hardening |
-| Production runtime | ⏳ | 🛑 Blocked by DNS resolution |
+| Favicon | ⏳ `public/favicon.ico` pending upload | 🛑 `/favicon.ico` not verified |
+| Production runtime | ⏳ | 🛑 DNS/upstream blocker carried |
 
 ---
 
@@ -180,6 +155,7 @@ Earliest verifiable migration evidence:
 - Catalog pagination is server-side.
 - Product route: `/product/[slug]`.
 - Local route: `/jual-barang-bekas-restoran/[...slug]`.
+- Landing routes: `/dapur-mbg`, `/jual-unit`, `/produksi-baru`.
 - Inventory business logic does not belong in presentation components.
 - SOLD Product Cards remain discoverable.
 - Homepage positioning is primarily sales.
@@ -198,6 +174,7 @@ Earliest verifiable migration evidence:
 | B-14 | Product Detail shared Header parity | ⚠️ Carried |
 | B-15 | Public WordPress renderer/SEO surface must be audited before Next.js takeover | ⚠️ Launch requirement |
 | B-16 | Authenticated WordPress admin control layer not yet implemented | ⚠️ Launch requirement |
+| B-17 | Production favicon delivery | 🛑 Pending `public/favicon.ico` upload + deployment verification |
 
 ### B-6 evidence summary
 
@@ -220,185 +197,36 @@ The current evidence points to DNS delegation/authoritative-zone instability, no
 
 ---
 
-# 🚫 DO NOT REPEAT
-
-- Treating browser console 502s as proof of a Next.js frontend problem.
-- Rewriting API routes to hide a DNS resolution failure.
-- Regenerating WooCommerce credentials without evidence of an authentication failure.
-- Treating Vercel Deployment Protection `302` as the root cause of upstream API failure.
-- Using the protected branch deployment URL as the sole unauthenticated API test.
-- Continuing the Dewaweb Warrior hosting experiment without a compatible runtime/platform baseline.
-- Treating `next build` success as proof upstream runtime is healthy.
-- Treating `isAdminMode` as proof of WordPress authentication.
-- Disabling WordPress public routes before auditing their SEO/indexability role.
-
----
-
-# 🧱 TECHNICAL DEBT — NOW / NEXT / LATER
-
-### NOW
-
-- DNS authority/delegation recovery and verification.
-- Re-test local and Vercel WordPress/WooCommerce API connectivity.
-- Clean final build/runtime/mobile regression after upstream recovery.
-- Shared Header search interaction + sticky behavior + parity.
-- Product Detail final shared-design parity.
-- Article/local editorial typography.
-
-### NEXT
-
-- Public WordPress URL + SEO surface audit.
-- Authenticated WordPress admin control layer.
-- WordPress/WooCommerce/Core System integration.
-- Authoritative ACF filtering.
-- WooCommerce API performance/cache hardening.
-- SOLD → Google Sheets workflow.
-
-### LATER
-
-- Production performance/accessibility hardening.
-- SEO verification and deeper measurement.
-- Deployment/caching/image optimization verification.
-
----
-
-# 🧪 VERIFICATION RULE
+# 🧭 IMPORTANT FILES
 
 ```text
-implemented
-  ↓
-localhost/runtime verified
-  ↓
-desktop verified
-  ↓
-mobile verified
-  ↓
-no obvious regression
-  ↓
-build verified
-  ↓
-commit
-```
-
-Always distinguish:
-
-```text
-build verified
-runtime verified
-upstream verified
-UI verified
-desktop verified
-mobile verified
-```
-
-For the clarified admin layer, also distinguish:
-
-```text
-WordPress authentication verified
-server authorization verified
-mutation/upstream write verified
-Next.js refresh/revalidation verified
-```
-
----
-
-# 📦 IMPORTANT FILES / ASSETS
-
-```text
-public/images/hero/bbkitchen-hero-desktop.webp
-public/images/hero/bbkitchen-hero-mobile.webp
-public/images/people/bbkitchen-chef-presenting.webp
-public/images/people/bbkitchen-chef-pointing.webp
-public/images/people/bbkitchen-chef-trust.webp
-public/images/social/youtube-shorts-cover.webp
-public/images/social/tiktok-cover.webp
-public/images/gallery/gallery-01.webp … gallery-16.webp
-
+src/app/dapur-mbg/page.tsx
+src/app/jual-unit/page.tsx
+src/app/produksi-baru/page.tsx
 src/components/Header.tsx
 src/components/Footer.tsx
-src/components/ProductCard.tsx
-src/components/RecentPostsSection.tsx
-src/components/SocialMediaSection.tsx
 src/components/KitchenConsultationBanner.tsx
-src/components/TestimonialsSection.tsx
-src/components/GallerySection.tsx
-src/components/HeroSection.tsx
-src/components/CategoryFilter.tsx
-src/app/page.tsx
-src/app/catalog/page.tsx
-src/app/product/[slug]/page.tsx
-src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
-src/app/api/posts/route.ts
-src/app/api/products/route.ts
-src/lib/wordpress.ts
-src/lib/woocommerce.ts
+src/app/layout.tsx
+public/favicon.ico          ← next favicon upload target
 ```
 
 ---
 
-# 📚 DOCUMENTATION MAP
-
-Use [`NAVIGATOR.md`](NAVIGATOR.md) to jump to any documentation area.
+# 🔁 NEXT-CHAT HANDOFF
 
 ```text
-NAVIGATOR.md
-├── README.md       → project sekarang ada di mana
-├── docs/progress/  → apa yang terjadi di setiap Chat
-├── docs/guides/    → kalau mau mengubah/memahami sesuatu
-└── docs/prompts/   → workflow AI
+1. Verify current main/Vercel deployment alignment.
+2. Upload favicon → public/favicon.ico.
+3. Deploy latest main.
+4. Verify https://front-end-bbkitchen.vercel.app/favicon.ico.
+5. Resume DNS authority/delegation verification.
+6. Re-test WordPress/WooCommerce upstream.
+7. Re-test local + Vercel API routes.
+8. Only then continue launch hardening.
 ```
 
-### Session workflow
+After GitHub changes, local checkout must sync with:
 
-- [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) → canonical orientation prompt untuk membuka session baru dan membuat archive awal.
-- [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) → canonical forensic close/handoff prompt untuk menutup session.
-- [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) → documentation-only synchronization workflow.
-
-### Root shortcut
-
-[`end-session-prompt.md`](end-session-prompt.md) → shortcut ke canonical [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
-
----
-
-# 🚀 CHAT 1.9 HANDOFF
-
-Start title:
-
-```text
-1.9 BBKitchen Next.js Migration — DNS Recovery & Production API Verification
-```
-
-Current session:
-
-```text
-Chat 1.8 → CLOSED — DNS BLOCKED
-Chat 1.9 → NEXT
-```
-
-First actions:
-
-1. Verify authoritative DNS/delegation for `bukanbarukitchen.com`.
-2. Confirm stable A/NS/SOA responses from multiple public resolvers.
-3. Re-test WordPress public REST and WooCommerce endpoints.
-4. Re-test local `/api/posts`, `/api/products`, and metadata.
-5. Re-test Vercel API routes.
-6. Only after upstream recovery, resume production hardening / SEO takeover audit.
-
-At session close, use [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md).
-
----
-
-# 📜 MIGRATION TIMELINE
-
-```text
-Chat 1.1 → Foundation
-Chat 1.2 → Live API / Metadata / SEO
-Chat 1.3 → Routing / Integration
-Chat 1.4 → Sales-first homepage / assets
-Chat 1.5 → Documentation / session hardening
-Chat 1.6 → Responsive UI / homepage UX / gallery
-Chat 1.6B → Launch architecture clarification
-Chat 1.7 → Clean verification + main branch + docs sync
-Chat 1.8 → Recent Posts + runtime diagnostics + DNS blocker isolation
-Chat 1.9 → DNS recovery + production API verification
+```bash
+git pull origin main
 ```

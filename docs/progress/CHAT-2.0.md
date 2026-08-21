@@ -12,36 +12,62 @@ Evidence source: User-confirmed session start and closing time in the current co
 
 ## Pareto Objective
 
-**1 BIG GOAL:** Resume BBKitchen migration from the Chat 1.9 handoff with evidence-first verification before any implementation change.
+**1 BIG GOAL:** Resume BBKitchen migration from the Chat 1.9 handoff with evidence-first verification and preserve the public URL contract defined by the WordPress sitemap.
 
 ### Top priorities
 
-1. Verify current `main` / Vercel deployment alignment.
-2. Verify production favicon handoff and `/favicon.ico` delivery.
-3. Reassess DNS + WordPress/WooCommerce upstream connectivity before continuing launch hardening.
+1. Restore Vercel → `www.bukanbarukitchen.com` WordPress/WooCommerce upstream connectivity.
+2. Implement dynamic route patterns matching the sitemap instead of manual per-URL routes.
+3. Verify product, category, page, post, and archive coverage against the sitemap.
 
-## Session Bootstrap Findings
+## Sitemap Contract
 
-- Canonical start-session instructions were reviewed from `docs/prompts/START-SESSION-PROMPT.md`.
-- Latest documented session is Chat 1.9.
-- Previous session history is preserved and must remain immutable unless correcting a verified factual error.
-- Next.js remains the public experience layer; WordPress/WooCommerce/ACF/Core System remains the backend/source of truth.
-- Approved UI direction remains frozen unless regression, responsive, functional, security, SEO, or newly clarified architecture evidence requires change.
+The uploaded Yoast sitemap index contains six source sitemaps: post, page, three product sitemaps, and product category. fileciteturn36file0L1-L2
 
-## Current Handoff
+Observed public URL patterns:
 
-Chat 1.9 closed with landing-page/navigation work complete and favicon production verification still pending. The repository README identifies Vercel deployment verification, favicon delivery verification, and DNS/upstream API verification as the active Pareto priorities.
+- WooCommerce products: `/shop/<slug>/` fileciteturn36file6L1-L2
+- WooCommerce product categories: `/product-category/<nested-slug>/` with nested category paths. fileciteturn36file11L1-L2
+- WordPress posts: root-level slug such as `/paket-dapur-mbg-200-jutaan/`. fileciteturn36file3L1-L2
+- WordPress pages: root-level and named paths such as `/`, `/katalog/`, and `/sentra-jual-barang-bekas-restoran/`. fileciteturn36file7L1-L2
 
-## Verification
+## Implementation Completed
 
-Initial repository documentation review completed before application-code changes.
+1. `src/lib/wordpress.ts`
+   - Default WordPress REST upstream restored to `https://www.bukanbarukitchen.com/wp-json/wp/v2`.
+   - Removed normalization that forced `www` to apex.
+   - Commit: `bc3dd9b4b39f04c3ca9918ce73e45f1b7246efed`.
 
-## Git Checkpoint
+2. `src/app/api/products/route.ts`
+   - Default WooCommerce REST upstream restored to `https://www.bukanbarukitchen.com/wp-json/wc/v3`.
+   - Removed normalization that forced `www` to apex.
+   - Commit: `8ce14e4036bb13103551d503591295543ceed172`.
 
-Progress record created before application-code modification, per `START-SESSION-PROMPT.md`.
+3. `src/app/shop/[slug]/page.tsx`
+   - Added one dynamic route pattern for all sitemap WooCommerce product URLs.
+   - Commit: `b15bde10bfced386ec98cac0468008e41b983257`.
 
-Chat 2.0 start time subsequently confirmed by the user as **21 August 2026 08:36:00 WIB**.
+4. `src/app/product-category/[...slug]/page.tsx`
+   - Added nested dynamic route pattern for all sitemap WooCommerce category URLs.
+   - Commit: `a021d368970fe8d29c9b0c7aa23168c65b675999`.
+
+5. `src/app/[...slug]/page.tsx`
+   - Added root-level WordPress page/post fallback using exact sitemap path resolution against WordPress REST.
+   - Commit: `6aa36854c00a8d0b1ad161b24479e661784f4a26`.
+
+## Important Caveat
+
+The upstream host changes are evidence-based but still require a production deployment/runtime verification. The new `/shop/[slug]` wrapper reuses the existing product renderer; its metadata/canonical behavior must be verified and corrected if it emits `/product/<slug>` instead of the sitemap-preserved `/shop/<slug>` canonical. No assumption of production success should be made until Vercel runtime is checked.
+
+## Verification Status
+
+- Sitemap pattern inventory: verified from uploaded sitemap files.
+- Route pattern implementation: completed.
+- Production Vercel verification: PENDING.
+- WooCommerce 403 verification after host fix: PENDING.
+- WordPress 403 verification after host fix: PENDING.
+- Full sitemap URL crawl: PENDING.
 
 ## Next Step
 
-Begin with read-only verification of current `main` state and deployment/runtime evidence. Do not assume previous implementation or production state is current.
+Deploy/verify the current `main` changes, then test representative URLs from every sitemap pattern and inspect Vercel runtime logs. After runtime success, run a sitemap-driven URL coverage audit rather than manually creating individual routes.

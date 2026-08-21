@@ -41,25 +41,63 @@ Evidence source: Session-start timestamp tidak terverifikasi di repository/evide
 
 DewaWeb support reported that `origin.bukanbarukitchen.com` had been added and that WordPress REST API plus WooCommerce REST API were reachable. They reported `/wp-json/wc/v3/products` returning `401 Unauthorized`, which is consistent with an active endpoint requiring WooCommerce API authentication.
 
-However, browser evidence from the newly accessible origin shows:
+### Browser evidence confirms wrong/separate WordPress state
 
-- URL: `origin.bukanbarukitchen.com/wp-admin/admin.php?page=wc-admin&path=/setup-wizard`
-- Page title/content: **Welcome to Woo!** / WooCommerce setup wizard.
-- The page presents **Set up my store**, indicating a WooCommerce setup state rather than the known BBKitchen production/admin state.
-- This is a strong warning that the origin may be mapped to a fresh/different WordPress installation or a different WordPress database/document root.
+User inspected `origin.bukanbarukitchen.com` directly and provided screenshots from the WordPress admin.
 
-This evidence does **not yet prove** that a second WordPress installation was created. It does prove that the origin is not yet verified as the existing BBKitchen WordPress installation at `/home/bukanbar/public_html`.
+Evidence:
 
-### Decision
+- WooCommerce admin opens the **Welcome to Woo! / Setup Wizard** with `Set up my store`.
+- WordPress **Settings → General** shows:
+  - WordPress Address: `https://origin.bukanbarukitchen.com`
+  - Site Address: `https://origin.bukanbarukitchen.com`
+  - Administration email: `admin@origin.bukanbarukitchen.com`
+- User additionally verified that the homepage/site identity is the generic **My WordPress Blog**, not BBKitchen.
+- User verified the Plugins area does not represent the known BBKitchen plugin stack.
+- User verified the WooCommerce Products area is only the generic WooCommerce product list, not the known BBKitchen catalog.
 
-Do **not** generate WooCommerce Consumer Key/Secret on the setup-wizard installation yet. Do **not** change Vercel production upstream environment variables yet.
+### Conclusion
 
-Before credentials are generated, verify:
+The evidence now establishes that `origin.bukanbarukitchen.com` is serving a **separate/fresh WordPress installation/state**, not the existing BBKitchen WordPress installation at `/home/bukanbar/public_html`.
 
-1. `origin.bukanbarukitchen.com` document root / virtual host mapping.
-2. Whether it points to `/home/bukanbar/public_html`.
-3. Whether the origin is using the existing BBKitchen WordPress database.
-4. Whether existing BBKitchen products, pages, plugins, ACF data, users, and configuration are present.
+This is no longer merely an unverified warning. The origin's WordPress identity, site address, generic blog state, setup wizard state, and lack of the existing BBKitchen catalog/plugin state demonstrate that it is the wrong backend target for the migration.
+
+### Decision — LOCKED
+
+Do **not**:
+
+- generate WooCommerce Consumer Key/Secret on this origin installation;
+- run the WooCommerce setup wizard;
+- create or migrate BBKitchen data into this fresh installation;
+- change Vercel production upstream environment variables to this origin;
+- create a second WordPress source of truth.
+
+The intended architecture remains the existing BBKitchen WordPress installation at `/home/bukanbar/public_html`, exposed through a separate origin hostname without creating a second WordPress installation.
+
+## Required DewaWeb Correction
+
+DewaWeb needs to correct the origin virtual-host/document-root/database mapping so that:
+
+```text
+origin.bukanbarukitchen.com
+        ↓
+existing BBKitchen WordPress
+        ↓
+/home/bukanbar/public_html
+        ↓
+existing BBKitchen database
+        ↓
+existing WooCommerce / ACF / plugins / products
+```
+
+The support response should explicitly be asked to **not install or provision a new WordPress instance**. The required action is to attach the origin hostname to the existing BBKitchen installation.
+
+### Evidence to request from DewaWeb
+
+1. Exact document root configured for `origin.bukanbarukitchen.com`.
+2. Confirmation that the origin points to `/home/bukanbar/public_html`.
+3. Confirmation that the origin uses the existing BBKitchen WordPress database, not a newly provisioned database.
+4. Confirmation that no second WordPress installation was created for the origin.
 
 ## Verification Status
 
@@ -69,35 +107,29 @@ Before credentials are generated, verify:
 - WordPress REST reachable: ✅ Support-reported.
 - WooCommerce REST endpoint reachable: ✅ Support-reported.
 - `/wp-json/wc/v3/products` returns 401: ✅ Support-reported.
-- Origin browser reaches WordPress/WooCommerce: ✅ User screenshot.
-- Origin proven to be existing BBKitchen installation: ❌ Not yet verified.
-- Origin proven to map to `/home/bukanbar/public_html`: ❌ Not yet verified.
+- Origin browser reaches WordPress/WooCommerce: ✅ User-verified.
+- Origin identity matches BBKitchen: ❌ **Verified mismatch — separate/fresh WordPress.**
+- Origin proven to map to `/home/bukanbar/public_html`: ❌ **No; current evidence indicates otherwise.**
 - WooCommerce credentials generated: ⏳ Intentionally deferred.
-- Application runtime/build verification: ⏳ Pending.
+- Application runtime/build verification: ⏳ Pending origin correction.
 
 ## Current Work
 
-**BLOCKER:** Determine whether `origin.bukanbarukitchen.com` is attached to the existing BBKitchen WordPress installation or a different/fresh WordPress state.
+**BLOCKER:** DewaWeb must correct `origin.bukanbarukitchen.com` to serve the existing BBKitchen WordPress installation rather than the fresh WordPress state currently attached to the hostname.
 
-### Safe inspection sequence
-
-1. Do not click **Set up my store** or complete the WooCommerce wizard.
-2. Exit/back out of the setup wizard without creating store data.
-3. Inspect WordPress **Settings → General** and record only non-secret values: WordPress Address (URL), Site Address (URL).
-4. Inspect **Plugins** and confirm BBKitchen-specific plugins, ACF, WooCommerce, and existing integrations are present.
-5. Inspect **Products** and confirm the known BBKitchen catalog exists.
-6. Compare the WordPress admin/site identity with the existing BBKitchen installation.
-7. Ask DewaWeb to confirm the origin virtual host/document root and database mapping if any mismatch remains.
+No application-code changes are justified until this backend mapping is corrected.
 
 ## Git Checkpoint
 
 - Session bootstrap commit: `ef457782fac365da4c44c22b7a866ac9b5544f94`
-- Origin mismatch evidence documentation commit: PENDING
+- Origin mismatch evidence documentation commit: `2efacfb516206d3b0e7df2210b42e6f2bd1b5893`
+- Confirmed separate-installation documentation commit: PENDING
 
 ## Handoff / Next Step
 
-1. Verify the origin's WordPress identity without modifying the setup wizard.
-2. Obtain DewaWeb confirmation of document root/virtual-host mapping to `/home/bukanbar/public_html`.
-3. Only after the existing BBKitchen installation is proven, generate/use WooCommerce API credentials.
-4. Test authenticated WooCommerce REST directly against the verified origin.
-5. Only then align Next.js/Vercel upstream configuration.
+1. Send DewaWeb the confirmed evidence that the new origin serves a fresh/generic WordPress installation.
+2. Request correction of the virtual-host/document-root/database mapping to the existing `/home/bukanbar/public_html` BBKitchen installation.
+3. Re-test origin identity after DewaWeb correction.
+4. Only after BBKitchen data/plugins/products are visible, generate/use WooCommerce API credentials.
+5. Test authenticated WooCommerce REST directly against the corrected origin.
+6. Only then align Next.js/Vercel upstream configuration.

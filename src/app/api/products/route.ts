@@ -19,24 +19,20 @@ function hasWooCommerceCredentials(): boolean {
 }
 
 function getWooCommerceHeaders(): HeadersInit {
-  return {
+  const consumerKey = process.env.WC_CONSUMER_KEY;
+  const consumerSecret = process.env.WC_CONSUMER_SECRET;
+  const headers: Record<string, string> = {
     Accept: 'application/json',
   };
+  if (consumerKey && consumerSecret) {
+    headers.Authorization = `Basic ${Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64')}`;
+  }
+  return headers;
 }
 
 function buildWooCommerceUrl(resource: string, params?: URLSearchParams): string {
   const query = new URLSearchParams({ rest_route: `/wc/v3/${resource}` });
   params?.forEach((value, key) => query.set(key, value));
-
-  // Use query-string authentication over HTTPS because the upstream hosting
-  // layer may not forward the Authorization header to WordPress/PHP.
-  const consumerKey = process.env.WC_CONSUMER_KEY;
-  const consumerSecret = process.env.WC_CONSUMER_SECRET;
-  if (consumerKey && consumerSecret) {
-    query.set('consumer_key', consumerKey);
-    query.set('consumer_secret', consumerSecret);
-  }
-
   return `${WOOCOMMERCE_API_ORIGIN}/?${query.toString()}`;
 }
 

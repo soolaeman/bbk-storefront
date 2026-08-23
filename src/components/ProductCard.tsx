@@ -33,21 +33,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail,
         <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden cursor-pointer" onClick={() => onOpenDetail(product)}>
           <img src={product.images[0] || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80'} alt={product.name} referrerPolicy="no-referrer" className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSold ? 'grayscale contrast-125' : ''}`} loading="lazy" />
 
-          <div className="absolute top-2.5 left-2.5 right-2.5 sm:right-auto pr-16 sm:pr-0 z-10">
-            {isSold ? (
-              <span className="inline-flex max-w-full items-center whitespace-nowrap overflow-hidden text-ellipsis px-2.5 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-xs shadow-md backdrop-blur-xs border border-slate-700">
-                TERJUAL / SOLD
-              </span>
-            ) : (
-              <span className="inline-flex max-w-full items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
-                READY SIAP KIRIM
-              </span>
-            )}
-          </div>
+          <div className="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              {isSold ? (
+                <span className="inline-flex max-w-full items-center whitespace-nowrap overflow-hidden text-ellipsis px-2.5 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-xs shadow-md backdrop-blur-xs border border-slate-700">
+                  TERJUAL / SOLD
+                </span>
+              ) : (
+                <span className="inline-flex max-w-full items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-md">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
+                  READY SIAP KIRIM
+                </span>
+              )}
+            </div>
 
-          <div className="absolute top-2.5 right-2.5 z-10">
-            <span className="px-2 py-0.5 rounded-md bg-slate-900/80 text-amber-300 text-[11px] font-mono font-semibold backdrop-blur-xs border border-slate-700 whitespace-nowrap">
+            <span className="shrink-0 px-2 py-0.5 rounded-md bg-slate-900/80 text-amber-300 text-[11px] font-mono font-semibold backdrop-blur-xs border border-slate-700 whitespace-nowrap">
               {product.sku}
             </span>
           </div>

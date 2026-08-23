@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEFAULT_WOOCOMMERCE_API_ORIGIN = 'https://jkt10.dewaweb.com';
-const DEFAULT_WOOCOMMERCE_HOST = 'www.bukanbarukitchen.com';
-const WOOCOMMERCE_API_URL_IS_EXPLICIT = Boolean(process.env.WOOCOMMERCE_API_URL);
+const DEFAULT_WOOCOMMERCE_API_ORIGIN = 'https://origin.bukanbarukitchen.com';
 const WOOCOMMERCE_API_ORIGIN = (
   process.env.WOOCOMMERCE_API_URL || DEFAULT_WOOCOMMERCE_API_ORIGIN
 ).replace(/\/$/, '').replace(/\/wp-json\/wc\/v3$/i, '');
@@ -21,10 +19,7 @@ function hasWooCommerceCredentials(): boolean {
 }
 
 function getWooCommerceHeaders(): HeadersInit {
-  return {
-    Accept: 'application/json',
-    ...(WOOCOMMERCE_API_URL_IS_EXPLICIT ? {} : { Host: DEFAULT_WOOCOMMERCE_HOST }),
-  };
+  return { Accept: 'application/json' };
 }
 
 function buildWooCommerceUrl(resource: string, params?: URLSearchParams): string {

@@ -36,13 +36,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail,
           <div className="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               {isSold ? (
-                <span className="inline-flex max-w-full items-center whitespace-nowrap overflow-hidden text-ellipsis px-2.5 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-xs shadow-md backdrop-blur-xs border border-slate-700">
-                  TERJUAL / SOLD
+                <span className="inline-flex items-center whitespace-nowrap px-2.5 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-xs shadow-md backdrop-blur-xs border border-slate-700">
+                  TERJUAL
                 </span>
               ) : (
-                <span className="inline-flex max-w-full items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-md">
+                <span className="inline-flex items-center gap-1 whitespace-nowrap px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-md">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
-                  READY SIAP KIRIM
+                  READY
                 </span>
               )}
             </div>

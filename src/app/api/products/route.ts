@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEFAULT_WOOCOMMERCE_API_ORIGIN = 'https://origin.bukanbarukitchen.com';
+const DEFAULT_WOOCOMMERCE_API_ORIGIN = 'https://jkt10.dewaweb.com';
+const DEFAULT_WOOCOMMERCE_HOST = 'www.bukanbarukitchen.com';
+const WOOCOMMERCE_API_URL_IS_EXPLICIT = Boolean(process.env.WOOCOMMERCE_API_URL);
 const WOOCOMMERCE_API_ORIGIN = (
   process.env.WOOCOMMERCE_API_URL || DEFAULT_WOOCOMMERCE_API_ORIGIN
 ).replace(/\/$/, '').replace(/\/wp-json\/wc\/v3$/i, '');
@@ -19,20 +21,21 @@ function hasWooCommerceCredentials(): boolean {
 }
 
 function getWooCommerceHeaders(): HeadersInit {
-  const consumerKey = process.env.WC_CONSUMER_KEY;
-  const consumerSecret = process.env.WC_CONSUMER_SECRET;
-  const headers: Record<string, string> = {
+  return {
     Accept: 'application/json',
+    ...(WOOCOMMERCE_API_URL_IS_EXPLICIT ? {} : { Host: DEFAULT_WOOCOMMERCE_HOST }),
   };
-  if (consumerKey && consumerSecret) {
-    headers.Authorization = `Basic ${Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64')}`;
-  }
-  return headers;
 }
 
 function buildWooCommerceUrl(resource: string, params?: URLSearchParams): string {
   const query = new URLSearchParams({ rest_route: `/wc/v3/${resource}` });
   params?.forEach((value, key) => query.set(key, value));
+  const consumerKey = process.env.WC_CONSUMER_KEY;
+  const consumerSecret = process.env.WC_CONSUMER_SECRET;
+  if (consumerKey && consumerSecret) {
+    query.set('consumer_key', consumerKey);
+    query.set('consumer_secret', consumerSecret);
+  }
   return `${WOOCOMMERCE_API_ORIGIN}/?${query.toString()}`;
 }
 

@@ -4,10 +4,10 @@
 
 ```text
 Session: 2.2
-Started: Tidak ditemukan di repository/evidence yang tersedia.
+Started: 24 August 2026 05:33 WIB
 Ended: PENDING
 Duration: PENDING
-Evidence source: Tidak ditemukan di repository/evidence yang tersedia.
+Evidence source: User-supplied session start timestamp in conversation: "dimulai Senin, 24 Agustus 2026, sekitar 05:33 WIB (UTC+7)".
 ```
 
 ## Scope

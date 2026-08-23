@@ -20,6 +20,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages, navigation, favicon handoff | ✅ Closed | [`CHAT-1.9.md`](CHAT-1.9.md) |
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
 | 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
+| 2.2 | **24 Aug 2026** | **05:33 WIB** | **PENDING** | **PENDING** | WooCommerce REST request-path recovery, production catalog recovery, metadata/detail verification | 🟡 In progress — catalog recovered, final verification pending | [`CHAT-2.2.md`](CHAT-2.2.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and reflected consistently in the archive/index. Individual duration is calculated only from verified Start + End timestamps.
 
@@ -96,6 +97,15 @@ Chat 2.1 START
         ↓
 21 Aug 2026 18:19 WIB
 Chat 2.1 END
+        ↓
+24 Aug 2026 05:33 WIB
+Chat 2.2 START
+        ↓
+24 Aug 2026
+Production catalog recovery evidence
+        ↓
+Chat 2.2 END
+PENDING
 ```
 
 ### Project time summary
@@ -110,8 +120,14 @@ Chat 2.0 working duration:
 Chat 2.1 working duration:
 4 hours 54 minutes
 
+Chat 2.2 working duration:
+PENDING — session not yet closed
+
 Verified session working time through Chat 2.1:
 56 hours 19 minutes 16 seconds
+
+Verified session working time through Chat 2.2:
+PENDING
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE
@@ -162,6 +178,9 @@ Origin/API separation + DewaWeb support handoff
    ↓
 Chat 2.1
 Origin document-root correction + `/katalog` recovery + WooCommerce REST auth isolation
+   ↓
+Chat 2.2
+Native WooCommerce REST path + browser-like User-Agent + production catalog recovery
 ```
 
 ## Current Migration Position
@@ -169,8 +188,8 @@ Origin document-root correction + `/katalog` recovery + WooCommerce REST auth is
 ```text
 DATA ARCHITECTURE       ✅ established
 ROUTING                 ✅ established
-CATALOG                 ⚠️ route accessible; dynamic WooCommerce data blocked
-PRODUCT DETAIL          ⚠️ runtime upstream auth blocked
+CATALOG                 ✅ production products visibly recovered
+PRODUCT DETAIL          ⚠️ final runtime verification pending
 HOMEPAGE POSITIONING    ✅ sales-first
 SHARED FOOTER           ✅ integrated across key templates
 RELATED PRODUCTS        ✅ implemented baseline
@@ -182,15 +201,17 @@ SITEMAP ROUTING         ✅ implemented
 PUBLIC SEO TAKEOVER     ⏳ audit pending
 ADMIN CONTROL LAYER     ⏳ implementation pending
 BACKEND ORIGIN          ✅ verified — origin.bukanbarukitchen.com → existing WordPress
-WOOCOMMERCE REST AUTH   🛑 blocked — 401
-PRODUCTION HARDENING    🛑 blocked by WooCommerce REST authentication
+WOOCOMMERCE REST PATH   ✅ production catalog recovery evidence
+WOOCOMMERCE METADATA    ⚠️ final production 200 JSON verification pending
+PRODUCTION HARDENING    ⚠️ catalog recovered; metadata/detail verification pending
 ```
 
 ## Current Pareto Focus
 
-1. Isolate direct-origin WooCommerce REST authentication with the existing/new key.
-2. Once authenticated product listing succeeds, verify `/api/products`, catalog metadata/filters, and `/shop/[slug]` product detail.
-3. Align remaining WooCommerce server-side fetches to the proven authentication mechanism, then run sitemap-driven production verification.
+1. Verify production `/api/products` and `/api/products?metadata=1` as real `application/json` responses.
+2. Verify filters, pagination, and one `/shop/[slug]` product detail route.
+3. Align remaining WooCommerce server-side fetch paths with the proven native REST mechanism.
+4. Only after those checks pass, close Chat 2.2 and run final sitemap-driven production verification.
 
 ## Rule
 

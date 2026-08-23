@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEFAULT_WOOCOMMERCE_ORIGIN_URL = 'https://jkt10.dewaweb.com';
-const DEFAULT_WOOCOMMERCE_HOST = 'www.bukanbarukitchen.com';
+const DEFAULT_WOOCOMMERCE_API_ORIGIN = 'https://origin.bukanbarukitchen.com';
 const WOOCOMMERCE_API_ORIGIN = (
-  process.env.WOOCOMMERCE_API_URL ||
-  DEFAULT_WOOCOMMERCE_ORIGIN_URL
+  process.env.WOOCOMMERCE_API_URL || DEFAULT_WOOCOMMERCE_API_ORIGIN
 ).replace(/\/$/, '').replace(/\/wp-json\/wc\/v3$/i, '');
-const WOOCOMMERCE_HOST = process.env.WOOCOMMERCE_API_URL ? undefined : DEFAULT_WOOCOMMERCE_HOST;
 
 const METADATA_PER_PAGE = 100;
 const PRODUCT_META_FILTER_PAGE_SIZE = 100;
@@ -24,7 +21,6 @@ function hasWooCommerceCredentials(): boolean {
 function getWooCommerceHeaders(): HeadersInit {
   return {
     Accept: 'application/json',
-    ...(WOOCOMMERCE_HOST ? { Host: WOOCOMMERCE_HOST } : {}),
   };
 }
 
@@ -32,8 +28,8 @@ function buildWooCommerceUrl(resource: string, params?: URLSearchParams): string
   const query = new URLSearchParams({ rest_route: `/wc/v3/${resource}` });
   params?.forEach((value, key) => query.set(key, value));
 
-  // DewaWeb/WordPress may not pass the Authorization header through to PHP.
-  // WooCommerce supports query-string authentication as a fallback for HTTPS.
+  // Use query-string authentication over HTTPS because the upstream hosting
+  // layer may not forward the Authorization header to WordPress/PHP.
   const consumerKey = process.env.WC_CONSUMER_KEY;
   const consumerSecret = process.env.WC_CONSUMER_SECRET;
   if (consumerKey && consumerSecret) {

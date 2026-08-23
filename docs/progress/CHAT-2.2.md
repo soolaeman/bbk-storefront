@@ -7,69 +7,154 @@ Session: 2.2
 Started: 24 August 2026 05:33 WIB
 Ended: PENDING
 Duration: PENDING
-Evidence source: User-supplied session start timestamp in conversation: "dimulai Senin, 24 Agustus 2026, sekitar 05:33 WIB (UTC+7)".
+Timezone: WIB (UTC+7)
+Evidence source: User-supplied session start timestamp.
 ```
 
 ## Scope
 
-**1 BIG GOAL:** Isolate the direct-origin WooCommerce REST authentication blocker and, only after successful authentication, verify the production catalog data path.
+**1 BIG GOAL:** Isolate the WooCommerce REST authentication/request-path blocker and restore the production catalog data path without creating a second WordPress source of truth or using a Vercel-blocked Host-header workaround.
 
 ## Starting State
 
 - Branch/source of truth: `main`.
-- Chat 2.1 is closed with the origin separation resolved and WooCommerce REST authentication still blocked by `401 woocommerce_rest_cannot_view`.
+- Chat 2.1 closed with origin separation resolved and WooCommerce REST authentication still blocked by `401 woocommerce_rest_cannot_view`.
 - `origin.bukanbarukitchen.com` is the verified backend/API origin mapped to the existing `/home/bukanbar/public_html` WordPress installation.
-- `/katalog` is reachable, but dynamic WooCommerce product listing remains blocked upstream.
+- `/katalog` was reachable, but the dynamic WooCommerce request path was not yet reliably returning JSON.
 
 ## Pareto Priorities
 
-1. **BLOCKER:** Perform one controlled direct-origin authenticated WooCommerce product-list request using the current credentials; do not generate new credentials without new evidence.
-2. **IMPORTANT:** Based on the direct-origin result, isolate the failure to either the Vercel/proxy request construction or the WordPress/WooCommerce/server authentication layer.
-3. **NEXT:** After authentication succeeds, verify `/api/products`, `/katalog`, metadata/filter behavior, and `/shop/[slug]`.
+1. **BLOCKER:** Determine the WooCommerce request construction that actually works from the Vercel/Next.js runtime.
+2. **IMPORTANT:** Verify that the working request returns real WooCommerce JSON rather than HTML/fallback content.
+3. **NEXT:** Verify metadata/filter behavior and product-detail runtime, then close the session with production evidence.
 
-## Repository Findings
+## Diagnostic Evidence
 
-### `/api/products`
+### Failed request strategies
 
-`src/app/api/products/route.ts` currently defaults to `https://jkt10.dewaweb.com` when `WOOCOMMERCE_API_URL` is absent, and only uses `www.bukanbarukitchen.com` as a `Host` header in that fallback mode. Requests are built as `/?rest_route=/wc/v3/...` with `consumer_key` and `consumer_secret` query parameters when credentials are present. fileciteturn6file0L2-L6
+The following tests were performed during this session:
 
-This is inconsistent with the verified migration architecture, where `origin.bukanbarukitchen.com` is the backend/API origin. It is therefore a concrete configuration/code path that must be verified before any credential or database changes.
+```text
+Direct origin + rest_route query authentication
+→ 401 woocommerce_rest_cannot_view
 
-### Compatibility WooCommerce route
+Direct origin + HTTP Basic Auth using WooCommerce key/secret
+→ 401 invalid_username
 
-`src/app/wp-json/wc/v3/[...slug]/route.ts` has the same `jkt10.dewaweb.com` fallback and uses only Basic `Authorization`, unlike the query-string strategy in `/api/products`. fileciteturn8file0L2-L6
+Next.js /api/products during the broken path
+→ intermittent 200/502; some responses contained HTML instead of JSON
 
-### Product detail
+Metadata endpoint /api/products?metadata=1
+→ 502 when upstream returned HTML / non-JSON or connection failed
 
-`src/app/product/[slug]/page.tsx` defaults to `https://www.bukanbarukitchen.com/wp-json/wc/v3` and uses Basic Authorization directly. This is also inconsistent with the verified public/production architecture and with the query-auth workaround used by `/api/products`. fileciteturn9file0L2-L2
+Some product requests
+→ ECONNRESET observed from upstream
+```
 
-## Firecrawl / External Verification
+These results established that Basic Auth could not be assumed to work for this origin and that a 200 response alone was not sufficient evidence: the body had to be verified as WooCommerce JSON.
 
-Firecrawl was unable to retrieve the live `origin.bukanbarukitchen.com` REST endpoints from its scraping engines in this diagnostic pass. This is **not** proof that the origin is down; it only means the Firecrawl fetch path could not retrieve the host.
+## Working Change Found
 
-WooCommerce's current REST API documentation confirms that `401 Unauthorized` represents authentication/permission failure; it specifically notes that FastCGI/server setups can fail to pass the Authorization header and that consumer key/secret may be supplied as query-string parameters when the Authorization header is not parsed correctly. citehttps://github.com/woocommerce/woocommerce/blob/4980c8cd50c0e0fa8d7ae8b05dd2ac36720358bc/docs/apis/rest-api/index.mdx
+A later manual/Gemini-assisted commit changed `src/app/api/products/route.ts` in two important ways:
 
-## Diagnostic Conclusion
+1. **Native WooCommerce REST path**
 
-⚠️ **New concrete finding:** before changing WordPress/WooCommerce credentials or database state, the frontend repository must be audited/fixed for origin consistency. Multiple WooCommerce server-side paths still contain stale fallback origins (`jkt10.dewaweb.com` / `www.bukanbarukitchen.com`) while the verified backend origin is `origin.bukanbarukitchen.com`.
+Previous request shape:
 
-This does **not yet prove** that stale fallback configuration is the root cause of the existing 401, because production may already have `WOOCOMMERCE_API_URL` set correctly. The next controlled test must establish the actual production target without exposing credentials.
+```text
+https://origin.bukanbarukitchen.com/?rest_route=/wc/v3/...
+```
+
+Working request shape:
+
+```text
+https://origin.bukanbarukitchen.com/wp-json/wc/v3/...
+```
+
+The commit was `50bfe2368562b7fac2fa474df7f04ed2652576ea` (`Update route.ts by Gemini`).
+
+2. **Browser-like User-Agent**
+
+The WooCommerce upstream request now includes a browser-style `User-Agent` together with `Accept: application/json`.
+
+The same change keeps WooCommerce consumer key/secret server-side and appends them to the REST request query string.
+
+## Important Rejected Approach
+
+An intermediate attempt changed the fallback upstream to `jkt10.dewaweb.com` and added:
+
+```text
+Host: www.bukanbarukitchen.com
+```
+
+This was explicitly rejected because the Host-header workaround is blocked by Vercel and is not compatible with the production architecture. That change was reverted before the working path was accepted.
+
+No second WordPress backend was created and no DNS/Host-header bypass was retained.
+
+## Production Evidence
+
+User supplied a live browser screenshot from `bukanbarukitchen.com` showing the catalog successfully rendering WooCommerce-backed products after the native `/wp-json/wc/v3/...` + User-Agent change.
+
+Visible evidence included:
+
+- multiple product cards rendered
+- real product images
+- WooCommerce product names/descriptions
+- location badges such as `KEDAUNG` and `SAWANGAN`
+- status badge `READY SIAP KIRIM`
+- unit codes such as `BBK2552`, `BBK2551`, `BBK2556`, and `BBK2549`
+- product condition badges such as `Baru` and `Bekas`
+
+This is strong visual evidence that the production product-data path is now functioning.
+
+## Repository Change Checkpoint
+
+```text
+Working code commit:
+50bfe2368562b7fac2fa474df7f04ed2652576ea
+
+Message:
+Update route.ts
+by Gemini
+```
+
+The important behavioral changes in that commit are the native `/wp-json/wc/v3/...` URL construction and browser-like User-Agent. Formatting/refactoring changes were also included.
 
 ## Verification Status
 
 ```text
 Session bootstrap: ✅
-Timestamp evidence: ✅
 Repository audit: ✅
-Firecrawl live origin fetch: ⚠️ unable to retrieve host
-WooCommerce API documentation check: ✅
-Direct authenticated origin result in this session: PENDING
-Application code changes in this diagnostic step: NONE
+Direct-origin rest_route auth: ❌ 401
+Direct-origin Basic Auth: ❌ 401 invalid_username
+Native WooCommerce REST request path: ✅ working evidence
+Production catalog visual rendering: ✅ user-verified
+Product JSON end-to-end response: ⚠️ not captured as final production curl evidence in this record
+Metadata endpoint /api/products?metadata=1: ⚠️ final 200 JSON verification pending
+Product detail /shop/[slug]: ⚠️ pending
+Filter/pagination verification: ⚠️ pending
 ```
+
+## Root-Cause Position
+
+The session established that the failure was not safely solved by Basic Auth and that the Vercel-blocked Host-header workaround must not be retained.
+
+The currently working production path is associated with the native WooCommerce REST URL (`/wp-json/wc/v3/...`) plus a browser-like User-Agent. This is the strongest evidence-backed implementation found in this session.
+
+Do **not** claim the upstream server's exact security rule as conclusively proven unless a direct origin test isolates it. The evidence supports the request-path/User-Agent fix, but not a complete server-side root-cause proof.
+
+## Carried Technical Debt
+
+- Verify `/api/products?metadata=1` returns `200 application/json` in production.
+- Verify `/api/products` with filters, pagination, `status_unit`, condition, location, and category.
+- Verify `/shop/[slug]` product detail against the same WooCommerce request mechanism.
+- Align `src/app/wp-json/wc/v3/[...slug]/route.ts` with the proven WooCommerce mechanism if still needed.
+- Align any remaining direct WooCommerce server-side fetches with the same proven mechanism.
+- Run final production/sitemap verification only after catalog + metadata + detail paths are stable.
 
 ## Next Controlled Step
 
-1. Verify the effective production `WOOCOMMERCE_API_URL` configuration without exposing secrets.
-2. Confirm whether production `/api/products` targets `origin.bukanbarukitchen.com` or a stale fallback host.
-3. If the production target is wrong, fix only the origin configuration/code path and re-test.
-4. If the target is correct and the direct-origin authenticated request still returns 401, continue isolation at the WordPress/WooCommerce/server layer.
+1. Test production `/api/products` and `/api/products?metadata=1` and confirm `Content-Type: application/json`.
+2. Test catalog filters and pagination.
+3. Test one product-detail route.
+4. If all pass, close Chat 2.2 and update the root README/current checkpoint with the final code commit and verified session end time.

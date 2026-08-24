@@ -24,7 +24,7 @@ Production WooCommerce verification and SEO hardening.
 
 1. Verify `/api/products` and `/api/products?metadata=1` as real production JSON responses.
 2. Verify catalog filters and pagination behavior.
-3. Align remaining WooCommerce fetch paths with the proven native REST mechanism, then perform SEO/indexing verification.
+3. Align remaining WooCommerce/WordPress fetch paths with the proven native REST mechanism, then perform SEO/indexing verification.
 
 ## Priority #1 — Production API Verification
 
@@ -76,7 +76,7 @@ Production filter/pagination request handling: ✅ functionally verified
 Exact item-count/header verification: ⚠️ not claimed from screenshots where the full body/header was not visible
 ```
 
-## Priority #3 — Canonical WooCommerce Fetch-Path Migration
+## Priority #3 — Canonical Fetch-Path Migration
 
 ### `product-category/[...slug]` migration — ✅ completed
 
@@ -104,43 +104,59 @@ Commit:
 37c32accc2bbb855167bc42ef710ee5a2adca170
 ```
 
-### Compatibility proxy audit — ⚠️ internally orphaned, external consumers unknown
+### WordPress REST helper migration — ✅ completed
 
-`src/app/wp-json/wc/v3/[...slug]/route.ts` remains present and contains the rejected legacy architecture (`jkt10.dewaweb.com`, conditional `Host` header, Basic Authorization, and `rest_route` forwarding). Repository code search found the route itself and historical documentation, but no current application consumer of that route. fileciteturn42file1L7-L10
+`src/lib/wordpress.ts` was actively used by `/api/wordpress`, so deletion was not appropriate. The helper previously used the rejected legacy routing strategy:
 
-Conclusion:
+- `jkt10.dewaweb.com`
+- conditional `Host: www.bukanbarukitchen.com`
+- `rest_route=/wp/v2/...` query forwarding
+
+It now uses the canonical WordPress REST path directly:
 
 ```text
-Internal application consumer found: ❌ none found in repository search
-External consumer possibility: ⚠️ cannot be proven from repository alone
+https://origin.bukanbarukitchen.com/wp-json/wp/v2/<resource>
+```
+
+It preserves the `WORDPRESS_API_URL` environment override, all existing query options and exported helper functions, and the active `/api/wordpress` abstraction. It also uses the browser-like `User-Agent` strategy used by the recovered WooCommerce path. fileciteturn69file0L2-L6
+
+Commit:
+
+```text
+1acc365d9f98becefaec42ed30b00d5a67c5f781
+```
+
+### Legacy WooCommerce compatibility proxy — ⚠️ pending retirement decision
+
+`src/app/wp-json/wc/v3/[...slug]/route.ts` remains present and contains the rejected legacy architecture. Repository search did not identify a current application consumer, but external consumer usage cannot be proven from the repository alone.
+
+```text
+Internal application consumer found: ❌ none identified
+External dependency: ⚠️ unknown
 Safe to delete immediately: ❌ not yet
-Recommended action: retire/delete only after confirming no external WordPress/API consumer depends on the legacy URL
+Recommended action: confirm external dependency status, then retire/delete if unused
 ```
 
-### WordPress helper audit — ❌ not safe to retire
-
-`src/lib/wordpress.ts` is actively consumed by the application. Repository search found `src/app/api/wordpress/route.ts`, which imports `getWordPressPages`, `getWordPressPosts`, `getWordPressMedia`, `getWordPressCategories`, `getWordPressTags`, `getWordPressUsers`, and `searchWordPress`. fileciteturn63file1L7-L10 fileciteturn63file3L17-L20
-
-Conclusion:
-
-```text
-WordPress helper currently in use: ✅
-Safe to delete helper: ❌ no
-Correct next action: migrate its legacy origin fallback/routing without removing the abstraction
-```
-
-The helper still contains the legacy `jkt10.dewaweb.com` + conditional `Host` header pattern, so it remains a migration target, not a deletion candidate. fileciteturn30file0L2-L6
-
-## Audit Conclusion
+## Current Audit Conclusion
 
 ```text
 Main WooCommerce catalog/product flow: ✅ canonical
 product-category direct WooCommerce fetch: ✅ migrated
+WordPress REST helper: ✅ migrated to canonical origin/path
 Legacy /wp-json/wc/v3 compatibility proxy: ⚠️ internally orphaned; external dependency unknown
-WordPress REST helper: ⚠️ actively used; legacy routing remains
 ```
 
-No compatibility route was deleted in this step because repository search cannot prove absence of external consumers.
+## Verification / CI Boundary
+
+```text
+GitHub Actions workflow runs for migration commits:
+none returned by repository connector
+
+Local build/typecheck:
+not executed in this environment
+```
+
+Therefore build/CI green is **not claimed** yet.
 
 ## Locked Architecture / Do Not Regress
 
@@ -170,25 +186,7 @@ No compatibility route was deleted in this step because repository search cannot
 - `src/lib/wordpress.ts`
 - `src/app/api/wordpress/route.ts`
 
-## Verification / CI
-
-```text
-GitHub Actions workflow runs for migration commit:
-none returned by repository connector
-
-Local build/typecheck:
-not executed in this environment
-```
-
-## Git Checkpoint
-
-```text
-Canonical product-category migration:
-37c32accc2bbb855167bc42ef710ee5a2adca170
-```
-
 ## Next Step
 
-1. Migrate `src/lib/wordpress.ts` away from the legacy `jkt10.dewaweb.com` / `Host` fallback while preserving the active `/api/wordpress` abstraction.
-2. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before deleting/retiring it.
-3. Continue SEO/indexing verification: robots, sitemap, canonical URLs, and public WordPress renderer surface.
+1. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before deleting/retiring it.
+2. Then continue SEO/indexing verification: robots, sitemap, canonical URLs, and public WordPress renderer surface.

@@ -4,10 +4,6 @@ import { notFound } from 'next/navigation';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 
-const WOOCOMMERCE_API_URL =
-  process.env.WOOCOMMERCE_API_URL ||
-  'https://www.bukanbarukitchen.com/wp-json/wc/v3';
-
 const WHATSAPP_NUMBER = '6281288889999';
 
 interface WooCommerceMeta {
@@ -33,11 +29,10 @@ interface WooCommerceProduct {
   meta_data?: WooCommerceMeta[];
 }
 
-function getAuthorization(): string | null {
-  const key = process.env.WC_CONSUMER_KEY;
-  const secret = process.env.WC_CONSUMER_SECRET;
-  if (!key || !secret) return null;
-  return `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`;
+function getSiteBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return 'http://localhost:3000';
 }
 
 function getMeta(product: WooCommerceProduct, key: string): string {
@@ -75,42 +70,32 @@ function normalizeStatus(value: string, stockStatus: string): string {
 }
 
 async function getProduct(slug: string): Promise<WooCommerceProduct | null> {
-  const authorization = getAuthorization();
-  if (!authorization) throw new Error('WooCommerce credentials belum dikonfigurasi.');
+  const baseUrl = getSiteBaseUrl();
+  const response = await fetch(
+    `${baseUrl}/api/products?slug=${encodeURIComponent(slug)}&status=publish&per_page=1`,
+    { next: { revalidate: 60 } },
+  );
 
-  const params = new URLSearchParams({ slug, status: 'publish', per_page: '1' });
-  const response = await fetch(`${WOOCOMMERCE_API_URL}/products?${params.toString()}`, {
-    headers: { Accept: 'application/json', Authorization: authorization },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) throw new Error(`WooCommerce product lookup gagal: ${response.status}`);
-
+  if (!response.ok) return null;
   const products = (await response.json()) as WooCommerceProduct[];
+  if (!Array.isArray(products) || products.length === 0) return null;
   return products[0] ?? null;
 }
 
 async function getRelatedProducts(product: WooCommerceProduct): Promise<WooCommerceProduct[]> {
-  const authorization = getAuthorization();
   const categoryId = product.categories[0]?.id;
-  if (!authorization || !categoryId) return [];
+  if (!categoryId) return [];
 
-  const params = new URLSearchParams({
-    status: 'publish',
-    category: String(categoryId),
-    exclude: String(product.id),
-    per_page: '4',
-    orderby: 'date',
-    order: 'desc',
-  });
-
-  const response = await fetch(`${WOOCOMMERCE_API_URL}/products?${params.toString()}`, {
-    headers: { Accept: 'application/json', Authorization: authorization },
-    cache: 'no-store',
-  });
+  const baseUrl = getSiteBaseUrl();
+  const response = await fetch(
+    `${baseUrl}/api/products?category=${categoryId}&per_page=5&status=publish&orderby=date&order=desc`,
+    { next: { revalidate: 60 } },
+  );
 
   if (!response.ok) return [];
-  return (await response.json()) as WooCommerceProduct[];
+  const products = (await response.json()) as WooCommerceProduct[];
+  if (!Array.isArray(products)) return [];
+  return products.filter((item) => item.id !== product.id).slice(0, 4);
 }
 
 export async function generateMetadata({
@@ -120,7 +105,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
-
   if (!product) return { title: 'Unit Tidak Ditemukan | BBKitchen' };
 
   const description = stripHtml(product.short_description || product.description || '').slice(0, 160);
@@ -150,15 +134,13 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const relatedProducts = await getRelatedProducts(product);
-  const rawCondition = getMeta(product, 'kondisi_unit');
-  const rawStatus = getMeta(product, 'status_unit');
+  const condition = normalizeCondition(getMeta(product, 'kondisi_unit'));
+  const status = normalizeStatus(getMeta(product, 'status_unit'), product.stock_status);
   const location = getMeta(product, 'lokasi_unit');
   const kodeUnit = getMeta(product, 'kode_unit') || product.sku;
   const category = product.categories[0]?.name || 'Peralatan Dapur Komersial';
   const shortDescription = product.short_description || product.description || '';
   const price = product.price || product.regular_price;
-  const condition = normalizeCondition(rawCondition);
-  const status = normalizeStatus(rawStatus, product.stock_status);
   const canonical = `https://www.bukanbarukitchen.com/product/${product.slug}`;
   const whatsappText = `Halo BBKitchen, saya tertarik dengan unit ${product.name} (${kodeUnit}).`;
 
@@ -185,59 +167,38 @@ export default async function ProductPage({
 
   return (
     <main className="min-h-screen bg-slate-100 text-slate-900">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
 
       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-7 lg:px-8 lg:py-9">
-        <nav className="mb-4 flex min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[11px] font-medium text-slate-500 shadow-sm sm:gap-2 sm:px-4 sm:text-xs" aria-label="Breadcrumb">
+        <nav className="mb-4 flex min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[11px] font-medium text-slate-500 shadow-sm sm:text-xs" aria-label="Breadcrumb">
           <a href="/" className="shrink-0 hover:text-emerald-700">Home</a>
-          <span className="shrink-0 text-slate-300">›</span>
+          <span>›</span>
           <a href="/#catalog" className="shrink-0 hover:text-emerald-700">Katalog</a>
-          <span className="shrink-0 text-slate-300">›</span>
-          <a href="/#catalog" className="max-w-[34vw] shrink-0 truncate hover:text-emerald-700">{category}</a>
-          <span className="shrink-0 text-slate-300">›</span>
-          <span className="min-w-0 truncate font-semibold text-slate-800" aria-current="page">{product.name}</span>
+          <span>›</span>
+          <span className="min-w-0 truncate font-semibold text-slate-800">{product.name}</span>
         </nav>
 
         <div className="mb-5 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm sm:px-6 sm:py-5">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
-            <div className="min-w-0">
-              <p className="mb-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">Detail Unit BBKitchen</p>
-              <h1 className="text-2xl font-black leading-tight tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">{product.name}</h1>
-            </div>
-            <span className="w-fit max-w-full truncate rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase text-amber-700">{category}</span>
-          </div>
+          <p className="mb-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">Detail Unit BBKitchen</p>
+          <h1 className="text-2xl font-black leading-tight tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">{product.name}</h1>
+          <span className="mt-2 inline-block rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase text-amber-700">{category}</span>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
             <div className="relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-              {product.images.length > 0 ? (
-                product.images.map((image, index) => (
-                  <div key={`${image.src}-${index}`} className="absolute inset-0">
-                    <input id={`product-gallery-${index}`} name="product-gallery" type="radio" defaultChecked={index === 0} className="peer fixed left-0 top-0 h-px w-px opacity-0" />
-                    <div className="pointer-events-none absolute inset-0 hidden peer-checked:block">
-                      <img src={image.src} alt={image.alt || `${product.name} foto ${index + 1}`} className="h-full w-full object-contain" />
-                      <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-[10px] font-black text-white shadow-md sm:text-xs">● {status === 'READY' ? 'READY SIAP KIRIM' : status}</span>
-                      <span className="absolute bottom-3 right-3 rounded-lg bg-slate-950/85 px-2.5 py-1.5 text-[10px] font-bold text-white">Foto Unit BBKitchen</span>
-                    </div>
-                  </div>
-                ))
+              {product.images[0]?.src ? (
+                <img src={product.images[0].src} alt={product.images[0].alt || product.name} className="h-full w-full object-contain" />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm font-semibold text-slate-500">Foto unit belum tersedia</div>
               )}
+              <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1.5 text-[10px] font-black text-white shadow-md sm:text-xs">● {status === 'READY' ? 'READY SIAP KIRIM' : status}</span>
             </div>
-
             {product.images.length > 1 && (
-              <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6" aria-label="Pilih foto produk">
+              <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6">
                 {product.images.map((image, index) => (
-                  <label key={`thumb-${image.src}-${index}`} htmlFor={`product-gallery-${index}`} className="cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5 transition hover:border-amber-400 hover:ring-2 hover:ring-amber-100 focus-within:border-amber-500">
-                    <img src={image.src} alt={`Pilih foto ${index + 1} ${product.name}`} className="aspect-square w-full rounded-md object-cover" />
-                  </label>
+                  <img key={`${image.src}-${index}`} src={image.src} alt={`${product.name} foto ${index + 1}`} className="aspect-square w-full rounded-lg border border-slate-200 object-cover" loading="lazy" />
                 ))}
               </div>
             )}
@@ -251,9 +212,9 @@ export default async function ProductPage({
 
             <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50">
               <dl className="divide-y divide-slate-200">
-                <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4"><dt className="text-sm font-medium text-slate-500">SKU</dt><dd className="text-right text-sm font-black text-slate-900">{kodeUnit}</dd></div>
-                <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4"><dt className="text-sm font-medium text-slate-500">Kategori</dt><dd className="max-w-[65%] text-right text-sm font-bold text-slate-900">{category}</dd></div>
-                <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4"><dt className="text-sm font-medium text-slate-500">Lokasi Unit</dt><dd className="text-right text-sm font-bold text-slate-900">{location || 'Belum tercantum'}</dd></div>
+                <div className="flex justify-between gap-4 p-4"><dt className="text-sm text-slate-500">SKU</dt><dd className="text-right text-sm font-black">{kodeUnit}</dd></div>
+                <div className="flex justify-between gap-4 p-4"><dt className="text-sm text-slate-500">Kategori</dt><dd className="text-right text-sm font-bold">{category}</dd></div>
+                <div className="flex justify-between gap-4 p-4"><dt className="text-sm text-slate-500">Lokasi Unit</dt><dd className="text-right text-sm font-bold">{location || 'Belum tercantum'}</dd></div>
               </dl>
             </div>
 
@@ -267,66 +228,37 @@ export default async function ProductPage({
             <div className="mt-4 rounded-xl bg-slate-950 p-4">
               <p className="text-[10px] font-bold text-slate-400">Butuh unit ini?</p>
               <p className="mt-1 text-sm font-semibold text-white">Tanyakan harga, ketersediaan, dan detail unit ke tim BBKitchen.</p>
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-xs font-black text-white shadow-sm transition hover:bg-emerald-400 sm:text-sm">☎ Tanya Harga &amp; Ketersediaan via WhatsApp</a>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-xs font-black text-white sm:text-sm">☎ Tanya Harga &amp; Ketersediaan via WhatsApp</a>
             </div>
           </section>
         </div>
 
         <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-7">
-          <div className="mb-5 flex items-center gap-3 border-b border-slate-200 pb-4">
-            <span className="rounded-lg bg-amber-50 px-2.5 py-2 text-amber-600">▤</span>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600">Informasi Produk</p>
-              <h2 className="text-lg font-black text-slate-950 sm:text-xl">Deskripsi &amp; Detail Unit</h2>
-            </div>
-          </div>
-          <div className="prose prose-slate max-w-none text-sm leading-7 prose-headings:font-black prose-headings:text-slate-950 prose-a:text-emerald-700">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600">Informasi Produk</p>
+          <h2 className="mt-1 text-lg font-black text-slate-950 sm:text-xl">Deskripsi &amp; Detail Unit</h2>
+          <div className="prose prose-slate mt-5 max-w-none text-sm leading-7 prose-headings:font-black prose-headings:text-slate-950 prose-a:text-emerald-700">
             {product.description ? <div dangerouslySetInnerHTML={{ __html: product.description }} /> : <p>{stripHtml(shortDescription) || 'Deskripsi unit belum tersedia.'}</p>}
-          </div>
-        </section>
-
-        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-7">
-          <h2 className="text-lg font-black text-slate-950 sm:text-xl">Ringkasan Unit</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">Kondisi</p><p className="mt-1 font-black text-slate-950">{condition}</p></div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">Status</p><p className="mt-1 font-black text-emerald-700">{status}</p></div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">Lokasi</p><p className="mt-1 font-black text-slate-950">{location || 'Belum tercantum'}</p></div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-semibold text-slate-500">SKU</p><p className="mt-1 font-black text-slate-950">{kodeUnit}</p></div>
           </div>
         </section>
 
         {relatedProducts.length > 0 && (
           <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-7" aria-labelledby="related-products-heading">
-            <div className="mb-5 flex flex-col gap-2 border-b border-slate-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="mb-5 flex items-end justify-between gap-3 border-b border-slate-200 pb-4">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-amber-600">Pilihan Lain di Kategori Ini</p>
                 <h2 id="related-products-heading" className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Produk Terkait</h2>
               </div>
-              <Link href="/catalog" className="text-xs font-bold text-emerald-700 hover:text-emerald-800">Lihat semua katalog →</Link>
+              <Link href="/catalog" className="text-xs font-bold text-emerald-700">Lihat katalog →</Link>
             </div>
-
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
               {relatedProducts.map((relatedProduct) => (
-                <Link
-                  key={relatedProduct.id}
-                  href={`/product/${encodeURIComponent(relatedProduct.slug)}`}
-                  className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
-                >
+                <Link key={relatedProduct.id} href={`/product/${encodeURIComponent(relatedProduct.slug)}`} className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md">
                   <div className="aspect-square overflow-hidden bg-slate-100">
-                    {relatedProduct.images[0]?.src ? (
-                      <img
-                        src={relatedProduct.images[0].src}
-                        alt={relatedProduct.images[0].alt || relatedProduct.name}
-                        className="h-full w-full object-contain transition duration-300 group-hover:scale-[1.02]"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center px-3 text-center text-xs font-semibold text-slate-400">Foto belum tersedia</div>
-                    )}
+                    {relatedProduct.images[0]?.src ? <img src={relatedProduct.images[0].src} alt={relatedProduct.images[0].alt || relatedProduct.name} className="h-full w-full object-contain" loading="lazy" /> : null}
                   </div>
                   <div className="p-3">
                     <p className="mb-1 line-clamp-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">{relatedProduct.categories[0]?.name || category}</p>
-                    <h3 className="line-clamp-2 text-sm font-black leading-5 text-slate-900 transition group-hover:text-emerald-800">{relatedProduct.name}</h3>
+                    <h3 className="line-clamp-2 text-sm font-black leading-5 text-slate-900">{relatedProduct.name}</h3>
                     <p className="mt-2 text-xs font-bold text-slate-500">Lihat detail →</p>
                   </div>
                 </Link>
@@ -337,8 +269,7 @@ export default async function ProductPage({
       </div>
 
       <Footer onSelectCategory={() => undefined} />
-
-      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-5 right-5 z-40 rounded-full bg-emerald-600 px-4 py-3 text-xs font-black text-white shadow-lg transition hover:bg-emerald-500 sm:right-8">Tanya via WhatsApp</a>
+      <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-5 right-5 z-40 rounded-full bg-emerald-600 px-4 py-3 text-xs font-black text-white shadow-lg sm:right-8">Tanya via WhatsApp</a>
     </main>
   );
 }

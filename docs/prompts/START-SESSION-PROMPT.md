@@ -67,7 +67,7 @@ Never assume that a previous implementation is still current.
 
 Historical progress files are immutable unless explicitly correcting a verified factual error.
 
-Especially `docs/progress/CHAT-X.Y.md`.
+Especially `docs/progress/CHAT-X.Y.md` and `docs/progress/README.md`.
 
 Do not rewrite previous session history merely to make it match the current architecture.
 
@@ -151,8 +151,8 @@ Current facts:
 - The existing BBKitchen WordPress installation is at `/home/bukanbar/public_html` on DewaWeb.
 - `origin.bukanbarukitchen.com` is the verified backend/origin hostname and is mapped to the existing BBKitchen web root.
 - Direct `/wp-json/` through the origin is verified and exposes the WooCommerce `wc/v3` and BBK `bbk/v1` namespaces.
-- The remaining upstream blocker is authenticated WooCommerce product listing: direct authenticated `/wp-json/wc/v3/products` still returns `401 woocommerce_rest_cannot_view`.
-- `jkt10.dewaweb.com` and `103.185.53.66` are not to be treated as BBKitchen API origins based on prior verification.
+- The production catalog/detail flow now uses the native `/wp-json/wc/v3/...` request path with server-side WooCommerce credentials and a browser-like User-Agent.
+- Final raw `/api/products` and `/api/products?metadata=1` JSON verification remains pending; do not describe that as fully verified.
 - Do not create a second WordPress installation merely to solve origin/API problems.
 
 ---
@@ -170,7 +170,7 @@ Preserve these patterns unless new evidence requires a change:
 WordPress page/post paths via catch-all resolution
 ```
 
-Do not use `/product/[slug]` as the public product URL contract merely because an older renderer or historical document references it.
+The existing product-detail renderer is `src/app/product/[slug]/page.tsx`, with public `/shop/[slug]` wrapper behavior. Preserve `/shop/[slug]` as the public product URL family.
 
 The final public architecture must avoid two competing public renderers.
 
@@ -272,21 +272,20 @@ For SEO changes, verify URL, canonical, metadata, redirect, indexability, and si
 
 For deployment changes, distinguish GitHub source state, Vercel deployment state, and production HTTP response.
 
-For the current WooCommerce blocker, use a controlled sequence:
+For WooCommerce production verification, the current controlled baseline is:
 
 ```text
-1. Direct origin authenticated request
-   origin.bukanbarukitchen.com/wp-json/wc/v3/products
+1. Native origin REST path
+   origin.bukanbarukitchen.com/wp-json/wc/v3/...
 
-2. If direct origin succeeds:
-   isolate Vercel/server-side proxy/request construction.
+2. Server-side WooCommerce credentials
 
-3. If direct origin still returns 401:
-   isolate WordPress/WooCommerce/server authentication.
+3. Browser-like User-Agent + Accept: application/json
 
-4. Do not generate additional credentials or alter the database
-   without new evidence.
+4. Verify response body/content-type, not only HTTP 200.
 ```
+
+Do not resurrect the rejected Vercel Host-header workaround or assume Basic Auth works for this origin.
 
 Also verify BBK custom endpoints under `/wp-json/bbk/v1/*` as applicable.
 

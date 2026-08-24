@@ -21,6 +21,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
 | 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
 | 2.2 | **24 Aug 2026** | **05:33 WIB** | **08:02 WIB** | **2h 29m** | WooCommerce REST request-path recovery, production catalog/detail recovery, URL preservation, WhatsApp update | ✅ Closed with carried verification debt | [`CHAT-2.2.md`](CHAT-2.2.md) |
+| 2.3 | **24 Aug 2026** | **08:12 WIB** | **PENDING** | **PENDING** | Production API verification, canonical WooCommerce fetch-path migration, legacy-route audit, SEO hardening | 🟡 In progress | [`CHAT-2.3.md`](CHAT-2.3.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. Individual duration is calculated only from verified Start + End timestamps.
 
@@ -103,6 +104,12 @@ Chat 2.2 START
         ↓
 24 Aug 2026 08:02 WIB
 Chat 2.2 END
+        ↓
+24 Aug 2026 08:12 WIB
+Chat 2.3 START
+        ↓
+PENDING
+Chat 2.3 END
 ```
 
 ### Project time summary
@@ -120,17 +127,14 @@ Chat 2.1 working duration:
 Chat 2.2 working duration:
 2 hours 29 minutes
 
-Verified session working time through Chat 2.1:
-56 hours 19 minutes 16 seconds
+Chat 2.3 working duration:
+PENDING — session still active
 
 Verified session working time through Chat 2.2:
 58 hours 48 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE
-
-Earliest verifiable migration evidence:
-14 August 2026 12:45 WIB
 ```
 
 > **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.
@@ -176,6 +180,9 @@ Origin document-root correction + `/katalog` recovery + WooCommerce REST auth is
    ↓
 Chat 2.2
 Native WooCommerce REST path + browser-like User-Agent + production catalog/detail recovery + `/shop/[slug]` preservation
+   ↓
+Chat 2.3
+Production API evidence + canonical `product-category` migration + legacy-route audit
 ```
 
 ## Current Migration Position
@@ -197,15 +204,18 @@ PUBLIC SEO TAKEOVER     ⏳ audit pending
 ADMIN CONTROL LAYER     ⏳ implementation pending
 BACKEND ORIGIN          ✅ verified — origin.bukanbarukitchen.com → existing WordPress
 WOOCOMMERCE REST PATH   ✅ production catalog recovery evidence
-WOOCOMMERCE METADATA    ⚠️ final production 200 JSON verification pending
-PRODUCTION HARDENING    ⚠️ catalog/detail working; metadata/filter/pagination evidence pending
+WOOCOMMERCE API BODY    ✅ production browser-verified
+WOOCOMMERCE FILTERS     ✅ functionally verified
+PRODUCT-CATEGORY PATH   ✅ migrated to canonical `/api/products`
+LEGACY COMPAT PROXY     ⚠️ internally orphaned; external dependency unknown
+WORDPRESS REST HELPER   ⚠️ actively used; legacy origin fallback remains
 ```
 
 ## Current Pareto Focus
 
-1. Verify production `/api/products` and `/api/products?metadata=1` as real `application/json` responses.
-2. Verify filters, pagination, and broader catalog behavior.
-3. Align remaining WooCommerce server-side fetch paths with the proven native REST mechanism, then perform SEO/indexing hardening.
+1. Migrate the active WordPress REST helper to the canonical origin/routing strategy.
+2. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before retiring it.
+3. Perform SEO/indexing hardening: robots, sitemap, canonical URLs, and public WordPress renderer surface.
 
 ## Rule
 

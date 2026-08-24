@@ -18,14 +18,14 @@ function xmlEscape(value: string): string {
 function toCanonicalUrl(page: WordPressPage): string | null {
   try {
     if (page.link) {
-      const pathname = new URL(page.link).pathname.replace(/\/+$/, '') || '/';
-      return `${SITE_URL}${pathname}`;
+      const pathname = new URL(page.link).pathname;
+      return `${SITE_URL}${pathname === '/' ? '/' : pathname.endsWith('/') ? pathname : `${pathname}/`}`;
     }
   } catch {
     // Fall back to the WordPress slug when a page link is malformed.
   }
 
-  if (page.slug) return `${SITE_URL}/${page.slug}`;
+  if (page.slug) return `${SITE_URL}/${page.slug}/`;
   return null;
 }
 

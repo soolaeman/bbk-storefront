@@ -22,166 +22,28 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
 | 2.2 | **24 Aug 2026** | **05:33 WIB** | **08:02 WIB** | **2h 29m** | WooCommerce REST request-path recovery, production catalog/detail recovery, URL preservation, WhatsApp update | ✅ Closed with carried verification debt | [`CHAT-2.2.md`](CHAT-2.2.md) |
 | 2.3 | **24 Aug 2026** | **08:12 WIB** | **10:42 WIB** | **2h 30m** | Production API verification, canonical WooCommerce/WordPress fetch-path migration, legacy-route audit, SEO hardening, split request-time sitemaps | ✅ Closed with carried verification debt | [`CHAT-2.3.md`](CHAT-2.3.md) |
+| 2.4 | **24 Aug 2026** | **10:58 WIB** | **12:53:02 WIB** | **1h 55m 02s** | MBG landing mapping, hierarchical routing, sitemap verification, universal hierarchy requirement | ✅ Closed with carried sitemap debt | [`CHAT-2.4.md`](CHAT-2.4.md) |
+| 2.5 | **24 Aug 2026** | **13:00:50 WIB** | **13:06:18 WIB** | **5m 28s** | Vercel production blocker audit, MBG route module-resolution diagnosis, deployment-quota isolation, hierarchy handoff | 🛑 Closed — Vercel deployment quota | [`CHAT-2.5.md`](CHAT-2.5.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. Chat 2.3 end time was explicitly confirmed as **10:42 WIB**.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. Exact Chat 2.5 Start/End/Duration are recorded in `CHAT-2.5.md`.
 
-## ⏱️ PROJECT TIMELINE — SINCE CHAT 1.1
-
-```text
-14 Aug 2026 12:45 WIB
-Chat 1.1 START
-        ↓
-14 Aug 2026 15:12 WIB
-Chat 1.1 END
-        ↓
-14 Aug 2026 17:00 WIB
-Chat 1.2 START
-        ↓
-14 Aug 2026 21:00 WIB
-Chat 1.2 END
-        ↓
-14 Aug 2026 23:00 WIB
-Chat 1.3 START
-        ↓
-15 Aug 2026 03:00 WIB
-Chat 1.3 END
-        ↓
-15 Aug 2026 13:00 WIB
-Chat 1.4 START
-        ↓
-16 Aug 2026 06:32:41 WIB
-Chat 1.4 END / Chat 1.5 START
-        ↓
-16 Aug 2026 07:20 WIB
-Chat 1.5 END
-        ↓
-16 Aug 2026 15:45 WIB
-Chat 1.6 START
-        ↓
-16 Aug 2026 19:43:16 WIB
-Chat 1.6 END
-        ↓
-16 Aug 2026 19:45 WIB
-Chat 1.6B START
-        ↓
-16 Aug 2026 20:16 WIB
-Chat 1.6B END
-        ↓
-17 Aug 2026 03:30 WIB
-Chat 1.7 START
-        ↓
-17 Aug 2026 06:18 WIB
-Chat 1.7 END
-        ↓
-17 Aug 2026 06:30 WIB
-Chat 1.8 START
-        ↓
-17 Aug 2026 16:54 WIB
-Chat 1.8 END
-        ↓
-17 Aug 2026 19:10 WIB
-Chat 1.9 START
-        ↓
-17 Aug 2026 22:14 WIB
-Chat 1.9 END
-        ↓
-21 Aug 2026 08:36 WIB
-Chat 2.0 START
-        ↓
-21 Aug 2026 10:29 WIB
-Chat 2.0 END
-        ↓
-21 Aug 2026 13:25 WIB
-Chat 2.1 START
-        ↓
-21 Aug 2026 18:19 WIB
-Chat 2.1 END
-        ↓
-24 Aug 2026 05:33 WIB
-Chat 2.2 START
-        ↓
-24 Aug 2026 08:02 WIB
-Chat 2.2 END
-        ↓
-24 Aug 2026 08:12 WIB
-Chat 2.3 START
-        ↓
-24 Aug 2026 10:42 WIB
-Chat 2.3 END
-```
-
-### Project time summary
+## Project time summary
 
 ```text
-Verified session working time through Chat 1.9:
-49 hours 32 minutes 16 seconds
+Verified working time through Chat 2.4:
+63 hours 13 minutes 18 seconds
 
-Chat 2.0 working duration:
-1 hour 53 minutes
+Chat 2.5:
+5 minutes 28 seconds
 
-Chat 2.1 working duration:
-4 hours 54 minutes
-
-Chat 2.2 working duration:
-2 hours 29 minutes
-
-Chat 2.3 working duration:
-2 hours 30 minutes
-
-Verified session working time through Chat 2.3:
-61 hours 18 minutes 16 seconds
+Verified working time through Chat 2.5:
+63 hours 18 minutes 46 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE
 ```
 
-> **Important:** `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.
-
-## Milestones
-
-```text
-Chat 1.1
-Foundation
-   ↓
-Chat 1.2
-Live WooCommerce / API / SEO contract
-   ↓
-Chat 1.3
-Routing + shared frontend integration
-   ↓
-Chat 1.4
-Sales-first homepage + conversion + visual assets
-   ↓
-Chat 1.5
-Documentation / repository orientation / session hardening
-   ↓
-Chat 1.6
-Responsive QA / shared UI / homepage UX polish / gallery
-   ↓
-Chat 1.6B
-Launch architecture clarification
-   ↓
-Chat 1.7
-Clean verification + GitHub branch finalization + documentation audit
-   ↓
-Chat 1.8
-Recent Posts + runtime diagnostics + DNS blocker isolation
-   ↓
-Chat 1.9
-Landing pages + navigation + favicon handoff
-   ↓
-Chat 2.0
-Origin/API separation + DewaWeb support handoff
-   ↓
-Chat 2.1
-Origin document-root correction + `/katalog` recovery + WooCommerce REST auth isolation
-   ↓
-Chat 2.2
-Native WooCommerce REST path + browser-like User-Agent + production catalog/detail recovery + `/shop/[slug]` preservation
-   ↓
-Chat 2.3
-Production API evidence + canonical WooCommerce/WordPress fetch-path migration + legacy-route audit + sitemap URL-architecture audit
-```
+> `session working time` and `project elapsed span` are different measurements. Do not use elapsed span as a proxy for working time.
 
 ## Current Migration Position
 
@@ -197,38 +59,26 @@ GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
 RECENT POSTS            ✅ implemented baseline
 
-SITEMAP ROUTING         ✅ request-time split XML implementation committed
+SITEMAP ROUTING         ⚠️ hierarchy parity still pending
 PUBLIC SEO TAKEOVER     ⏳ audit pending
 ADMIN CONTROL LAYER     ⏳ implementation pending
 BACKEND ORIGIN          ✅ verified — origin.bukanbarukitchen.com → existing WordPress
 WOOCOMMERCE REST PATH   ✅ production catalog recovery evidence
-WOOCOMMERCE API BODY    ✅ production browser-verified
-WOOCOMMERCE FILTERS     ✅ functionally verified
-PRODUCT-CATEGORY PATH   ✅ migrated to canonical `/api/products`
 WORDPRESS REST HELPER   ✅ migrated to canonical origin/path
 LEGACY COMPAT PROXY     ⚠️ internally orphaned; external dependency unknown
+VERCEL DEPLOYMENT       🛑 Hobby daily deployment quota exhausted
+MBG ROUTE BUILD         🛑 latest blocker: incorrect relative import depth
 ```
 
 ## Current Pareto Focus
 
-1. Audit remaining WooCommerce/WordPress fetch paths in the repository before further sitemap changes.
-2. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before retiring it.
-3. Deploy and verify `/sitemap.xml` plus child sitemap responses, then finish SEO/indexing hardening: robots, canonical URLs, and public WordPress renderer surface.
+1. Correct `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx` imports from `../../../../` to `../../../` and commit the fix.
+2. After Vercel quota recovery, perform one production deployment attempt and inspect the resulting build.
+3. Implement the universal WordPress hierarchy resolver shared by routing, canonical generation, and `sitemap-pages.xml`, then re-verify live sitemap hierarchy.
 
 ## Rule
 
-Every migration chat should leave behind a progress record containing:
-
-- date/time evidence
-- duration when verifiable
-- Pareto top changes
-- bottlenecks
-- root causes
-- failed approaches
-- architecture decisions
-- verification
-- Git checkpoint
-- next-chat handoff
+Every migration chat should leave behind a progress record containing date/time evidence, duration when verifiable, Pareto top changes, bottlenecks, root causes, failed approaches, architecture decisions, verification, Git checkpoint, and next-chat handoff.
 
 If a fact is unavailable, write:
 

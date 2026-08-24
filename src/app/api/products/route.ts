@@ -323,7 +323,7 @@ export async function GET(request: NextRequest) {
     // 3. AMBIL DATA DARI WOOCOMMERCE & TANGKAP ERROR JIKA MENGERIMKAN NON-200 (HTML)
     const response = await fetch(buildWooCommerceUrl('products', params), {
       headers: getWooCommerceHeaders(),
-      next: { revalidate: PRODUCT_CACHE_REVALIDATE_SECONDS },
+      cache: 'no-store',
     });
 
     const responseText = await response.text();

@@ -8,29 +8,24 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 CURRENT CHECKPOINT — CHAT 2.2 CLOSED
+# 🕒 CURRENT CHECKPOINT — CHAT 2.3 IN PROGRESS
 
 ```text
 Date: 24 August 2026
-Session: Chat 2.2
-Start: 05:33 WIB
-End: 08:02 WIB
-Duration: 2h 29m
-Status: CLOSED — catalog/detail flow recovered; verification debt carried forward
+Session: Chat 2.3
+Start: 08:12 WIB
+End: PENDING
+Duration: PENDING
+Status: IN PROGRESS — production verification + canonical WooCommerce fetch-path migration
 ```
 
-Chat 2.2 recovered the production WooCommerce catalog/detail flow using the native `/wp-json/wc/v3/...` request path with a browser-like User-Agent and server-side credentials. The public product URL family remains `/shop/[slug]`. Product Detail WhatsApp is `0851 2200 1051`.
+Chat 2.3 verified live production JSON bodies for `/api/products` and `/api/products?metadata=1`, verified filter/pagination behavior, and migrated `product-category/[...slug]` away from direct WooCommerce fetching to the canonical `/api/products` application path. The public product URL family remains `/shop/[slug]`. Product Detail WhatsApp is `0851 2200 1051`.
 
-## Documentation checkpoints
-
-```text
-Chat 2.2 archive:
-a1011041732afd26800a7848242a7f0405a251b8
-Progress index:
-9686c7282b75867c3c54579f688633c4cb4b88e4
 Latest code checkpoint:
-ef1687d5673c03b885ac94e4cd20b55f98dab0a7
-```
+`37c32accc2bbb855167bc42ef710ee5a2adca170`
+
+Latest documentation checkpoint:
+`aca0376e113de7c45b56bbf19aa989c3266f6379`
 
 ---
 
@@ -51,6 +46,7 @@ ef1687d5673c03b885ac94e4cd20b55f98dab0a7
 | 2.0 | 21 Aug 08:36 WIB | 21 Aug 10:29 WIB | 1h 53m | Origin/API diagnostics | 🟡 Superseded |
 | 2.1 | 21 Aug 13:25 WIB | 21 Aug 18:19 WIB | 4h 54m | Origin correction / `/katalog` / WooCommerce auth | ⚠️ Superseded |
 | 2.2 | 24 Aug 05:33 WIB | 24 Aug 08:02 WIB | 2h 29m | WooCommerce REST recovery / catalog-detail / URL preservation | ✅ Closed |
+| 2.3 | 24 Aug 08:12 WIB | PENDING | PENDING | Production API verification / canonical fetch-path migration / SEO hardening | 🟡 In progress |
 
 ### Project time
 
@@ -58,11 +54,11 @@ ef1687d5673c03b885ac94e4cd20b55f98dab0a7
 Verified session working time through Chat 2.2:
 58 hours 48 minutes 16 seconds
 
+Chat 2.3:
+PENDING — session still active
+
 Actual elapsed duration since Chat 1.1:
 NOT VERIFIABLE
-
-Earliest verifiable migration evidence:
-14 August 2026 12:45 WIB
 ```
 
 Calendar span is not working duration.
@@ -71,9 +67,9 @@ Calendar span is not working duration.
 
 # 🎯 CURRENT PARETO PRIORITIES
 
-1. **Production API verification** — prove `/api/products` and `/api/products?metadata=1` return real `application/json` consistently.
-2. **Catalog verification** — filters, pagination, status/condition/location/category behavior and broader production coverage.
-3. **SEO + backend consistency** — audit remaining WooCommerce fetch paths, robots/indexing, sitemap/canonical behavior and the public WordPress renderer surface.
+1. **Canonical backend consistency** — migrate remaining WordPress REST helper away from the legacy origin/Host fallback while preserving active API consumers.
+2. **Legacy compatibility retirement** — confirm whether `/wp-json/wc/v3/[...slug]` has any external consumer before retiring it.
+3. **SEO + backend consistency** — robots/indexing, sitemap/canonical behavior and the public WordPress renderer surface.
 
 ---
 
@@ -89,9 +85,12 @@ Calendar span is not working duration.
 | Native `/wp-json/wc/v3/...` path + browser-like User-Agent | ✅ working evidence |
 | Product detail `/shop/[slug]` | ✅ user-verified |
 | Related products + `/shop/[slug]` links | ✅ user-verified |
-| `/api/products` raw JSON | ⚠️ pending final evidence |
-| `/api/products?metadata=1` | ⚠️ pending final 200 JSON evidence |
-| Exhaustive filters/pagination | ⚠️ pending |
+| `/api/products` raw JSON body | ✅ production browser-verified |
+| `/api/products?metadata=1` raw JSON body | ✅ production browser-verified |
+| Filters + pagination | ✅ functionally verified |
+| `product-category/[...slug]` canonical API path | ✅ migrated |
+| Legacy `/wp-json/wc/v3/[...slug]` compatibility route | ⚠️ internally orphaned; external dependency unknown |
+| `src/lib/wordpress.ts` | ⚠️ actively used; legacy origin fallback remains |
 | Public SEO takeover | ⏳ audit pending |
 | Authenticated admin controls | ⏳ implementation pending |
 
@@ -126,16 +125,15 @@ Locked principles:
 |---|---|---|
 | B-6 | WordPress/WooCommerce origin separation | ✅ Resolved |
 | B-18 | WooCommerce REST request/auth path | ⚠️ Recovered / verifying |
-
-B-18 evidence: previous `rest_route` auth returned `401 woocommerce_rest_cannot_view`, Basic Auth returned `401 invalid_username`, while the native `/wp-json/wc/v3/...` path with browser-like User-Agent produced working production catalog evidence.
+| B-19 | Legacy WordPress REST routing | ⚠️ Migration in progress |
 
 ---
 
 # 🧩 CARRIED TECHNICAL DEBT
 
-- Verify production `/api/products` and `/api/products?metadata=1` raw JSON responses.
-- Verify filters/pagination/status/condition/location/category behavior.
-- Audit remaining direct WooCommerce server-side fetching and `src/app/wp-json/wc/v3/[...slug]/route.ts`.
+- Confirm strict production `HTTP 200 + Content-Type: application/json` headers for API endpoints; browser body evidence is already verified.
+- Migrate `src/lib/wordpress.ts` away from `jkt10.dewaweb.com` + conditional `Host` header.
+- Confirm external consumers before retiring `src/app/wp-json/wc/v3/[...slug]/route.ts`.
 - Audit origin `robots/noindex`, public WordPress renderer, sitemap and canonical/indexing behavior.
 - Complete authenticated WordPress admin control layer.
 
@@ -166,11 +164,10 @@ docs/prompts/
 
 ## Chat 2.3 — WooCommerce Production Verification & SEO Hardening
 
-1. Verify `/api/products` + `/api/products?metadata=1` as real JSON.
-2. Verify filters and pagination.
-3. Audit remaining WooCommerce fetch paths against the proven native REST mechanism.
-4. Run SEO/indexing/robots/sitemap verification after API stability is confirmed.
-5. Do not repeat the rejected Host-header workaround or Basic Auth approach.
+1. Migrate the active WordPress REST helper to the canonical origin/routing strategy.
+2. Confirm whether the legacy WooCommerce compatibility route has any external consumer before retiring it.
+3. Run SEO/indexing/robots/sitemap/canonical verification.
+4. Do not repeat the rejected Host-header workaround or Basic Auth approach.
 
 After GitHub changes:
 

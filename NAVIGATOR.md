@@ -36,6 +36,7 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/progress/README.md`](docs/progress/README.md) | Index dan ringkasan seluruh progress migration | Saat ingin melihat gambaran sejarah tanpa membaca semua chat. |
+| [`docs/progress/CHAT-2.5.md`](docs/progress/CHAT-2.5.md) | Forensic history Chat 2.5 | Saat perlu memahami Vercel production blocker, MBG route module-resolution diagnosis, deployment-quota isolation, dan universal hierarchy handoff. |
 | [`docs/progress/CHAT-2.4.md`](docs/progress/CHAT-2.4.md) | Forensic history Chat 2.4 | Saat perlu memahami MBG landing URL mapping, hierarchical routing, sitemap verification, dan universal hierarchy handoff. |
 | [`docs/progress/CHAT-2.3.md`](docs/progress/CHAT-2.3.md) | Forensic history Chat 2.3 | Saat perlu memahami production API verification, canonical fetch-path migration, dan sitemap/SEO audit. |
 | [`docs/progress/CHAT-2.2.md`](docs/progress/CHAT-2.2.md) | Forensic history Chat 2.2 | Saat perlu memahami WooCommerce REST recovery, catalog/detail recovery, public `/shop/[slug]` preservation, dan verification debt. |

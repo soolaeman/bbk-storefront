@@ -6,6 +6,7 @@ import { Footer } from '../../../components/Footer';
 import { getWooCommerceProductBySlug, getWooCommerceRelatedProducts } from '../../../lib/woocommerce';
 
 const WHATSAPP_NUMBER = '6285122001051';
+const PUBLIC_SITE_ORIGIN = 'https://bukanbarukitchen.com';
 
 interface WooCommerceMeta { key: string; value: string | number | boolean | null; }
 interface WooCommerceImage { src: string; alt?: string; }
@@ -27,13 +28,13 @@ async function getRelatedProducts(product: WooCommerceProduct): Promise<WooComme
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params; const product = await getProduct(slug); if (!product) return { title: 'Unit Tidak Ditemukan | BBKitchen' };
-  const description = stripHtml(product.short_description || product.description || '').slice(0, 160); const canonical = `https://www.bukanbarukitchen.com/shop/${product.slug}`;
+  const description = stripHtml(product.short_description || product.description || '').slice(0, 160); const canonical = `${PUBLIC_SITE_ORIGIN}/shop/${product.slug}`;
   return { title: product.name, description, alternates: { canonical }, openGraph: { title: product.name, description, url: canonical, type: 'website', images: product.images[0]?.src ? [{ url: product.images[0].src }] : undefined } };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params; const product = await getProduct(slug); if (!product) notFound();
-  const relatedProducts = await getRelatedProducts(product); const condition = normalizeCondition(getMeta(product, 'kondisi_unit')); const status = normalizeStatus(getMeta(product, 'status_unit'), product.stock_status); const location = getMeta(product, 'lokasi_unit'); const kodeUnit = getMeta(product, 'kode_unit') || product.sku; const category = product.categories[0]?.name || 'Peralatan Dapur Komersial'; const shortDescription = product.short_description || product.description || ''; const price = product.price || product.regular_price; const canonical = `https://www.bukanbarukitchen.com/shop/${product.slug}`; const whatsappText = `Halo BBKitchen, saya tertarik dengan unit ${product.name} (${kodeUnit}).`;
+  const relatedProducts = await getRelatedProducts(product); const condition = normalizeCondition(getMeta(product, 'kondisi_unit')); const status = normalizeStatus(getMeta(product, 'status_unit'), product.stock_status); const location = getMeta(product, 'lokasi_unit'); const kodeUnit = getMeta(product, 'kode_unit') || product.sku; const category = product.categories[0]?.name || 'Peralatan Dapur Komersial'; const shortDescription = product.short_description || product.description || ''; const price = product.price || product.regular_price; const canonical = `${PUBLIC_SITE_ORIGIN}/shop/${product.slug}`; const whatsappText = `Halo BBKitchen, saya tertarik dengan unit ${product.name} (${kodeUnit}).`;
   const jsonLd = { '@context': 'https://schema.org', '@type': 'Product', name: product.name, description: stripHtml(shortDescription), sku: kodeUnit, category, image: product.images.map((image) => image.src), url: canonical, offers: price ? { '@type': 'Offer', priceCurrency: 'IDR', price, availability: status === 'SOLD' ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock', url: canonical } : undefined };
   return (
     <main className="min-h-screen bg-slate-100 text-slate-900"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} /><Header />

@@ -5,156 +5,163 @@
 ```text
 Session: 2.2
 Started: 24 August 2026 05:33 WIB
-Ended: PENDING
-Duration: PENDING
+Ended: 24 August 2026 08:02 WIB
+Duration: 2h 29m
 Timezone: WIB (UTC+7)
-Evidence source: User-supplied session start timestamp.
+Evidence source: Session start from existing Chat 2.2 archive; session end from current time verification at end-session close.
 ```
 
 ## Scope
 
-**1 BIG GOAL:** Isolate the WooCommerce REST authentication/request-path blocker and restore the production catalog data path without creating a second WordPress source of truth or using a Vercel-blocked Host-header workaround.
+Restore and harden the production WooCommerce catalog/detail path, then verify product-detail routing and related products without changing existing `/shop/[slug]` URLs or creating a second WordPress source of truth.
 
 ## Starting State
 
 - Branch/source of truth: `main`.
-- Chat 2.1 closed with origin separation resolved and WooCommerce REST authentication still blocked by `401 woocommerce_rest_cannot_view`.
-- `origin.bukanbarukitchen.com` is the verified backend/API origin mapped to the existing `/home/bukanbar/public_html` WordPress installation.
-- `/katalog` was reachable, but the dynamic WooCommerce request path was not yet reliably returning JSON.
+- Chat 2.1 had isolated the origin separation but WooCommerce REST authentication/request construction was still blocked.
+- Production catalog recovery became possible after adopting the native `/wp-json/wc/v3/...` request path plus a browser-like `User-Agent` and server-side consumer credentials.
+- Product detail pages still failed with a server error because detail fetching remained on the old direct path.
 
-## Pareto Priorities
+## Pareto
 
-1. **BLOCKER:** Determine the WooCommerce request construction that actually works from the Vercel/Next.js runtime.
-2. **IMPORTANT:** Verify that the working request returns real WooCommerce JSON rather than HTML/fallback content.
-3. **NEXT:** Verify metadata/filter behavior and product-detail runtime, then close the session with production evidence.
+### Top 20% Changes
 
-## Diagnostic Evidence
+1. Added `slug` support to `src/app/api/products/route.ts`.
+2. Added server-side WooCommerce product lookup by slug and related-product helper in `src/lib/woocommerce.ts`.
+3. Switched `src/app/product/[slug]/page.tsx` to the server-side WooCommerce helpers.
+4. Restored related-product links and metadata/canonical URLs to `/shop/[slug]`.
+5. Updated Product Detail WhatsApp number to `0851 2200 1051`.
 
-### Failed request strategies
+### Top 20% Bottlenecks
 
-The following tests were performed during this session:
+1. WooCommerce REST auth/request-path instability from the earlier `rest_route` and Basic Auth approaches.
+2. Product-detail SSR still used a legacy direct WooCommerce fetch path after the catalog had recovered.
+3. Related products initially linked to `/product/[slug]`, creating URL-family drift from the preserved `/shop/[slug]` route.
 
-```text
-Direct origin + rest_route query authentication
-→ 401 woocommerce_rest_cannot_view
+### Top 20% Decisions
 
-Direct origin + HTTP Basic Auth using WooCommerce key/secret
-→ 401 invalid_username
+1. Preserve `/shop/[slug]` as the public product URL family; do not replace it with `/product/[slug]`.
+2. Keep `[...slug]` and `wp-json/wc/v3/[...slug]` untouched unless a separate audit proves they are obsolete.
+3. Keep WooCommerce credentials server-side and use the native WooCommerce REST path with browser-like request headers.
+4. Prefer direct server-side module helpers over Server Component self-fetching through `/api/products`.
+5. Treat visible production verification as separate from code existence; only mark verified items when user/runtime evidence exists.
 
-Next.js /api/products during the broken path
-→ intermittent 200/502; some responses contained HTML instead of JSON
+## File / Route / API History
 
-Metadata endpoint /api/products?metadata=1
-→ 502 when upstream returned HTML / non-JSON or connection failed
+### `src/app/api/products/route.ts`
+- Changed in this session to whitelist `slug` so `/api/products?slug=...` can resolve a specific product.
 
-Some product requests
-→ ECONNRESET observed from upstream
-```
+### `src/lib/woocommerce.ts`
+- Added `slug?: string` to the product query contract.
+- Added `getWooCommerceProductBySlug()` using the native WooCommerce REST origin and server-side credentials.
+- Added `getWooCommerceRelatedProducts()` using the same server-side origin/request mechanism.
+- Related products exclude the current product.
 
-These results established that Basic Auth could not be assumed to work for this origin and that a 200 response alone was not sufficient evidence: the body had to be verified as WooCommerce JSON.
+### `src/app/product/[slug]/page.tsx`
+- Product detail now resolves through `getWooCommerceProductBySlug()`.
+- Related products now resolve through `getWooCommerceRelatedProducts()`.
+- Metadata canonical, Open Graph URL, JSON-LD URL/Offer URL, and related-product links use `/shop/[slug]`.
+- WhatsApp number changed to `6285122001051`.
 
-## Working Change Found
+### `src/app/shop/[slug]/page.tsx`
+- No structural change; remains the product-detail public route wrapper.
 
-A later manual/Gemini-assisted commit changed `src/app/api/products/route.ts` in two important ways:
+### `src/app/[...slug]/`
+- No change; retained as WordPress Pages/Posts catch-all.
 
-1. **Native WooCommerce REST path**
+### `src/app/wp-json/wc/v3/[...slug]/route.ts`
+- No change in this session.
 
-Previous request shape:
+## Bottlenecks — Symptom → Root Cause → Resolution
 
-```text
-https://origin.bukanbarukitchen.com/?rest_route=/wc/v3/...
-```
+### B-18 carry-forward
+- **Symptom:** catalog/detail API requests had returned `401`, HTML instead of JSON, or connection errors.
+- **Root cause position:** evidence supported a request-path/User-Agent issue, but did not conclusively prove the server's exact security rule.
+- **Resolution:** native `/wp-json/wc/v3/...` path, browser-like `User-Agent`, and server-side consumer key/secret were adopted.
+- **Status:** recovered; production catalog visibly working.
 
-Working request shape:
+### Product-detail SSR blocker
+- **Symptom:** opening `/shop/[slug]` showed a server error even though catalog/search worked.
+- **Root cause:** product detail still used a legacy direct WooCommerce fetch path instead of the recovered server-side helper path.
+- **Resolution:** detail now uses `getWooCommerceProductBySlug()` and related products use the shared server-side helper.
+- **Status:** VERIFIED by user in Vercel/production.
 
-```text
-https://origin.bukanbarukitchen.com/wp-json/wc/v3/...
-```
+### Related-product URL drift
+- **Symptom:** clicking a related product changed the browser URL to `/product/[slug]`.
+- **Root cause:** related-product links were generated with `/product/...` even though the public product URL family is `/shop/...`.
+- **Resolution:** links, canonical metadata, Open Graph URL, and JSON-LD URL were aligned to `/shop/[slug]`.
+- **Status:** VERIFIED by user.
 
-The commit was `50bfe2368562b7fac2fa474df7f04ed2652576ea` (`Update route.ts by Gemini`).
+## Failed / Rejected Approaches
 
-2. **Browser-like User-Agent**
+- Creating a new `src/app/api/products/[slug]/route.ts`: rejected as unnecessary and removed.
+- Using Server Component HTTP self-fetch to `/api/products`: rejected in favor of direct server-side module helpers.
+- Relying on WooCommerce Basic Auth: previously failed with `401 invalid_username`.
+- Vercel-blocked `Host` header workaround / alternate-host strategy: rejected and not retained.
 
-The WooCommerce upstream request now includes a browser-style `User-Agent` together with `Accept: application/json`.
-
-The same change keeps WooCommerce consumer key/secret server-side and appends them to the REST request query string.
-
-## Important Rejected Approach
-
-An intermediate attempt changed the fallback upstream to `jkt10.dewaweb.com` and added:
-
-```text
-Host: www.bukanbarukitchen.com
-```
-
-This was explicitly rejected because the Host-header workaround is blocked by Vercel and is not compatible with the production architecture. That change was reverted before the working path was accepted.
-
-No second WordPress backend was created and no DNS/Host-header bypass was retained.
-
-## Production Evidence
-
-User supplied a live browser screenshot from `bukanbarukitchen.com` showing the catalog successfully rendering WooCommerce-backed products after the native `/wp-json/wc/v3/...` + User-Agent change.
-
-Visible evidence included:
-
-- multiple product cards rendered
-- real product images
-- WooCommerce product names/descriptions
-- location badges such as `KEDAUNG` and `SAWANGAN`
-- status badge `READY SIAP KIRIM`
-- unit codes such as `BBK2552`, `BBK2551`, `BBK2556`, and `BBK2549`
-- product condition badges such as `Baru` and `Bekas`
-
-This is strong visual evidence that the production product-data path is now functioning.
-
-## Repository Change Checkpoint
+## Verification
 
 ```text
-Working code commit:
-50bfe2368562b7fac2fa474df7f04ed2652576ea
+Production catalog rendering: ✅ user-verified
+Search → product detail: ✅ user-verified
+Product detail `/shop/[slug]`: ✅ user-verified
+Related products rendering: ✅ user-verified
+Related product → `/shop/[slug]`: ✅ user-verified after final routing fix
+WhatsApp number in Product Detail: ✅ code verified
+Desktop product-detail visual check: ✅ user-supplied screenshot
+Mobile catalog/status-card verification from session: ✅ user-supplied screenshots
+Final `/api/products` raw curl JSON evidence: Not captured in this session close
+Final `/api/products?metadata=1` raw 200 JSON evidence: Not captured in this session close
+Production filter/pagination exhaustive verification: Not fully captured in this session close
 
-Message:
-Update route.ts
-by Gemini
+`Code exists` is not treated as equivalent to every verification category above.
 ```
 
-The important behavioral changes in that commit are the native `/wp-json/wc/v3/...` URL construction and browser-like User-Agent. Formatting/refactoring changes were also included.
-
-## Verification Status
+## Git Checkpoints
 
 ```text
-Session bootstrap: ✅
-Repository audit: ✅
-Direct-origin rest_route auth: ❌ 401
-Direct-origin Basic Auth: ❌ 401 invalid_username
-Native WooCommerce REST request path: ✅ working evidence
-Production catalog visual rendering: ✅ user-verified
-Product JSON end-to-end response: ⚠️ not captured as final production curl evidence in this record
-Metadata endpoint /api/products?metadata=1: ⚠️ final 200 JSON verification pending
-Product detail /shop/[slug]: ⚠️ pending
-Filter/pagination verification: ⚠️ pending
+Latest code checkpoint:
+ef1687d5673c03b885ac94e4cd20b55f98dab0a7
+Message: fix: update WhatsApp number
+
+Previous important code checkpoint:
+c97e4a0f97f2dadeb323f3d4958a6c1e8f803276
+Message: fix: preserve shop product URLs
+
+Earlier product-detail helper checkpoint:
+81908bbe6c54889a4fa01c31ee8e918cb1e6efd6
 ```
 
-## Root-Cause Position
+GitHub evidence confirms `ef1687d` changed the Product Detail WhatsApp number from the old value to `6285122001051`.
 
-The session established that the failure was not safely solved by Basic Auth and that the Vercel-blocked Host-header workaround must not be retained.
+## Technical Debt / Carried Forward
 
-The currently working production path is associated with the native WooCommerce REST URL (`/wp-json/wc/v3/...`) plus a browser-like User-Agent. This is the strongest evidence-backed implementation found in this session.
+1. Verify `/api/products?metadata=1` as a real `200 application/json` production response.
+2. Run fuller production filter/pagination verification.
+3. Audit `src/app/wp-json/wc/v3/[...slug]/route.ts` and any remaining direct WooCommerce server-side fetch paths for consistency with the proven mechanism.
+4. Complete origin `robots/noindex` hygiene and public WordPress renderer/SEO surface audit before final launch hardening.
+5. Complete authenticated WordPress admin control layer.
 
-Do **not** claim the upstream server's exact security rule as conclusively proven unless a direct origin test isolates it. The evidence supports the request-path/User-Agent fix, but not a complete server-side root-cause proof.
+## Handoff
 
-## Carried Technical Debt
+### Current State
 
-- Verify `/api/products?metadata=1` returns `200 application/json` in production.
-- Verify `/api/products` with filters, pagination, `status_unit`, condition, location, and category.
-- Verify `/shop/[slug]` product detail against the same WooCommerce request mechanism.
-- Align `src/app/wp-json/wc/v3/[...slug]/route.ts` with the proven WooCommerce mechanism if still needed.
-- Align any remaining direct WooCommerce server-side fetches with the same proven mechanism.
-- Run final production/sitemap verification only after catalog + metadata + detail paths are stable.
+Product catalog and product-detail flow are operational on the production Vercel deployment, with `/shop/[slug]` preserved as the public product URL and related products following the same URL family.
 
-## Next Controlled Step
+### Next Priority Order
 
-1. Test production `/api/products` and `/api/products?metadata=1` and confirm `Content-Type: application/json`.
-2. Test catalog filters and pagination.
-3. Test one product-detail route.
-4. If all pass, close Chat 2.2 and update the root README/current checkpoint with the final code commit and verified session end time.
+1. Production API/raw-response verification.
+2. Filter/pagination verification.
+3. WooCommerce compatibility/direct-fetch audit.
+4. SEO/indexing hardening and sitemap-driven verification.
+
+### Things NOT to Repeat
+
+- Do not create a second single-product API route unless a concrete requirement appears.
+- Do not switch product links to `/product/[slug]` when `/shop/[slug]` is the established public URL.
+- Do not resurrect the Vercel `Host` header workaround or rely on WooCommerce Basic Auth for this origin.
+- Do not self-fetch internal Next.js route handlers from Server Components when a direct server-side helper is available.
+
+### Next Conversation Title
+
+`Chat 2.3 — WooCommerce Production Verification & SEO Hardening`

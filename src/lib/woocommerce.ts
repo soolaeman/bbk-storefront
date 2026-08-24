@@ -11,7 +11,7 @@ interface WooCommerceProduct {
 }
 
 export interface WooCommerceProductsQuery {
-  perPage?: number; page?: number; search?: string; category?: string; stockStatus?: string;
+  perPage?: number; page?: number; search?: string; slug?: string; category?: string; stockStatus?: string;
   orderby?: 'date' | 'title' | 'price' | 'id'; order?: 'asc' | 'desc'; sku?: string;
   featured?: boolean; minPrice?: string; maxPrice?: string; tag?: string; attribute?: string;
   attributeTerm?: string; condition?: string; location?: string; powerType?: string;
@@ -105,6 +105,7 @@ export async function getWooCommerceProductsResult(options?: WooCommerceProducts
     appendQueryParam(url, 'per_page', options?.perPage ?? 8);
     appendQueryParam(url, 'page', options?.page ?? 1);
     appendQueryParam(url, 'search', options?.search);
+    appendQueryParam(url, 'slug', options?.slug);
     appendQueryParam(url, 'category', options?.category);
     appendQueryParam(url, 'condition', options?.condition);
     appendQueryParam(url, 'location', options?.location);

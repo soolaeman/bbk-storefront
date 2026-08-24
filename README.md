@@ -14,12 +14,12 @@ Branch aktif: `main`
 Session: 2.2 BBKitchen Next.js Migration
 Date: 24 August 2026
 Start: 05:33 WIB
-End: PENDING
-Duration: PENDING
-Status: IN PROGRESS — production catalog recovered; final API/detail verification pending
+End: 08:02 WIB
+Duration: 2h 29m
+Status: CLOSED — catalog and product-detail flow recovered; verification debt carried forward
 ```
 
-> Chat 2.2 recovered the production WooCommerce catalog path after identifying that the native `/wp-json/wc/v3/...` request path plus a browser-like User-Agent works in the current production setup. The session remains open until metadata, filters/pagination, and product-detail verification are completed.
+> Chat 2.2 recovered the production WooCommerce catalog/detail path using the native `/wp-json/wc/v3/...` request mechanism with a browser-like User-Agent, preserved `/shop/[slug]` as the public product URL family, and updated Product Detail WhatsApp to `0851 2200 1051`.
 
 ---
 
@@ -38,23 +38,23 @@ Chat 1.8 → 🛑 Closed — DNS blocked
 Chat 1.9 → ✅ Closed — landing pages / favicon handoff
 Chat 2.0 → 🟡 Superseded — origin separation resolved in Chat 2.1
 Chat 2.1 → ⚠️ Superseded — WooCommerce auth blocker investigated further in Chat 2.2
-Chat 2.2 → 🟡 In progress — catalog recovered; final verification pending
+Chat 2.2 → ✅ Closed — catalog/detail flow recovered; production verification debt carried forward
 ```
 
 ## Current documentation checkpoint
 
 ```text
 Chat 2.2 archive:
-c17b0c362f2c1d8e781bc68bff6a233531b2a4d0
+a1011041732afd26800a7848242a7f0405a251b8
 
 Progress index:
-59aba47c80887f0f602cc6aec17b344f753e5108
+9686c7282b75867c3c54579f688633c4cb4b88e4
 
-Working code checkpoint:
-50bfe2368562b7fac2fa474df7f04ed2652576ea
+Latest code checkpoint:
+ef1687d5673c03b885ac94e4cd20b55f98dab0a7
 
-Previous rejected Host-header workaround:
-45e2355edbccdd89389373b441bae6ce0d5e29cc
+Previous product URL checkpoint:
+c97e4a0f97f2dadeb323f3d4958a6c1e8f803276
 ```
 
 ---
@@ -75,7 +75,7 @@ Previous rejected Host-header workaround:
 | 1.9 | **17 Aug 2026** | **19:10 WIB** | **22:14 WIB** | **3h 04m** | Landing pages / navigation / favicon | ✅ |
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Origin/API diagnostics / DewaWeb support | 🟡 Superseded by Chat 2.1 |
 | 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin correction, `/katalog` restore, WooCommerce auth isolation | ⚠️ Superseded by Chat 2.2 |
-| 2.2 | **24 Aug 2026** | **05:33 WIB** | **PENDING** | **PENDING** | WooCommerce REST request-path recovery, production catalog recovery, metadata/detail verification | 🟡 In progress |
+| 2.2 | **24 Aug 2026** | **05:33 WIB** | **08:02 WIB** | **2h 29m** | WooCommerce REST recovery, catalog/detail, URL preservation, WhatsApp | ✅ Closed |
 
 ### ⏱️ Verified working/session time
 
@@ -83,11 +83,11 @@ Previous rejected Host-header workaround:
 Verified session working time through Chat 2.1:
 56 hours 19 minutes 16 seconds
 
-Chat 2.2:
-PENDING — session not yet closed
+Chat 2.2 working duration:
+2 hours 29 minutes
 
 Verified session working time through Chat 2.2:
-PENDING
+58 hours 48 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE
@@ -102,9 +102,9 @@ Earliest verifiable migration evidence:
 
 # 🎯 CURRENT PRIORITIES — PARETO
 
-1. **Production API verification** — confirm `/api/products` and `/api/products?metadata=1` return `application/json` consistently.
-2. **Catalog verification** — test filters, pagination, `status_unit`, condition, location, category, and one product-detail route.
-3. **WooCommerce server-side consistency** — align remaining direct/compatibility fetch paths with the proven native REST mechanism.
+1. **Production API verification** — confirm `/api/products` and `/api/products?metadata=1` return real `application/json` responses consistently.
+2. **Catalog verification** — test filters, pagination, status/condition/location/category behavior, and broader production coverage.
+3. **WooCommerce consistency + SEO hardening** — align remaining direct fetch paths, then audit indexing/robots/sitemap and the remaining public WordPress renderer surface.
 
 ---
 
@@ -113,18 +113,21 @@ Earliest verifiable migration evidence:
 | Area | Implementation | Verification |
 |---|---|---|
 | WordPress origin hostname | ✅ | ✅ Verified |
-| Origin document root → `/home/bukanbar/public_html` | ✅ | ✅ cPanel + REST verified |
-| Existing BBKitchen WordPress served via origin | ✅ | ✅ Direct REST identity verified |
-| WordPress `/wp-json/` | ✅ | ✅ Direct browser verified |
-| WooCommerce `wc/v3` namespace | ✅ | ✅ Direct browser verified |
-| BBK custom `bbk/v1` namespace | ✅ | ✅ Direct browser verified |
-| `/katalog` route | ✅ | ✅ User-verified accessible |
-| Production WooCommerce product cards | ✅ | ✅ User-verified visually |
+| Origin document root → `/home/bukanbar/public_html` | ✅ | ✅ Verified |
+| Existing BBKitchen WordPress served via origin | ✅ | ✅ Verified |
+| WordPress `/wp-json/` | ✅ | ✅ Verified |
+| WooCommerce `wc/v3` namespace | ✅ | ✅ Verified |
+| BBK custom `bbk/v1` namespace | ✅ | ✅ Verified |
+| `/katalog` route | ✅ | ✅ User-verified |
+| Production WooCommerce product cards | ✅ | ✅ User-verified |
 | Native `/wp-json/wc/v3/...` request path | ✅ | ✅ Working production evidence |
-| Browser-like upstream User-Agent | ✅ | ✅ Included in working code checkpoint |
-| `/api/products` final JSON verification | ⚠️ | ⏳ Pending final curl evidence |
+| Browser-like upstream User-Agent | ✅ | ✅ Included in working checkpoint |
+| Product detail `/shop/[slug]` | ✅ | ✅ User-verified |
+| Related products + `/shop/[slug]` links | ✅ | ✅ User-verified |
+| Product Detail WhatsApp `0851 2200 1051` | ✅ | ✅ Code verified |
+| `/api/products` final raw JSON evidence | ⚠️ | ⏳ Pending |
 | `/api/products?metadata=1` | ⚠️ | ⏳ Pending final 200 JSON verification |
-| Product detail `/shop/[slug]` | ✅ structure | ⏳ Runtime verification pending |
+| Exhaustive filters/pagination | ⚠️ | ⏳ Pending |
 | Public SEO takeover | ⏳ | ⏳ Audit pending |
 | Authenticated admin controls | ⏳ | ⏳ Implementation pending |
 
@@ -162,6 +165,7 @@ existing WordPress + WooCommerce + ACF + BBK APIs
 - Do not change the WordPress table prefix as a workaround for REST authentication.
 - Keep WooCommerce credentials server-side only.
 - Do not equate a Next.js route existing with proof that legacy WordPress public routes are redirected, canonicalized, disabled, or de-indexed.
+- Preserve `/shop/[slug]` as the established public product URL family.
 
 ---
 
@@ -170,7 +174,7 @@ existing WordPress + WooCommerce + ACF + BBK APIs
 | ID | Chat | Problem | Root Cause / Evidence | Resolution | Status |
 |---|---|---|---|---|---|
 | B-6 | 2.0 → 2.1 | WordPress/WooCommerce origin separation | Origin hostname initially pointed to a fresh WordPress document root | Corrected origin document root to `/home/bukanbar/public_html` | ✅ RESOLVED |
-| B-18 | 2.1 → 2.2 | WooCommerce REST request/auth path | `rest_route` and Basic Auth tests failed; native `/wp-json/wc/v3/...` + browser-like User-Agent produced working production catalog evidence | Working path adopted; final API/detail verification pending | ⚠️ RECOVERED / VERIFYING |
+| B-18 | 2.1 → 2.2 | WooCommerce REST request/auth path | `rest_route` and Basic Auth tests failed; native `/wp-json/wc/v3/...` + browser-like User-Agent produced working production catalog evidence | Working path adopted; catalog/detail flow recovered | ⚠️ RECOVERED / VERIFYING |
 
 ### B-18 current evidence
 
@@ -189,24 +193,40 @@ Vercel Host-header workaround                         → rejected / reverted
 
 - Verify production `/api/products?metadata=1` as `200 application/json`.
 - Verify filters, pagination, condition/location/category/status behavior.
-- Verify `/shop/[slug]` product detail against the same WooCommerce mechanism.
-- Align `src/app/wp-json/wc/v3/[...slug]/route.ts` with the proven WooCommerce mechanism if still needed.
-- Align remaining direct WooCommerce server-side fetching with the same mechanism.
+- Verify final raw JSON response for `/api/products`.
+- Audit `src/app/wp-json/wc/v3/[...slug]/route.ts` and remaining direct WooCommerce server-side fetching.
 - Audit origin `robots/noindex` hygiene before launch.
 - Complete public WordPress renderer/SEO surface audit.
 - Complete authenticated WordPress admin control layer.
 
 ---
 
+# 🗺️ PROJECT TIMELINE / ELAPSED-TIME STATUS
+
+```text
+Earliest verifiable migration evidence:
+14 August 2026 12:45 WIB
+
+Actual elapsed duration since Chat 1.1:
+NOT VERIFIABLE
+
+Verified working/session time through Chat 2.2:
+58 hours 48 minutes 16 seconds
+```
+
+For the detailed Start / End / Duration chronology, see [`docs/progress/README.md`](docs/progress/README.md). Do not treat calendar span as working duration.
+
+---
+
 # 🔁 NEXT-CHAT HANDOFF
 
-## Chat 2.2 — Final WooCommerce Production Verification
+## Chat 2.3 — WooCommerce Production Verification & SEO Hardening
 
 1. Test production `/api/products` and `/api/products?metadata=1` and confirm real `application/json` responses.
 2. Test catalog filters and pagination.
-3. Test one product-detail route.
-4. If all pass, close Chat 2.2 with verified end time and update the progress archive.
-5. Only after that run final sitemap-driven production verification.
+3. Audit remaining WooCommerce server-side fetch paths against the proven native REST mechanism.
+4. Run SEO/indexing/robots/sitemap verification after API stability is confirmed.
+5. Do not repeat the rejected Host-header workaround or Basic Auth approach.
 
 After GitHub changes:
 

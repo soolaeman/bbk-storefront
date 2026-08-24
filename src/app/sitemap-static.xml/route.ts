@@ -7,7 +7,7 @@ const staticUrls = [
   { path: '/katalog', changefreq: 'daily', priority: '0.9' },
   { path: '/jual-barang-bekas-restoran', changefreq: 'weekly', priority: '0.8' },
   { path: '/jual-unit', changefreq: 'weekly', priority: '0.7' },
-  { path: '/dapur-mbg', changefreq: 'weekly', priority: '0.7' },
+  { path: '/solusi-peralatan-dapur-mbg/', changefreq: 'weekly', priority: '0.7' },
 ];
 
 export async function GET() {

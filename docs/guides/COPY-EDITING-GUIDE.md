@@ -4,7 +4,7 @@
 
 This is a **GUIDE**, not a prompt.
 
-Use it when you want to understand **where copy/text lives and what is safe to change** without changing routing, API contracts, inventory logic, or SEO behavior.
+Use it to understand **where copy/text lives and what is safe to change** without changing routing, API contracts, inventory logic, authentication, or SEO behavior.
 
 ## Quick map
 
@@ -13,9 +13,9 @@ Use it when you want to understand **where copy/text lives and what is safe to c
 | Hero | `src/components/HeroSection.tsx` | headline, CTA, value copy |
 | Service | `src/components/KitchenConsultationBanner.tsx` | service CTA and WhatsApp labels |
 | Product Card | `src/components/ProductCard.tsx` | READY/SOLD, Tanya WA |
-| Product Detail | current `/shop/[slug]` route + existing product renderer | product CTA, related-product presentation |
+| Product Detail | `src/app/product/[slug]/page.tsx` + public wrapper `src/app/shop/[slug]/page.tsx` | product CTA, product detail, related products |
 | Header | `src/components/Header.tsx` | navigation, search, CTA |
-| Footer | `src/components/Footer.tsx` | footer CTA/navigation |
+| Footer | `src/components/Footer.tsx` | footer CTA/navigation/contact/social |
 | Social | `src/components/SocialMediaSection.tsx` | social labels/copy/video cards |
 | Testimonials | `src/components/TestimonialsSection.tsx` | testimonial heading/copy |
 | Gallery | `src/components/GallerySection.tsx` | gallery heading/copy and carousel affordance |
@@ -28,7 +28,7 @@ Use it when you want to understand **where copy/text lives and what is safe to c
 
 ## Quick route warning
 
-The current public URL contract is sitemap-driven:
+The current public URL contract is:
 
 ```text
 /katalog
@@ -37,7 +37,7 @@ The current public URL contract is sitemap-driven:
 [...slug] → WordPress page/post fallback
 ```
 
-Do not use the older `/product/[slug]` route as the public product URL contract merely because an older guide or renderer still references that path. Product-detail implementation/renderer ownership is currently an integration item and must not be inferred beyond repository evidence.
+Product-detail implementation is split between the public `/shop/[slug]` wrapper and the existing `src/app/product/[slug]/page.tsx` renderer. Do not change either path merely to edit wording.
 
 ## Text vs logic
 
@@ -85,16 +85,8 @@ SOLD
 
 ### Dapur MBG
 
-Page H1:
-
 ```text
 Peralatan Dapur MBG & Equipment SPPG
-```
-
-Page subheadline:
-
-```text
-Solusi peralatan dapur komersial untuk kebutuhan preparation, cooking, washing, storage, packing, dan exhaust pada operasional Dapur MBG/SPPG.
 ```
 
 ### Produksi Baru
@@ -121,8 +113,6 @@ Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detai
 
 ### Jual Unit
 
-Primary page positioning:
-
 ```text
 Jual Peralatan Dapur Bekas ke BBKitchen
 ```
@@ -140,18 +130,12 @@ SOLD  → Tanya Lainnya
 
 ```text
 Cari, Jual, atau Produksi Peralatan Dapur Resto & Dapur MBG
-```
-
-```text
 Siap Kirim
 Seluruh Indonesia
-```
-
-```text
 Lihat Unit yang Tersedia →
 ```
 
-The catalog CTA scrolls to the catalog. Keep behavior separate from wording edits.
+Keep the catalog CTA behavior separate from wording edits.
 
 ### Homepage service CTA labels
 
@@ -162,21 +146,15 @@ Dapur MBG       → Konsultasi MBG
 Produksi Baru   → Request Produksi
 ```
 
-The service card and WhatsApp CTA are separate clickable actions.
-
 ### Catalog result copy
 
 ```text
 Halaman 1 • Menampilkan {DISPLAYED} dari {TOTAL} unit BBKitchen
 ```
 
-Category/subcategory button counts are intentionally omitted.
-
 ### Gallery
 
-Current gallery copy owner:
-
-`src/components/GallerySection.tsx`
+Owner: `src/components/GallerySection.tsx`
 
 ```text
 Dokumentasi BBKitchen
@@ -188,7 +166,7 @@ Melihat lebih dekat aktivitas, peralatan, dan proses BBKitchen.
 
 Do not document dynamic product/business data as hardcoded frontend copy when it comes from WordPress, WooCommerce, ACF, or Core System.
 
-Examples include:
+Examples:
 
 ```text
 Product name
@@ -204,11 +182,9 @@ lokasi_unit
 link_telegram
 ```
 
-These remain backend/source-of-truth concerns.
-
 ## Admin-control distinction
 
-The current project has an **admin-control requirement/foundation**, not proof that the privileged workflow is fully implemented.
+The project has an **admin-control requirement/foundation**, not proof that the privileged workflow is fully implemented.
 
 Keep these separate:
 
@@ -221,14 +197,7 @@ ACF-sourced value
 authentication / authorization
 ```
 
-The intended authenticated workflow is:
-
-```text
-READY ↔ SOLD
-Buka Telegram → ACF-backed product Telegram link
-```
-
-Do not claim this is fully implemented unless repository evidence proves authentication, server authorization, mutation, and upstream refresh behavior.
+Do not claim READY ↔ SOLD or Telegram mutation is fully implemented without evidence of authentication, authorization, mutation, and upstream refresh.
 
 ## Do not casually change
 

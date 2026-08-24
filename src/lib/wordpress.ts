@@ -1,11 +1,11 @@
-const DEFAULT_WORDPRESS_ORIGIN_URL = 'https://jkt10.dewaweb.com';
-const DEFAULT_WORDPRESS_HOST = 'www.bukanbarukitchen.com';
+const DEFAULT_WORDPRESS_API_ORIGIN = 'https://origin.bukanbarukitchen.com';
 
 const WORDPRESS_API_ORIGIN = (
   process.env.WORDPRESS_API_URL ||
-  DEFAULT_WORDPRESS_ORIGIN_URL
-).replace(/\/$/, '').replace(/\/wp-json\/wp\/v2$/i, '');
-const WORDPRESS_HOST = process.env.WORDPRESS_API_URL ? undefined : DEFAULT_WORDPRESS_HOST;
+  DEFAULT_WORDPRESS_API_ORIGIN
+)
+  .replace(/\/$/, '')
+  .replace(/\/wp-json\/wp\/v2$/i, '');
 
 export interface WordPressRenderedField {
   rendered: string;
@@ -109,6 +109,8 @@ function buildQuery(options?: WordPressQueryOptions): string {
   if (options?.tags) params.set('tags', options.tags);
   if (options?.include) params.set('include', options.include);
   if (options?.exclude) params.set('exclude', options.exclude);
+  if (options?.after) params.set('after', options.after);
+  if (options?.before) params.set('before', options.before);
   if (options?.orderby) params.set('orderby', options.orderby);
   if (options?.order) params.set('order', options.order);
 
@@ -116,17 +118,17 @@ function buildQuery(options?: WordPressQueryOptions): string {
 }
 
 function buildWordPressUrl(resource: string, options?: WordPressQueryOptions): string {
-  const params = new URLSearchParams({ rest_route: `/wp/v2/${resource}` });
   const query = buildQuery(options);
-  if (query) new URLSearchParams(query).forEach((value, key) => params.set(key, value));
-  return `${WORDPRESS_API_ORIGIN}/?${params.toString()}`;
+  const path = `${WORDPRESS_API_ORIGIN}/wp-json/wp/v2/${resource}`;
+  return query ? `${path}?${query}` : path;
 }
 
 async function fetchWordPress<T>(resource: string, options?: WordPressQueryOptions): Promise<T> {
   const response = await fetch(buildWordPressUrl(resource, options), {
     headers: {
       Accept: 'application/json',
-      ...(WORDPRESS_HOST ? { Host: WORDPRESS_HOST } : {}),
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     },
     next: { revalidate: 300 },
   });

@@ -21,7 +21,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
 | 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
 | 2.2 | **24 Aug 2026** | **05:33 WIB** | **08:02 WIB** | **2h 29m** | WooCommerce REST request-path recovery, production catalog/detail recovery, URL preservation, WhatsApp update | ✅ Closed with carried verification debt | [`CHAT-2.2.md`](CHAT-2.2.md) |
-| 2.3 | **24 Aug 2026** | **08:12 WIB** | **PENDING** | **PENDING** | Production API verification, canonical WooCommerce/WordPress fetch-path migration, legacy-route audit, SEO hardening | 🟡 In progress | [`CHAT-2.3.md`](CHAT-2.3.md) |
+| 2.3 | **24 Aug 2026** | **08:12 WIB** | **PENDING** | **PENDING** | Production API verification, canonical WooCommerce/WordPress fetch-path migration, legacy-route audit, SEO hardening, split request-time sitemaps | 🟡 In progress | [`CHAT-2.3.md`](CHAT-2.3.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. Individual duration is calculated only from verified Start + End timestamps.
 
@@ -180,7 +180,7 @@ Chat 2.2
 Native WooCommerce REST path + browser-like User-Agent + production catalog/detail recovery + `/shop/[slug]` preservation
    ↓
 Chat 2.3
-Production API evidence + canonical WooCommerce/WordPress fetch-path migration + legacy-route audit
+Production API evidence + canonical WooCommerce/WordPress fetch-path migration + legacy-route audit + split request-time sitemap architecture
 ```
 
 ## Current Migration Position
@@ -197,7 +197,7 @@ GALLERY                 ✅ compact carousel direction locked
 MOBILE UX PATTERNS      ✅ direction locked
 RECENT POSTS            ✅ implemented baseline
 
-SITEMAP ROUTING         ✅ implemented
+SITEMAP ROUTING         ✅ request-time split XML implementation committed
 PUBLIC SEO TAKEOVER     ⏳ audit pending
 ADMIN CONTROL LAYER     ⏳ implementation pending
 BACKEND ORIGIN          ✅ verified — origin.bukanbarukitchen.com → existing WordPress
@@ -213,7 +213,7 @@ LEGACY COMPAT PROXY     ⚠️ internally orphaned; external dependency unknown
 
 1. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before retiring it.
 2. If no required external consumer exists, retire/delete that compatibility route.
-3. Perform SEO/indexing hardening: robots, sitemap, canonical URLs, and public WordPress renderer surface.
+3. Deploy and verify `/sitemap.xml` plus child sitemap responses, then finish SEO/indexing hardening: robots, canonical URLs, and public WordPress renderer surface.
 
 ## Rule
 

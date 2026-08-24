@@ -21,7 +21,8 @@ Use it to understand **where copy/text lives and what is safe to change** withou
 | Gallery | `src/components/GallerySection.tsx` | gallery heading/copy and carousel affordance |
 | Category | `src/components/CategoryFilter.tsx` | filter/category/subcategory labels |
 | Local landing | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` | local H1/CTA/copy |
-| Dapur MBG | `src/app/dapur-mbg/page.tsx` | MBG/SPPG landing-page copy, equipment categories, catalog CTA |
+| Dapur MBG display | `src/components/DapurMbgLanding.tsx` | MBG/SPPG landing-page display copy, equipment categories, catalog CTA |
+| Dapur MBG public URL wrapper | `src/app/solusi-peralatan-dapur-mbg/page.tsx` | public/canonical URL metadata and landing composition |
 | Jual Unit | `src/app/jual-unit/page.tsx` | sell-to-BBKitchen copy, process, FAQ, CTA |
 | Produksi Baru | `src/app/produksi-baru/page.tsx` | custom production copy, process, FAQ, CTA |
 | Recent Posts | `src/components/RecentPostsSection.tsx` | homepage post-section copy |
@@ -35,7 +36,10 @@ The current public URL contract includes:
 /shop/[slug]
 /product-category/[...slug]
 WordPress page/post paths via catch-all resolution
+/solusi-peralatan-dapur-mbg/
 ```
+
+`/dapur-mbg/` is a redirect-only legacy/public path for the MBG landing. Do not edit it merely to change MBG copy; edit the display component instead.
 
 Product-detail implementation is split between the public `/shop/[slug]` wrapper and the existing `src/app/product/[slug]/page.tsx` renderer. Do not change either path merely to edit wording.
 

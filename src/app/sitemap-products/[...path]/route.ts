@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const SITE_URL = 'https://bukanbarukitchen.com';
+const SITE_URL = 'https://www.bukanbarukitchen.com';
 const API_PAGE_SIZE = 100;
 const PRODUCTS_PER_SITEMAP = 500;
 const API_PAGES_PER_SITEMAP = PRODUCTS_PER_SITEMAP / API_PAGE_SIZE;

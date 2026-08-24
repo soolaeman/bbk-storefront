@@ -5,8 +5,8 @@
 ```text
 Session: 2.3
 Started: 24 August 2026 08:12 WIB
-Ended: PENDING
-Duration: PENDING
+Ended: 24 August 2026 10:35 WIB
+Duration: 2h 23m
 Timezone: WIB (UTC+7)
 ```
 
@@ -137,67 +137,87 @@ Safe to delete immediately: ❌ not yet
 Recommended action: confirm external dependency status, then retire/delete if unused
 ```
 
-## SEO Hardening — Sitemap Architecture
+## SEO Hardening — Sitemap / URL Architecture Audit
 
-### Problem confirmed
+### Legacy sitemap evidence reviewed
 
-The previous `src/app/sitemap.ts` collected every published product during sitemap generation by paging through `/api/products` until `X-WP-TotalPages`. That made the root `/sitemap.xml` dependent on the full product catalog and could exceed the deployment/request timeout as the catalog grows.
-
-### Production reference
-
-The uploaded production sitemap index is split into multiple Yoast-generated product sitemaps (`product-sitemap.xml`, `product-sitemap2.xml`, `product-sitemap3.xml`) plus category sitemap coverage. The product sitemap entries use `/shop/<slug>` URLs and `lastmod` values.
-
-### Migration implemented — ✅
-
-The monolithic Next.js metadata sitemap was replaced with request-time XML sitemap routes:
+NotebookLM audit of the uploaded production/legacy Yoast sitemap set reported:
 
 ```text
-/sitemap.xml
-    ├── /sitemap-static.xml
-    ├── /sitemap-categories.xml
-    └── /sitemap-products/1.xml
-        /sitemap-products/2.xml
-        /sitemap-products/3.xml
-        ...
+Total <loc> entries: 5,305
+HTML URL entries: 2,566
+WebP media entries used as root <loc>: 2,739
 ```
 
-Implementation:
-
-- `src/app/sitemap.xml/route.ts` generates the sitemap index and determines the number of product sitemap chunks from `X-WP-TotalPages`.
-- `src/app/sitemap-products/[page].xml/route.ts` fetches only the five WooCommerce API pages belonging to that sitemap chunk, with 100 products per API page / 500 products per sitemap.
-- `src/app/sitemap-categories.xml/route.ts` exposes product category URLs from the existing metadata endpoint.
-- `src/app/sitemap-static.xml/route.ts` preserves the existing static public URLs.
-- Sitemap responses use XML content type and one-hour shared caching with stale-while-revalidate.
-- Product URLs remain `/shop/<slug>` and retain `date_modified` as `<lastmod>` where available.
-
-### Commit sequence
+It also identified duplicate WebP entries and a broader URL architecture than the three initially discussed parents. The discovered top-level patterns included:
 
 ```text
-2bb4871274117ae1067909e34e73c8c57e347129  remove monolithic src/app/sitemap.ts
-ac64b589537d5f626b0c246285ac9bf2946daf69  add request-time sitemap index
-bc016ee44c188efedc06ab45d145d5fc2a47da51  add paginated product sitemaps
-70a60ff0ff8576c74a7970faee39be18cd21a0b8  add category sitemap
-4f3bb0d51bbd9dad531a11933ee9834d823cd418  add static sitemap
+/
+/jual-barang-bekas-restoran/
+/solusi-peralatan-dapur-mbg/
+/shop/
+/product-category/
+/denyut-dapur-nusantara/
+/katalog/
+/kebijakan-privasi-dan-penggunaan/
+/sentra-jual-barang-bekas-restoran/
 ```
 
-### Verification boundary
+Important decision:
 
 ```text
-Repository implementation: ✅ committed
-Production /sitemap.xml response: ⚠️ pending deployment verification
-Child product sitemap response: ⚠️ pending deployment verification
-Google Search Console indexing behavior: ⚠️ pending
-Local build/typecheck: ⚠️ not executed in this environment
+Do NOT standardize existing legacy slugs during this migration.
+Preserve existing URL/path hierarchy unless a separate redirect/canonical redesign is explicitly approved.
 ```
 
-## Current Audit Conclusion
+### Legacy WebP leakage vs Next.js generator
+
+The 2,739 WebP entries are a legacy sitemap finding. A code audit of the current Next.js generators found no source path that emits `.webp` URLs as standalone sitemap `<loc>` entries.
 
 ```text
-Main WooCommerce catalog/product flow: ✅ canonical
-product-category direct WooCommerce fetch: ✅ migrated
-WordPress REST helper: ✅ migrated to canonical origin/path
-Legacy /wp-json/wc/v3 compatibility proxy: ⚠️ internally orphaned; external dependency unknown
-Sitemap generation: ✅ migrated from monolithic build-time collection to request-time split XML sitemaps
+Legacy sitemap WebP leakage: ✅ evidenced in legacy data
+Next.js code leakage: ✅ not found
+Live production byte-level proof: ⚠️ not conclusively verified in this session
+```
+
+### Page sitemap hierarchy fix — ✅ implemented
+
+`src/app/sitemap-pages.xml/route.ts` now uses the full WordPress `link` pathname and rewrites the host to the canonical `www` host. This preserves paths such as:
+
+```text
+https://www.bukanbarukitchen.com/jual-barang-bekas-restoran/jakarta/jakarta-selatan
+```
+
+instead of reducing them to the leaf slug only.
+
+### Sitemap generator code audit — STEP 1 ✅
+
+Audited current generators for:
+
+- `sitemap.xml`
+- `sitemap-static.xml`
+- `sitemap-pages.xml`
+- `sitemap-posts.xml`
+- `sitemap-categories.xml`
+- `sitemap-products/[...path]`
+
+Current code audit conclusion:
+
+```text
+Standalone WebP <loc> emission found: ❌
+Canonical www host in sitemap generators: ✅
+Sitemap index product chunk count: dynamic
+```
+
+### Current sitemap follow-up queue
+
+```text
+1. Fix/audit sitemap-posts.xml to preserve full WordPress post path.
+2. Audit/fix sitemap-categories.xml for parent/child hierarchy.
+3. Verify product sitemap `/shop/[slug]` parity and chunk behavior.
+4. Verify dynamic routing against ALL discovered URL parent patterns.
+5. Production smoke-test sitemap index + child XMLs.
+6. Verify robots/canonical/GSC behavior.
 ```
 
 ## Verification / CI Boundary
@@ -210,7 +230,7 @@ Local build/typecheck:
 not executed in this environment
 
 Production sitemap verification:
-pending deployment
+pending deployment / live XML evidence
 ```
 
 Therefore build/CI green and production sitemap success are **not claimed** yet.
@@ -224,6 +244,7 @@ Therefore build/CI green and production sitemap success are **not claimed** yet.
 - Do not resurrect the rejected Vercel `Host`-header workaround.
 - Do not rely on WooCommerce Basic Auth for this origin.
 - Preserve `/shop/[slug]` as the public product URL family.
+- Preserve existing WordPress URL hierarchy during migration; do not standardize slugs unless separately approved.
 - `isAdminMode` is not authentication.
 - Do not return to a monolithic `getAllProducts()` sitemap implementation.
 
@@ -244,13 +265,33 @@ Therefore build/CI green and production sitemap success are **not claimed** yet.
 - `src/lib/wordpress.ts`
 - `src/app/api/wordpress/route.ts`
 - `src/app/sitemap.xml/route.ts`
-- `src/app/sitemap-products/[page].xml/route.ts`
+- `src/app/sitemap-products/[...path]/route.ts`
 - `src/app/sitemap-categories.xml/route.ts`
+- `src/app/sitemap-pages.xml/route.ts`
+- `src/app/sitemap-posts.xml/route.ts`
 - `src/app/sitemap-static.xml/route.ts`
 
-## Next Step
+## Handoff
 
-1. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before deleting/retiring it.
-2. Deploy and verify `/sitemap.xml`, `/sitemap-static.xml`, `/sitemap-categories.xml`, and at least the first product sitemap response.
-3. Verify `robots.txt`, canonical URLs, and Google Search Console sitemap/indexing behavior.
-4. Run a real build/typecheck before claiming CI/build green.
+Current state:
+
+- Production API body responses verified; strict HTTP 200/Content-Type header evidence remains a boundary.
+- Filter and pagination behavior functionally verified.
+- `product-category/[...slug]` migrated to canonical application API path.
+- `src/lib/wordpress.ts` migrated to canonical WordPress REST origin/path.
+- Legacy WooCommerce compatibility proxy remains pending external-consumer confirmation.
+- Sitemap split architecture and page hierarchy preservation are implemented/audited in code.
+- Production sitemap XML and GSC behavior remain pending live verification.
+
+### Next priority order
+
+1. Audit remaining WooCommerce/WordPress fetch paths in the repository (Priority #3).
+2. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before deleting/retiring it.
+3. Continue sitemap parity work: posts, categories, products, dynamic routing, and production smoke tests.
+
+### Do not repeat
+
+- Do not resurrect the rejected Vercel `Host` header workaround.
+- Do not use WooCommerce Basic Auth for this origin.
+- Do not standardize legacy URLs/slugs during this migration without explicit redirect/canonical approval.
+- Do not claim CI/build or live sitemap verification without direct evidence.

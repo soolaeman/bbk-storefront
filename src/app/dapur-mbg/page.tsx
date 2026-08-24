@@ -5,9 +5,8 @@ import { Footer } from '../../components/Footer';
 import { getWordPressPages } from '../../lib/wordpress';
 
 const SITE_URL = 'https://www.bukanbarukitchen.com';
-const CMS_SLUG = 'solusi-peralatan-dapur-mbg';
-const PUBLIC_PATH = '/dapur-mbg/';
-const CANONICAL_PATH = '/solusi-peralatan-dapur-mbg/';
+const CMS_SLUG = 'dapur-mbg';
+const PUBLIC_PATH = '/solusi-peralatan-dapur-mbg/';
 
 type WordPressPage = {
   id: number;
@@ -18,30 +17,31 @@ type WordPressPage = {
   content?: { rendered?: string };
 };
 
-async function getCanonicalMbgPage(): Promise<WordPressPage | undefined> {
+async function getMbgContentPage(): Promise<WordPressPage | undefined> {
   const pages = await getWordPressPages({ slug: CMS_SLUG, parent: 0 });
   return pages[0] as WordPressPage | undefined;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await getCanonicalMbgPage();
+  const page = await getMbgContentPage();
   if (!page) return {};
 
+  const publicUrl = `${SITE_URL}${PUBLIC_PATH}`;
   return {
     title: page.title?.rendered,
     description: page.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim(),
-    alternates: { canonical: `${SITE_URL}${CANONICAL_PATH}` },
+    alternates: { canonical: publicUrl },
     openGraph: {
       title: page.title?.rendered,
       description: page.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim(),
-      url: `${SITE_URL}${PUBLIC_PATH}`,
+      url: publicUrl,
       type: 'website',
     },
   };
 }
 
 export default async function DapurMbgPage() {
-  const page = await getCanonicalMbgPage();
+  const page = await getMbgContentPage();
   if (!page) notFound();
 
   return (

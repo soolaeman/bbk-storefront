@@ -13,7 +13,7 @@ Evidence source: current conversation timestamp supplied by the session environm
 
 ## Scope
 
-Bootstrap Chat 2.3 following the canonical START SESSION workflow. No application code changes have been made yet.
+Bootstrap Chat 2.3 and execute Pareto priority #1: production verification of the Next.js product API responses.
 
 ## Pareto
 
@@ -27,14 +27,39 @@ Production WooCommerce verification and SEO hardening, following the Chat 2.2 ha
 2. Verify catalog filters and pagination behavior.
 3. Audit remaining WooCommerce fetch paths and then perform SEO/indexing verification.
 
-## Starting State
+## Priority #1 — Production API Verification
 
-- Branch/source of truth: `main`.
-- Chat 2.2 is closed and archived.
-- Production catalog and product-detail flow are user-verified.
-- Public product URL family remains `/shop/[slug]`.
-- Native `/wp-json/wc/v3/...` request path with server-side WooCommerce credentials and browser-like User-Agent is the current proven production mechanism.
-- Raw `/api/products` JSON, `/api/products?metadata=1` JSON, exhaustive filters/pagination, SEO takeover, and authenticated admin controls remain pending or partially verified.
+### Repository/code evidence
+
+`src/app/api/products/route.ts` uses the native WooCommerce REST path `/wp-json/wc/v3/...`, server-side credentials, `Accept: application/json`, and a browser-like `User-Agent`. The normal response path explicitly parses the upstream body as JSON and returns `Content-Type: application/json`. Metadata requests also return `NextResponse.json(...)`. fileciteturn12file0L2-L2 fileciteturn13file0L2-L2
+
+### Production runtime verification attempt
+
+Target endpoints:
+
+```text
+https://www.bukanbarukitchen.com/api/products
+https://www.bukanbarukitchen.com/api/products?metadata=1
+```
+
+Current external verification status:
+
+```text
+/api/products: ⚠️ NOT VERIFIED — current external web/runtime environment could not retrieve the endpoint response.
+/api/products?metadata=1: ⚠️ NOT VERIFIED — current external web/runtime environment could not retrieve the endpoint response.
+```
+
+The public domain itself is discoverable and serving current BBKitchen pages through web search, but the API endpoints were not returned as searchable/indexed resources, and direct URL opening was rejected by the web environment's URL-safety restriction. A direct container request also failed because the execution environment could not resolve the public hostname. Therefore no HTTP status, response body, or `Content-Type` claim is being promoted to `✅ verified`.
+
+### Important conclusion
+
+```text
+Code path JSON handling: ✅ verified by repository inspection
+Production `/api/products` raw JSON: ⚠️ pending
+Production `/api/products?metadata=1` raw 200 JSON: ⚠️ pending
+```
+
+This preserves the Chat 2.2 verification debt rather than falsely closing it.
 
 ## Locked Architecture / Do Not Regress
 
@@ -47,10 +72,6 @@ Production WooCommerce verification and SEO hardening, following the Chat 2.2 ha
 - Preserve `/shop/[slug]` as the public product URL family.
 - `isAdminMode` is not authentication.
 
-## Verification Discipline
-
-Code existence is not equivalent to runtime, upstream, UI, security, SEO, or production verification. All claims in this session must be labeled according to available evidence.
-
 ## Repository Context Read
 
 The session bootstrap read and reviewed:
@@ -61,11 +82,18 @@ The session bootstrap read and reviewed:
 - `docs/progress/README.md`
 - `docs/progress/CHAT-2.2.md`
 - `docs/guides/README.md`
+- `src/app/api/products/route.ts`
 
-## Initial GitHub Checkpoint
+## Git Checkpoint
 
-Documentation bootstrap commit: pending inspection after file creation.
+```text
+Session bootstrap:
+90c308d8e950cee2a480d610c818676ad066b407
+
+API verification checkpoint:
+pending final session close
+```
 
 ## Next Step
 
-Inspect current GitHub branch/state and then proceed with the highest-value production API verification step before any broader scope expansion.
+Priority #1 remains open until raw production HTTP evidence proves both endpoints return the expected JSON response. Do not mark this as production-verified from code inspection alone.

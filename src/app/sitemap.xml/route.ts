@@ -26,6 +26,8 @@ export async function GET() {
     const productSitemapCount = await getProductTotalPages();
     const entries = [
       `${SITE_URL}/sitemap-static.xml`,
+      `${SITE_URL}/sitemap-pages.xml`,
+      `${SITE_URL}/sitemap-posts.xml`,
       `${SITE_URL}/sitemap-categories.xml`,
       ...Array.from({ length: productSitemapCount }, (_, index) => `${SITE_URL}/sitemap-products/${index + 1}.xml`),
     ];

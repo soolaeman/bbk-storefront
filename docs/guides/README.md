@@ -16,7 +16,7 @@ They are not execution prompts.
 - Public website/rendering is owned by Next.js on `bukanbarukitchen.com`.
 - WordPress/WooCommerce/ACF remains the backend/admin source of truth.
 - `origin.bukanbarukitchen.com` is the verified backend/API origin mapped to the existing `/home/bukanbar/public_html` WordPress installation.
-- WordPress REST is reachable through the origin, including the `wc/v3` namespace, but authenticated WooCommerce product listing remains blocked by a `401 woocommerce_rest_cannot_view` response.
+- WordPress REST is reachable through the origin, including the `wc/v3` namespace. The production catalog/detail flow now uses the native `/wp-json/wc/v3/...` request path with server-side WooCommerce credentials and a browser-like User-Agent; final raw JSON/metadata verification remains carried forward.
 - Existing WordPress/WooCommerce API paths remain backend contracts; changing authentication or API origin is an infrastructure concern, not a copy-editing task.
 
 ## Guides vs Prompts

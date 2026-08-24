@@ -5,22 +5,21 @@ const WP_ORIGIN = 'https://origin.bukanbarukitchen.com';
 const PER_PAGE = 100;
 const REVALIDATE_SECONDS = 86400;
 
-type Page = { slug?: string; date_modified?: string };
+type WordPressPage = { slug?: string; date_modified?: string };
 
 function xmlEscape(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
-async function fetchPages(page: number): Promise<{ pages: Page[]; totalPages: number }> {
+async function fetchPages(page: number): Promise<{ pages: WordPressPage[]; totalPages: number }> {
   const response = await fetch(
     `${WP_ORIGIN}/wp-json/wp/v2/pages?status=publish&per_page=${PER_PAGE}&page=${page}&orderby=modified&order=desc&_fields=slug,date_modified`,
     { headers: { Accept: 'application/json' }, next: { revalidate: REVALIDATE_SECONDS } },
   );
   if (!response.ok) throw new Error(`Page sitemap source failed: ${response.status}`);
-  return {
-    pages: (await response.json()) as Page[],
-    totalPages: Number(response.headers.get('X-WP-TotalPages') || '1'),
-  };
+  const payload: unknown = await response.json();
+  const pages = Array.isArray(payload) ? (payload as WordPressPage[]) : [];
+  return { pages, totalPages: Number(response.headers.get('X-WP-TotalPages') || '1') };
 }
 
 export async function GET() {
@@ -29,7 +28,7 @@ export async function GET() {
     const batches = await Promise.all(
       Array.from({ length: Math.max(0, first.totalPages - 1) }, (_, index) => fetchPages(index + 2)),
     );
-    const pages = [first.pages, ...batches.flatMap((batch) => batch.pages)].filter((page) => page.slug);
+    const pages = first.pages.concat(batches.flatMap((batch) => batch.pages)).filter((page) => page.slug);
     const urls = pages.map((page) => {
       const lastmod = page.date_modified ? `<lastmod>${xmlEscape(new Date(page.date_modified).toISOString())}</lastmod>` : '';
       return `  <url><loc>${xmlEscape(`${SITE_URL}/${page.slug}`)}</loc>${lastmod}<changefreq>monthly</changefreq><priority>0.5</priority></url>`;

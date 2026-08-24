@@ -4,6 +4,7 @@ const SITE_URL = 'https://www.bukanbarukitchen.com';
 const API_PAGE_SIZE = 100;
 const PRODUCTS_PER_SITEMAP = 500;
 const API_PAGES_PER_SITEMAP = PRODUCTS_PER_SITEMAP / API_PAGE_SIZE;
+const SITEMAP_REVALIDATE_SECONDS = 86400;
 
 type Product = { slug?: string; date_modified?: string };
 
@@ -19,7 +20,7 @@ function xmlEscape(value: string): string {
 async function fetchProducts(page: number): Promise<Product[]> {
   const response = await fetch(
     `${SITE_URL}/api/products?status=publish&per_page=${API_PAGE_SIZE}&page=${page}&orderby=date&order=desc`,
-    { headers: { Accept: 'application/json' }, next: { revalidate: 3600 } },
+    { headers: { Accept: 'application/json' }, next: { revalidate: SITEMAP_REVALIDATE_SECONDS } },
   );
 
   if (!response.ok) throw new Error(`Product sitemap page ${page} failed: ${response.status}`);
@@ -57,7 +58,7 @@ export async function GET(_request: Request, context: { params: Promise<{ path?:
       status: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        'Cache-Control': `public, max-age=${SITEMAP_REVALIDATE_SECONDS}, s-maxage=${SITEMAP_REVALIDATE_SECONDS}, stale-while-revalidate=604800`,
       },
     });
   } catch (error) {

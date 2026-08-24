@@ -8,21 +8,21 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 CURRENT CHECKPOINT — CHAT 2.4 CLOSED
+# 🕒 CURRENT CHECKPOINT — CHAT 2.5 CLOSED
 
 ```text
 Date: 24 August 2026
-Session: Chat 2.4
-Start: 10:58:00 WIB
-End: 12:53:02 WIB
-Duration: 1h 55m 02s
-Status: CLOSED — MBG landing URL mapping + hierarchical route work + live sitemap verification + universal hierarchy requirement identified
+Session: Chat 2.5
+Start: 13:00:50 WIB
+End: 13:06:18 WIB
+Duration: 5m 28s
+Status: CLOSED — Vercel deployment quota blocked production verification; latest build blocker isolated to MBG route imports
 ```
 
-Chat 2.4 preserved the existing Next.js Dapur MBG landing design, exposed it through the public `/solusi-peralatan-dapur-mbg/` URL, routed hierarchical MBG pages through WordPress parent IDs, removed `/dapur-mbg/` from the static sitemap, and verified the live sitemap index/static sitemap. Live `sitemap-pages.xml` still contains flat/root-level legacy page URLs, so universal WordPress hierarchy resolution is the next priority.
+Chat 2.5 audited the newest Vercel production failure and separated it from the earlier `produksi-baru/page.tsx` parser failure. The current verified blocker is an incorrect relative-import depth in `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx`; Vercel also reports the Hobby daily deployment quota as exhausted. No redeploy was attempted after the quota warning.
 
-Latest Chat 2.4 documentation checkpoint:
-`de6ff52bd5b1f61b23ac0e87fdb140276b1e85f0`
+Latest Chat 2.5 documentation checkpoint:
+`90becc3bc05ced03efac1b0d8d064b082b6134c7`
 
 ---
 
@@ -45,18 +45,19 @@ Latest Chat 2.4 documentation checkpoint:
 | 2.2 | 24 Aug 05:33 WIB | 24 Aug 08:02 WIB | 2h 29m | WooCommerce REST recovery / catalog-detail / URL preservation | ✅ Closed |
 | 2.3 | 24 Aug 08:12 WIB | 24 Aug 10:42 WIB | 2h 30m | Production API verification / canonical fetch-path migration / SEO + sitemap audit | ✅ Closed with carried verification debt |
 | 2.4 | 24 Aug 10:58 WIB | 24 Aug 12:53:02 WIB | 1h 55m 02s | MBG landing mapping / hierarchical routing / sitemap verification / universal hierarchy requirement | ✅ Closed with carried sitemap debt |
+| 2.5 | 24 Aug 13:00:50 WIB | 24 Aug 13:06:18 WIB | 5m 28s | Vercel blocker audit / MBG import diagnosis / deployment quota isolation / hierarchy handoff | 🛑 Closed — Vercel quota |
 
 ### Project time
 
 ```text
-Verified working time through Chat 2.3:
-61 hours 18 minutes 16 seconds
-
-Chat 2.4:
-1 hour 55 minutes 02 seconds
-
 Verified working time through Chat 2.4:
 63 hours 13 minutes 18 seconds
+
+Chat 2.5:
+5 minutes 28 seconds
+
+Verified working time through Chat 2.5:
+63 hours 18 minutes 46 seconds
 
 Actual elapsed duration since Chat 1.1:
 NOT VERIFIABLE
@@ -68,9 +69,9 @@ Calendar span is not working duration.
 
 # 🎯 CURRENT PARETO PRIORITIES
 
-1. **Universal WordPress hierarchy resolver** — one parent/child path resolver must drive Next.js route resolution, canonical URLs, and `sitemap-pages.xml`; do not special-case MBG.
-2. **Legacy sitemap parity** — eliminate flat/root-level legacy page URLs from the Next.js sitemap without flattening real WordPress hierarchies.
-3. **Production SEO verification** — re-check live sitemap XML, canonical URLs, robots, and GSC behavior after the universal resolver is implemented.
+1. **Fix the current MBG route build blocker** — change the three relative imports in `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx` from `../../../../...` to `../../../...`.
+2. **Production deployment recovery** — wait for Vercel Hobby deployment quota recovery; do not spam `Redeploy` while `api-deployments-free-per-day` is active.
+3. **Universal WordPress hierarchy resolver** — one parent/child path resolver must drive Next.js route resolution, canonical URLs, and `sitemap-pages.xml`; do not special-case MBG.
 
 ---
 
@@ -94,13 +95,14 @@ Calendar span is not working duration.
 | Legacy `/wp-json/wc/v3/[...slug]` compatibility route | ⚠️ internally orphaned; external dependency unknown |
 | MBG landing `/solusi-peralatan-dapur-mbg/` | ✅ user-verified on Vercel |
 | `/dapur-mbg/` | ✅ redirect; excluded from static sitemap |
-| MBG hierarchical route | ✅ code implemented; production build verified |
-| Sitemap index | ✅ user-verified |
-| Static sitemap | ✅ user-verified |
+| MBG hierarchical route | ⚠️ code exists; latest production build blocked by module-resolution error |
+| Sitemap index | ✅ previously user-verified |
+| Static sitemap | ✅ previously user-verified |
 | Pages sitemap hierarchy | ⚠️ live flat legacy URLs remain |
 | Universal hierarchy resolver | ⏳ next implementation |
 | Public SEO takeover | ⏳ audit pending |
 | Authenticated admin controls | ⏳ implementation pending |
+| Vercel Hobby deployment quota | 🛑 exhausted at session close |
 
 ## Current architecture
 
@@ -136,7 +138,8 @@ Locked principles:
 - preserve existing WordPress URL hierarchy during migration;
 - hierarchy must be generic, not MBG-specific;
 - do not treat a Next.js route as proof that a legacy WordPress URL is redirected/de-indexed;
-- `isAdminMode` is not authentication.
+- `isAdminMode` is not authentication;
+- do not claim production verification from code existence alone.
 
 ---
 
@@ -148,6 +151,7 @@ Locked principles:
 | B-18 | WooCommerce REST request/auth path | ⚠️ Recovered / verifying |
 | B-19 | Legacy WordPress REST routing | ⚠️ Migration in progress |
 | B-20 | Universal WordPress hierarchy vs sitemap parity | ⏳ Open |
+| B-21 | Vercel Hobby daily deployment quota | 🛑 Active — wait for quota recovery |
 
 ---
 
@@ -155,6 +159,8 @@ Locked principles:
 
 - Confirm strict production `HTTP 200 + Content-Type: application/json` headers for API endpoints; browser body evidence is already verified.
 - Confirm external consumers before retiring `src/app/wp-json/wc/v3/[...slug]/route.ts`.
+- Fix the MBG hierarchical route relative imports before the next deployment.
+- Wait for Vercel quota recovery before triggering another production deployment.
 - Implement and verify a universal WordPress hierarchy resolver shared by routing, canonical generation, and sitemap generation.
 - Re-run production sitemap XML checks after hierarchy resolver implementation.
 - Verify sitemap hierarchy for posts, categories, products, and all discovered legacy parents.
@@ -182,17 +188,24 @@ docs/prompts/
 → AI workflow / SOP
 ```
 
+## Documentation audit — Chat 2.5
+
+- `docs/guides/*`: **No change required**; current guides remain valid for the session's work.
+- `docs/prompts/*`: **No change required**; canonical `END-SESSION-PROMPT.md` remains the normal end-session SOP.
+- `end-session-prompt.md`: **No change required**; shortcut remains canonical.
+
 ---
 
 # 🔁 NEXT CHAT HANDOFF
 
-## Chat 2.5 — Universal WordPress Hierarchy Resolver
+## Chat 2.5 — Universal WordPress Hierarchy Resolver (Resume After Vercel Quota Reset)
 
-1. Build one universal parent/child path resolver from WordPress page IDs and `parent` relationships.
-2. Reuse the same resolver for Next.js catch-all page routing, canonical metadata, and `sitemap-pages.xml`.
-3. Verify arbitrary-depth paths and future parents, e.g. `/jasa-pasang-exhaust-hood/jakarta/`, without hardcoded parent names.
-4. Re-run live sitemap verification and confirm flat/root-level legacy URLs are gone from the relevant sitemap output.
-5. Continue remaining posts/categories/products parity and SEO verification.
+1. Fix `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx` imports: `../../../../` → `../../../` for `Header`, `Footer`, and `lib/wordpress`.
+2. Commit the verified source fix.
+3. After Vercel quota recovery, perform one production deployment attempt and inspect the resulting build logs.
+4. Build one universal parent/child path resolver from WordPress page IDs and `parent` relationships.
+5. Reuse the resolver for Next.js catch-all page routing, canonical metadata, and `sitemap-pages.xml`.
+6. Verify arbitrary-depth paths and confirm flat/root-level legacy URLs are gone from the relevant sitemap output.
 
 Do not repeat:
 
@@ -204,6 +217,7 @@ Do not repeat:
 - WooCommerce Basic Auth approach
 - legacy URL slug standardization without explicit redirect/canonical approval
 - unverified CI/build/GSC claims
+- repeated Vercel redeploy attempts while the daily quota is exhausted
 ```
 
 After GitHub changes:
@@ -211,3 +225,13 @@ After GitHub changes:
 ```bash
 git pull origin main
 ```
+
+---
+
+## Last code checkpoint
+
+`86487265c9c6260fae81539b08cd39b27a89f69e`
+
+## Last documentation checkpoint
+
+`90becc3bc05ced03efac1b0d8d064b082b6134c7`

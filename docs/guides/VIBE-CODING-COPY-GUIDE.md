@@ -15,7 +15,8 @@ Service              → src/components/KitchenConsultationBanner.tsx
 Product Card         → src/components/ProductCard.tsx
 Product Detail       → src/app/product/[slug]/page.tsx + public wrapper src/app/shop/[slug]/page.tsx
 Location / Article   → src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
-Dapur MBG            → src/app/dapur-mbg/page.tsx
+Dapur MBG display    → src/components/DapurMbgLanding.tsx
+Dapur MBG public URL → src/app/solusi-peralatan-dapur-mbg/page.tsx
 Jual Unit            → src/app/jual-unit/page.tsx
 Produksi Baru        → src/app/produksi-baru/page.tsx
 Social               → src/components/SocialMediaSection.tsx
@@ -33,7 +34,8 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 | Hero headline / CTA / shipping copy | `src/components/HeroSection.tsx` |
 | Header menu / search placeholder | `src/components/Header.tsx` |
 | MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / `KitchenConsultationBanner.tsx` / `Footer.tsx` |
-| MBG page copy / PDF catalog CTA | `src/app/dapur-mbg/page.tsx` |
+| MBG landing copy / PDF catalog CTA | `src/components/DapurMbgLanding.tsx` |
+| MBG public/canonical URL metadata | `src/app/solusi-peralatan-dapur-mbg/page.tsx` |
 | Service WhatsApp CTA | `src/components/KitchenConsultationBanner.tsx` |
 | Jual Unit page copy | `src/app/jual-unit/page.tsx` |
 | Produksi Baru wording | `src/app/produksi-baru/page.tsx` |
@@ -56,7 +58,10 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 /shop/[slug]
 /product-category/[...slug]
 WordPress page/post paths via catch-all resolution
+/solusi-peralatan-dapur-mbg/
 ```
+
+`/dapur-mbg/` is redirect-only. Kalau cuma ingin mengubah tulisan MBG, edit `DapurMbgLanding.tsx`, bukan redirect path-nya.
 
 Kalau cuma ingin mengubah tulisan, jangan mengubah URL/path tersebut.
 

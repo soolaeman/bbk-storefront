@@ -4,7 +4,6 @@ const SITE_URL = 'https://www.bukanbarukitchen.com';
 
 const staticUrls = [
   { path: '', changefreq: 'daily', priority: '1.0' },
-  { path: '/catalog', changefreq: 'daily', priority: '0.9' },
   { path: '/katalog', changefreq: 'daily', priority: '0.9' },
   { path: '/jual-barang-bekas-restoran', changefreq: 'weekly', priority: '0.8' },
   { path: '/jual-unit', changefreq: 'weekly', priority: '0.7' },

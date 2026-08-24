@@ -5,22 +5,21 @@ const WP_ORIGIN = 'https://origin.bukanbarukitchen.com';
 const PER_PAGE = 100;
 const REVALIDATE_SECONDS = 86400;
 
-type Post = { slug?: string; date_modified?: string };
+type WordPressPost = { slug?: string; date_modified?: string };
 
 function xmlEscape(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
-async function fetchPosts(page: number): Promise<{ posts: Post[]; totalPages: number }> {
+async function fetchPosts(page: number): Promise<{ posts: WordPressPost[]; totalPages: number }> {
   const response = await fetch(
     `${WP_ORIGIN}/wp-json/wp/v2/posts?status=publish&per_page=${PER_PAGE}&page=${page}&orderby=date&order=desc&_fields=slug,date_modified`,
     { headers: { Accept: 'application/json' }, next: { revalidate: REVALIDATE_SECONDS } },
   );
   if (!response.ok) throw new Error(`Post sitemap source failed: ${response.status}`);
-  return {
-    posts: (await response.json()) as Post[],
-    totalPages: Number(response.headers.get('X-WP-TotalPages') || '1'),
-  };
+  const payload: unknown = await response.json();
+  const posts = Array.isArray(payload) ? (payload as WordPressPost[]) : [];
+  return { posts, totalPages: Number(response.headers.get('X-WP-TotalPages') || '1') };
 }
 
 export async function GET() {

@@ -22,7 +22,7 @@ Status: CLOSED — Vercel deployment quota blocked production verification; late
 Chat 2.5 audited the newest Vercel production failure and separated it from the earlier `produksi-baru/page.tsx` parser failure. The current verified blocker is an incorrect relative-import depth in `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx`; Vercel also reports the Hobby daily deployment quota as exhausted. No redeploy was attempted after the quota warning.
 
 Latest Chat 2.5 documentation checkpoint:
-`90becc3bc05ced03efac1b0d8d064b082b6134c7`
+`1c4d25923061d638e3db030a7e064e7fd4088ce6`
 
 ---
 
@@ -234,4 +234,4 @@ git pull origin main
 
 ## Last documentation checkpoint
 
-`90becc3bc05ced03efac1b0d8d064b082b6134c7`
+`1c4d25923061d638e3db030a7e064e7fd4088ce6`

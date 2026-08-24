@@ -2,10 +2,7 @@ import Link from 'next/link';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 
-const WOOCOMMERCE_API_URL = (
-  process.env.WOOCOMMERCE_API_URL ||
-  'https://www.bukanbarukitchen.com/wp-json/wc/v3'
-).replace(/\/$/, '');
+const PUBLIC_SITE_ORIGIN = 'https://bukanbarukitchen.com';
 
 interface Product {
   id: number;
@@ -16,31 +13,49 @@ interface Product {
   images: Array<{ src: string; alt?: string }>;
 }
 
-function getAuthorization(): string | null {
-  const key = process.env.WC_CONSUMER_KEY;
-  const secret = process.env.WC_CONSUMER_SECRET;
-  return key && secret ? `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}` : null;
+interface CatalogMetadataCategory {
+  id: number;
+  name: string;
+  slug?: string;
+  parent?: number;
+}
+
+interface CatalogMetadataResponse {
+  categories: CatalogMetadataCategory[];
 }
 
 async function getProducts(categorySlug: string): Promise<Product[]> {
-  const authorization = getAuthorization();
-  if (!authorization) return [];
+  try {
+    const metadataResponse = await fetch(`${PUBLIC_SITE_ORIGIN}/api/products?metadata=1`, {
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+    });
+    if (!metadataResponse.ok) return [];
 
-  const categoryResponse = await fetch(
-    `${WOOCOMMERCE_API_URL}/products/categories?slug=${encodeURIComponent(categorySlug)}&per_page=1`,
-    { headers: { Accept: 'application/json', Authorization: authorization }, next: { revalidate: 60 } },
-  );
-  if (!categoryResponse.ok) return [];
-  const categories = (await categoryResponse.json()) as Array<{ id: number }>;
-  const categoryId = categories[0]?.id;
-  if (!categoryId) return [];
+    const metadata = (await metadataResponse.json()) as CatalogMetadataResponse;
+    const category = metadata.categories?.find((item) => item.slug === categorySlug);
+    if (!category) return [];
 
-  const response = await fetch(
-    `${WOOCOMMERCE_API_URL}/products?status=publish&category=${categoryId}&per_page=24&orderby=date&order=desc`,
-    { headers: { Accept: 'application/json', Authorization: authorization }, next: { revalidate: 60 } },
-  );
-  if (!response.ok) return [];
-  return (await response.json()) as Product[];
+    const params = new URLSearchParams({
+      status: 'publish',
+      category: String(category.id),
+      per_page: '24',
+      page: '1',
+      orderby: 'date',
+      order: 'desc',
+    });
+
+    const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/products?${params.toString()}`, {
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+    });
+    if (!response.ok) return [];
+
+    return (await response.json()) as Product[];
+  } catch (error) {
+    console.error('Product category API lookup failed:', error);
+    return [];
+  }
 }
 
 export default async function ProductCategoryPage({ params }: { params: Promise<{ slug: string[] }> }) {

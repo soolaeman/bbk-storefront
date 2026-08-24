@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const SITE_URL = 'https://bukanbarukitchen.com';
+const SITE_URL = 'https://www.bukanbarukitchen.com';
 
 type Category = { slug?: string; parent?: number };
 

@@ -96,7 +96,7 @@ WooCommerce native REST proxy
 origin.bukanbarukitchen.com
 ```
 
-The page no longer contains WooCommerce credentials, direct WooCommerce origin configuration, or direct WooCommerce REST requests. fileciteturn66file0L2-L6
+The page no longer contains WooCommerce credentials, direct WooCommerce origin configuration, or direct WooCommerce REST requests.
 
 Commit:
 
@@ -118,7 +118,7 @@ It now uses the canonical WordPress REST path directly:
 https://origin.bukanbarukitchen.com/wp-json/wp/v2/<resource>
 ```
 
-It preserves the `WORDPRESS_API_URL` environment override, all existing query options and exported helper functions, and the active `/api/wordpress` abstraction. It also uses the browser-like `User-Agent` strategy used by the recovered WooCommerce path. fileciteturn69file0L2-L6
+It preserves the `WORDPRESS_API_URL` environment override, all existing query options and exported helper functions, and the active `/api/wordpress` abstraction. It also uses the browser-like `User-Agent` strategy used by the recovered WooCommerce path.
 
 Commit:
 
@@ -137,6 +137,59 @@ Safe to delete immediately: ❌ not yet
 Recommended action: confirm external dependency status, then retire/delete if unused
 ```
 
+## SEO Hardening — Sitemap Architecture
+
+### Problem confirmed
+
+The previous `src/app/sitemap.ts` collected every published product during sitemap generation by paging through `/api/products` until `X-WP-TotalPages`. That made the root `/sitemap.xml` dependent on the full product catalog and could exceed the deployment/request timeout as the catalog grows.
+
+### Production reference
+
+The uploaded production sitemap index is split into multiple Yoast-generated product sitemaps (`product-sitemap.xml`, `product-sitemap2.xml`, `product-sitemap3.xml`) plus category sitemap coverage. The product sitemap entries use `/shop/<slug>` URLs and `lastmod` values.
+
+### Migration implemented — ✅
+
+The monolithic Next.js metadata sitemap was replaced with request-time XML sitemap routes:
+
+```text
+/sitemap.xml
+    ├── /sitemap-static.xml
+    ├── /sitemap-categories.xml
+    └── /sitemap-products/1.xml
+        /sitemap-products/2.xml
+        /sitemap-products/3.xml
+        ...
+```
+
+Implementation:
+
+- `src/app/sitemap.xml/route.ts` generates the sitemap index and determines the number of product sitemap chunks from `X-WP-TotalPages`.
+- `src/app/sitemap-products/[page].xml/route.ts` fetches only the five WooCommerce API pages belonging to that sitemap chunk, with 100 products per API page / 500 products per sitemap.
+- `src/app/sitemap-categories.xml/route.ts` exposes product category URLs from the existing metadata endpoint.
+- `src/app/sitemap-static.xml/route.ts` preserves the existing static public URLs.
+- Sitemap responses use XML content type and one-hour shared caching with stale-while-revalidate.
+- Product URLs remain `/shop/<slug>` and retain `date_modified` as `<lastmod>` where available.
+
+### Commit sequence
+
+```text
+2bb4871274117ae1067909e34e73c8c57e347129  remove monolithic src/app/sitemap.ts
+ac64b589537d5f626b0c246285ac9bf2946daf69  add request-time sitemap index
+bc016ee44c188efedc06ab45d145d5fc2a47da51  add paginated product sitemaps
+70a60ff0ff8576c74a7970faee39be18cd21a0b8  add category sitemap
+4f3bb0d51bbd9dad531a11933ee9834d823cd418  add static sitemap
+```
+
+### Verification boundary
+
+```text
+Repository implementation: ✅ committed
+Production /sitemap.xml response: ⚠️ pending deployment verification
+Child product sitemap response: ⚠️ pending deployment verification
+Google Search Console indexing behavior: ⚠️ pending
+Local build/typecheck: ⚠️ not executed in this environment
+```
+
 ## Current Audit Conclusion
 
 ```text
@@ -144,6 +197,7 @@ Main WooCommerce catalog/product flow: ✅ canonical
 product-category direct WooCommerce fetch: ✅ migrated
 WordPress REST helper: ✅ migrated to canonical origin/path
 Legacy /wp-json/wc/v3 compatibility proxy: ⚠️ internally orphaned; external dependency unknown
+Sitemap generation: ✅ migrated from monolithic build-time collection to request-time split XML sitemaps
 ```
 
 ## Verification / CI Boundary
@@ -154,9 +208,12 @@ none returned by repository connector
 
 Local build/typecheck:
 not executed in this environment
+
+Production sitemap verification:
+pending deployment
 ```
 
-Therefore build/CI green is **not claimed** yet.
+Therefore build/CI green and production sitemap success are **not claimed** yet.
 
 ## Locked Architecture / Do Not Regress
 
@@ -168,6 +225,7 @@ Therefore build/CI green is **not claimed** yet.
 - Do not rely on WooCommerce Basic Auth for this origin.
 - Preserve `/shop/[slug]` as the public product URL family.
 - `isAdminMode` is not authentication.
+- Do not return to a monolithic `getAllProducts()` sitemap implementation.
 
 ## Repository Context Read
 
@@ -185,8 +243,14 @@ Therefore build/CI green is **not claimed** yet.
 - `src/app/wp-json/wc/v3/[...slug]/route.ts`
 - `src/lib/wordpress.ts`
 - `src/app/api/wordpress/route.ts`
+- `src/app/sitemap.xml/route.ts`
+- `src/app/sitemap-products/[page].xml/route.ts`
+- `src/app/sitemap-categories.xml/route.ts`
+- `src/app/sitemap-static.xml/route.ts`
 
 ## Next Step
 
 1. Confirm whether the legacy `/wp-json/wc/v3/[...slug]` compatibility route has any external consumer before deleting/retiring it.
-2. Then continue SEO/indexing verification: robots, sitemap, canonical URLs, and public WordPress renderer surface.
+2. Deploy and verify `/sitemap.xml`, `/sitemap-static.xml`, `/sitemap-categories.xml`, and at least the first product sitemap response.
+3. Verify `robots.txt`, canonical URLs, and Google Search Console sitemap/indexing behavior.
+4. Run a real build/typecheck before claiming CI/build green.

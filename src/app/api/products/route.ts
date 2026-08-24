@@ -131,6 +131,7 @@ async function buildWooCommerceParams(request: NextRequest): Promise<URLSearchPa
 
   for (const key of [
     'search',
+    'slug',
     'orderby',
     'order',
     'stock_status',

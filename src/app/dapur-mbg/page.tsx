@@ -6,6 +6,8 @@ import { getWordPressPages } from '../../lib/wordpress';
 
 const SITE_URL = 'https://www.bukanbarukitchen.com';
 const CMS_SLUG = 'solusi-peralatan-dapur-mbg';
+const PUBLIC_PATH = '/dapur-mbg/';
+const CANONICAL_PATH = '/solusi-peralatan-dapur-mbg/';
 
 type WordPressPage = {
   id: number;
@@ -28,11 +30,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: page.title?.rendered,
     description: page.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim(),
-    alternates: { canonical: `${SITE_URL}/dapur-mbg/` },
+    alternates: { canonical: `${SITE_URL}${CANONICAL_PATH}` },
     openGraph: {
       title: page.title?.rendered,
       description: page.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim(),
-      url: `${SITE_URL}/dapur-mbg/`,
+      url: `${SITE_URL}${PUBLIC_PATH}`,
       type: 'website',
     },
   };

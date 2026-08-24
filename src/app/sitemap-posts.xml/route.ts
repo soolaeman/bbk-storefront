@@ -18,7 +18,8 @@ async function fetchPosts(page: number): Promise<{ posts: WordPressPost[]; total
   );
   if (!response.ok) throw new Error(`Post sitemap source failed: ${response.status}`);
   const payload: unknown = await response.json();
-  const posts = Array.isArray(payload) ? (payload as WordPressPost[]) : [];
+  const rawPosts = Array.isArray(payload) ? payload : payload ? [payload] : [];
+  const posts = rawPosts as WordPressPost[];
   return { posts, totalPages: Number(response.headers.get('X-WP-TotalPages') || '1') };
 }
 
@@ -28,7 +29,7 @@ export async function GET() {
     const batches = await Promise.all(
       Array.from({ length: Math.max(0, first.totalPages - 1) }, (_, index) => fetchPosts(index + 2)),
     );
-    const posts = [first.posts, ...batches.flatMap((batch) => batch.posts)].filter((post) => post.slug);
+    const posts = first.posts.concat(batches.flatMap((batch) => batch.posts)).filter((post) => post.slug);
     const urls = posts.map((post) => {
       const lastmod = post.date_modified ? `<lastmod>${xmlEscape(new Date(post.date_modified).toISOString())}</lastmod>` : '';
       return `  <url><loc>${xmlEscape(`${SITE_URL}/${post.slug}`)}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.6</priority></url>`;

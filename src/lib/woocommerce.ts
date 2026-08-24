@@ -1,4 +1,5 @@
 import type { AvailabilityStatus, EquipmentCategory, Product, ProductCondition } from '../types';
+import { buildWooCommerceUrl, getWooCommerceHeaders, hasWooCommerceCredentials } from './woocommerce-client';
 
 interface WooCommerceMeta { key: string; value: string | number | boolean | null; }
 interface WooCommerceImage { src: string; alt?: string; }
@@ -21,23 +22,8 @@ export interface WooCommerceProductsQuery {
 
 export interface WooCommerceProductsResult { products: Product[]; total: number | null; totalPages: number | null; }
 
-const WOOCOMMERCE_API_ORIGIN = (process.env.WOOCOMMERCE_API_URL || 'https://origin.bukanbarukitchen.com').replace(/\/$/, '').replace(/\/wp-json\/wc\/v3$/i, '');
-
-function getWooCommerceHeaders(): HeadersInit {
-  return { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36' };
-}
-
-function buildWooCommerceUrl(resource: string, params?: URLSearchParams): string {
-  const query = new URLSearchParams(params);
-  const consumerKey = process.env.WC_CONSUMER_KEY;
-  const consumerSecret = process.env.WC_CONSUMER_SECRET;
-  if (consumerKey && consumerSecret) { query.set('consumer_key', consumerKey); query.set('consumer_secret', consumerSecret); }
-  const queryString = query.toString();
-  return `${WOOCOMMERCE_API_ORIGIN}/wp-json/wc/v3/${resource}${queryString ? `?${queryString}` : ''}`;
-}
-
 async function fetchWooCommerceProducts(params: URLSearchParams): Promise<WooCommerceProduct[] | null> {
-  if (!process.env.WC_CONSUMER_KEY || !process.env.WC_CONSUMER_SECRET) return null;
+  if (!hasWooCommerceCredentials()) return null;
   try {
     const response = await fetch(buildWooCommerceUrl('products', params), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } });
     if (!response.ok) { console.error(`WooCommerce product lookup gagal: ${response.status} ${response.statusText}`); return null; }

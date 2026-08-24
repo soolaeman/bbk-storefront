@@ -28,13 +28,13 @@ Use it to understand **where copy/text lives and what is safe to change** withou
 
 ## Quick route warning
 
-The current public URL contract is:
+The current public URL contract includes:
 
 ```text
 /katalog
 /shop/[slug]
 /product-category/[...slug]
-[...slug] → WordPress page/post fallback
+WordPress page/post paths via catch-all resolution
 ```
 
 Product-detail implementation is split between the public `/shop/[slug]` wrapper and the existing `src/app/product/[slug]/page.tsx` renderer. Do not change either path merely to edit wording.

@@ -36,6 +36,7 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/progress/README.md`](docs/progress/README.md) | Index dan ringkasan seluruh progress migration | Saat ingin melihat gambaran sejarah tanpa membaca semua chat. |
+| [`docs/progress/CHAT-2.4.md`](docs/progress/CHAT-2.4.md) | Forensic history Chat 2.4 | Saat perlu memahami MBG landing URL mapping, hierarchical routing, sitemap verification, dan universal hierarchy handoff. |
 | [`docs/progress/CHAT-2.3.md`](docs/progress/CHAT-2.3.md) | Forensic history Chat 2.3 | Saat perlu memahami production API verification, canonical fetch-path migration, dan sitemap/SEO audit. |
 | [`docs/progress/CHAT-2.2.md`](docs/progress/CHAT-2.2.md) | Forensic history Chat 2.2 | Saat perlu memahami WooCommerce REST recovery, catalog/detail recovery, public `/shop/[slug]` preservation, dan verification debt. |
 | [`docs/progress/CHAT-2.1.md`](docs/progress/CHAT-2.1.md) | Forensic history Chat 2.1 | Saat perlu memahami origin document-root correction, `/katalog` restoration, WooCommerce REST auth blocker, dan Chat 2.2 handoff. |
@@ -60,7 +61,7 @@
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
 | [`docs/guides/README.md`](docs/guides/README.md) | Index semua human/vibe-coding guides | Saat belum tahu guide mana yang relevan. |
-| [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, MBG, Jual Unit, Produksi Baru, product detail, Footer, atau gallery copy. |
+| [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, MBG, Jual Unit, Produksi Baru, product detail, Footer, gallery, atau public URL ownership. |
 | [`docs/guides/VIBE-CODING-COPY-GUIDE.md`](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi sederhana untuk user non-developer / vibe coding | Saat mau mengubah copy tanpa perlu memahami seluruh architecture. |
 
 > **Guide = menjelaskan.** Guide bukan instruksi eksekusi AI.

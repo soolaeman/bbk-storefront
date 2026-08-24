@@ -1,8 +1,9 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 
-const PUBLIC_SITE_ORIGIN = 'https://bukanbarukitchen.com';
+const PUBLIC_SITE_ORIGIN = 'https://www.bukanbarukitchen.com';
 
 interface Product {
   id: number;
@@ -56,6 +57,25 @@ async function getProducts(categorySlug: string): Promise<Product[]> {
     console.error('Product category API lookup failed:', error);
     return [];
   }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const path = `/product-category/${slug.join('/')}`;
+  const canonical = `${PUBLIC_SITE_ORIGIN}${path}`;
+  const title = slug.map((part) => part.replace(/-/g, ' ')).join(' / ');
+
+  return {
+    title: `${title} | BBKitchen`,
+    description: `Produk kategori ${title} di BBKitchen.`,
+    alternates: { canonical },
+    openGraph: {
+      title: `${title} | BBKitchen`,
+      description: `Produk kategori ${title} di BBKitchen.`,
+      url: canonical,
+      type: 'website',
+    },
+  };
 }
 
 export default async function ProductCategoryPage({ params }: { params: Promise<{ slug: string[] }> }) {

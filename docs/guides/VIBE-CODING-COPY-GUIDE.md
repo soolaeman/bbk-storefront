@@ -13,7 +13,7 @@ Hero                 → src/components/HeroSection.tsx
 Header               → src/components/Header.tsx
 Service              → src/components/KitchenConsultationBanner.tsx
 Product Card         → src/components/ProductCard.tsx
-Product Detail       → current /shop/[slug] route + existing product renderer
+Product Detail       → src/app/product/[slug]/page.tsx + public wrapper src/app/shop/[slug]/page.tsx
 Location / Article   → src/app/jual-barang-bekas-restoran/[...slug]/page.tsx
 Dapur MBG            → src/app/dapur-mbg/page.tsx
 Jual Unit            → src/app/jual-unit/page.tsx
@@ -30,24 +30,20 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 
 | Yang mau diubah | File pertama yang dicek |
 |---|---|
-| Hero headline | `src/components/HeroSection.tsx` |
-| Hero CTA | `src/components/HeroSection.tsx` |
-| Hero shipping/value copy | `src/components/HeroSection.tsx` |
-| Header menu text | `src/components/Header.tsx` |
-| Search placeholder | `src/components/Header.tsx` |
+| Hero headline / CTA / shipping copy | `src/components/HeroSection.tsx` |
+| Header menu / search placeholder | `src/components/Header.tsx` |
 | MBG button wording | `src/components/Header.tsx` / `HeroSection.tsx` / `KitchenConsultationBanner.tsx` / `Footer.tsx` |
-| MBG page copy | `src/app/dapur-mbg/page.tsx` |
-| MBG PDF catalog CTA | `src/app/dapur-mbg/page.tsx` |
+| MBG page copy / PDF catalog CTA | `src/app/dapur-mbg/page.tsx` |
 | Service WhatsApp CTA | `src/components/KitchenConsultationBanner.tsx` |
 | Jual Unit page copy | `src/app/jual-unit/page.tsx` |
 | Produksi Baru wording | `src/app/produksi-baru/page.tsx` |
 | READY/SOLD button | `src/components/ProductCard.tsx` |
 | Product WhatsApp message | cari global `Halo Tim BBKitchen` |
-| Product Detail CTA | current `/shop/[slug]` route + existing product renderer |
+| Product Detail CTA / copy | `src/app/product/[slug]/page.tsx` + `src/app/shop/[slug]/page.tsx` |
 | Social copy / video cards | `src/components/SocialMediaSection.tsx` |
 | Testimonial heading/copy | `src/components/TestimonialsSection.tsx` |
 | Gallery heading/copy | `src/components/GallerySection.tsx` |
-| Footer wording | `src/components/Footer.tsx` |
+| Footer wording/contact | `src/components/Footer.tsx` |
 | Category labels | `src/components/CategoryFilter.tsx` |
 | Local article H1/copy | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` |
 | Recent Posts heading/copy | `src/components/RecentPostsSection.tsx` |
@@ -109,8 +105,6 @@ Current result summary:
 ```text
 Halaman 1 • Menampilkan {DISPLAYED} dari {TOTAL} unit BBKitchen
 ```
-
-Category/subcategory button counts sengaja tidak ditampilkan.
 
 ## Gallery copy
 

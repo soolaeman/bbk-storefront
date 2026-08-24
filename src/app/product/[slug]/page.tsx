@@ -5,7 +5,7 @@ import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import { getWooCommerceProductBySlug, getWooCommerceRelatedProducts } from '../../../lib/woocommerce';
 
-const WHATSAPP_NUMBER = '6281288889999';
+const WHATSAPP_NUMBER = '6285122001051';
 
 interface WooCommerceMeta { key: string; value: string | number | boolean | null; }
 interface WooCommerceImage { src: string; alt?: string; }

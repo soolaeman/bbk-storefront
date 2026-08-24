@@ -151,8 +151,8 @@ Current facts:
 - The existing BBKitchen WordPress installation is at `/home/bukanbar/public_html` on DewaWeb.
 - `origin.bukanbarukitchen.com` is the verified backend/origin hostname and is mapped to the existing BBKitchen web root.
 - Direct `/wp-json/` through the origin is verified and exposes the WooCommerce `wc/v3` and BBK `bbk/v1` namespaces.
-- The production catalog/detail flow now uses the native `/wp-json/wc/v3/...` request path with server-side WooCommerce credentials and a browser-like User-Agent.
-- Final raw `/api/products` and `/api/products?metadata=1` JSON verification remains pending; do not describe that as fully verified.
+- The production catalog/detail flow uses the native `/wp-json/wc/v3/...` request path with server-side WooCommerce credentials and a browser-like User-Agent.
+- Production `/api/products` and `/api/products?metadata=1` response bodies were verified in Chat 2.3; strict raw HTTP `200` and `Content-Type: application/json` header evidence was not captured in the browser screenshots, so that header-level criterion remains a verification boundary.
 - Do not create a second WordPress installation merely to solve origin/API problems.
 
 ---
@@ -173,6 +173,14 @@ WordPress page/post paths via catch-all resolution
 The existing product-detail renderer is `src/app/product/[slug]/page.tsx`, with public `/shop/[slug]` wrapper behavior. Preserve `/shop/[slug]` as the public product URL family.
 
 The final public architecture must avoid two competing public renderers.
+
+During SEO/sitemap migration:
+
+- preserve the full existing WordPress URL hierarchy unless a separate redirect/canonical redesign is explicitly approved;
+- do not reduce a legacy regional or programmatic URL to a leaf slug when generating a Next.js sitemap;
+- treat the full WordPress `link` pathname as the canonical path source where applicable;
+- distinguish legacy WordPress sitemap findings from current Next.js generator behavior;
+- a legacy `.webp` `<loc>` finding is not proof that the current Next.js generator emits `.webp` entries.
 
 Before production launch, audit homepage, product archives, category archives, attachment pages, feeds, sitemaps, canonical URLs, and indexed legacy URLs.
 
@@ -316,7 +324,7 @@ git pull origin main
 npm run dev
 ```
 
-Always provide the Git pull command after making changes on GitHub:
+After making changes on GitHub, always provide:
 
 ```bash
 git pull origin main

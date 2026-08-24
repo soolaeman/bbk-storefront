@@ -8,21 +8,21 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 CURRENT CHECKPOINT — CHAT 2.3 CLOSED
+# 🕒 CURRENT CHECKPOINT — CHAT 2.4 CLOSED
 
 ```text
 Date: 24 August 2026
-Session: Chat 2.3
-Start: 08:12 WIB
-End: 10:42 WIB
-Duration: 2h 30m
-Status: CLOSED — production verification + canonical fetch-path migration + sitemap URL-architecture audit
+Session: Chat 2.4
+Start: 10:58:00 WIB
+End: 12:53:02 WIB
+Duration: 1h 55m 02s
+Status: CLOSED — MBG landing URL mapping + hierarchical route work + live sitemap verification + universal hierarchy requirement identified
 ```
 
-Chat 2.3 verified live production JSON bodies for `/api/products` and `/api/products?metadata=1`, verified filter/pagination behavior, migrated `product-category/[...slug]` away from direct WooCommerce fetching to the canonical `/api/products` application path, migrated the active WordPress REST helper to the canonical origin/path, and audited the current sitemap generator architecture against legacy sitemap evidence.
+Chat 2.4 preserved the existing Next.js Dapur MBG landing design, exposed it through the public `/solusi-peralatan-dapur-mbg/` URL, routed hierarchical MBG pages through WordPress parent IDs, removed `/dapur-mbg/` from the static sitemap, and verified the live sitemap index/static sitemap. Live `sitemap-pages.xml` still contains flat/root-level legacy page URLs, so universal WordPress hierarchy resolution is the next priority.
 
-Latest Chat 2.3 documentation checkpoint:
-`4362d3017e0371cbca308492981e5e8a02a158e7`
+Latest Chat 2.4 documentation checkpoint:
+`de6ff52bd5b1f61b23ac0e87fdb140276b1e85f0`
 
 ---
 
@@ -44,18 +44,19 @@ Latest Chat 2.3 documentation checkpoint:
 | 2.1 | 21 Aug 13:25 WIB | 21 Aug 18:19 WIB | 4h 54m | Origin correction / `/katalog` / WooCommerce auth | ⚠️ Superseded |
 | 2.2 | 24 Aug 05:33 WIB | 24 Aug 08:02 WIB | 2h 29m | WooCommerce REST recovery / catalog-detail / URL preservation | ✅ Closed |
 | 2.3 | 24 Aug 08:12 WIB | 24 Aug 10:42 WIB | 2h 30m | Production API verification / canonical fetch-path migration / SEO + sitemap audit | ✅ Closed with carried verification debt |
+| 2.4 | 24 Aug 10:58 WIB | 24 Aug 12:53:02 WIB | 1h 55m 02s | MBG landing mapping / hierarchical routing / sitemap verification / universal hierarchy requirement | ✅ Closed with carried sitemap debt |
 
 ### Project time
 
 ```text
-Verified session working time through Chat 2.2:
-58 hours 48 minutes 16 seconds
-
-Chat 2.3:
-2 hours 30 minutes
-
 Verified working time through Chat 2.3:
 61 hours 18 minutes 16 seconds
+
+Chat 2.4:
+1 hour 55 minutes 02 seconds
+
+Verified working time through Chat 2.4:
+63 hours 13 minutes 18 seconds
 
 Actual elapsed duration since Chat 1.1:
 NOT VERIFIABLE
@@ -67,9 +68,9 @@ Calendar span is not working duration.
 
 # 🎯 CURRENT PARETO PRIORITIES
 
-1. **Canonical backend consistency** — audit remaining WooCommerce/WordPress fetch paths and preserve the proven native REST/origin strategy.
-2. **Legacy compatibility retirement** — confirm whether `/wp-json/wc/v3/[...slug]` has any external consumer before retiring it.
-3. **SEO + sitemap parity** — verify posts, categories, products, all discovered URL parents, robots, canonical URLs, and live GSC behavior.
+1. **Universal WordPress hierarchy resolver** — one parent/child path resolver must drive Next.js route resolution, canonical URLs, and `sitemap-pages.xml`; do not special-case MBG.
+2. **Legacy sitemap parity** — eliminate flat/root-level legacy page URLs from the Next.js sitemap without flattening real WordPress hierarchies.
+3. **Production SEO verification** — re-check live sitemap XML, canonical URLs, robots, and GSC behavior after the universal resolver is implemented.
 
 ---
 
@@ -91,8 +92,13 @@ Calendar span is not working duration.
 | `product-category/[...slug]` canonical API path | ✅ migrated |
 | `src/lib/wordpress.ts` canonical origin/path | ✅ migrated |
 | Legacy `/wp-json/wc/v3/[...slug]` compatibility route | ⚠️ internally orphaned; external dependency unknown |
-| Sitemap split architecture | ✅ code committed |
-| Sitemap production response | ⏳ live verification pending |
+| MBG landing `/solusi-peralatan-dapur-mbg/` | ✅ user-verified on Vercel |
+| `/dapur-mbg/` | ✅ redirect; excluded from static sitemap |
+| MBG hierarchical route | ✅ code implemented; production build verified |
+| Sitemap index | ✅ user-verified |
+| Static sitemap | ✅ user-verified |
+| Pages sitemap hierarchy | ⚠️ live flat legacy URLs remain |
+| Universal hierarchy resolver | ⏳ next implementation |
 | Public SEO takeover | ⏳ audit pending |
 | Authenticated admin controls | ⏳ implementation pending |
 
@@ -102,12 +108,23 @@ Calendar span is not working duration.
 www.bukanbarukitchen.com
         ↓
 Vercel / Next.js
-        ↓ server-side fetch
+        ↓ server-side API fetch
 origin.bukanbarukitchen.com
         ↓
 /home/bukanbar/public_html
         ↓
 WordPress + WooCommerce + ACF + BBK APIs
+```
+
+MBG landing mapping:
+
+```text
+src/components/DapurMbgLanding.tsx
+        ↓ display implementation
+/solusi-peralatan-dapur-mbg/
+        ↓ public/canonical URL
+/dapur-mbg/
+        ↓ redirect only
 ```
 
 Locked principles:
@@ -117,6 +134,7 @@ Locked principles:
 - WooCommerce credentials stay server-side;
 - preserve `/shop/[slug]` as the public product URL family;
 - preserve existing WordPress URL hierarchy during migration;
+- hierarchy must be generic, not MBG-specific;
 - do not treat a Next.js route as proof that a legacy WordPress URL is redirected/de-indexed;
 - `isAdminMode` is not authentication.
 
@@ -129,6 +147,7 @@ Locked principles:
 | B-6 | WordPress/WooCommerce origin separation | ✅ Resolved |
 | B-18 | WooCommerce REST request/auth path | ⚠️ Recovered / verifying |
 | B-19 | Legacy WordPress REST routing | ⚠️ Migration in progress |
+| B-20 | Universal WordPress hierarchy vs sitemap parity | ⏳ Open |
 
 ---
 
@@ -136,8 +155,9 @@ Locked principles:
 
 - Confirm strict production `HTTP 200 + Content-Type: application/json` headers for API endpoints; browser body evidence is already verified.
 - Confirm external consumers before retiring `src/app/wp-json/wc/v3/[...slug]/route.ts`.
-- Verify sitemap index and all relevant child sitemap XML responses in production.
-- Verify sitemap URL hierarchy for posts, categories, products, and all discovered legacy parents.
+- Implement and verify a universal WordPress hierarchy resolver shared by routing, canonical generation, and sitemap generation.
+- Re-run production sitemap XML checks after hierarchy resolver implementation.
+- Verify sitemap hierarchy for posts, categories, products, and all discovered legacy parents.
 - Audit origin `robots/noindex`, public WordPress renderer, sitemap and canonical/indexing behavior.
 - Complete authenticated WordPress admin control layer.
 
@@ -166,17 +186,20 @@ docs/prompts/
 
 # 🔁 NEXT CHAT HANDOFF
 
-## Chat 2.4 — Fetch-Path Audit & Sitemap Parity
+## Chat 2.5 — Universal WordPress Hierarchy Resolver
 
-1. Audit all remaining WooCommerce/WordPress fetch paths in the repository before changing more sitemap code.
-2. Confirm whether the legacy WooCommerce compatibility route has any external consumer before retiring it.
-3. Continue sitemap parity: posts, categories, products, dynamic routing, and all discovered URL parent patterns.
-4. Production-smoke-test sitemap index and child XMLs.
-5. Verify robots, canonical URLs, and Google Search Console behavior.
+1. Build one universal parent/child path resolver from WordPress page IDs and `parent` relationships.
+2. Reuse the same resolver for Next.js catch-all page routing, canonical metadata, and `sitemap-pages.xml`.
+3. Verify arbitrary-depth paths and future parents, e.g. `/jasa-pasang-exhaust-hood/jakarta/`, without hardcoded parent names.
+4. Re-run live sitemap verification and confirm flat/root-level legacy URLs are gone from the relevant sitemap output.
+5. Continue remaining posts/categories/products parity and SEO verification.
 
 Do not repeat:
 
 ```text
+- MBG-specific sitemap hacks
+- replacing the Next.js Dapur MBG landing with WordPress-rendered content
+- flattening hierarchical URLs
 - rejected Vercel Host-header workaround
 - WooCommerce Basic Auth approach
 - legacy URL slug standardization without explicit redirect/canonical approval

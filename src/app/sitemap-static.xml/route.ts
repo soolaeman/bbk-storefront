@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const SITE_URL = 'https://bukanbarukitchen.com';
+const SITE_URL = 'https://www.bukanbarukitchen.com';
 
 const staticUrls = [
   { path: '', changefreq: 'daily', priority: '1.0' },

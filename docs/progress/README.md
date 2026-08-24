@@ -21,9 +21,9 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 2.0 | **21 Aug 2026** | **08:36 WIB** | **10:29 WIB** | **1h 53m** | Vercel/WordPress origin diagnostics, DewaWeb origin strategy, API architecture, support-ticket handoff | 🛑 Blocked — DewaWeb support | [`CHAT-2.0.md`](CHAT-2.0.md) |
 | 2.1 | **21 Aug 2026** | **13:25 WIB** | **18:19 WIB** | **4h 54m** | Origin document-root correction, `/katalog` recovery, WooCommerce REST authentication isolation | ⚠️ Closed — WooCommerce REST auth blocked | [`CHAT-2.1.md`](CHAT-2.1.md) |
 | 2.2 | **24 Aug 2026** | **05:33 WIB** | **08:02 WIB** | **2h 29m** | WooCommerce REST request-path recovery, production catalog/detail recovery, URL preservation, WhatsApp update | ✅ Closed with carried verification debt | [`CHAT-2.2.md`](CHAT-2.2.md) |
-| 2.3 | **24 Aug 2026** | **08:12 WIB** | **Tidak ditemukan di repository/evidence yang tersedia.** | **Tidak ditemukan di repository/evidence yang tersedia.** | Production API verification, canonical WooCommerce/WordPress fetch-path migration, legacy-route audit, SEO hardening, split request-time sitemaps | ✅ Closed with carried verification debt | [`CHAT-2.3.md`](CHAT-2.3.md) |
+| 2.3 | **24 Aug 2026** | **08:12 WIB** | **10:42 WIB** | **2h 30m** | Production API verification, canonical WooCommerce/WordPress fetch-path migration, legacy-route audit, SEO hardening, split request-time sitemaps | ✅ Closed with carried verification debt | [`CHAT-2.3.md`](CHAT-2.3.md) |
 
-> **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. Exact Chat 2.3 End/Duration could not be independently verified from the available repository/evidence, so they are intentionally not estimated.
+> **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. Chat 2.3 end time was explicitly confirmed as **10:42 WIB**.
 
 ## ⏱️ PROJECT TIMELINE — SINCE CHAT 1.1
 
@@ -106,8 +106,8 @@ Chat 2.2 END
 24 Aug 2026 08:12 WIB
 Chat 2.3 START
         ↓
-End time not independently verifiable
-Chat 2.3 CLOSED
+24 Aug 2026 10:42 WIB
+Chat 2.3 END
 ```
 
 ### Project time summary
@@ -126,10 +126,10 @@ Chat 2.2 working duration:
 2 hours 29 minutes
 
 Chat 2.3 working duration:
-NOT VERIFIABLE
+2 hours 30 minutes
 
-Verified session working time through Chat 2.2:
-58 hours 48 minutes 16 seconds
+Verified session working time through Chat 2.3:
+61 hours 18 minutes 16 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE

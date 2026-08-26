@@ -378,7 +378,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
                         const res = await fetch('/api/sales-helper/toggle-status', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ sku: item.sku, status: nextStatus }),
+                          body: JSON.stringify({ sku: item.sku, productId: item.id, status: nextStatus }),
                         });
                         const data = await res.json();
                         if (data.success) {

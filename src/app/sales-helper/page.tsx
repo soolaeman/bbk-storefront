@@ -169,7 +169,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 pb-16">
       {/* Top Mobile Sticky Header */}
-      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+      <header className="sticky top-0 z-30 bg-slate-900/80 backdrop-blur-lg border-b border-slate-800/80 shadow-lg shadow-slate-950/20 px-4 py-3">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
           </div>
           <button
             onClick={handleLogout}
-            className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="text-xs px-3 py-1.5 rounded-lg border border-slate-700/80 text-slate-400 hover:text-white hover:bg-slate-800 hover:border-slate-600 transition-all font-semibold"
           >
             Kunci
           </button>
@@ -195,12 +195,12 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Ketik SKU (misal: BBK0004) atau nama barang..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full pl-10 pr-12 py-3 rounded-xl bg-slate-950/80 border border-slate-800/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-emerald-400 transition-colors"
               >
                 Reset
               </button>
@@ -228,18 +228,18 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
             return (
               <div 
                 key={item.id}
-                className="rounded-2xl bg-slate-900 border border-slate-800 p-4 shadow-sm hover:border-slate-700 transition-all"
+                className="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950/75 border border-slate-800/80 p-4 shadow-lg shadow-slate-950/30 hover:border-slate-700/80 hover:shadow-xl hover:shadow-emerald-950/5 transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 {/* Header: SKU, Status, Gudang */}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="font-black text-sm text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2.5 py-0.5 rounded-lg">
+                    <span className="font-black text-sm text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2.5 py-0.5 rounded-lg shadow-sm">
                       {item.sku}
                     </span>
-                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full shadow-sm ${
                       isSold 
-                        ? 'bg-rose-950/80 text-rose-400 border border-rose-800' 
-                        : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800'
+                        ? 'bg-rose-950/80 text-rose-400 border border-rose-800/80' 
+                        : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/80'
                     }`}>
                       {item.status}
                     </span>
@@ -253,7 +253,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
                 {/* Body: Thumbnail & Info */}
                 <div className="flex gap-3 mt-3">
                   {item.images && item.images[0] ? (
-                    <div className="relative h-20 w-20 flex-shrink-0 rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+                    <div className="relative h-20 w-20 flex-shrink-0 rounded-xl overflow-hidden bg-slate-950 border border-slate-800/80 shadow-inner">
                       <Image
                         src={item.images[0]}
                         alt={item.name}
@@ -263,7 +263,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
                       />
                     </div>
                   ) : (
-                    <div className="h-20 w-20 flex-shrink-0 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-600">
+                    <div className="h-20 w-20 flex-shrink-0 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-center text-slate-600 shadow-inner">
                       <Package className="w-6 h-6" />
                     </div>
                   )}
@@ -287,7 +287,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
                     href={item.telegramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3.5 w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md shadow-sky-950 transition-all"
+                    className="mt-3.5 w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-500 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-sky-950/20 active:scale-98 transition-all"
                   >
                     <Send className="w-3.5 h-3.5" />
                     🚀 Buka Pesan Asli di Telegram Supplier
@@ -297,10 +297,10 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
 
                 {/* Dynamic Pricing Box (Tangga Nego) */}
                 {item.pricing && (
-                  <div className="mt-3.5 rounded-xl bg-slate-950 border border-slate-800/80 p-3">
-                    <div className="flex items-center justify-between mb-2">
+                  <div className={`mt-3.5 rounded-xl bg-slate-950/60 border-l-4 ${isSold ? 'border-l-rose-500' : 'border-l-emerald-500'} border border-slate-800/50 p-3.5 shadow-inner`}>
+                    <div className="flex items-center justify-between mb-2.5">
                       <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 flex items-center gap-1">
-                        <DollarSign className="w-3 h-3 text-emerald-400" />
+                        <DollarSign className="w-3 h-3 text-emerald-400 animate-pulse" />
                         Tangga Nego (Dynamic Pricing)
                       </span>
                       <span className="text-[11px] text-slate-400">
@@ -310,7 +310,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
 
                     <div className="grid grid-cols-3 gap-2 text-center">
                       {/* Harga Buka */}
-                      <div className="rounded-lg bg-emerald-950/40 border border-emerald-800/60 p-2">
+                      <div className="rounded-xl bg-gradient-to-b from-emerald-950/40 to-emerald-950/10 border border-emerald-800/40 p-2.5 shadow-xs">
                         <p className="text-[10px] font-bold text-emerald-400">1. BUKA WA</p>
                         <p className="text-xs font-black text-emerald-300 mt-0.5">
                           Rp {item.pricing.buka.toLocaleString('id-ID')}
@@ -318,7 +318,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
                       </div>
 
                       {/* Harga Deal */}
-                      <div className="rounded-lg bg-amber-950/40 border border-amber-800/60 p-2">
+                      <div className="rounded-xl bg-gradient-to-b from-amber-950/40 to-amber-950/10 border border-amber-800/40 p-2.5 shadow-xs">
                         <p className="text-[10px] font-bold text-amber-400">2. DEAL CEPAT</p>
                         <p className="text-xs font-black text-amber-300 mt-0.5">
                           Rp {item.pricing.deal.toLocaleString('id-ID')}
@@ -326,7 +326,7 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
                       </div>
 
                       {/* Harga Floor */}
-                      <div className="rounded-lg bg-rose-950/40 border border-rose-800/60 p-2">
+                      <div className="rounded-xl bg-gradient-to-b from-rose-950/40 to-rose-950/10 border border-rose-800/40 p-2.5 shadow-xs">
                         <p className="text-[10px] font-bold text-rose-400">3. BATAS NETT</p>
                         <p className="text-xs font-black text-rose-300 mt-0.5">
                           Rp {item.pricing.floor.toLocaleString('id-ID')}
@@ -338,90 +338,90 @@ Foto & detail unit sudah kami siapkan. Mau dikirim via kurir Lalamove/Deliveree 
 
                 {/* Quick Action Footer */}
                 <div className="mt-3.5 flex flex-col gap-2 pt-2 border-t border-slate-800/60">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => copyToClipboard(generateWhatsappDraft(item), item.id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-emerald-300 transition-colors"
-                    >
-                      {copiedId === item.id ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          Tercopy ke Clipboard!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          Salin Draft Chat WA
-                        </>
-                      )}
-                    </button>
+                   <div className="flex items-center gap-2">
+                     <button
+                       onClick={() => copyToClipboard(generateWhatsappDraft(item), item.id)}
+                       className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-750 border border-slate-700/50 hover:border-emerald-500/30 text-xs font-bold text-emerald-400 shadow-sm transition-all"
+                     >
+                       {copiedId === item.id ? (
+                         <>
+                           <Check className="w-3.5 h-3.5 text-emerald-400" />
+                           Tercopy ke Clipboard!
+                         </>
+                       ) : (
+                         <>
+                           <Copy className="w-3.5 h-3.5" />
+                           Salin Draft Chat WA
+                         </>
+                       )}
+                     </button>
 
-                    {item.slug && (
-                      <Link
-                        href={`/shop/${item.slug}`}
-                        target="_blank"
-                        className="flex items-center justify-center p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                        title="Lihat Tampilan Web Publik"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </Link>
-                    )}
-                  </div>
+                     {item.slug && (
+                       <Link
+                         href={`/shop/${item.slug}`}
+                         target="_blank"
+                         className="flex items-center justify-center p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-750 border border-slate-700/50 hover:border-slate-600 text-slate-300 shadow-sm transition-all"
+                         title="Lihat Tampilan Web Publik"
+                       >
+                         <ExternalLink className="w-4 h-4" />
+                       </Link>
+                     )}
+                   </div>
 
-                  {/* Toggle Status Button */}
-                  <button
-                    onClick={async () => {
-                      if (updatingId) return;
-                      setUpdatingId(item.id);
-                      try {
-                        const nextStatus = isSold ? 'READY' : 'SOLD';
-                        const res = await fetch('/api/sales-helper/toggle-status', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ sku: item.sku, productId: item.id, status: nextStatus }),
-                        });
-                        const data = await res.json();
-                        if (data.success) {
-                          setProducts((prev) =>
-                            prev.map((p) => (p.id === item.id ? { ...p, status: nextStatus } : p))
-                          );
-                        } else {
-                          alert(data.message || data.error || 'Gagal mengubah status');
-                        }
-                      } catch (err) {
-                        console.error(err);
-                        alert('Terjadi kesalahan jaringan.');
-                      } finally {
-                        setUpdatingId(null);
-                      }
-                    }}
-                    disabled={updatingId !== null}
-                    className={`w-full py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                      updatingId === item.id 
-                        ? 'bg-slate-800 text-slate-400 cursor-not-allowed'
-                        : isSold 
-                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white' 
-                          : 'bg-rose-650 hover:bg-rose-500 text-white'
-                    }`}
-                  >
-                    {updatingId === item.id ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        Memproses...
-                      </>
-                    ) : isSold ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        Tandai READY Kembali
-                      </>
-                    ) : (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        Tandai sebagai SOLD (Terjual)
-                      </>
-                    )}
-                  </button>
-                </div>
+                   {/* Toggle Status Button */}
+                   <button
+                     onClick={async () => {
+                       if (updatingId) return;
+                       setUpdatingId(item.id);
+                       try {
+                         const nextStatus = isSold ? 'READY' : 'SOLD';
+                         const res = await fetch('/api/sales-helper/toggle-status', {
+                           method: 'POST',
+                           headers: { 'Content-Type': 'application/json' },
+                           body: JSON.stringify({ sku: item.sku, productId: item.id, status: nextStatus }),
+                         });
+                         const data = await res.json();
+                         if (data.success) {
+                           setProducts((prev) =>
+                             prev.map((p) => (p.id === item.id ? { ...p, status: nextStatus } : p))
+                           );
+                         } else {
+                           alert(data.message || data.error || 'Gagal mengubah status');
+                         }
+                       } catch (err) {
+                         console.error(err);
+                         alert('Terjadi kesalahan jaringan.');
+                       } finally {
+                         setUpdatingId(null);
+                       }
+                     }}
+                     disabled={updatingId !== null}
+                     className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-98 shadow-md ${
+                       updatingId === item.id 
+                         ? 'bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-700'
+                         : isSold 
+                           ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-950/25' 
+                           : 'bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white shadow-rose-950/25'
+                     }`}
+                   >
+                     {updatingId === item.id ? (
+                       <>
+                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                         Memproses...
+                       </>
+                     ) : isSold ? (
+                       <>
+                         <RefreshCw className="w-3.5 h-3.5" />
+                         Tandai READY Kembali
+                       </>
+                     ) : (
+                       <>
+                         <RefreshCw className="w-3.5 h-3.5" />
+                         Tandai sebagai SOLD (Terjual)
+                       </>
+                     )}
+                   </button>
+                 </div>
               </div>
             );
           })

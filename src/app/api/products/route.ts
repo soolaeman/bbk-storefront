@@ -286,6 +286,130 @@ export async function GET(request: NextRequest) {
         (incomingParams.get('status_unit') && incomingParams.get('status_unit') !== 'READY')
     );
 
+    const statusUnitParam = incomingParams.get('status_unit');
+    const isDefaultCatalogLoad = !searchQuery && 
+      (!conditionFilter || normalizeText(conditionFilter) === 'semua kondisi') &&
+      (!locationFilter || normalizeText(locationFilter) === 'semua lokasi') &&
+      statusUnitParam === 'READY,DP,SOLD';
+
+    if (isDefaultCatalogLoad) {
+      const requestedPage = Math.max(Number(incomingParams.get('page') || '1') || 1, 1);
+      const requestedPerPage = Math.min(Math.max(Number(incomingParams.get('per_page') || '8') || 8, 1), 100);
+
+      // 1. Get total ready and total sold counts
+      const readyParams = new URLSearchParams(params);
+      readyParams.set('stock_status', 'instock');
+      readyParams.set('per_page', '1');
+      readyParams.set('page', '1');
+      
+      const soldParams = new URLSearchParams(params);
+      soldParams.set('stock_status', 'outofstock');
+      soldParams.set('per_page', '1');
+      soldParams.set('page', '1');
+
+      const [readyRes, soldRes] = await Promise.all([
+        fetch(buildWooCommerceUrl('products', readyParams), { headers: getWooCommerceHeaders() }),
+        fetch(buildWooCommerceUrl('products', soldParams), { headers: getWooCommerceHeaders() })
+      ]);
+
+      const totalReady = Number(readyRes.headers.get('X-WP-Total') || '0');
+      const totalSold = Number(soldRes.headers.get('X-WP-Total') || '0');
+      const total = totalReady + totalSold;
+      const totalPages = Math.ceil(total / requestedPerPage);
+
+      let pageProducts: any[] = [];
+      const skip = (requestedPage - 1) * requestedPerPage;
+      const limit = requestedPerPage;
+
+      if (skip + limit <= totalReady) {
+        // Only ready products
+        const fetchParams = new URLSearchParams(params);
+        fetchParams.set('stock_status', 'instock');
+        fetchParams.set('per_page', String(limit));
+        fetchParams.set('page', String(requestedPage));
+        const res = await fetch(buildWooCommerceUrl('products', fetchParams), { headers: getWooCommerceHeaders() });
+        if (res.ok) pageProducts = await res.json();
+      } else if (skip >= totalReady) {
+        // Only sold products
+        const soldSkip = skip - totalReady;
+        const page1 = Math.floor(soldSkip / limit) + 1;
+        const offsetInPage = soldSkip % limit;
+
+        if (offsetInPage === 0) {
+          const fetchParams = new URLSearchParams(params);
+          fetchParams.set('stock_status', 'outofstock');
+          fetchParams.set('per_page', String(limit));
+          fetchParams.set('page', String(page1));
+          const res = await fetch(buildWooCommerceUrl('products', fetchParams), { headers: getWooCommerceHeaders() });
+          if (res.ok) pageProducts = await res.json();
+        } else {
+          // Crosses page boundary
+          const fetchParams1 = new URLSearchParams(params);
+          fetchParams1.set('stock_status', 'outofstock');
+          fetchParams1.set('per_page', String(limit));
+          fetchParams1.set('page', String(page1));
+
+          const fetchParams2 = new URLSearchParams(params);
+          fetchParams2.set('stock_status', 'outofstock');
+          fetchParams2.set('per_page', String(limit));
+          fetchParams2.set('page', String(page1 + 1));
+
+          const [res1, res2] = await Promise.all([
+            fetch(buildWooCommerceUrl('products', fetchParams1), { headers: getWooCommerceHeaders() }),
+            fetch(buildWooCommerceUrl('products', fetchParams2), { headers: getWooCommerceHeaders() })
+          ]);
+
+          let items1: any[] = [];
+          let items2: any[] = [];
+          if (res1.ok) items1 = await res1.json();
+          if (res2.ok) items2 = await res2.json();
+
+          pageProducts = [...items1, ...items2].slice(offsetInPage, offsetInPage + limit);
+        }
+      } else {
+        // Spans boundary
+        const readyItemsNeeded = totalReady - skip;
+        const soldItemsNeeded = limit - readyItemsNeeded;
+
+        const lastReadyPage = Math.ceil(totalReady / limit);
+        const fetchParamsReady = new URLSearchParams(params);
+        fetchParamsReady.set('stock_status', 'instock');
+        fetchParamsReady.set('per_page', String(limit));
+        fetchParamsReady.set('page', String(lastReadyPage));
+
+        const fetchParamsSold = new URLSearchParams(params);
+        fetchParamsSold.set('stock_status', 'outofstock');
+        fetchParamsSold.set('per_page', String(limit));
+        fetchParamsSold.set('page', '1');
+
+        const [resReady, resSold] = await Promise.all([
+          fetch(buildWooCommerceUrl('products', fetchParamsReady), { headers: getWooCommerceHeaders() }),
+          fetch(buildWooCommerceUrl('products', fetchParamsSold), { headers: getWooCommerceHeaders() })
+        ]);
+
+        let itemsReady: any[] = [];
+        let itemsSold: any[] = [];
+        if (resReady.ok) itemsReady = await resReady.json();
+        if (resSold.ok) itemsSold = await resSold.json();
+
+        // slice correct items
+        const readySliced = itemsReady.slice(itemsReady.length - readyItemsNeeded);
+        const soldSliced = itemsSold.slice(0, soldItemsNeeded);
+        pageProducts = [...readySliced, ...soldSliced];
+      }
+
+      return NextResponse.json(pageProducts, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
+          'X-WP-Total': String(total),
+          'X-WP-TotalPages': String(totalPages),
+          'X-BBK-Meta-Filter': 'split-fetch',
+        },
+      });
+    }
+
     if (needsMetaFiltering) {
       const requestedPage = Math.max(Number(incomingParams.get('page') || '1') || 1, 1);
       const requestedPerPage = Math.min(Math.max(Number(incomingParams.get('per_page') || '8') || 8, 1), 100);

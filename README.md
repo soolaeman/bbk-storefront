@@ -8,21 +8,25 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 CURRENT CHECKPOINT — CHAT 2.5 CLOSED
+# 🕒 CURRENT CHECKPOINT — CHAT 2.6 CLOSED
 
 ```text
-Date: 24 August 2026
-Session: Chat 2.5
-Start: 13:00:50 WIB
-End: 13:06:18 WIB
-Duration: 5m 28s
-Status: CLOSED — Vercel deployment quota blocked production verification; latest build blocker isolated to MBG route imports
+Date: 26 August 2026
+Session: Chat 2.6
+Start: 19:22 WIB
+End: 19:22 WIB
+Duration: 0m (documentation/close session)
+Status: CLOSED — Antigravity code changes documented; runtime/build/production verification deferred
 ```
 
-Chat 2.5 audited the newest Vercel production failure and separated it from the earlier `produksi-baru/page.tsx` parser failure. The current verified blocker is an incorrect relative-import depth in `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx`; Vercel also reports the Hobby daily deployment quota as exhausted. No redeploy was attempted after the quota warning.
+Chat 2.6 did not author the morning/afternoon code changes. The session performed forensic repository documentation of Google Antigravity work reported for 05:00–17:00 WIB and separated source-level implementation from runtime/production verification.
 
-Latest Chat 2.5 documentation checkpoint:
-`1c4d25923061d638e3db030a7e064e7fd4088ce6`
+Latest Chat 2.6 documentation checkpoints:
+
+```text
+Progress archive: 22019c29dc1c2fce91cb1b8300dfaf25b90fa86d
+Progress index:    1ff47635031906ce4c054b7026a37943d4c13ee8
+```
 
 ---
 
@@ -46,17 +50,18 @@ Latest Chat 2.5 documentation checkpoint:
 | 2.3 | 24 Aug 08:12 WIB | 24 Aug 10:42 WIB | 2h 30m | Production API verification / canonical fetch-path migration / SEO + sitemap audit | ✅ Closed with carried verification debt |
 | 2.4 | 24 Aug 10:58 WIB | 24 Aug 12:53:02 WIB | 1h 55m 02s | MBG landing mapping / hierarchical routing / sitemap verification / universal hierarchy requirement | ✅ Closed with carried sitemap debt |
 | 2.5 | 24 Aug 13:00:50 WIB | 24 Aug 13:06:18 WIB | 5m 28s | Vercel blocker audit / MBG import diagnosis / deployment quota isolation / hierarchy handoff | 🛑 Closed — Vercel quota |
+| 2.6 | 26 Aug 19:22 WIB | 26 Aug 19:22 WIB | 0m documentation close | Antigravity forensic documentation / verification status / handoff | ✅ Closed |
 
 ### Project time
 
 ```text
-Verified working time through Chat 2.4:
-63 hours 13 minutes 18 seconds
-
-Chat 2.5:
-5 minutes 28 seconds
-
 Verified working time through Chat 2.5:
+63 hours 18 minutes 46 seconds
+
+Chat 2.6:
+0 minutes (documentation/close session)
+
+Verified working time through Chat 2.6:
 63 hours 18 minutes 46 seconds
 
 Actual elapsed duration since Chat 1.1:
@@ -69,8 +74,8 @@ Calendar span is not working duration.
 
 # 🎯 CURRENT PARETO PRIORITIES
 
-1. **Fix the current MBG route build blocker** — change the three relative imports in `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx` from `../../../../...` to `../../../...`.
-2. **Production deployment recovery** — wait for Vercel Hobby deployment quota recovery; do not spam `Redeploy` while `api-deployments-free-per-day` is active.
+1. **Verify Antigravity Sales Helper changes** — READY ↔ SOLD mutation, WooCommerce stock state, exact SKU search, and path/cache revalidation.
+2. **Verify split-fetch catalog pagination** — especially the exact READY→SOLD boundary; then re-check production after Vercel quota recovery.
 3. **Universal WordPress hierarchy resolver** — one parent/child path resolver must drive Next.js route resolution, canonical URLs, and `sitemap-pages.xml`; do not special-case MBG.
 
 ---
@@ -89,20 +94,23 @@ Calendar span is not working duration.
 | Related products + `/shop/[slug]` links | ✅ user-verified |
 | `/api/products` raw JSON body | ✅ production browser-verified |
 | `/api/products?metadata=1` raw JSON body | ✅ production browser-verified |
-| Filters + pagination | ✅ functionally verified |
+| Filters + pagination | 🟡 existing verification; new split-fetch boundary verification pending |
 | `product-category/[...slug]` canonical API path | ✅ migrated |
 | `src/lib/wordpress.ts` canonical origin/path | ✅ migrated |
 | Legacy `/wp-json/wc/v3/[...slug]` compatibility route | ⚠️ internally orphaned; external dependency unknown |
 | MBG landing `/solusi-peralatan-dapur-mbg/` | ✅ user-verified on Vercel |
 | `/dapur-mbg/` | ✅ redirect; excluded from static sitemap |
-| MBG hierarchical route | ⚠️ code exists; latest production build blocked by module-resolution error |
+| MBG hierarchical route imports | 🟡 source-level fix committed; production build verification pending |
+| Sales Helper READY ↔ SOLD | 🟡 code implemented; runtime/upstream verification pending |
+| Catalog READY/SOLD split-fetch | 🟡 code implemented; boundary verification pending |
+| Sales Helper UI facelift | 🟡 code implemented; visual/runtime verification pending |
 | Sitemap index | ✅ previously user-verified |
 | Static sitemap | ✅ previously user-verified |
 | Pages sitemap hierarchy | ⚠️ live flat legacy URLs remain |
 | Universal hierarchy resolver | ⏳ next implementation |
 | Public SEO takeover | ⏳ audit pending |
 | Authenticated admin controls | ⏳ implementation pending |
-| Vercel Hobby deployment quota | 🛑 exhausted at session close |
+| Vercel Hobby deployment quota | 🛑 deployment verification remains quota-dependent |
 
 ## Current architecture
 
@@ -116,17 +124,6 @@ origin.bukanbarukitchen.com
 /home/bukanbar/public_html
         ↓
 WordPress + WooCommerce + ACF + BBK APIs
-```
-
-MBG landing mapping:
-
-```text
-src/components/DapurMbgLanding.tsx
-        ↓ display implementation
-/solusi-peralatan-dapur-mbg/
-        ↓ public/canonical URL
-/dapur-mbg/
-        ↓ redirect only
 ```
 
 Locked principles:
@@ -159,7 +156,9 @@ Locked principles:
 
 - Confirm strict production `HTTP 200 + Content-Type: application/json` headers for API endpoints; browser body evidence is already verified.
 - Confirm external consumers before retiring `src/app/wp-json/wc/v3/[...slug]/route.ts`.
-- Fix the MBG hierarchical route relative imports before the next deployment.
+- Verify the corrected MBG hierarchical route in a full build/production deployment.
+- Verify Sales Helper READY ↔ SOLD mutation against real WooCommerce state.
+- Verify split-fetch catalog pagination across the READY/SOLD boundary.
 - Wait for Vercel quota recovery before triggering another production deployment.
 - Implement and verify a universal WordPress hierarchy resolver shared by routing, canonical generation, and sitemap generation.
 - Re-run production sitemap XML checks after hierarchy resolver implementation.
@@ -188,9 +187,9 @@ docs/prompts/
 → AI workflow / SOP
 ```
 
-## Documentation audit — Chat 2.5
+## Documentation audit — Chat 2.6
 
-- `docs/guides/*`: **No change required**; current guides remain valid for the session's work.
+- `docs/guides/*`: **No change required**; no guide drift was identified from the documented Antigravity changes.
 - `docs/prompts/*`: **No change required**; canonical `END-SESSION-PROMPT.md` remains the normal end-session SOP.
 - `end-session-prompt.md`: **No change required**; shortcut remains canonical.
 
@@ -198,14 +197,14 @@ docs/prompts/
 
 # 🔁 NEXT CHAT HANDOFF
 
-## Chat 2.5 — Universal WordPress Hierarchy Resolver (Resume After Vercel Quota Reset)
+## Chat 2.7 — Verify Antigravity Changes + Universal WordPress Hierarchy
 
-1. Fix `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx` imports: `../../../../` → `../../../` for `Header`, `Footer`, and `lib/wordpress`.
-2. Commit the verified source fix.
-3. After Vercel quota recovery, perform one production deployment attempt and inspect the resulting build logs.
-4. Build one universal parent/child path resolver from WordPress page IDs and `parent` relationships.
-5. Reuse the resolver for Next.js catch-all page routing, canonical metadata, and `sitemap-pages.xml`.
-6. Verify arbitrary-depth paths and confirm flat/root-level legacy URLs are gone from the relevant sitemap output.
+1. Run `npm run build` against the current `main` code.
+2. Verify Sales Helper READY ↔ SOLD mutation, WooCommerce stock status, exact SKU search, and path/cache revalidation.
+3. Verify catalog split-fetch pagination at ordinary pages and the READY→SOLD boundary.
+4. Re-check Vercel quota before one production deployment attempt.
+5. Implement one universal parent/child WordPress hierarchy resolver shared by catch-all routing, canonical metadata, and `sitemap-pages.xml`.
+6. Re-verify live sitemap hierarchy and SEO parity.
 
 Do not repeat:
 
@@ -218,6 +217,7 @@ Do not repeat:
 - legacy URL slug standardization without explicit redirect/canonical approval
 - unverified CI/build/GSC claims
 - repeated Vercel redeploy attempts while the daily quota is exhausted
+- reverted Apps Script architecture without an explicit new decision
 ```
 
 After GitHub changes:
@@ -230,8 +230,8 @@ git pull origin main
 
 ## Last code checkpoint
 
-`86487265c9c6260fae81539b08cd39b27a89f69e`
+`ba9f51b81acd2f911f2e5f3cb4ef157560bc4ed2`
 
 ## Last documentation checkpoint
 
-`1c4d25923061d638e3db030a7e064e7fd4088ce6`
+`22019c29dc1c2fce91cb1b8300dfaf25b90fa86d`

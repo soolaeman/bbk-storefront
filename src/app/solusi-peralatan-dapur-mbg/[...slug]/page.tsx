@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Header } from '../../../../components/Header';
-import { Footer } from '../../../../components/Footer';
-import { getWordPressPages } from '../../../../lib/wordpress';
+import { Header } from '../../../components/Header';
+import { Footer } from '../../../components/Footer';
+import { getWordPressPages } from '../../../lib/wordpress';
 
 interface MbgPage {
   id: number;

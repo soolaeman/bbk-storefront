@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { buildWooCommerceUrl, getWooCommerceHeaders } from '../../../../lib/woocommerce-client';
 
 export const dynamic = 'force-dynamic';
@@ -85,6 +86,13 @@ export async function POST(request: NextRequest) {
     if (scriptJson.success && productId) {
       try {
         await updateWooCommerceProductStatus(productId, targetStatus);
+        
+        // Revalidate the product pages so the status updates immediately
+        revalidatePath('/shop/[slug]', 'page');
+        revalidatePath('/product/[slug]', 'page');
+        revalidatePath('/katalog');
+        revalidatePath('/catalog');
+        revalidatePath('/');
       } catch (wooError) {
         console.error('WooCommerce Sync Error:', wooError);
         // Tetap kembalikan sukses dari Apps Script tetapi beri catatan error WooCommerce

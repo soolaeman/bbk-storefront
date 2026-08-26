@@ -41,10 +41,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('q')?.trim() || '';
     const sku = searchParams.get('sku')?.trim() || '';
+    const normalizeUnitCode = (val: string) => val.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const isUnitCodeQuery = (val: string) => {
+      const normalized = normalizeUnitCode(val);
+      return normalized.length >= 4 && /^BBK\d+$/.test(normalized);
+    };
+
+    const isSkuQuery = isUnitCodeQuery(search);
 
     const products = await getWooCommerceProducts({
-      search: search || undefined,
-      sku: sku || undefined,
+      search: isSkuQuery ? undefined : (search || undefined),
+      sku: isSkuQuery ? normalizeUnitCode(search) : (sku || undefined),
       perPage: 30,
     });
 

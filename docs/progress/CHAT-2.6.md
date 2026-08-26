@@ -3,18 +3,23 @@
 ## Date / Session Timeline
 
 ```md
-## Date / Session Timeline
-
 Session: 2.6
+Date: 26 August 2026
 Started: 26 August 2026 19:22:00 WIB
-Ended: PENDING
-Duration: PENDING
-Evidence source: current session clock supplied at bootstrap; exact historical repository evidence was not available, so this timestamp is the session-start record.
+Ended: 26 August 2026 19:22 WIB
+Duration: 0m (documentation/close session)
+Evidence source: session clock at bootstrap and end-session close. The earlier 05:00–17:00 development window is user-reported and is documented separately; GitHub commit timestamps provide partial activity evidence but are not continuous working-time proof.
 ```
 
 ## Scope
 
-Resume the BBKitchen Next.js migration from Chat 2.5 and document the development performed with Google Antigravity earlier on 26 August 2026.
+Resume the BBKitchen Next.js migration from Chat 2.5, then perform a forensic close after documenting and auditing the Google Antigravity development performed earlier on 26 August 2026.
+
+## Starting State
+
+- Chat 2.5 ended on 24 August 2026 with a Vercel Hobby deployment-quota blocker and an MBG hierarchical route module-resolution error.
+- The session bootstrap created this archive before implementation work.
+- The canonical END-SESSION prompt requires archive, progress index, root README, guide/prompt audit, timing verification, Git checkpoint, and handoff. fileciteturn7file0L2-L2
 
 ## Historical Development Window — 26 August 2026
 
@@ -24,25 +29,25 @@ User-reported development window:
 05:00 WIB — 17:00 WIB
 ```
 
-This is recorded as a **user-reported development window**, not as verified working-time evidence. Git commit timestamps provide only partial evidence of activity within that window.
+This is a **reported development period**, not a verified 12-hour working duration.
 
-Verified Git activity on `main` establishes commits during approximately:
+GitHub commit evidence shows substantive changes during approximately:
 
 ```text
 09:39 WIB — 16:28 WIB
 ```
 
-The Git timestamps are evidence of commits, not proof of continuous developer working time. Therefore the 05:00–17:00 window is documented as requested, but it is **not converted into a verified 12-hour working duration**.
+The commits prove repository activity at those timestamps, not continuous development for the entire 05:00–17:00 interval.
 
-## Changes Documented From Antigravity Development
+## Forensic Changes From Antigravity Development
 
-### 1. MBG hierarchical route build blocker fixed
+### 1. MBG hierarchical route blocker fixed — DONE / CODE ONLY
 
-Corrected imports in:
+File:
 
 `src/app/solusi-peralatan-dapur-mbg/[...slug]/page.tsx`
 
-The previous Chat 2.5 blocker used imports one directory too deep:
+Chat 2.5 identified imports one directory too deep for:
 
 ```text
 ../../../../components/Header
@@ -50,22 +55,24 @@ The previous Chat 2.5 blocker used imports one directory too deep:
 ../../../../lib/wordpress
 ```
 
-Commit `e023e15bc0b43628b499f57243a6b6e78d8c849c` fixes the relative import depth.
+Commit:
 
-This resolves the specific module-resolution blocker identified in Chat 2.5 at source level. Production build/deployment verification remains separate and must not be inferred from the commit alone.
+`e023e15bc0b43628b499f57243a6b6e78d8c849c`
 
-### 2. Sales Helper status controls restored and expanded
+The source-level module-resolution error was corrected. This does **not** by itself prove production build/deployment verification.
 
-Sales Helper now has a status-toggle flow for product units. The implementation evolved through several commits:
+### 2. Sales Helper READY ↔ SOLD workflow — DONE / CODE ONLY
+
+Relevant commits:
 
 - `9a0e754` — restored toggle-status API route and UI buttons.
-- `82b68d0` — integrated status toggle with WooCommerce stock-status synchronization.
-- `57d1f70` — fixed empty product results caused by `statusFilter=ALL` handling.
-- `9361e04` — changed Sales Helper to direct server-side fetching.
+- `82b68d0` — integrated toggle with WooCommerce stock-status synchronization.
+- `57d1f70` — fixed empty results from `statusFilter=ALL` behavior.
+- `9361e04` — moved Sales Helper to direct server-side fetch.
 - `5d72726` — revalidated affected paths after successful status toggle.
-- `269a8a6` — made BBK SKU search exact.
+- `269a8a6` — made BBK SKU lookup exact.
 
-Operational intent:
+Intended operational flow:
 
 ```text
 Sales Helper
@@ -79,29 +86,23 @@ Next.js revalidation
 updated UI
 ```
 
-### 3. SOLD units are now positioned after READY units
+### 3. SOLD ordering — DONE / CODE ONLY
 
-Commit `460f194c288c24a87a4d616852051a5311e315bb` changes the default catalog ordering so SOLD units are pushed to the end of pagination.
+Commit:
 
-### 4. High-performance split-fetch pagination
+`460f194c288c24a87a4d616852051a5311e315bb`
 
-Commit `ba9f51b81acd2f911f2e5f3cb4ef157560bc4ed2` adds a split-fetch path for the default catalog load:
+Default catalog ordering now puts SOLD units at the end of pagination.
 
-```text
-WooCommerce
-   ├── instock / READY
-   └── outofstock / SOLD
-          ↓
-Next.js combines the two datasets
-          ↓
-READY first, SOLD last
-          ↓
-consistent pagination
-```
+### 4. Split-fetch catalog pagination — DONE / CODE ONLY
 
-The implementation calculates READY and SOLD totals from WooCommerce headers, determines the requested page boundary, and fetches only the necessary page(s), including cross-boundary handling.
+Commit:
 
-Response metadata added by this path includes:
+`ba9f51b81acd2f911f2e5f3cb4ef157560bc4ed2`
+
+The default catalog path now separates WooCommerce READY (`instock`) and SOLD (`outofstock`) requests, computes totals, resolves page boundaries, and combines only the necessary data.
+
+Response headers include:
 
 ```text
 X-WP-Total
@@ -109,83 +110,131 @@ X-WP-TotalPages
 X-BBK-Meta-Filter: split-fetch
 ```
 
-This is intended to improve performance compared with fetching a larger combined dataset and sorting it entirely after retrieval.
+The implementation explicitly handles READY-only pages, SOLD-only pages, and pages crossing the READY/SOLD boundary.
 
-### 5. Sales Helper UI facelift
+### 5. Sales Helper UI facelift — DONE / CODE ONLY
 
-The same `ba9f51b` commit also refines the Sales Helper interface:
+The same `ba9f51b` commit refines the Sales Helper visual layer with stronger sticky header treatment, search-field focus/spacing, richer product cards, refined status badges, improved image containers, a gradient Telegram CTA, stronger pricing presentation, and additional interaction transitions.
 
-- stronger sticky mobile header treatment;
-- improved search field spacing/focus treatment;
-- richer product cards and hover elevation;
-- refined READY/SOLD badges;
-- improved image container treatment;
-- gradient Telegram CTA;
-- stronger dynamic-pricing presentation;
-- additional transitions and interaction polish.
+## Failed / Reverted Approach
 
-## Important Development History / Reversal
-
-An earlier experiment attempted to integrate the toggle-status workflow with Apps Script:
+An earlier experiment attempted Apps Script integration:
 
 ```text
 6a3ea8d — Add toggle-status API route and UI button, integrate with Apps Script
 149c604 — Revert that commit
 ```
 
-The later implementation was rebuilt around the current server-side/WooCommerce flow rather than preserving that reverted Apps Script approach.
+The later implementation was rebuilt around server-side/WooCommerce flow. The reverted Apps Script approach is not part of the current architecture.
 
-## Verification Status
+## Bottlenecks / Root Causes / Resolutions
 
-### Source-level evidence
+### B-21 — Vercel Hobby deployment quota
 
-- ✅ MBG relative import blocker fixed in Git.
-- ✅ Sales Helper status-toggle flow implemented in source.
-- ✅ WooCommerce stock-status synchronization implemented in source.
-- ✅ Path revalidation after successful status mutation implemented in source.
-- ✅ Exact SKU search implemented in source.
-- ✅ READY/SOLD ordering and split-fetch pagination implemented in source.
-- ✅ Sales Helper UI facelift implemented in source.
+- Symptom: production deployment was blocked by the daily quota.
+- Root cause: Vercel Hobby deployment limit.
+- Resolution: source development proceeded in Git; production redeploy remains deferred until quota recovery.
+- Status: OPEN / operational verification pending.
 
-### Still requires verification
+### MBG module-resolution blocker
 
-- ⚠️ `npm run build` after the full set of changes.
-- ⚠️ Local runtime/functional verification of Sales Helper toggle flow.
-- ⚠️ Direct confirmation that READY ↔ SOLD mutation updates WooCommerce as intended in the real backend.
-- ⚠️ Production deployment/build after Vercel quota recovery.
-- ⚠️ Production catalog pagination behavior across the READY/SOLD boundary.
-- ⚠️ Universal WordPress hierarchy resolver remains pending.
-- ⚠️ Live sitemap hierarchy parity remains pending.
+- Symptom: Vercel build could not resolve Header, Footer, and WordPress helper imports from the hierarchical MBG route.
+- Root cause: relative import depth was one level too deep.
+- Resolution: `e023e15...` corrected the import paths.
+- Status: source fix complete; production verification pending.
 
-## Pareto Assessment After Antigravity Work
+## Verification Matrix
 
-1. **Primary completed source fix:** MBG module-resolution blocker corrected.
-2. **Primary functional expansion:** Sales Helper now has a WooCommerce-backed READY/SOLD operational workflow.
-3. **Primary performance improvement:** default catalog pagination now uses split-fetch READY/SOLD handling.
+| Area | Status |
+|---|---|
+| MBG import-path correction | ✅ DONE / CODE ONLY |
+| Sales Helper status toggle | ✅ DONE / CODE ONLY |
+| WooCommerce stock-status sync | ✅ DONE / CODE ONLY |
+| Path revalidation | ✅ DONE / CODE ONLY |
+| Exact BBK SKU search | ✅ DONE / CODE ONLY |
+| READY → SOLD ordering | ✅ DONE / CODE ONLY |
+| Split-fetch pagination | ✅ DONE / CODE ONLY |
+| Sales Helper UI facelift | ✅ DONE / CODE ONLY |
+| `npm run build` after all changes | ⚠️ NOT VERIFIED in this session |
+| Local runtime verification | ⚠️ NOT VERIFIED in this session |
+| Live WooCommerce mutation verification | ⚠️ NOT VERIFIED in this session |
+| Production deployment verification | 🛑 BLOCKED / DEFERRED |
+| Universal WordPress hierarchy resolver | ⏳ DEFERRED |
+| Live sitemap hierarchy parity | ⏳ DEFERRED |
 
-## Carry Forward
+## Top 20% Changes
 
-1. Run build and functional verification before treating the Antigravity changes as complete.
-2. Re-check current Vercel deployment quota/status before attempting production deployment.
-3. Verify the split-fetch pagination at normal pages and the READY→SOLD boundary.
-4. Continue the universal WordPress hierarchy resolver shared by routing, canonical generation, and `sitemap-pages.xml`.
+1. Fixed the MBG hierarchical route's known source-level module-resolution blocker.
+2. Built a WooCommerce-backed READY ↔ SOLD operational workflow for Sales Helper.
+3. Added READY/SOLD split-fetch pagination so the default catalog can keep SOLD items at the end without naively sorting one large combined dataset.
+4. Improved exact SKU lookup and cache/path revalidation around status mutations.
+5. Refined Sales Helper UI/interaction presentation.
 
-## Git Evidence
+## Top 20% Bottlenecks
 
-Relevant commits discovered on `main` during this documentation pass:
+1. Production deployment verification remains constrained by Vercel quota state.
+2. Runtime and upstream mutation verification were not performed in this close session.
+3. Universal WordPress hierarchy resolution is still not implemented.
+4. Live sitemap hierarchy parity remains pending.
+
+## Top 20% Decisions
+
+1. Keep WooCommerce/WordPress as the source of truth; do not create a second operational data store for Sales Helper status.
+2. Keep READY/SOLD handling server-side and pagination-aware rather than depending on a frontend-only sort.
+3. Preserve the generic WordPress hierarchy objective; do not replace it with MBG-specific sitemap hacks.
+4. Do not claim production completion from source commits alone.
+5. Do not resume the reverted Apps Script architecture without explicit new evidence/decision.
+
+## Technical Debt / Carry Forward
+
+- Run `npm run build` after the Antigravity changes.
+- Verify Sales Helper toggle behavior locally/runtime and against real WooCommerce state.
+- Test pagination around the exact READY/SOLD boundary.
+- Re-check Vercel deployment quota and perform one production deployment after recovery.
+- Implement universal WordPress parent/child hierarchy resolver for route resolution, canonical generation, and `sitemap-pages.xml`.
+- Re-verify live sitemap hierarchy and broader SEO parity.
+
+## Git Checkpoints
+
+### Code checkpoints discovered in the development window
 
 ```text
-9a0e754  Restore toggle-status API route and add toggle-status buttons in Sales Helper page
-82b68d0  Integrate sales-helper status toggle with WooCommerce stock status sync
-57d1f70  Fix empty products list by removing statusFilter ALL in sales-helper GET route
-9361e04  fix: direct server-side fetch for sales helper
-269a8a6  fix: make search query exact when searching for a BBK SKU code
-5d72726  fix: revalidate paths upon successful status toggle
-460f194  fix: show sold units by default sorted to the end of pagination
-e023e15  Fix import paths for Header, Footer, and wordpress lib in solusi-peralatan-dapur-mbg
-ba9f51b  fix: implement high performance split-fetch catalog sorting & sales helper ui facelift
+9a0e754
+82b68d0
+57d1f70
+9361e04
+269a8a6
+5d72726
+460f194
+e023e15
+ba9f51b
 ```
+
+### Documentation checkpoints
+
+- Session bootstrap: `427faf7f18ef3f065f89a7228a4e1c7e14738e16`
+- Antigravity documentation update: `3fd16b0d75cb0398633d34bffedd59fd6b6006c2`
+- Final Chat 2.6 archive update: pending successful write SHA.
 
 ## Handoff
 
-The morning/afternoon Antigravity work has materially advanced the operational Sales Helper and fixed the known MBG source-level build blocker. However, source commits are not equivalent to runtime or production verification. The next session step should be verification-first rather than adding more functionality.
+### Current State
+
+The Google Antigravity development window materially advanced Sales Helper operations and catalog presentation and corrected the known MBG source-level import blocker. The repository now contains these changes on `main`, but they remain **code-level evidence unless separately verified at build/runtime/upstream/production layers**.
+
+### Next Priority Order
+
+1. Verify the full Antigravity change set with build and runtime checks, especially READY ↔ SOLD mutation and split-fetch pagination boundaries.
+2. After Vercel quota recovery, perform one production deployment and inspect the resulting build/runtime state.
+3. Continue universal WordPress hierarchy resolver work and live sitemap parity verification.
+
+### Things NOT to repeat
+
+- Do not spam Vercel redeploy while the daily quota is exhausted.
+- Do not resurrect the reverted Apps Script approach without a deliberate architecture decision.
+- Do not use MBG-specific sitemap hacks in place of the universal hierarchy resolver.
+- Do not claim production completion based only on GitHub source commits.
+
+## Next Conversation Title
+
+`Chat 2.6 — Verification of Antigravity Sales Helper + Universal WordPress Hierarchy`

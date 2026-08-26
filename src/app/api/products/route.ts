@@ -282,7 +282,8 @@ export async function GET(request: NextRequest) {
     const needsMetaFiltering = Boolean(
       unitCodeSearch ||
         (conditionFilter && normalizeText(conditionFilter) !== 'semua kondisi') ||
-        (locationFilter && normalizeText(locationFilter) !== 'semua lokasi')
+        (locationFilter && normalizeText(locationFilter) !== 'semua lokasi') ||
+        (incomingParams.get('status_unit') && incomingParams.get('status_unit') !== 'READY')
     );
 
     if (needsMetaFiltering) {
@@ -293,6 +294,11 @@ export async function GET(request: NextRequest) {
       if (unitCodeSearch) {
         metaFilterParams.delete('search');
         metaFilterParams.set('sku', normalizeUnitCode(searchQuery));
+        metaFilterParams.delete('stock_status');
+      }
+      const statusUnitParam = incomingParams.get('status_unit');
+      if (statusUnitParam && statusUnitParam !== 'READY') {
+        metaFilterParams.delete('stock_status');
       }
 
       const allProducts = await fetchAllProductsForMetaFiltering(metaFilterParams);
@@ -302,6 +308,18 @@ export async function GET(request: NextRequest) {
           matchesMetaFilter(product, 'kondisi_unit', conditionFilter) &&
           matchesMetaFilter(product, 'lokasi_unit', locationFilter)
       );
+
+      // Sort: READY (and others) first, SOLD last
+      filteredProducts.sort((a, b) => {
+        const aStatus = getProductMetaValue(a, ['status_unit']).toUpperCase();
+        const bStatus = getProductMetaValue(b, ['status_unit']).toUpperCase();
+        const aIsSold = aStatus === 'SOLD';
+        const bIsSold = bStatus === 'SOLD';
+        
+        if (aIsSold && !bIsSold) return 1;
+        if (!aIsSold && bIsSold) return -1;
+        return 0;
+      });
 
       const total = filteredProducts.length;
       const totalPages = Math.ceil(total / requestedPerPage);

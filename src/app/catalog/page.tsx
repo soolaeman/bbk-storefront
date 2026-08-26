@@ -12,7 +12,7 @@ import { getWooCommerceProductsResult } from '../../lib/woocommerce';
 const PRODUCTS_PER_PAGE = 8;
 interface CatalogMetadataCategory { id: number; name: string; slug?: string; parent?: number; count?: number; }
 interface CatalogMetadata { categories: CatalogMetadataCategory[]; conditionOptions: string[]; locationOptions: string[]; totalProducts: number | null; }
-const DEFAULT_FILTERS: FilterState = { searchQuery: '', category: 'Semua', condition: 'Semua Kondisi', location: 'Semua Lokasi', powerType: 'Semua Sumber Daya', statusFilter: 'READY_ONLY', minPrice: null, maxPrice: null, sortBy: 'latest' };
+const DEFAULT_FILTERS: FilterState = { searchQuery: '', category: 'Semua', condition: 'Semua Kondisi', location: 'Semua Lokasi', powerType: 'Semua Sumber Daya', statusFilter: 'INCLUDE_SOLD', minPrice: null, maxPrice: null, sortBy: 'latest' };
 
 export default function CatalogPage() {
   const [query, setQuery] = useState(''); const [products, setProducts] = useState<Product[]>([]); const [totalResults, setTotalResults] = useState<number | null>(null); const [isLoading, setIsLoading] = useState(true); const [error, setError] = useState<string | null>(null); const [catalogPage, setCatalogPage] = useState(1); const [catalogPageInput, setCatalogPageInput] = useState('1'); const [totalPages, setTotalPages] = useState<number | null>(null); const [hasNextPage, setHasNextPage] = useState(false); const [metadata, setMetadata] = useState<CatalogMetadata>({ categories: [], conditionOptions: [], locationOptions: [], totalProducts: null }); const [isLoadingMetadata, setIsLoadingMetadata] = useState(true); const [filterState, setFilterState] = useState<FilterState>(DEFAULT_FILTERS);

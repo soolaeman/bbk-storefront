@@ -58,6 +58,38 @@ function appendQueryParam(url: URL, key: string, value: string | number | boolea
 let latestProductsRequestId = 0;
 let latestProductsRequestPromise: Promise<WooCommerceProductsResult> | null = null;
 export async function getWooCommerceProducts(options?: WooCommerceProductsQuery): Promise<Product[]> { return (await getWooCommerceProductsResult(options)).products; }
-export async function getWooCommerceProductsResult(options?: WooCommerceProductsQuery): Promise<WooCommerceProductsResult> { const requestId = ++latestProductsRequestId; const requestPromise = (async (): Promise<WooCommerceProductsResult> => { const url = new URL('/api/products', 'http://localhost'); appendQueryParam(url, 'status', 'publish'); appendQueryParam(url, 'per_page', options?.perPage ?? 8); appendQueryParam(url, 'page', options?.page ?? 1); appendQueryParam(url, 'search', options?.search); appendQueryParam(url, 'slug', options?.slug); appendQueryParam(url, 'category', options?.category); appendQueryParam(url, 'condition', options?.condition); appendQueryParam(url, 'location', options?.location); appendQueryParam(url, 'power_type', options?.powerType); appendQueryParam(url, 'status_unit', options?.statusFilter === 'READY_ONLY' ? 'READY' : options?.statusFilter === 'INCLUDE_SOLD' ? 'READY,DP,SOLD' : undefined); appendQueryParam(url, 'stock_status', options?.stockStatus); appendQueryParam(url, 'orderby', options?.orderby); appendQueryParam(url, 'order', options?.order); appendQueryParam(url, 'sku', options?.sku); appendQueryParam(url, 'featured', options?.featured); appendQueryParam(url, 'min_price', options?.minPrice ?? (options?.minPriceNumber != null ? String(options.minPriceNumber) : undefined)); appendQueryParam(url, 'max_price', options?.maxPrice ?? (options?.maxPriceNumber != null ? String(options.maxPriceNumber) : undefined)); appendQueryParam(url, 'tag', options?.tag); appendQueryParam(url, 'attribute', options?.attribute); appendQueryParam(url, 'attribute_term', options?.attributeTerm); const response = await fetch(url.toString().replace('http://localhost', ''), { headers: { Accept: 'application/json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`WooCommerce proxy gagal: ${response.status} ${response.statusText}`); const products = (await response.json()) as WooCommerceProduct[]; const total = response.headers.get('X-WP-Total') ? Number(response.headers.get('X-WP-Total')) : null; const totalPages = response.headers.get('X-WP-TotalPages') ? Number(response.headers.get('X-WP-TotalPages')) : null; return { products: products.map(mapProduct), total: Number.isFinite(total) ? total : null, totalPages: Number.isFinite(totalPages) ? totalPages : null }; })(); latestProductsRequestPromise = requestPromise; const result = await requestPromise; if (requestId !== latestProductsRequestId && latestProductsRequestPromise) return latestProductsRequestPromise; return result; }
+export async function getWooCommerceProductsResult(options?: WooCommerceProductsQuery): Promise<WooCommerceProductsResult> {
+  if (typeof window === 'undefined' && hasWooCommerceCredentials()) {
+    try {
+      const params = new URLSearchParams();
+      params.set('status', 'publish');
+      params.set('per_page', String(options?.perPage ?? 8));
+      params.set('page', String(options?.page ?? 1));
+      if (options?.search) params.set('search', options.search);
+      if (options?.slug) params.set('slug', options.slug);
+      if (options?.stockStatus) params.set('stock_status', options.stockStatus);
+      if (options?.orderby) params.set('orderby', options.orderby);
+      if (options?.order) params.set('order', options.order);
+      if (options?.sku) params.set('sku', options.sku);
+      if (options?.featured) params.set('featured', String(options.featured));
+      if (options?.minPriceNumber != null) params.set('min_price', String(options.minPriceNumber));
+      else if (options?.minPrice) params.set('min_price', options.minPrice);
+      if (options?.maxPriceNumber != null) params.set('max_price', String(options.maxPriceNumber));
+      else if (options?.maxPrice) params.set('max_price', options.maxPrice);
+      
+      const rawProducts = await fetchWooCommerceProducts(params);
+      if (rawProducts) {
+        return {
+          products: rawProducts.map(mapProduct),
+          total: rawProducts.length,
+          totalPages: 1,
+        };
+      }
+    } catch (e) {
+      console.error('Gagal direct server-side fetch di getWooCommerceProductsResult, fallback to loopback:', e);
+    }
+  }
+
+  const requestId = ++latestProductsRequestId; const requestPromise = (async (): Promise<WooCommerceProductsResult> => { const url = new URL('/api/products', 'http://localhost'); appendQueryParam(url, 'status', 'publish'); appendQueryParam(url, 'per_page', options?.perPage ?? 8); appendQueryParam(url, 'page', options?.page ?? 1); appendQueryParam(url, 'search', options?.search); appendQueryParam(url, 'slug', options?.slug); appendQueryParam(url, 'category', options?.category); appendQueryParam(url, 'condition', options?.condition); appendQueryParam(url, 'location', options?.location); appendQueryParam(url, 'power_type', options?.powerType); appendQueryParam(url, 'status_unit', options?.statusFilter === 'READY_ONLY' ? 'READY' : options?.statusFilter === 'INCLUDE_SOLD' ? 'READY,DP,SOLD' : undefined); appendQueryParam(url, 'stock_status', options?.stockStatus); appendQueryParam(url, 'orderby', options?.orderby); appendQueryParam(url, 'order', options?.order); appendQueryParam(url, 'sku', options?.sku); appendQueryParam(url, 'featured', options?.featured); appendQueryParam(url, 'min_price', options?.minPrice ?? (options?.minPriceNumber != null ? String(options.minPriceNumber) : undefined)); appendQueryParam(url, 'max_price', options?.maxPrice ?? (options?.maxPriceNumber != null ? String(options.maxPriceNumber) : undefined)); appendQueryParam(url, 'tag', options?.tag); appendQueryParam(url, 'attribute', options?.attribute); appendQueryParam(url, 'attribute_term', options?.attributeTerm); const response = await fetch(url.toString().replace('http://localhost', ''), { headers: { Accept: 'application/json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`WooCommerce proxy gagal: ${response.status} ${response.statusText}`); const products = (await response.json()) as WooCommerceProduct[]; const total = response.headers.get('X-WP-Total') ? Number(response.headers.get('X-WP-Total')) : null; const totalPages = response.headers.get('X-WP-TotalPages') ? Number(response.headers.get('X-WP-TotalPages')) : null; return { products: products.map(mapProduct), total: Number.isFinite(total) ? total : null, totalPages: Number.isFinite(totalPages) ? totalPages : null }; })(); latestProductsRequestPromise = requestPromise; const result = await requestPromise; if (requestId !== latestProductsRequestId && latestProductsRequestPromise) return latestProductsRequestPromise; return result; }
 
 export async function getWooCommerceProductById(id: string | number): Promise<Product> { throw new Error(`getWooCommerceProductById belum dipindahkan ke server-side proxy: ${id}`); }

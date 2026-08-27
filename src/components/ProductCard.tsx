@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Product } from '../types';
 import { generateWhatsAppProductLink } from '../utils/formatters';
 import { Phone, MapPin, Eye, Layers, Wrench, Send } from 'lucide-react';
@@ -28,7 +29,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail,
   const conditionLabel = getConditionLabel(product.condition);
 
   return (
-    <div id={`product-card-${product.id}`} className={`group bg-white rounded-2xl border transition-all duration-200 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-lg ${isSold ? 'border-slate-300 bg-slate-50/70' : 'border-slate-200 hover:border-amber-400/60'}`}>
+    <motion.div
+      id={`product-card-${product.id}`}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+      className={`group bg-white rounded-2xl border transition-colors duration-200 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-lg ${isSold ? 'border-slate-300 bg-slate-50/70' : 'border-slate-200 hover:border-amber-400/60'}`}
+    >
       <div>
         <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden cursor-pointer" onClick={() => onOpenDetail(product)}>
           <img src={product.images[0] || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80'} alt={product.name} referrerPolicy="no-referrer" className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSold ? 'grayscale contrast-125' : ''}`} loading="lazy" />
@@ -124,6 +131,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail,
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

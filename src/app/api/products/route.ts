@@ -12,6 +12,8 @@ const WOOCOMMERCE_API_ORIGIN = (
 const METADATA_PER_PAGE = 100;
 const PRODUCT_META_FILTER_PAGE_SIZE = 100;
 const PRODUCT_CACHE_REVALIDATE_SECONDS = 60;
+const IN_MEMORY_CACHE_TTL_MS = 60 * 1000; // 60 seconds
+const METADATA_CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 const ACF_STATUS_OPTIONS = ['READY', 'DP', 'SOLD'] as const;
 const ACF_CONDITION_OPTIONS = ['BARU', 'BEKAS'] as const;
@@ -28,6 +30,36 @@ const TOP_LEVEL_CATEGORY_ORDER = [
   'Showcase',
   'Peralatan Dapur Bekas Lainnya',
 ] as const;
+
+// In-Memory Query & Metadata Cache
+interface CacheEntry {
+  data: any;
+  headers: Record<string, string>;
+  timestamp: number;
+}
+const queryCache = new Map<string, CacheEntry>();
+const MAX_CACHE_ENTRIES = 150;
+
+let cachedMetadata: { data: any; timestamp: number } | null = null;
+let cachedCategoryMap: Map<string, number> | null = null;
+
+function setQueryCache(key: string, data: any, headers: Record<string, string>) {
+  if (queryCache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = queryCache.keys().next().value;
+    if (oldestKey) queryCache.delete(oldestKey);
+  }
+  queryCache.set(key, { data, headers, timestamp: Date.now() });
+}
+
+function getQueryCache(key: string): CacheEntry | null {
+  const entry = queryCache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.timestamp > IN_MEMORY_CACHE_TTL_MS) {
+    queryCache.delete(key);
+    return null;
+  }
+  return entry;
+}
 
 function hasWooCommerceCredentials(): boolean {
   return Boolean(process.env.WC_CONSUMER_KEY && process.env.WC_CONSUMER_SECRET);
@@ -110,15 +142,15 @@ async function resolveWooCommerceCategoryId(categoryName: string): Promise<numbe
   if (!trimmedName || normalizeText(trimmedName) === 'semua') return null;
   if (/^\d+$/.test(trimmedName)) return Number(trimmedName);
 
-  const params = new URLSearchParams({ search: trimmedName, per_page: '100' });
-  const response = await fetch(buildWooCommerceUrl('products/categories', params), {
-    headers: getWooCommerceHeaders(),
-    next: { revalidate: PRODUCT_CACHE_REVALIDATE_SECONDS },
-  });
+  const normalized = normalizeText(trimmedName);
+  if (cachedCategoryMap && cachedCategoryMap.has(normalized)) {
+    return cachedCategoryMap.get(normalized) ?? null;
+  }
 
-  if (!response.ok) throw new Error(`WooCommerce category lookup gagal: ${response.status} ${response.statusText}`);
-  const categories = (await response.json()) as Array<{ id: number; name: string }>;
-  return categories.find((item) => normalizeText(item.name) === normalizeText(trimmedName))?.id ?? null;
+  // If not in cache, fetch categories to populate map
+  const categories = await fetchWooCommerceCategories();
+  const found = categories.find((item) => normalizeText(item.name) === normalized)?.id ?? null;
+  return found;
 }
 
 async function buildWooCommerceParams(request: NextRequest): Promise<URLSearchParams> {
@@ -148,7 +180,8 @@ async function buildWooCommerceParams(request: NextRequest): Promise<URLSearchPa
 
   const category = incomingParams.get('category');
   if (category && normalizeText(category) !== 'semua') {
-    params.set('category', String((await resolveWooCommerceCategoryId(category)) ?? -1));
+    const resolvedId = await resolveWooCommerceCategoryId(category);
+    params.set('category', String(resolvedId ?? -1));
   }
 
   const statusFilter = incomingParams.get('status_unit');
@@ -185,19 +218,41 @@ async function fetchWooCommerceCategories(): Promise<WooCommerceMetadataCategory
   const categories = (await categoriesResponse.json()) as WooCommerceMetadataCategory[];
   const totalPages = Number(categoriesResponse.headers.get('X-WP-TotalPages') || '1');
 
-  for (let page = 2; page <= totalPages; page += 1) {
-    params.set('page', String(page));
-    const response = await fetch(buildWooCommerceUrl('products/categories', params), {
-      headers: getWooCommerceHeaders(),
-      next: { revalidate: 300 },
-    });
-    if (!response.ok) break;
-    categories.push(...((await response.json()) as WooCommerceMetadataCategory[]));
+  if (totalPages > 1) {
+    const pagePromises: Promise<WooCommerceMetadataCategory[]>[] = [];
+    for (let page = 2; page <= totalPages; page += 1) {
+      const pageParams = new URLSearchParams(params);
+      pageParams.set('page', String(page));
+      pagePromises.push(
+        fetch(buildWooCommerceUrl('products/categories', pageParams), {
+          headers: getWooCommerceHeaders(),
+          next: { revalidate: 300 },
+        })
+          .then((res) => (res.ok ? res.json() : []))
+          .catch(() => [])
+      );
+    }
+    const additionalCategories = await Promise.all(pagePromises);
+    for (const batch of additionalCategories) {
+      if (Array.isArray(batch)) categories.push(...batch);
+    }
   }
+
+  // Update in-memory category lookup map
+  const catMap = new Map<string, number>();
+  for (const cat of categories) {
+    if (cat.name) catMap.set(normalizeText(cat.name), cat.id);
+  }
+  cachedCategoryMap = catMap;
+
   return categories;
 }
 
 async function fetchWooCommerceMetadata() {
+  if (cachedMetadata && Date.now() - cachedMetadata.timestamp < METADATA_CACHE_TTL_MS) {
+    return cachedMetadata.data;
+  }
+
   const categories = await fetchWooCommerceCategories();
   const topLevelCategories = categories.filter((category) => category.parent === 0);
   const categoryOrder = new Map(TOP_LEVEL_CATEGORY_ORDER.map((name, index) => [normalizeText(name), index]));
@@ -214,12 +269,15 @@ async function fetchWooCommerceMetadata() {
   const topLevelIds = new Set(topLevelCategories.map((category) => category.id));
   const childCategories = categories.filter((category) => category.parent !== 0 && topLevelIds.has(category.parent));
 
-  return {
+  const metadata = {
     categories: [...topLevelCategories, ...childCategories],
     conditionOptions: [...ACF_CONDITION_OPTIONS],
     locationOptions: [...ACF_LOCATION_OPTIONS],
     statusOptions: [...ACF_STATUS_OPTIONS],
   };
+
+  cachedMetadata = { data: metadata, timestamp: Date.now() };
+  return metadata;
 }
 
 interface WooCommerceProductForMetaFilter {
@@ -235,22 +293,31 @@ async function fetchAllProductsForMetaFiltering(params: URLSearchParams): Promis
 
   const firstResponse = await fetch(buildWooCommerceUrl('products', firstParams), {
     headers: getWooCommerceHeaders(),
-    cache: 'no-store',
+    next: { revalidate: 60 },
   });
 
   if (!firstResponse.ok) throw new Error(`WooCommerce metadata product lookup gagal: ${firstResponse.status}`);
   allProducts.push(...((await firstResponse.json()) as WooCommerceProductForMetaFilter[]));
 
   const totalPages = Number(firstResponse.headers.get('X-WP-TotalPages') || '1');
-  for (let page = 2; page <= totalPages; page += 1) {
-    const pageParams = new URLSearchParams(firstParams);
-    pageParams.set('page', String(page));
-    const response = await fetch(buildWooCommerceUrl('products', pageParams), {
-      headers: getWooCommerceHeaders(),
-      cache: 'no-store',
-    });
-    if (!response.ok) break;
-    allProducts.push(...((await response.json()) as WooCommerceProductForMetaFilter[]));
+  if (totalPages > 1) {
+    const pagePromises: Promise<WooCommerceProductForMetaFilter[]>[] = [];
+    for (let page = 2; page <= totalPages; page += 1) {
+      const pageParams = new URLSearchParams(firstParams);
+      pageParams.set('page', String(page));
+      pagePromises.push(
+        fetch(buildWooCommerceUrl('products', pageParams), {
+          headers: getWooCommerceHeaders(),
+          next: { revalidate: 60 },
+        })
+          .then((res) => (res.ok ? res.json() : []))
+          .catch(() => [])
+      );
+    }
+    const additionalPages = await Promise.all(pagePromises);
+    for (const batch of additionalPages) {
+      if (Array.isArray(batch)) allProducts.push(...batch);
+    }
   }
   return allProducts;
 }
@@ -263,13 +330,30 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  const cacheKey = request.nextUrl.search;
+
   try {
+    // Check in-memory query cache
+    const cachedResponse = getQueryCache(cacheKey);
+    if (cachedResponse) {
+      const headers = new Headers(cachedResponse.headers);
+      headers.set('X-BBK-Cache', 'HIT');
+      return NextResponse.json(cachedResponse.data, {
+        status: 200,
+        headers,
+      });
+    }
+
     // Handling Metadata Request
     if (request.nextUrl.searchParams.get('metadata') === '1') {
       const metadata = await fetchWooCommerceMetadata();
-      return NextResponse.json(metadata, {
-        headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600' },
-      });
+      const headers = {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'X-BBK-Cache': 'MISS',
+      };
+      setQueryCache(cacheKey, metadata, headers);
+      return NextResponse.json(metadata, { headers });
     }
 
     const incomingParams = request.nextUrl.searchParams;
@@ -308,8 +392,8 @@ export async function GET(request: NextRequest) {
       soldParams.set('page', '1');
 
       const [readyRes, soldRes] = await Promise.all([
-        fetch(buildWooCommerceUrl('products', readyParams), { headers: getWooCommerceHeaders() }),
-        fetch(buildWooCommerceUrl('products', soldParams), { headers: getWooCommerceHeaders() })
+        fetch(buildWooCommerceUrl('products', readyParams), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } }),
+        fetch(buildWooCommerceUrl('products', soldParams), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } })
       ]);
 
       const totalReady = Number(readyRes.headers.get('X-WP-Total') || '0');
@@ -327,7 +411,7 @@ export async function GET(request: NextRequest) {
         fetchParams.set('stock_status', 'instock');
         fetchParams.set('per_page', String(limit));
         fetchParams.set('page', String(requestedPage));
-        const res = await fetch(buildWooCommerceUrl('products', fetchParams), { headers: getWooCommerceHeaders() });
+        const res = await fetch(buildWooCommerceUrl('products', fetchParams), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } });
         if (res.ok) pageProducts = await res.json();
       } else if (skip >= totalReady) {
         // Only sold products
@@ -340,7 +424,7 @@ export async function GET(request: NextRequest) {
           fetchParams.set('stock_status', 'outofstock');
           fetchParams.set('per_page', String(limit));
           fetchParams.set('page', String(page1));
-          const res = await fetch(buildWooCommerceUrl('products', fetchParams), { headers: getWooCommerceHeaders() });
+          const res = await fetch(buildWooCommerceUrl('products', fetchParams), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } });
           if (res.ok) pageProducts = await res.json();
         } else {
           // Crosses page boundary
@@ -355,8 +439,8 @@ export async function GET(request: NextRequest) {
           fetchParams2.set('page', String(page1 + 1));
 
           const [res1, res2] = await Promise.all([
-            fetch(buildWooCommerceUrl('products', fetchParams1), { headers: getWooCommerceHeaders() }),
-            fetch(buildWooCommerceUrl('products', fetchParams2), { headers: getWooCommerceHeaders() })
+            fetch(buildWooCommerceUrl('products', fetchParams1), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } }),
+            fetch(buildWooCommerceUrl('products', fetchParams2), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } })
           ]);
 
           let items1: any[] = [];
@@ -383,8 +467,8 @@ export async function GET(request: NextRequest) {
         fetchParamsSold.set('page', '1');
 
         const [resReady, resSold] = await Promise.all([
-          fetch(buildWooCommerceUrl('products', fetchParamsReady), { headers: getWooCommerceHeaders() }),
-          fetch(buildWooCommerceUrl('products', fetchParamsSold), { headers: getWooCommerceHeaders() })
+          fetch(buildWooCommerceUrl('products', fetchParamsReady), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } }),
+          fetch(buildWooCommerceUrl('products', fetchParamsSold), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } })
         ]);
 
         let itemsReady: any[] = [];
@@ -398,15 +482,20 @@ export async function GET(request: NextRequest) {
         pageProducts = [...readySliced, ...soldSliced];
       }
 
+      const responseHeaders: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Cache-Control': `public, s-maxage=${PRODUCT_CACHE_REVALIDATE_SECONDS}, stale-while-revalidate=300`,
+        'X-WP-Total': String(total),
+        'X-WP-TotalPages': String(totalPages),
+        'X-BBK-Meta-Filter': 'split-fetch',
+        'X-BBK-Cache': 'MISS',
+      };
+
+      setQueryCache(cacheKey, pageProducts, responseHeaders);
+
       return NextResponse.json(pageProducts, {
         status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store',
-          'X-WP-Total': String(total),
-          'X-WP-TotalPages': String(totalPages),
-          'X-BBK-Meta-Filter': 'split-fetch',
-        },
+        headers: responseHeaders,
       });
     }
 
@@ -450,22 +539,27 @@ export async function GET(request: NextRequest) {
       const start = (requestedPage - 1) * requestedPerPage;
       const pageProducts = filteredProducts.slice(start, start + requestedPerPage);
 
+      const responseHeaders: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Cache-Control': `public, s-maxage=${PRODUCT_CACHE_REVALIDATE_SECONDS}, stale-while-revalidate=300`,
+        'X-WP-Total': String(total),
+        'X-WP-TotalPages': String(totalPages),
+        'X-BBK-Meta-Filter': unitCodeSearch ? 'unit-code/condition/location' : 'condition/location',
+        'X-BBK-Cache': 'MISS',
+      };
+
+      setQueryCache(cacheKey, pageProducts, responseHeaders);
+
       return NextResponse.json(pageProducts, {
         status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store',
-          'X-WP-Total': String(total),
-          'X-WP-TotalPages': String(totalPages),
-          'X-BBK-Meta-Filter': unitCodeSearch ? 'unit-code/condition/location' : 'condition/location',
-        },
+        headers: responseHeaders,
       });
     }
 
     // 3. AMBIL DATA DARI WOOCOMMERCE & TANGKAP ERROR JIKA MENGERIMKAN NON-200 (HTML)
     const response = await fetch(buildWooCommerceUrl('products', params), {
       headers: getWooCommerceHeaders(),
-      cache: 'no-store',
+      next: { revalidate: PRODUCT_CACHE_REVALIDATE_SECONDS },
     });
 
     const responseText = await response.text();
@@ -490,15 +584,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const headers = new Headers({
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'Cache-Control': `public, s-maxage=${PRODUCT_CACHE_REVALIDATE_SECONDS}, stale-while-revalidate=300`,
-    });
+      'X-BBK-Cache': 'MISS',
+    };
 
     const total = response.headers.get('X-WP-Total');
     const totalPages = response.headers.get('X-WP-TotalPages');
-    if (total) headers.set('X-WP-Total', total);
-    if (totalPages) headers.set('X-WP-TotalPages', totalPages);
+    if (total) headers['X-WP-Total'] = total;
+    if (totalPages) headers['X-WP-TotalPages'] = totalPages;
+
+    setQueryCache(cacheKey, jsonData, headers);
 
     return NextResponse.json(jsonData, { status: 200, headers });
   } catch (error) {

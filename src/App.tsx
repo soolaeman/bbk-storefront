@@ -14,13 +14,11 @@ import { LocationSection } from './components/LocationSection';
 import { SocialMediaSection } from './components/SocialMediaSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
-import { getWooCommerceProductsResult } from './lib/woocommerce';
+import { getWooCommerceProductsResult, getCatalogMetadata, CatalogMetadata } from './lib/woocommerce';
 import { Product, FilterState } from './types';
 import { PackageOpen, RotateCcw, Sparkles, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const PRODUCTS_PER_PAGE = 8;
-interface CatalogMetadataCategory { id: number; name: string; slug?: string; parent?: number; count?: number; }
-interface CatalogMetadata { categories: CatalogMetadataCategory[]; conditionOptions: string[]; locationOptions: string[]; totalProducts: number | null; }
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -44,16 +42,18 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false;
-    const loadCatalogMetadata = async () => {
+    const loadMetadata = async () => {
       setIsLoadingMetadata(true);
       try {
-        const response = await fetch('/api/products?metadata=1', { headers: { Accept: 'application/json' }, cache: 'no-store' });
-        if (!response.ok) throw new Error(`Metadata endpoint gagal: ${response.status}`);
-        const data = (await response.json()) as CatalogMetadata;
-        if (!cancelled) setCatalogMetadata({ categories: Array.isArray(data.categories) ? data.categories : [], conditionOptions: Array.isArray(data.conditionOptions) ? data.conditionOptions : [], locationOptions: Array.isArray(data.locationOptions) ? data.locationOptions : [], totalProducts: typeof data.totalProducts === 'number' ? data.totalProducts : null });
-      } catch (error) { console.error('Failed to load WooCommerce catalog metadata:', error); } finally { if (!cancelled) setIsLoadingMetadata(false); }
+        const data = await getCatalogMetadata();
+        if (!cancelled) setCatalogMetadata(data);
+      } catch (error) {
+        console.error('Failed to load WooCommerce catalog metadata:', error);
+      } finally {
+        if (!cancelled) setIsLoadingMetadata(false);
+      }
     };
-    void loadCatalogMetadata();
+    void loadMetadata();
     return () => { cancelled = true; };
   }, []);
 

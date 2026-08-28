@@ -8,7 +8,7 @@ const ADDRESS = 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A, Bela
 const WHATSAPP = '0851 2200 1051';
 const WHATSAPP_CONSULTATION_URL = generateWhatsAppConsultationLink();
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=BBKitchen%20-%20Sentra%20Peralatan%20Dapur%20Restoran%20Bekas%20Jakarta%20%7C%20Bukan%20Baru%20Kitchen';
-const MBG_PAGE_URL = '/dapur-mbg';
+const MBG_PAGE_URL = '/solusi-peralatan-dapur-mbg/';
 const SELL_UNIT_PAGE_URL = '/jual-unit';
 const PRODUCTION_PAGE_URL = '/produksi-baru';
 

@@ -9,6 +9,7 @@ interface LocationPage {
   title: { rendered: string };
   slug: string;
   parent: number;
+  content: { rendered: string };
 }
 
 const SITE_URL = 'https://www.bukanbarukitchen.com';

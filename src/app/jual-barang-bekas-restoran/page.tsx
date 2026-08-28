@@ -45,96 +45,33 @@ async function getLocationMap() {
   const root = roots[0];
   if (!root) return [];
 
-  // Ambil halaman bertahap. Jangan request page berikutnya kalau batch
-  // sebelumnya belum penuh karena WordPress REST API bisa membalas 400.
-  async function getChildren(parentId: number): Promise<LocationPage[]> {
-    const pages: LocationPage[] = [];
-    let page = 1;
+  // Hanya ambil child langsung dari hub utama.
+  // Tidak menelusuri seluruh tree wilayah agar halaman hub tetap ringan.
+  const pages: LocationPage[] = [];
 
-    while (true) {
-      const batch = await getWordPressPages({
-        parent: parentId,
-        perPage: 100,
-        page,
-        orderby: 'menu_order',
-        order: 'asc',
-      });
+  for (let page = 1; page <= 2; page += 1) {
+    const batch = (await getWordPressPages({
+      parent: root.id,
+      perPage: 100,
+      page,
+      orderby: 'menu_order',
+      order: 'asc',
+    })) as LocationPage[];
 
-      pages.push(...(batch as LocationPage[]));
+    pages.push(...batch);
 
-      if (batch.length < 100) break;
-      page += 1;
-    }
-
-    return pages;
-  }
-
-  // Tidak perlu daftar wilayah manual; seluruh tree WordPress dibaca.
-  const directChildren = await getChildren(root.id);
-
-  // Halaman daerah saat ini bertingkat (provinsi/kota/kecamatan).
-  // Telusuri semua turunannya supaya mapping tidak bergantung pada level daerah.
-  const allPages = [...directChildren];
-  const byParent = new Map<number, LocationPage[]>();
-
-  for (const page of directChildren) {
-    const children = byParent.get(page.parent) ?? [];
-    children.push(page);
-    byParent.set(page.parent, children);
-  }
-
-  // Ambil descendants sampai seluruh tree selesai.
-  const queue = [...directChildren];
-  while (queue.length > 0) {
-    const parent = queue.shift();
-    if (!parent) continue;
-
-    const children = await getChildren(parent.id);
-    if (children.length === 0) continue;
-
-    byParent.set(parent.id, children);
-    allPages.push(...children);
-    queue.push(...children);
-  }
-
-  const pathById = new Map<number, string>();
-
-  function buildPath(page: LocationPage): string {
-    const cached = pathById.get(page.id);
-    if (cached) return cached;
-
-    const parent = allPages.find((item) => item.id === page.parent);
-    const path = parent
-      ? `${buildPath(parent)}/${page.slug}`
-      : page.slug;
-
-    pathById.set(page.id, path);
-    return path;
-  }
-
-  function firstH2(contentHtml: string) {
-    const match = contentHtml.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/i);
-    if (!match) return '';
-
-    return match[1]
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/gi, ' ')
-      .replace(/&amp;/gi, '&')
-      .replace(/&quot;/gi, '"')
-      .replace(/&#39;/gi, "'")
-      .replace(/&lt;/gi, '<')
-      .replace(/&gt;/gi, '>')
-      .replace(/\\s+/g, ' ')
-      .trim();
+    if (batch.length < 100) break;
   }
 
   const seen = new Set<string>();
   const items: { id: number; title: string; href: string }[] = [];
 
-  // Urutan mengikuti struktur WordPress/menu_order, tetapi judul kartu
-  // sepenuhnya berasal dari H2 pertama masing-masing halaman.
-  for (const page of allPages) {
-    const title = firstH2(page.content?.rendered ?? '') ||
+  // Label kartu diambil dari H2 pertama, bukan H1/judul wilayah.
+  // Setiap H2 unik hanya ditampilkan sekali, tetapi link tetap menuju
+  // halaman child yang memiliki H2 tersebut.
+  for (const page of pages) {
+    const title =
+      firstH2(page.content?.rendered ?? '') ||
       cleanTitle(page.title?.rendered ?? '', labelFromSlug(page.slug));
 
     const key = title.toLocaleLowerCase('id-ID');
@@ -144,11 +81,27 @@ async function getLocationMap() {
     items.push({
       id: page.id,
       title,
-      href: `/jual-barang-bekas-restoran/${buildPath(page)}/`,
+      href: `/jual-barang-bekas-restoran/${page.slug}/`,
     });
   }
 
   return items;
+}
+
+function firstH2(contentHtml: string) {
+  const match = contentHtml.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/i);
+  if (!match) return '';
+
+  return match[1]
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export default async function JualBarangBekasRestoranPage() {

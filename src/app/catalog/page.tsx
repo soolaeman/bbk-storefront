@@ -17,12 +17,27 @@ export default function CatalogPage() {
   useEffect(() => { const params = new URLSearchParams(window.location.search); const search = (params.get('search') || '').trim(); setQuery(search); setFilterState((current) => ({ ...current, searchQuery: search })); }, []);
   useEffect(() => { let cancelled = false; const loadMeta = async () => { setIsLoadingMetadata(true); try { const data = await getCatalogMetadata(); if (!cancelled) setMetadata(data); } catch (metadataError) { console.error('Failed to load catalog metadata:', metadataError); } finally { if (!cancelled) setIsLoadingMetadata(false); } }; void loadMeta(); return () => { cancelled = true; }; }, []);
   const loadProducts = async (page = 1) => { setIsLoading(true); setError(null); try { const result = await getWooCommerceProductsResult({ perPage: PRODUCTS_PER_PAGE, page, search: filterState.searchQuery.trim() || undefined, category: filterState.category !== 'Semua' ? filterState.category : undefined, condition: filterState.condition !== 'Semua Kondisi' ? filterState.condition : undefined, location: filterState.location !== 'Semua Lokasi' ? filterState.location : undefined, powerType: filterState.powerType !== 'Semua Sumber Daya' ? filterState.powerType : undefined, statusFilter: filterState.statusFilter, minPriceNumber: filterState.minPrice, maxPriceNumber: filterState.maxPrice, sortBy: filterState.sortBy }); setProducts(result.products); setTotalResults(result.total); setCatalogPage(page); setCatalogPageInput(String(page)); setTotalPages(result.totalPages); setHasNextPage(result.totalPages !== null ? page < result.totalPages : result.products.length === PRODUCTS_PER_PAGE); } catch (loadError) { console.error('Failed to load catalog:', loadError); setProducts([]); setTotalResults(null); setTotalPages(null); setHasNextPage(false); setError('Katalog sedang mengalami kendala. Silakan coba lagi.'); } finally { setIsLoading(false); } };
-  useEffect(() => { void loadProducts(1); }, [filterState.searchQuery, filterState.category, filterState.condition, filterState.location, filterState.powerType, filterState.statusFilter, filterState.minPrice, filterState.maxPrice, filterState.sortBy]);
+  useEffect(() => {
+    const delay = filterState.searchQuery.trim() ? 350 : 0;
+    const timer = window.setTimeout(() => { void loadProducts(1); }, delay);
+    return () => window.clearTimeout(timer);
+  }, [filterState.searchQuery, filterState.category, filterState.condition, filterState.location, filterState.powerType, filterState.statusFilter, filterState.minPrice, filterState.maxPrice, filterState.sortBy]);
   const categoryCounts = useMemo(() => products.reduce<Record<string, number>>((counts, product) => { counts[product.category] = (counts[product.category] || 0) + 1; return counts; }, {}), [products]);
   const categories = useMemo<CategoryFilterOption[]>(() => metadata.categories.filter((category) => category.name.trim() && category.name.trim() !== 'Semua').map((category) => ({ id: category.id, name: category.name.trim(), parentId: category.parent, count: category.count ?? categoryCounts[category.name.trim()] ?? 0 })), [metadata.categories, categoryCounts]);
   const conditionOptions = useMemo(() => Array.from(new Set(metadata.conditionOptions.map((value) => value.trim()).filter(Boolean))), [metadata.conditionOptions]);
   const locationOptions = useMemo(() => Array.from(new Set(metadata.locationOptions.map((value) => value.trim()).filter(Boolean))), [metadata.locationOptions]);
-  const handleFilterChange = (updates: Partial<FilterState>) => { setFilterState((current) => ({ ...current, ...updates })); if (updates.searchQuery !== undefined) { const nextSearch = updates.searchQuery.trim(); setQuery(nextSearch); setCatalogPage(1); setCatalogPageInput('1'); } else if (Object.keys(updates).some((key) => key !== 'searchQuery')) { setCatalogPage(1); setCatalogPageInput('1'); } };
+  const handleFilterChange = (updates: Partial<FilterState>) => {
+    setFilterState((current) => ({ ...current, ...updates }));
+    if (updates.searchQuery !== undefined) {
+      const nextSearch = updates.searchQuery.trim();
+      setQuery(nextSearch);
+      setCatalogPage(1);
+      setCatalogPageInput('1');
+    } else if (Object.keys(updates).some((key) => key !== 'searchQuery')) {
+      setCatalogPage(1);
+      setCatalogPageInput('1');
+    }
+  };
   const handleResetFilters = () => { setFilterState(DEFAULT_FILTERS); setQuery(''); setCatalogPage(1); setCatalogPageInput('1'); };
   const goToCatalogPage = (page: number) => { if (page < 1 || isLoading) return; if (totalPages !== null && page > totalPages) return; if (totalPages === null && page > catalogPage && !hasNextPage) return; window.scrollTo({ top: 360, behavior: 'smooth' }); void loadProducts(page); };
   const handleCatalogPageSubmit = (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); const requestedPage = Number.parseInt(catalogPageInput, 10); if (!Number.isFinite(requestedPage)) { setCatalogPageInput(String(catalogPage)); return; } const maxPage = totalPages ?? (hasNextPage ? requestedPage : catalogPage); const targetPage = Math.min(Math.max(requestedPage, 1), maxPage); setCatalogPageInput(String(targetPage)); goToCatalogPage(targetPage); };

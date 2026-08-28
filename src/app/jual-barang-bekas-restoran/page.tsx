@@ -5,7 +5,7 @@ import { Footer } from '../../components/Footer';
 import { getWordPressPages, type WordPressPage } from '../../lib/wordpress';
 
 const SITE_URL = 'https://www.bukanbarukitchen.com';
-const ITEMS_PER_PAGE = 24;
+const ITEMS_PER_PAGE = 15;
 
 export const metadata: Metadata = {
   title: 'Jual Barang Bekas Restoran',
@@ -92,17 +92,12 @@ async function getArticleIndex() {
   }
 
   const descendants = getDescendants(allPages, root.id);
-  const seen = new Set<string>();
   const items: { id: number; title: string; href: string }[] = [];
 
   for (const page of descendants) {
     const title = firstH2(page.content?.rendered ?? '');
     if (!title) continue;
 
-    const key = title.toLocaleLowerCase('id-ID');
-    if (seen.has(key)) continue;
-
-    seen.add(key);
     const href = (() => { try { const path = new URL(page.link).pathname; return path.endsWith('/') ? path : `${path}/`; } catch { return ''; } })();
     if (!href) continue;
     items.push({ id: page.id, title, href });

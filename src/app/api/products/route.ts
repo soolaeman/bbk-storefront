@@ -38,7 +38,9 @@ interface CacheEntry {
   timestamp: number;
 }
 const queryCache = new Map<string, CacheEntry>();
+const metaProductCache = new Map<string, { data: WooCommerceProductForMetaFilter[]; timestamp: number }>();
 const MAX_CACHE_ENTRIES = 150;
+const MAX_META_CACHE_ENTRIES = 30;
 
 let cachedMetadata: { data: any; timestamp: number } | null = null;
 let cachedCategoryMap: Map<string, number> | null = null;
@@ -285,7 +287,19 @@ interface WooCommerceProductForMetaFilter {
   meta_data?: Array<{ key: string; value: string | number | boolean | null }>;
 }
 
+function getMetaProductCacheKey(params: URLSearchParams): string {
+  const normalized = new URLSearchParams(params);
+  normalized.delete('page');
+  normalized.set('per_page', String(PRODUCT_META_FILTER_PAGE_SIZE));
+  return normalized.toString();
+}
+
 async function fetchAllProductsForMetaFiltering(params: URLSearchParams): Promise<WooCommerceProductForMetaFilter[]> {
+  const cacheKey = getMetaProductCacheKey(params);
+  const cached = metaProductCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < IN_MEMORY_CACHE_TTL_MS) {
+    return cached.data;
+  }
   const allProducts: WooCommerceProductForMetaFilter[] = [];
   const firstParams = new URLSearchParams(params);
   firstParams.set('per_page', String(PRODUCT_META_FILTER_PAGE_SIZE));
@@ -319,6 +333,11 @@ async function fetchAllProductsForMetaFiltering(params: URLSearchParams): Promis
       if (Array.isArray(batch)) allProducts.push(...batch);
     }
   }
+  if (metaProductCache.size >= MAX_META_CACHE_ENTRIES) {
+    const oldestKey = metaProductCache.keys().next().value;
+    if (oldestKey) metaProductCache.delete(oldestKey);
+  }
+  metaProductCache.set(cacheKey, { data: allProducts, timestamp: Date.now() });
   return allProducts;
 }
 
@@ -545,6 +564,7 @@ export async function GET(request: NextRequest) {
         'X-WP-Total': String(total),
         'X-WP-TotalPages': String(totalPages),
         'X-BBK-Meta-Filter': unitCodeSearch ? 'unit-code/condition/location' : 'condition/location',
+        'X-BBK-Meta-Scan-Cache': metaProductCache.has(getMetaProductCacheKey(metaFilterParams)) ? 'HIT' : 'MISS',
         'X-BBK-Cache': 'MISS',
       };
 

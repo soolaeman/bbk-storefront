@@ -93,6 +93,7 @@ export interface WordPressQueryOptions {
   before?: string;
   orderby?: string;
   order?: 'asc' | 'desc';
+  fields?: string;
 }
 
 function buildQuery(options?: WordPressQueryOptions): string {
@@ -113,6 +114,7 @@ function buildQuery(options?: WordPressQueryOptions): string {
   if (options?.before) params.set('before', options.before);
   if (options?.orderby) params.set('orderby', options.orderby);
   if (options?.order) params.set('order', options.order);
+  if (options?.fields) params.set('_fields', options.fields);
 
   return params.toString();
 }

@@ -44,27 +44,121 @@ async function getLocationMap() {
   const root = roots[0];
   if (!root) return [];
 
-  const provinces = (await getWordPressPages({
-    parent: root.id,
-    perPage: 100,
-    orderby: 'menu_order',
-    order: 'asc',
-  })) as LocationPage[];
+  // Ambil seluruh halaman turunan sekali per batch, lalu bangun path
+  // berdasarkan parent WordPress. Tidak perlu daftar wilayah manual.
+  const [firstBatch, secondBatch] = await Promise.all([
+    getWordPressPages({
+      parent: root.id,
+      perPage: 100,
+      page: 1,
+      orderby: 'menu_order',
+      order: 'asc',
+    }),
+    getWordPressPages({
+      parent: root.id,
+      perPage: 100,
+      page: 2,
+      orderby: 'menu_order',
+      order: 'asc',
+    }),
+  ]);
 
-  const locations = await Promise.all(
-    provinces.map(async (province) => {
-      const cities = (await getWordPressPages({
-        parent: province.id,
+  const directChildren = [...firstBatch, ...secondBatch] as LocationPage[];
+
+  // Halaman daerah saat ini bertingkat (provinsi/kota/kecamatan).
+  // Telusuri semua turunannya supaya mapping tidak bergantung pada level daerah.
+  const allPages = [...directChildren];
+  const byParent = new Map<number, LocationPage[]>();
+
+  for (const page of directChildren) {
+    const children = byParent.get(page.parent) ?? [];
+    children.push(page);
+    byParent.set(page.parent, children);
+  }
+
+  // Ambil descendants sampai seluruh tree selesai.
+  const queue = [...directChildren];
+  while (queue.length > 0) {
+    const parent = queue.shift();
+    if (!parent) continue;
+
+    const [batch1, batch2] = await Promise.all([
+      getWordPressPages({
+        parent: parent.id,
         perPage: 100,
+        page: 1,
         orderby: 'menu_order',
         order: 'asc',
-      })) as LocationPage[];
+      }),
+      getWordPressPages({
+        parent: parent.id,
+        perPage: 100,
+        page: 2,
+        orderby: 'menu_order',
+        order: 'asc',
+      }),
+    ]);
 
-      return { province, cities };
-    }),
-  );
+    const children = [...batch1, ...batch2] as LocationPage[];
+    if (children.length === 0) continue;
 
-  return locations;
+    byParent.set(parent.id, children);
+    allPages.push(...children);
+    queue.push(...children);
+  }
+
+  const pathById = new Map<number, string>();
+
+  function buildPath(page: LocationPage): string {
+    const cached = pathById.get(page.id);
+    if (cached) return cached;
+
+    const parent = allPages.find((item) => item.id === page.parent);
+    const path = parent
+      ? `${buildPath(parent)}/${page.slug}`
+      : page.slug;
+
+    pathById.set(page.id, path);
+    return path;
+  }
+
+  function firstH2(contentHtml: string) {
+    const match = contentHtml.match(/<h2\\b[^>]*>([\\s\\S]*?)<\\/h2>/i);
+    if (!match) return '';
+
+    return match[1]
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;/gi, "'")
+      .replace(/&lt;/gi, '<')
+      .replace(/&gt;/gi, '>')
+      .replace(/\\s+/g, ' ')
+      .trim();
+  }
+
+  const seen = new Set<string>();
+  const items: { id: number; title: string; href: string }[] = [];
+
+  // Urutan mengikuti struktur WordPress/menu_order, tetapi judul kartu
+  // sepenuhnya berasal dari H2 pertama masing-masing halaman.
+  for (const page of allPages) {
+    const title = firstH2(page.content?.rendered ?? '') ||
+      cleanTitle(page.title?.rendered ?? '', labelFromSlug(page.slug));
+
+    const key = title.toLocaleLowerCase('id-ID');
+    if (!title || seen.has(key)) continue;
+
+    seen.add(key);
+    items.push({
+      id: page.id,
+      title,
+      href: `/jual-barang-bekas-restoran/${buildPath(page)}/`,
+    });
+  }
+
+  return items;
 }
 
 export default async function JualBarangBekasRestoranPage() {
@@ -116,64 +210,32 @@ export default async function JualBarangBekasRestoranPage() {
                   Pilih Wilayah
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Daftar wilayah diambil langsung dari struktur halaman WordPress.
+                  Daftar solusi diambil dari H2 pertama pada halaman turunan WordPress.
                 </p>
               </div>
               <span className="hidden shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 sm:inline-flex">
-                {locations.length} wilayah
+                {locations.length} solusi
               </span>
             </div>
 
             {locations.length > 0 ? (
-              <div className="grid gap-5 md:grid-cols-2">
-                {locations.map(({ province, cities }) => {
-                  const provinceLabel = cleanTitle(
-                    province.title?.rendered ?? '',
-                    labelFromSlug(province.slug),
-                  );
-                  const provinceHref = `/jual-barang-bekas-restoran/${province.slug}/`;
-
-                  return (
-                    <section
-                      key={province.id}
-                      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                    >
-                      <Link
-                        href={provinceHref}
-                        className="group flex items-center justify-between gap-4"
-                      >
-                        <h3 className="text-xl font-black text-slate-950 group-hover:text-emerald-700">
-                          {provinceLabel}
-                        </h3>
-                        <span className="text-sm font-bold text-emerald-700">
-                          Lihat →
-                        </span>
-                      </Link>
-
-                      {cities.length > 0 ? (
-                        <div className="mt-4 grid grid-cols-1 gap-2 border-t border-slate-100 pt-4 sm:grid-cols-2">
-                          {cities.map((city) => {
-                            const cityLabel = cleanTitle(
-                              city.title?.rendered ?? '',
-                              labelFromSlug(city.slug),
-                            );
-                            const cityHref = `/jual-barang-bekas-restoran/${province.slug}/${city.slug}/`;
-
-                            return (
-                              <Link
-                                key={city.id}
-                                href={cityHref}
-                                className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-800"
-                              >
-                                {cityLabel}
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      ) : null}
-                    </section>
-                  );
-                })}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {locations.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-lg font-black leading-snug text-slate-950 group-hover:text-emerald-700">
+                        {item.title}
+                      </h3>
+                      <span className="shrink-0 text-sm font-bold text-emerald-700">
+                        Lihat →
+                      </span>
+                    </div>
+                  </Link>
+                ))}
               </div>
             ) : (
               <div className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-8 text-center text-sm text-slate-600">

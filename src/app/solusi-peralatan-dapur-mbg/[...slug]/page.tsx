@@ -18,6 +18,8 @@ interface Params {
   slug: string[];
 }
 
+const PUBLIC_SITE_ORIGIN = 'https://www.bukanbarukitchen.com';
+
 async function getMbgPage(slugs: string[]): Promise<MbgPage | undefined> {
   const parents = await getWordPressPages({ slug: 'solusi-peralatan-dapur-mbg', parent: 0 });
   const root = parents[0] as MbgPage | undefined;
@@ -41,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const page = await getMbgPage(slug);
   if (!page) return {};
 
-  const canonical = `${page.link.replace(/\/$/, '')}/`;
+  const canonical = `${PUBLIC_SITE_ORIGIN}/solusi-peralatan-dapur-mbg/${slug.join('/')}/`;
   return {
     title: page.title?.rendered,
     description: page.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim(),

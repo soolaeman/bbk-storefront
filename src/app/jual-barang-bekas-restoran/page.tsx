@@ -1209,7 +1209,7 @@ const ARTICLES: Article[] = [
 export const metadata: Metadata = {
   title: 'Jual Barang Bekas Restoran',
   description:
-    'Kumpulan halaman dan artikel BBKitchen tentang jual barang bekas restoran dan peralatan dapur komersial.',
+    'Temukan panduan, solusi, dan informasi seputar peralatan restoran bekas yang dikurasi dari halaman BBKitchen.',
   alternates: {
     canonical: `${SITE_URL}/jual-barang-bekas-restoran/`,
   },
@@ -1292,7 +1292,8 @@ export default async function JualBarangBekasRestoranPage({
                   Artikel &amp; Tips
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Daftar artikel dikelola manual berdasarkan judul H2 dan URL halaman.
+                  Temukan berbagai artikel pilihan tentang peralatan dapur, usaha kuliner, dan solusi praktis untuk kebutuhan restoran. 
+                  Jelajahi panduan dan informasi yang relevan untuk membantu Anda memilih peralatan dan mengembangkan kebutuhan usaha dengan lebih tepat.
                 </p>
               </div>
               <span className="hidden shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 sm:inline-flex">

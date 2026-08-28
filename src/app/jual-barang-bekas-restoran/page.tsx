@@ -79,7 +79,7 @@ async function getArticleIndex() {
           page,
           orderby: 'menu_order',
           order: 'asc',
-          fields: 'id,parent,slug,content',
+          fields: 'id,parent,slug,content,link',
         }),
       ),
     );
@@ -103,11 +103,9 @@ async function getArticleIndex() {
     if (seen.has(key)) continue;
 
     seen.add(key);
-    items.push({
-      id: page.id,
-      title,
-      href: `/jual-barang-bekas-restoran/${page.slug}/`,
-    });
+    const href = (() => { try { const path = new URL(page.link).pathname; return path.endsWith('/') ? path : `${path}/`; } catch { return ''; } })();
+    if (!href) continue;
+    items.push({ id: page.id, title, href });
   }
 
   return items;

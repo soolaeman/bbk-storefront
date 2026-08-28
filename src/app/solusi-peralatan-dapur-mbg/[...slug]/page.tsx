@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import { getWordPressPages } from '../../../lib/wordpress';
@@ -65,14 +66,24 @@ export default async function MbgHierarchicalPage({ params }: { params: Promise<
             <a href="/" className="hover:text-emerald-700">Home</a>
             <span className="mx-1.5 text-slate-300">/</span>
             <a href="/solusi-peralatan-dapur-mbg/" className="hover:text-emerald-700">Solusi Peralatan Dapur MBG</a>
-            {slug.map((segment, index) => (
-              <span key={`${segment}-${index}`} className="inline-flex items-center">
-                <span className="mx-1.5 text-slate-300">/</span>
-                <span className={index === slug.length - 1 ? 'font-semibold text-slate-800' : undefined}>
-                  {segment.replace(/-/g, ' ')}
+            {slug.map((segment, index) => {
+              const label = segment
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, (letter) => letter.toUpperCase());
+              const href = '/solusi-peralatan-dapur-mbg/' + slug.slice(0, index + 1).join('/') + '/';
+              const isCurrent = index === slug.length - 1;
+
+              return (
+                <span key={segment + '-' + index} className="inline-flex items-center">
+                  <span className="mx-1.5 text-slate-300">/</span>
+                  {isCurrent ? (
+                    <span className="font-semibold text-slate-800">{label}</span>
+                  ) : (
+                    <Link href={href} className="hover:text-emerald-700">{label}</Link>
+                  )}
                 </span>
-              </span>
-            ))}
+              );
+            })}
           </div>
         </nav>
 

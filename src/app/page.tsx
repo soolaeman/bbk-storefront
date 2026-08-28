@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import App from '../App';
 
-const SITE_URL = 'https://bukanbarukitchen.com';
+const SITE_URL = 'https://www.bukanbarukitchen.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -18,6 +18,29 @@ export const metadata: Metadata = {
   },
 };
 
+const localBusinessJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'BBKitchen - Bukan Baru Kitchen',
+  url: SITE_URL,
+  telephone: '+6285122001051',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Perumahan Griya Pamulang 2, Jl. Tulip Raya Blok E1 No.12A RT 004/020, Pondok Benda, Pamulang',
+    addressLocality: 'Tangerang Selatan',
+    addressRegion: 'Banten',
+    addressCountry: 'ID',
+  },
+};
+
 export default function HomePage() {
-  return <App />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
+      <App />
+    </>
+  );
 }

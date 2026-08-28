@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
     title: page.title?.rendered,
     description: page.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim(),
     alternates: {
-      canonical: page.link,
+      canonical: `https://www.bukanbarukitchen.com/jual-barang-bekas-restoran/${slug.join('/')}/`,
     },
   };
 }

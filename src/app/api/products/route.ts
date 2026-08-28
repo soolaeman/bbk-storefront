@@ -533,6 +533,8 @@ export async function GET(request: NextRequest) {
         metaFilterParams.delete('stock_status');
       }
 
+      const metaScanCacheKey = getMetaProductCacheKey(metaFilterParams);
+      const metaScanWasCached = Boolean(metaProductCache.get(metaScanCacheKey) && Date.now() - (metaProductCache.get(metaScanCacheKey)?.timestamp || 0) < IN_MEMORY_CACHE_TTL_MS);
       const allProducts = await fetchAllProductsForMetaFiltering(metaFilterParams);
       const filteredProducts = allProducts.filter(
         (product) =>
@@ -564,7 +566,7 @@ export async function GET(request: NextRequest) {
         'X-WP-Total': String(total),
         'X-WP-TotalPages': String(totalPages),
         'X-BBK-Meta-Filter': unitCodeSearch ? 'unit-code/condition/location' : 'condition/location',
-        'X-BBK-Meta-Scan-Cache': metaProductCache.has(getMetaProductCacheKey(metaFilterParams)) ? 'HIT' : 'MISS',
+        'X-BBK-Meta-Scan-Cache': metaScanWasCached ? 'HIT' : 'MISS',
         'X-BBK-Cache': 'MISS',
       };
 

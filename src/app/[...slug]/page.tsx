@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: content.title.replace(/<[^>]+>/g, ''),
     description: content.excerpt.replace(/<[^>]+>/g, '').slice(0, 160),
-    alternates: { canonical: `https://www.bukanbarukitchen.com${content.path.replace(/\/$/, '') || '/'}` },
+    alternates: { canonical: `https://www.bukanbarukitchen.com${content.path === '/' ? '/' : `${content.path.replace(/\/$/, '')}/`}` },
   };
 }
 

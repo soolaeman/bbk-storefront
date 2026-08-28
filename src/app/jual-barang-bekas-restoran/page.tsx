@@ -123,7 +123,7 @@ async function getLocationMap() {
   }
 
   function firstH2(contentHtml: string) {
-    const match = contentHtml.match(/<h2\\b[^>]*>([\\s\\S]*?)<\\/h2>/i);
+    const match = contentHtml.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/i);
     if (!match) return '';
 
     return match[1]

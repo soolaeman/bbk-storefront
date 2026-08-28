@@ -60,19 +60,35 @@ async function getArticleIndex() {
   const root = roots[0];
   if (!root) return [];
 
+  // Jangan mengambil 100 halaman sekaligus: respons WordPress bisa >2 MB
+  // dan membuat Next.js Data Cache gagal. Ambil batch kecil secara paralel.
   const allPages: WordPressPage[] = [];
+  const BATCH_SIZE = 20;
+  const MAX_BATCHES = 15;
 
-  for (let page = 1; page <= 10; page += 1) {
-    const batch = await getWordPressPages({
-      perPage: 100,
-      page,
-      orderby: 'menu_order',
-      order: 'asc',
-    });
+  for (let startBatch = 1; startBatch <= MAX_BATCHES; startBatch += 5) {
+    const batchNumbers = Array.from(
+      { length: Math.min(5, MAX_BATCHES - startBatch + 1) },
+      (_, index) => startBatch + index,
+    );
 
-    allPages.push(...batch);
+    const batches = await Promise.all(
+      batchNumbers.map((page) =>
+        getWordPressPages({
+          perPage: BATCH_SIZE,
+          page,
+          orderby: 'menu_order',
+          order: 'asc',
+          fields: 'id,parent,slug,content',
+        }),
+      ),
+    );
 
-    if (batch.length < 100) break;
+    for (const batch of batches) {
+      allPages.push(...batch);
+    }
+
+    if (batches.some((batch) => batch.length < BATCH_SIZE)) break;
   }
 
   const descendants = getDescendants(allPages, root.id);

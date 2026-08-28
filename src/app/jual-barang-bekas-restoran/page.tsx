@@ -45,26 +45,32 @@ async function getLocationMap() {
   const root = roots[0];
   if (!root) return [];
 
-  // Ambil seluruh halaman turunan sekali per batch, lalu bangun path
-  // berdasarkan parent WordPress. Tidak perlu daftar wilayah manual.
-  const [firstBatch, secondBatch] = await Promise.all([
-    getWordPressPages({
-      parent: root.id,
-      perPage: 100,
-      page: 1,
-      orderby: 'menu_order',
-      order: 'asc',
-    }),
-    getWordPressPages({
-      parent: root.id,
-      perPage: 100,
-      page: 2,
-      orderby: 'menu_order',
-      order: 'asc',
-    }),
-  ]);
+  // Ambil halaman bertahap. Jangan request page berikutnya kalau batch
+  // sebelumnya belum penuh karena WordPress REST API bisa membalas 400.
+  async function getChildren(parentId: number): Promise<LocationPage[]> {
+    const pages: LocationPage[] = [];
+    let page = 1;
 
-  const directChildren = [...firstBatch, ...secondBatch] as LocationPage[];
+    while (true) {
+      const batch = await getWordPressPages({
+        parent: parentId,
+        perPage: 100,
+        page,
+        orderby: 'menu_order',
+        order: 'asc',
+      });
+
+      pages.push(...(batch as LocationPage[]));
+
+      if (batch.length < 100) break;
+      page += 1;
+    }
+
+    return pages;
+  }
+
+  // Tidak perlu daftar wilayah manual; seluruh tree WordPress dibaca.
+  const directChildren = await getChildren(root.id);
 
   // Halaman daerah saat ini bertingkat (provinsi/kota/kecamatan).
   // Telusuri semua turunannya supaya mapping tidak bergantung pada level daerah.
@@ -83,24 +89,7 @@ async function getLocationMap() {
     const parent = queue.shift();
     if (!parent) continue;
 
-    const [batch1, batch2] = await Promise.all([
-      getWordPressPages({
-        parent: parent.id,
-        perPage: 100,
-        page: 1,
-        orderby: 'menu_order',
-        order: 'asc',
-      }),
-      getWordPressPages({
-        parent: parent.id,
-        perPage: 100,
-        page: 2,
-        orderby: 'menu_order',
-        order: 'asc',
-      }),
-    ]);
-
-    const children = [...batch1, ...batch2] as LocationPage[];
+    const children = await getChildren(parent.id);
     if (children.length === 0) continue;
 
     byParent.set(parent.id, children);

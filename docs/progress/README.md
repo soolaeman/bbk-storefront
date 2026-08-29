@@ -26,6 +26,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 2.5 | **24 Aug 2026** | **13:00:50 WIB** | **13:06:18 WIB** | **5m 28s** | Vercel production blocker audit, MBG route module-resolution diagnosis, deployment-quota isolation, hierarchy handoff | 🛑 Closed — Vercel deployment quota | [`CHAT-2.5.md`](CHAT-2.5.md) |
 | 2.6 | **26 Aug 2026** | **19:22 WIB** | **19:22 WIB** | **0m documentation close** | Forensic documentation of Google Antigravity development, repository audit, verification status, handoff | ✅ Closed — code changes documented; runtime/production verification deferred | [`CHAT-2.6.md`](CHAT-2.6.md) |
 | **2.7** | **29 Aug 2026** | **15:12:28 WIB** | **15:18:14 WIB** | **5m 46s** | **Documentation-only forensic archive of all post-2.6 commits; documentation drift audit** | **✅ Closed — documentation-only** | [`CHAT-2.7.md`](CHAT-2.7.md) |
+| **2.8** | **29 Aug 2026** | **20:37:01 WIB** | **PENDING** | **PENDING** | **Session bootstrap; continuation from Chat 2.7** | **🟡 Active** | [`CHAT-2.8.md`](CHAT-2.8.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. The 05:00–17:00 Antigravity development window on 26 Aug is user-reported; GitHub timestamps establish repository activity but not continuous working time.
 

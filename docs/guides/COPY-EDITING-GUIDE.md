@@ -26,6 +26,9 @@ Use it to understand **where copy/text lives and what is safe to change** withou
 | Jual Unit | `src/app/jual-unit/page.tsx` | sell-to-BBKitchen copy, process, FAQ, CTA |
 | Produksi Baru | `src/app/produksi-baru/page.tsx` | custom production copy, process, FAQ, CTA |
 | Recent Posts | `src/components/RecentPostsSection.tsx` | homepage post-section copy |
+| Sales Helper | `src/app/sales-helper/page.tsx` | internal lookup labels, negotiation helper UI, WhatsApp draft |
+| Sales Helper API | `src/app/api/sales-helper/route.ts` | server-side proxy; business logic belongs in BTC |
+| Sales status mutation | `src/app/api/sales-helper/toggle-status/route.ts` | READY/SOLD action endpoint; not ordinary copy |
 
 ## Quick route warning
 
@@ -185,6 +188,24 @@ kondisi_unit
 lokasi_unit
 link_telegram
 ```
+
+## Sales Quote vs Sales Helper
+
+These are **separate internal functions**.
+
+```text
+Sales Quote
+→ existing quotation workflow
+→ /admin/sales
+
+Sales Helper
+→ separate internal lookup / negotiation helper
+→ separate admin navigation/tab
+→ frontend proxy via /api/sales-helper
+→ BTC owns the Sales Helper business logic
+```
+
+Do not replace Sales Quote with Sales Helper or describe them as the same tool.
 
 ## Admin-control distinction
 

@@ -8,25 +8,26 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 CURRENT CHECKPOINT — CHAT 2.6 CLOSED
+# 🕒 CURRENT CHECKPOINT — CHAT 2.7 CLOSED
 
 ```text
-Date: 26 August 2026
-Session: Chat 2.6
-Start: 19:22 WIB
-End: 19:22 WIB
-Duration: 0m (documentation/close session)
-Status: CLOSED — Antigravity code changes documented; runtime/build/production verification deferred
+Date: 29 August 2026
+Session: Chat 2.7
+Start: 15:12:28 WIB
+End: 15:18:14 WIB
+Duration: 5m 46s
+Status: CLOSED — documentation-only forensic archive
 ```
 
-Chat 2.6 did not author the morning/afternoon code changes. The session performed forensic repository documentation of Google Antigravity work reported for 05:00–17:00 WIB and separated source-level implementation from runtime/production verification.
-
-Latest Chat 2.6 documentation checkpoints:
+Chat 2.7 did not author application code. It synchronized the documentation and archived **all 44 post-2.6 commits** from the Chat 2.6 baseline through the audited HEAD.
 
 ```text
-Progress archive: 22019c29dc1c2fce91cb1b8300dfaf25b90fa86d
-Progress index:    1ff47635031906ce4c054b7026a37943d4c13ee8
+Chat 2.6 baseline: 22019c29dc1c2fce91cb1b8300dfaf25b90fa86d
+Audited HEAD:      b5c19a69cecc41888d88d59118987a33448b630b
+GitHub range:      +44 / -0
 ```
+
+Detailed ledger: [`docs/progress/CHAT-2.7.md`](docs/progress/CHAT-2.7.md)
 
 ---
 
@@ -45,12 +46,13 @@ Progress index:    1ff47635031906ce4c054b7026a37943d4c13ee8
 | 1.8 | 17 Aug 06:30 WIB | 17 Aug 16:54 WIB | 10h 24m | Recent Posts / runtime / DNS | 🛑 |
 | 1.9 | 17 Aug 19:10 WIB | 17 Aug 22:14 WIB | 3h 04m | Landing pages / navigation / favicon | ✅ |
 | 2.0 | 21 Aug 08:36 WIB | 21 Aug 10:29 WIB | 1h 53m | Origin/API diagnostics | 🟡 Superseded |
-| 2.1 | 21 Aug 13:25 WIB | 21 Aug 18:19 WIB | 4h 54m | Origin correction / `/katalog` / WooCommerce auth | ⚠️ Superseded |
+| 2.1 | 21 Aug 13:25 WIB | 21 Aug 18:19 WIB | 4h 54m | Origin correction / /katalog / WooCommerce auth | ⚠️ Superseded |
 | 2.2 | 24 Aug 05:33 WIB | 24 Aug 08:02 WIB | 2h 29m | WooCommerce REST recovery / catalog-detail / URL preservation | ✅ Closed |
 | 2.3 | 24 Aug 08:12 WIB | 24 Aug 10:42 WIB | 2h 30m | Production API verification / canonical fetch-path migration / SEO + sitemap audit | ✅ Closed with carried verification debt |
-| 2.4 | 24 Aug 10:58 WIB | 24 Aug 12:53:02 WIB | 1h 55m 02s | MBG landing mapping / hierarchical routing / sitemap verification / universal hierarchy requirement | ✅ Closed with carried sitemap debt |
-| 2.5 | 24 Aug 13:00:50 WIB | 24 Aug 13:06:18 WIB | 5m 28s | Vercel blocker audit / MBG import diagnosis / deployment quota isolation / hierarchy handoff | 🛑 Closed — Vercel quota |
-| 2.6 | 26 Aug 19:22 WIB | 26 Aug 19:22 WIB | 0m documentation close | Antigravity forensic documentation / verification status / handoff | ✅ Closed |
+| 2.4 | 24 Aug 10:58 WIB | 24 Aug 12:53:02 WIB | 1h 55m 02s | MBG landing mapping / hierarchical routing / sitemap verification | ✅ Closed with carried sitemap debt |
+| 2.5 | 24 Aug 13:00:50 WIB | 24 Aug 13:06:18 WIB | 5m 28s | Vercel blocker audit / MBG import diagnosis / deployment quota isolation | 🛑 Closed — Vercel quota |
+| 2.6 | 26 Aug 19:22 WIB | 26 Aug 19:22 WIB | 0m | Antigravity forensic documentation / verification status | ✅ Closed |
+| **2.7** | **29 Aug 15:12:28 WIB** | **29 Aug 15:18:14 WIB** | **5m 46s** | **Complete post-2.6 commit archive / documentation sync** | **✅ Closed** |
 
 ### Project time
 
@@ -59,10 +61,13 @@ Verified working time through Chat 2.5:
 63 hours 18 minutes 46 seconds
 
 Chat 2.6:
-0 minutes (documentation/close session)
+0 minutes
 
-Verified working time through Chat 2.6:
-63 hours 18 minutes 46 seconds
+Chat 2.7:
+5 minutes 46 seconds (documentation-only)
+
+Verified working time through Chat 2.7:
+63 hours 24 minutes 32 seconds
 
 Actual elapsed duration since Chat 1.1:
 NOT VERIFIABLE
@@ -74,9 +79,9 @@ Calendar span is not working duration.
 
 # 🎯 CURRENT PARETO PRIORITIES
 
-1. **Verify Antigravity Sales Helper changes** — READY ↔ SOLD mutation, WooCommerce stock state, exact SKU search, and path/cache revalidation.
-2. **Verify split-fetch catalog pagination** — especially the exact READY→SOLD boundary; then re-check production after Vercel quota recovery.
-3. **Universal WordPress hierarchy resolver** — one parent/child path resolver must drive Next.js route resolution, canonical URLs, and `sitemap-pages.xml`; do not special-case MBG.
+1. **Establish a clean build baseline** after the 44 post-2.6 commits; check the `KitchenConsultationBanner` stale production-reference risk.
+2. **Verify Sales Helper + split-fetch** at runtime/upstream level: READY ↔ SOLD mutation, WooCommerce stock state, exact SKU search, cache/path revalidation, and READY→SOLD pagination boundary.
+3. **Implement the universal WordPress hierarchy resolver** shared by route resolution, canonical URLs, and `sitemap-pages.xml`.
 
 ---
 
@@ -89,23 +94,22 @@ Calendar span is not working duration.
 | Backend origin `origin.bukanbarukitchen.com` | ✅ verified |
 | `/katalog` | ✅ user-verified |
 | Production WooCommerce catalog | ✅ user-verified |
-| Native `/wp-json/wc/v3/...` path + browser-like User-Agent | ✅ working evidence |
 | Product detail `/shop/[slug]` | ✅ user-verified |
 | Related products + `/shop/[slug]` links | ✅ user-verified |
 | `/api/products` raw JSON body | ✅ production browser-verified |
 | `/api/products?metadata=1` raw JSON body | ✅ production browser-verified |
-| Filters + pagination | 🟡 existing verification; new split-fetch boundary verification pending |
-| `product-category/[...slug]` canonical API path | ✅ migrated |
+| Filters + pagination | 🟡 split-fetch boundary verification pending |
 | `src/lib/wordpress.ts` canonical origin/path | ✅ migrated |
-| Legacy `/wp-json/wc/v3/[...slug]` compatibility route | ⚠️ internally orphaned; external dependency unknown |
-| MBG landing `/solusi-peralatan-dapur-mbg/` | ✅ user-verified on Vercel |
-| `/dapur-mbg/` | ✅ redirect; excluded from static sitemap |
-| MBG hierarchical route imports | 🟡 source-level fix committed; production build verification pending |
+| MBG landing `/solusi-peralatan-dapur-mbg/` | ✅ user-verified |
+| MBG hierarchical route imports | 🟡 source fix committed; production build pending |
 | Sales Helper READY ↔ SOLD | 🟡 code implemented; runtime/upstream verification pending |
 | Catalog READY/SOLD split-fetch | 🟡 code implemented; boundary verification pending |
 | Sales Helper UI facelift | 🟡 code implemented; visual/runtime verification pending |
-| Sitemap index | ✅ previously user-verified |
-| Static sitemap | ✅ previously user-verified |
+| Homepage canonical + LocalBusiness schema | 🟡 source change committed; live verification pending |
+| MBG canonical/internal-link normalization | 🟡 source changes committed; live verification pending |
+| Jual Barang Bekas Restoran hub | 🟡 current implementation is manual article index; IA/synchronization review pending |
+| Jasa Instalasi Gas | 🟡 source page implemented; production verification pending |
+| Legacy `/produksi-baru/` | 🟡 redirect/removal source changes committed; live verification pending |
 | Pages sitemap hierarchy | ⚠️ live flat legacy URLs remain |
 | Universal hierarchy resolver | ⏳ next implementation |
 | Public SEO takeover | ⏳ audit pending |
@@ -154,17 +158,18 @@ Locked principles:
 
 # 🧩 CARRIED TECHNICAL DEBT
 
-- Confirm strict production `HTTP 200 + Content-Type: application/json` headers for API endpoints; browser body evidence is already verified.
+- Confirm strict production `HTTP 200 + Content-Type: application/json` headers for API endpoints.
 - Confirm external consumers before retiring `src/app/wp-json/wc/v3/[...slug]/route.ts`.
-- Verify the corrected MBG hierarchical route in a full build/production deployment.
+- Verify corrected MBG hierarchical route in a full build/production deployment.
 - Verify Sales Helper READY ↔ SOLD mutation against real WooCommerce state.
 - Verify split-fetch catalog pagination across the READY/SOLD boundary.
 - Wait for Vercel quota recovery before triggering another production deployment.
-- Implement and verify a universal WordPress hierarchy resolver shared by routing, canonical generation, and sitemap generation.
+- Implement and verify universal WordPress hierarchy resolver shared by routing, canonical generation, and sitemap generation.
 - Re-run production sitemap XML checks after hierarchy resolver implementation.
 - Verify sitemap hierarchy for posts, categories, products, and all discovered legacy parents.
 - Audit origin `robots/noindex`, public WordPress renderer, sitemap and canonical/indexing behavior.
 - Complete authenticated WordPress admin control layer.
+- Review `KitchenConsultationBanner.tsx` for stale `PRODUCTION_PAGE_URL` references.
 
 ---
 
@@ -187,24 +192,26 @@ docs/prompts/
 → AI workflow / SOP
 ```
 
-## Documentation audit — Chat 2.6
+## Documentation audit — Chat 2.7
 
-- `docs/guides/*`: **No change required**; no guide drift was identified from the documented Antigravity changes.
-- `docs/prompts/*`: **No change required**; canonical `END-SESSION-PROMPT.md` remains the normal end-session SOP.
-- `end-session-prompt.md`: **No change required**; shortcut remains canonical.
+- `docs/progress/README.md`: synchronized with Chat 2.7.
+- `docs/progress/CHAT-2.7.md`: complete 44-commit post-2.6 ledger.
+- `docs/prompts/*`: no change required.
+- `docs/guides/*`: no change required.
 
 ---
 
 # 🔁 NEXT CHAT HANDOFF
 
-## Chat 2.7 — Verify Antigravity Changes + Universal WordPress Hierarchy
+## Chat 2.8 — Build Baseline + Runtime Verification
 
-1. Run `npm run build` against the current `main` code.
-2. Verify Sales Helper READY ↔ SOLD mutation, WooCommerce stock status, exact SKU search, and path/cache revalidation.
-3. Verify catalog split-fetch pagination at ordinary pages and the READY→SOLD boundary.
-4. Re-check Vercel quota before one production deployment attempt.
-5. Implement one universal parent/child WordPress hierarchy resolver shared by catch-all routing, canonical metadata, and `sitemap-pages.xml`.
-6. Re-verify live sitemap hierarchy and SEO parity.
+1. Run `npm run build` against current `main`.
+2. Check/fix any stale `PRODUCTION_PAGE_URL` reference in `KitchenConsultationBanner.tsx`.
+3. Verify Sales Helper READY ↔ SOLD mutation, WooCommerce stock status, exact SKU search, and cache/path revalidation.
+4. Verify catalog split-fetch pagination at ordinary pages and the READY→SOLD boundary.
+5. Re-check Vercel quota before one production deployment attempt.
+6. Implement one universal parent/child WordPress hierarchy resolver shared by catch-all routing, canonical metadata, and `sitemap-pages.xml`.
+7. Re-verify live sitemap hierarchy and SEO parity.
 
 Do not repeat:
 
@@ -230,8 +237,8 @@ git pull origin main
 
 ## Last code checkpoint
 
-`ba9f51b81acd2f911f2e5f3cb4ef157560bc4ed2`
+`b5c19a69cecc41888d88d59118987a33448b630b`
 
 ## Last documentation checkpoint
 
-`22019c29dc1c2fce91cb1b8300dfaf25b90fa86d`
+`68b1c62f298e5f348f729ee9c181f37040b5e5f6`

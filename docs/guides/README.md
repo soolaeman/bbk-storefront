@@ -9,7 +9,7 @@ They are not execution prompts.
 ## Guides
 
 - [Copy Editing Guide](COPY-EDITING-GUIDE.md) — technical map for finding and changing copy safely, including service, MBG, Jual Unit, Produksi Baru, catalog, product detail, Footer, gallery, and current public URL ownership.
-- [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) — simplified guide for non-developers / vibe coding, including current page/copy locations, routing/contract warnings, and MBG display vs public URL ownership.
+- [Vibe Coding Copy Guide](VIBE-CODING-COPY-GUIDE.md) — simplified guide for non-developers / vibe coding, including current page/copy locations, routing/contract warnings, MBG display vs public URL ownership, and the separate Sales Quote / Sales Helper functions.
 
 ## Current architecture note
 

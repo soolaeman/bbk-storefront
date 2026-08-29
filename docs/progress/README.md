@@ -25,6 +25,7 @@ This folder is the **detailed progress/history layer** for the Next.js migration
 | 2.4 | **24 Aug 2026** | **10:58 WIB** | **12:53:02 WIB** | **1h 55m 02s** | MBG landing mapping, hierarchical routing, sitemap verification, universal hierarchy requirement | ✅ Closed with carried sitemap debt | [`CHAT-2.4.md`](CHAT-2.4.md) |
 | 2.5 | **24 Aug 2026** | **13:00:50 WIB** | **13:06:18 WIB** | **5m 28s** | Vercel production blocker audit, MBG route module-resolution diagnosis, deployment-quota isolation, hierarchy handoff | 🛑 Closed — Vercel deployment quota | [`CHAT-2.5.md`](CHAT-2.5.md) |
 | 2.6 | **26 Aug 2026** | **19:22 WIB** | **19:22 WIB** | **0m documentation close** | Forensic documentation of Google Antigravity development, repository audit, verification status, handoff | ✅ Closed — code changes documented; runtime/production verification deferred | [`CHAT-2.6.md`](CHAT-2.6.md) |
+| **2.7** | **29 Aug 2026** | **15:12:28 WIB** | **15:18:14 WIB** | **5m 46s** | **Documentation-only forensic archive of all post-2.6 commits; documentation drift audit** | **✅ Closed — documentation-only** | [`CHAT-2.7.md`](CHAT-2.7.md) |
 
 > **Canonical timing source:** verified session timing supplied in the migration workflow and current end-session time verification. The 05:00–17:00 Antigravity development window on 26 Aug is user-reported; GitHub timestamps establish repository activity but not continuous working time.
 
@@ -37,8 +38,11 @@ Verified working time through Chat 2.5:
 Chat 2.6:
 0 minutes (documentation/close session)
 
-Verified working time through Chat 2.6:
-63 hours 18 minutes 46 seconds
+Chat 2.7:
+5 minutes 46 seconds (documentation-only)
+
+Verified working time through Chat 2.7:
+63 hours 24 minutes 32 seconds
 
 Actual elapsed duration since Chat 1.1 start:
 NOT VERIFIABLE

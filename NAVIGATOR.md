@@ -65,6 +65,12 @@
 | [`docs/guides/COPY-EDITING-GUIDE.md`](docs/guides/COPY-EDITING-GUIDE.md) | Menemukan lokasi copy dan mengubah copy dengan aman | Saat mau mengganti headline, CTA, label, section copy, katalog, layanan, MBG, Jual Unit, Produksi Baru, product detail, Footer, gallery, atau public URL ownership. |
 | [`docs/guides/VIBE-CODING-COPY-GUIDE.md`](docs/guides/VIBE-CODING-COPY-GUIDE.md) | Versi sederhana untuk user non-developer / vibe coding | Saat mau mengubah copy tanpa perlu memahami seluruh architecture. |
 
+Sales Helper reference:
+- `src/app/sales-helper/page.tsx` — internal Sales Helper UI.
+- `src/app/api/sales-helper/route.ts` — frontend proxy to BTC.
+- `src/app/api/sales-helper/toggle-status/route.ts` — READY/SOLD mutation endpoint.
+- Sales Quote remains separate at `/admin/sales`.
+
 > **Guide = menjelaskan.** Guide bukan instruksi eksekusi AI.
 
 ---

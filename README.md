@@ -8,26 +8,20 @@ Branch aktif: `main`
 
 ---
 
-# 🕒 CURRENT CHECKPOINT — CHAT 2.7 CLOSED
+# 🕒 CURRENT CHECKPOINT — CHAT 2.8 CLOSED
 
 ```text
-Date: 29 August 2026
-Session: Chat 2.7
-Start: 15:12:28 WIB
-End: 15:18:14 WIB
-Duration: 5m 46s
-Status: CLOSED — documentation-only forensic archive
+Date: 29–30 August 2026
+Session: Chat 2.8
+Start: 29 Aug 2026 20:37:01 WIB
+End: 30 Aug 2026 01:57 WIB
+Duration: 5h 19m 59s
+Status: CLOSED — Sales Quote preserved; separate Sales Helper added; frontend-to-BTC proxy; forensic archive completed
 ```
 
-Chat 2.7 did not author application code. It synchronized the documentation and archived **all 44 post-2.6 commits** from the Chat 2.6 baseline through the audited HEAD.
+Chat 2.8 delivered the separation of **Sales Quote** and **Sales Helper**, moved Sales Helper business logic behind the BTC service boundary, and completed the session forensic archive.
 
-```text
-Chat 2.6 baseline: 22019c29dc1c2fce91cb1b8300dfaf25b90fa86d
-Audited HEAD:      b5c19a69cecc41888d88d59118987a33448b630b
-GitHub range:      +44 / -0
-```
-
-Detailed ledger: [`docs/progress/CHAT-2.7.md`](docs/progress/CHAT-2.7.md)
+Detailed archive: [`docs/progress/CHAT-2.8.md`](docs/progress/CHAT-2.8.md)
 
 ---
 
@@ -53,6 +47,7 @@ Detailed ledger: [`docs/progress/CHAT-2.7.md`](docs/progress/CHAT-2.7.md)
 | 2.5 | 24 Aug 13:00:50 WIB | 24 Aug 13:06:18 WIB | 5m 28s | Vercel blocker audit / MBG import diagnosis / deployment quota isolation | 🛑 Closed — Vercel quota |
 | 2.6 | 26 Aug 19:22 WIB | 26 Aug 19:22 WIB | 0m | Antigravity forensic documentation / verification status | ✅ Closed |
 | **2.7** | **29 Aug 15:12:28 WIB** | **29 Aug 15:18:14 WIB** | **5m 46s** | **Complete post-2.6 commit archive / documentation sync** | **✅ Closed** |
+| **2.8** | **29 Aug 20:37:01 WIB** | **30 Aug 01:57 WIB** | **5h 19m 59s** | **Sales Quote + Sales Helper separation / BTC integration / deployment recovery** | **✅ Closed with verification debt** |
 
 ### Project time
 
@@ -66,8 +61,11 @@ Chat 2.6:
 Chat 2.7:
 5 minutes 46 seconds (documentation-only)
 
-Verified working time through Chat 2.7:
-63 hours 24 minutes 32 seconds
+Chat 2.8:
+5 hours 19 minutes 59 seconds
+
+Verified working time through Chat 2.8:
+68 hours 44 minutes 31 seconds
 
 Actual elapsed duration since Chat 1.1:
 NOT VERIFIABLE
@@ -79,9 +77,9 @@ Calendar span is not working duration.
 
 # 🎯 CURRENT PARETO PRIORITIES
 
-1. **Establish a clean build baseline** after the 44 post-2.6 commits; check the `KitchenConsultationBanner` stale production-reference risk.
-2. **Verify Sales Helper + split-fetch** at runtime/upstream level: READY ↔ SOLD mutation, WooCommerce stock state, exact SKU search, cache/path revalidation, and READY→SOLD pagination boundary.
-3. **Implement the universal WordPress hierarchy resolver** shared by route resolution, canonical URLs, and `sitemap-pages.xml`.
+1. **Verify deployed Front-End-BBKitchen → BTC Sales Helper integration**, including `BBK_BTC_URL` and the production response contract.
+2. **Verify Sales Helper READY ↔ SOLD end-to-end**, including Apps Script/Google Sheets, WooCommerce state, revalidation, and real authorization.
+3. **Strengthen internal authorization/data boundaries**, then resume universal WordPress hierarchy + sitemap parity.
 
 ---
 
@@ -102,6 +100,8 @@ Calendar span is not working duration.
 | `src/lib/wordpress.ts` canonical origin/path | ✅ migrated |
 | MBG landing `/solusi-peralatan-dapur-mbg/` | ✅ user-verified |
 | MBG hierarchical route imports | 🟡 source fix committed; production build pending |
+| Sales Quote | 🔒 preserved as separate function |
+| Sales Helper | 🟡 separate tab + BTC proxy implemented; end-to-end verification pending |
 | Sales Helper READY ↔ SOLD | 🟡 code implemented; runtime/upstream verification pending |
 | Catalog READY/SOLD split-fetch | 🟡 code implemented; boundary verification pending |
 | Sales Helper UI facelift | 🟡 code implemented; visual/runtime verification pending |
@@ -114,7 +114,7 @@ Calendar span is not working duration.
 | Universal hierarchy resolver | ⏳ next implementation |
 | Public SEO takeover | ⏳ audit pending |
 | Authenticated admin controls | ⏳ implementation pending |
-| Vercel Hobby deployment quota | 🛑 deployment verification remains quota-dependent |
+| Vercel Hobby deployment quota | 🛑 Frontend deployment verification remains quota-dependent; BTC deployment shown Ready/Latest |
 
 ## Current architecture
 
@@ -192,10 +192,10 @@ docs/prompts/
 → AI workflow / SOP
 ```
 
-## Documentation audit — Chat 2.7
+## Documentation audit — Chat 2.8
 
-- `docs/progress/README.md`: synchronized with Chat 2.7.
-- `docs/progress/CHAT-2.7.md`: complete 44-commit post-2.6 ledger.
+- `docs/progress/README.md`: synchronized with Chat 2.8.
+- `docs/progress/CHAT-2.8.md`: forensic archive of Chat 2.8.
 - `docs/prompts/*`: no change required.
 - `docs/guides/*`: no change required.
 
@@ -203,15 +203,14 @@ docs/prompts/
 
 # 🔁 NEXT CHAT HANDOFF
 
-## Chat 2.8 — Build Baseline + Runtime Verification
+## Chat 2.9 — Sales Helper Runtime + Authorization + SEO Handoff
 
-1. Run `npm run build` against current `main`.
-2. Check/fix any stale `PRODUCTION_PAGE_URL` reference in `KitchenConsultationBanner.tsx`.
-3. Verify Sales Helper READY ↔ SOLD mutation, WooCommerce stock status, exact SKU search, and cache/path revalidation.
-4. Verify catalog split-fetch pagination at ordinary pages and the READY→SOLD boundary.
-5. Re-check Vercel quota before one production deployment attempt.
-6. Implement one universal parent/child WordPress hierarchy resolver shared by catch-all routing, canonical metadata, and `sitemap-pages.xml`.
-7. Re-verify live sitemap hierarchy and SEO parity.
+1. Verify deployed Front-End-BBKitchen → BTC Sales Helper GET integration.
+2. Verify Sales Helper READY ↔ SOLD end-to-end against Apps Script/Google Sheets and WooCommerce.
+3. Replace/strengthen the client-side PIN/localStorage gate with server-side authorization.
+4. Re-run public/internal pricing leakage audit.
+5. Verify `BBK_BTC_URL` production configuration.
+6. Resume universal WordPress hierarchy resolver and sitemap parity only after the runtime baseline is clean.
 
 Do not repeat:
 
@@ -237,8 +236,8 @@ git pull origin main
 
 ## Last code checkpoint
 
-`b5c19a69cecc41888d88d59118987a33448b630b`
+`88d8395fa052af10c0303ae3e73ede3169a91209`
 
 ## Last documentation checkpoint
 
-`68b1c62f298e5f348f729ee9c181f37040b5e5f6`
+`5646d15a55560780f240e8720d0a8944660fb91d`

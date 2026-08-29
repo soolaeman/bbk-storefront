@@ -197,7 +197,10 @@ docs/prompts/
 - `docs/progress/README.md`: synchronized with Chat 2.8.
 - `docs/progress/CHAT-2.8.md`: forensic archive of Chat 2.8.
 - `docs/prompts/*`: no change required.
-- `docs/guides/*`: no change required.
+- `docs/guides/COPY-EDITING-GUIDE.md`: synchronized with separate Sales Helper ownership.
+- `docs/guides/VIBE-CODING-COPY-GUIDE.md`: synchronized with separate Sales Quote / Sales Helper functions.
+- `docs/guides/README.md`: guide index synchronized.
+- `NAVIGATOR.md`: Sales Helper reference mapped.
 
 ---
 
@@ -240,4 +243,4 @@ git pull origin main
 
 ## Last documentation checkpoint
 
-`5646d15a55560780f240e8720d0a8944660fb91d`
+`d4aa4dd81a5e1bd34eac8cd33e2cf47fe260b9e3`

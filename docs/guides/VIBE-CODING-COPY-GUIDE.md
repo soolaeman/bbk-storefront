@@ -25,6 +25,9 @@ Gallery              → src/components/GallerySection.tsx
 Category             → src/components/CategoryFilter.tsx
 Footer               → src/components/Footer.tsx
 Recent Posts         → src/components/RecentPostsSection.tsx
+Sales Helper         → src/app/sales-helper/page.tsx
+Sales Helper API     → src/app/api/sales-helper/route.ts
+Sales status API     → src/app/api/sales-helper/toggle-status/route.ts
 ```
 
 ## Kalau mau mengubah...
@@ -49,6 +52,9 @@ Recent Posts         → src/components/RecentPostsSection.tsx
 | Category labels | `src/components/CategoryFilter.tsx` |
 | Local article H1/copy | `src/app/jual-barang-bekas-restoran/[...slug]/page.tsx` |
 | Recent Posts heading/copy | `src/components/RecentPostsSection.tsx` |
+| Sales Helper UI copy | `src/app/sales-helper/page.tsx` |
+| Sales Helper API/proxy | `src/app/api/sales-helper/route.ts` — do not move business logic back here |
+| Sales status mutation | `src/app/api/sales-helper/toggle-status/route.ts` — action/backend behavior, not ordinary copy |
 | Catalog result summary | audit the current `/katalog` route and its imported components before editing |
 
 ## Current public URL contract
@@ -186,6 +192,17 @@ SOLD  → Tanya Lainnya
 ```
 
 Jangan menonaktifkan Product Card SOLD hanya karena wording tombol berubah.
+
+## Sales Quote vs Sales Helper
+
+Keduanya **bukan fungsi yang sama**.
+
+```text
+Sales Quote  → /admin/sales → existing quotation workflow
+Sales Helper → separate admin tab → internal lookup / negotiation helper
+```
+
+Kalau mau mengubah wording Sales Helper, edit page copy saja. Jangan mengarahkan Sales Quote ke Sales Helper atau sebaliknya.
 
 ## Jangan disentuh sembarangan
 

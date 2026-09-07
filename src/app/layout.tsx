@@ -34,6 +34,9 @@ export const metadata: Metadata = {
       'Peralatan dapur komersial untuk restoran, cafe, catering, bakery, hotel, dan bisnis kuliner.',
     url: SITE_URL,
   },
+  verification: {
+    google: 'R32jn5X4W_pvu787AxVtWsqLGAS2mhoBesvJumGZeyk',
+  },
 };
 
 export default function RootLayout({

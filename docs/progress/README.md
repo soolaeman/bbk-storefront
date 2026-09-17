@@ -1,10 +1,18 @@
-# BBKitchen Progress Archive
+# 🏢 BBKitchen Storefront — Progress & Session Archive
 
-This folder is the **detailed progress/history layer** for the Next.js migration.
+> **Status:** 🔒 **Legacy Migration Milestone Sealed (`CHAT-1.1` s/d `CHAT-2.8`)**  
+> **Sovereign Transition:** Seluruh sesi koding dan manajemen operasional mulai 17 September 2026 dikendalikan terpusat melalui **J.A.R.V.I.S. Sovereign Holding Cockpit** via perintah `fn_start BBK` / `fn_close`.
 
-`README.md` at repository root is the current-state summary and handoff. Detailed session history belongs here.
+---
 
-## Chronology
+## 🧭 Panduan Sesi Baru (Sovereign Cockpit)
+1. **Mulai Sesi:** Buka Cockpit JARVIS ➔ `fn_start BBK` (Auto Git Pull Upstream & Init Scaffold).
+2. **Koding & Verifikasi:** Kerjakan fitur/bugfix di `bbk-storefront/`.
+3. **Tutup Sesi:** `fn_close` ➔ Otomatis mencatat durasi kerja ke database master [`Jarvis-OS/data/sqlite/jarvis.db`](file:///c:/Users/Lenovo/Documents/Github/JARVIS/Jarvis-OS/data/sqlite/jarvis.db).
+
+---
+
+## 📊 Indeks Sesi Historis (Legacy Milestone 1.1 — 2.8)
 
 | Chat | Period / Evidence | Start | End | Duration | Focus | Status | Archive |
 |---|---|---|---|---:|---|---|---|

@@ -50,6 +50,26 @@ export function getR2PhotoUrl(sku: string, index = 1): string {
   return `${R2_PHOTO_BASE_URL}/${sku}_${index}.webp`;
 }
 
+export function parsePhotoUrls(photoUrlsStr: string | null | undefined, sku: string): string[] {
+  if (!photoUrlsStr) return [getR2PhotoUrl(sku, 1)];
+  const rawParts = String(photoUrlsStr)
+    .split(/[,|]/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  if (rawParts.length === 0) return [getR2PhotoUrl(sku, 1)];
+
+  return rawParts.map((part, idx) => {
+    if (part.startsWith('http://') || part.startsWith('https://')) {
+      return part;
+    }
+    if (part.endsWith('.webp') || part.endsWith('.jpg') || part.endsWith('.png')) {
+      return `${R2_PHOTO_BASE_URL}/${part}`;
+    }
+    return getR2PhotoUrl(sku, idx + 1);
+  });
+}
+
 export function extractSlugFromLink(linkUnit: string | null | undefined, fallbackSku: string): string {
   if (linkUnit) {
     const trimmed = linkUnit.replace(/\/$/, '');
@@ -92,17 +112,8 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
     categoryName = toTitleCase(String(row.category_slug).replace(/-/g, ' '));
   }
 
-  // Cloudflare R2 WebP images
-  const photoUrlsStr = String(row.photo_urls || '');
-  let imageCount = 1;
-  if (photoUrlsStr) {
-    const parts = photoUrlsStr.split(',').map((p) => p.trim()).filter(Boolean);
-    if (parts.length > 1) imageCount = parts.length;
-  }
-  const images: string[] = [];
-  for (let i = 1; i <= imageCount; i++) {
-    images.push(getR2PhotoUrl(sku, i));
-  }
+  // Cloudflare R2 WebP images (supports pipe |, comma ,, webp filename, or full URL)
+  const images = parsePhotoUrls(row.photo_urls, sku);
 
   // Dimensions from title
   const dimMatch = title.match(/(\d+\s*x\s*\d+(?:\s*x\s*\d+)?)/i);
@@ -207,19 +218,12 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
   else if (row.parent_name) categoryName = toTitleCase(String(row.parent_name));
   else if (row.category_slug) categoryName = toTitleCase(String(row.category_slug).replace(/-/g, ' '));
 
-  const photoUrlsStr = String(row.photo_urls || '');
-  let imageCount = 1;
-  if (photoUrlsStr) {
-    const parts = photoUrlsStr.split(',').map((p) => p.trim()).filter(Boolean);
-    if (parts.length > 1) imageCount = parts.length;
-  }
-  const images: WooCommerceImage[] = [];
-  for (let i = 1; i <= imageCount; i++) {
-    images.push({
-      src: getR2PhotoUrl(sku, i),
-      alt: `${title} - Bukan Baru Kitchen`,
-    });
-  }
+  // Cloudflare R2 WebP images (supports pipe |, comma ,, webp filename, or full URL)
+  const parsedUrls = parsePhotoUrls(row.photo_urls, sku);
+  const images: WooCommerceImage[] = parsedUrls.map((url) => ({
+    src: url,
+    alt: `${title} - Bukan Baru Kitchen`,
+  }));
 
   const stock_status = statusUnit === 'SOLD' ? 'outofstock' : 'instock';
 

@@ -1,178 +1,225 @@
 import type { AvailabilityStatus, EquipmentCategory, Product, ProductCondition } from '../types';
-import { buildWooCommerceUrl, getWooCommerceHeaders, hasWooCommerceCredentials } from './woocommerce-client';
+import {
+  getTursoProductBySlug,
+  getTursoRelatedProducts,
+  getTursoWooCommerceProductBySlug,
+  getTursoWooCommerceRelatedProducts,
+  getTursoCatalogMetadata,
+  queryTursoProducts,
+  type CatalogMetadata,
+  type CatalogMetadataCategory,
+  type WooCommerceProduct,
+} from './turso';
 
-interface WooCommerceMeta { key: string; value: string | number | boolean | null; }
-interface WooCommerceImage { src: string; alt?: string; }
-interface WooCommerceCategory { id?: number; name: string; slug?: string; }
-export interface WooCommerceProduct {
-  id: number; name: string; slug: string; sku: string; price: string; regular_price: string;
-  short_description: string; description: string; images: WooCommerceImage[];
-  categories: WooCommerceCategory[]; stock_status: string; date_created?: string;
-  date_modified?: string; meta_data?: WooCommerceMeta[];
-}
+export type {
+  CatalogMetadata,
+  CatalogMetadataCategory,
+  WooCommerceProduct,
+};
 
 export interface WooCommerceProductsQuery {
-  perPage?: number; page?: number; search?: string; slug?: string; category?: string; stockStatus?: string;
-  orderby?: 'date' | 'title' | 'price' | 'id'; order?: 'asc' | 'desc'; sku?: string;
-  featured?: boolean; minPrice?: string; maxPrice?: string; tag?: string; attribute?: string;
-  attributeTerm?: string; condition?: string; location?: string; powerType?: string;
-  statusFilter?: 'ALL' | 'READY_ONLY' | 'INCLUDE_SOLD'; minPriceNumber?: number | null;
-  maxPriceNumber?: number | null; sortBy?: 'latest' | 'price_low' | 'price_high' | 'condition';
+  perPage?: number;
+  page?: number;
+  search?: string;
+  slug?: string;
+  category?: string;
+  stockStatus?: string;
+  orderby?: 'date' | 'title' | 'price' | 'id';
+  order?: 'asc' | 'desc';
+  sku?: string;
+  featured?: boolean;
+  minPrice?: string;
+  maxPrice?: string;
+  tag?: string;
+  attribute?: string;
+  attributeTerm?: string;
+  condition?: string;
+  location?: string;
+  powerType?: string;
+  statusFilter?: 'ALL' | 'READY_ONLY' | 'INCLUDE_SOLD';
+  minPriceNumber?: number | null;
+  maxPriceNumber?: number | null;
+  sortBy?: 'latest' | 'price_low' | 'price_high' | 'condition';
 }
 
-export interface WooCommerceProductsResult { products: Product[]; total: number | null; totalPages: number | null; }
-
-async function fetchWooCommerceProducts(params: URLSearchParams): Promise<WooCommerceProduct[] | null> {
-  if (!hasWooCommerceCredentials()) return null;
-  try {
-    const response = await fetch(buildWooCommerceUrl('products', params), { headers: getWooCommerceHeaders(), next: { revalidate: 60 } });
-    if (!response.ok) { console.error(`WooCommerce product lookup gagal: ${response.status} ${response.statusText}`); return null; }
-    const products = (await response.json()) as WooCommerceProduct[];
-    return Array.isArray(products) ? products : null;
-  } catch (error) { console.error('Gagal fetch products dari WooCommerce:', error); return null; }
+export interface WooCommerceProductsResult {
+  products: Product[];
+  total: number | null;
+  totalPages: number | null;
 }
 
 export async function getWooCommerceProductBySlug(slug: string): Promise<WooCommerceProduct | null> {
   if (!slug) return null;
-  const params = new URLSearchParams({ slug, status: 'publish', per_page: '1' });
-  const products = await fetchWooCommerceProducts(params);
-  return products?.[0] ?? null;
+  return getTursoWooCommerceProductBySlug(slug);
 }
 
-export async function getWooCommerceRelatedProducts(categoryId: number, currentProductId: number, limit = 4): Promise<WooCommerceProduct[]> {
-  if (!categoryId) return [];
-  const params = new URLSearchParams({ category: String(categoryId), status: 'publish', per_page: String(Math.max(limit + 1, 5)), orderby: 'date', order: 'desc' });
-  const products = await fetchWooCommerceProducts(params);
-  return (products ?? []).filter((product) => product.id !== currentProductId).slice(0, limit);
+export async function getWooCommerceRelatedProducts(
+  categoryId: number,
+  currentProductId: number | string,
+  limit = 4
+): Promise<WooCommerceProduct[]> {
+  return getTursoWooCommerceRelatedProducts(categoryId, currentProductId, limit);
 }
 
-const normalizeKey = (value: string) => value.toLowerCase().trim().replace(/[\s-]+/g, '_');
-function getMeta(product: WooCommerceProduct, keys: string[]): string { const normalizedKeys = keys.map(normalizeKey); const item = product.meta_data?.find((entry) => normalizedKeys.includes(normalizeKey(entry.key))); return item?.value == null ? '' : String(item.value).trim(); }
-function stripHtml(value: string): string { return value.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&#8211;/g, '–').replace(/&#8212;/g, '—').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/\s+/g, ' ').trim(); }
-function mapStatus(value: string): AvailabilityStatus { const normalized = value.trim().toUpperCase(); if (normalized === 'SOLD') return 'SOLD'; if (normalized === 'BOOKED') return 'BOOKED'; if (normalized === 'CONFIRMING' || normalized === 'DP') return 'CONFIRMING'; return 'READY'; }
-function mapCondition(value: string): ProductCondition { const normalized = value.trim().toUpperCase(); if (normalized === 'BEKAS') return 'Bekas Original'; if (normalized === 'BARU') return 'Baru Sisa Proyek / Lelang'; return 'Bekas Original'; }
-function mapCategory(product: WooCommerceProduct): EquipmentCategory { return (product.categories?.[0]?.name?.trim() || 'Semua') as EquipmentCategory; }
-function parsePrice(product: WooCommerceProduct): number | null { const raw = product.price || product.regular_price; if (!raw) return null; const value = Number(raw); return Number.isFinite(value) ? value : null; }
-function mapProduct(product: WooCommerceProduct): Product { const kodeUnit = getMeta(product, ['kode_unit']); const statusUnit = getMeta(product, ['status_unit']); const lokasiUnit = getMeta(product, ['lokasi_unit']); const kondisiUnit = getMeta(product, ['kondisi_unit']); const linkTelegram = getMeta(product, ['link_telegram']); const summary = stripHtml(product.short_description || '') || stripHtml(product.description || ''); const description = stripHtml(product.description || ''); return { id: String(product.id), slug: product.slug || undefined, sku: kodeUnit || product.sku || `BBK-${product.id}`, name: stripHtml(product.name || ''), category: mapCategory(product), brand: 'Tidak tercantum', price: parsePrice(product), originalPriceEstimate: null, status: mapStatus(statusUnit), condition: mapCondition(kondisiUnit), conditionRating: 0, location: lokasiUnit || 'Tidak tercantum', powerType: 'Manual / Tanpa Daya', powerWattage: undefined, dimensions: undefined, material: undefined, summary, description, testedFunctions: [], images: (product.images || []).map((image) => image.src).filter(Boolean), dateAdded: new Date().toISOString(), previousUsage: kondisiUnit || undefined, adminTelegramRef: linkTelegram || undefined, featured: false }; }
-function appendQueryParam(url: URL, key: string, value: string | number | boolean | undefined): void { if (value === undefined || value === null) return; const stringValue = String(value).trim(); if (stringValue) url.searchParams.set(key, stringValue); }
-let latestProductsRequestId = 0;
-let latestProductsRequestPromise: Promise<WooCommerceProductsResult> | null = null;
-export async function getWooCommerceProducts(options?: WooCommerceProductsQuery): Promise<Product[]> { return (await getWooCommerceProductsResult(options)).products; }
+export async function getWooCommerceProducts(options?: WooCommerceProductsQuery): Promise<Product[]> {
+  return (await getWooCommerceProductsResult(options)).products;
+}
+
 const clientResultCache = new Map<string, { result: WooCommerceProductsResult; timestamp: number }>();
 const CLIENT_CACHE_TTL = 30 * 1000; // 30 seconds client-side memory cache
 
-export async function getWooCommerceProductsResult(options?: WooCommerceProductsQuery): Promise<WooCommerceProductsResult> {
-  if (typeof window === 'undefined' && hasWooCommerceCredentials()) {
+export async function getWooCommerceProductsResult(
+  options?: WooCommerceProductsQuery
+): Promise<WooCommerceProductsResult> {
+  // If running on server, query Turso directly for zero latency
+  if (typeof window === 'undefined') {
     try {
-      const params = new URLSearchParams();
-      params.set('status', 'publish');
-      params.set('per_page', String(options?.perPage ?? 8));
-      params.set('page', String(options?.page ?? 1));
-      if (options?.search) params.set('search', options.search);
-      if (options?.slug) params.set('slug', options.slug);
-      if (options?.stockStatus) params.set('stock_status', options.stockStatus);
-      if (options?.orderby) params.set('orderby', options.orderby);
-      if (options?.order) params.set('order', options.order);
-      if (options?.sku) params.set('sku', options.sku);
-      if (options?.featured) params.set('featured', String(options.featured));
-      if (options?.minPriceNumber != null) params.set('min_price', String(options.minPriceNumber));
-      else if (options?.minPrice) params.set('min_price', options.minPrice);
-      if (options?.maxPriceNumber != null) params.set('max_price', String(options.maxPriceNumber));
-      else if (options?.maxPrice) params.set('max_price', options.maxPrice);
-      
-      const rawProducts = await fetchWooCommerceProducts(params);
-      if (rawProducts) {
-        return {
-          products: rawProducts.map(mapProduct),
-          total: rawProducts.length,
-          totalPages: 1,
-        };
-      }
+      const res = await queryTursoProducts({
+        perPage: options?.perPage ?? 8,
+        page: options?.page ?? 1,
+        search: options?.search,
+        slug: options?.slug,
+        category: options?.category,
+        condition: options?.condition,
+        location: options?.location,
+        powerType: options?.powerType,
+        statusFilter: options?.statusFilter,
+        stockStatus: options?.stockStatus,
+        sku: options?.sku,
+        sortBy: options?.sortBy,
+      });
+
+      return {
+        products: res.products,
+        total: res.total,
+        totalPages: res.totalPages,
+      };
     } catch (e) {
-      console.error('Gagal direct server-side fetch di getWooCommerceProductsResult, fallback to loopback:', e);
+      console.error('Server-side Turso query error in getWooCommerceProductsResult:', e);
     }
   }
 
+  // Client-side fetch through /api/products
   const url = new URL('/api/products', 'http://localhost');
-  appendQueryParam(url, 'status', 'publish');
-  appendQueryParam(url, 'per_page', options?.perPage ?? 8);
-  appendQueryParam(url, 'page', options?.page ?? 1);
-  appendQueryParam(url, 'search', options?.search);
-  appendQueryParam(url, 'slug', options?.slug);
-  appendQueryParam(url, 'category', options?.category);
-  appendQueryParam(url, 'condition', options?.condition);
-  appendQueryParam(url, 'location', options?.location);
-  appendQueryParam(url, 'power_type', options?.powerType);
-  appendQueryParam(url, 'status_unit', options?.statusFilter === 'READY_ONLY' ? 'READY' : options?.statusFilter === 'INCLUDE_SOLD' ? 'READY,DP,SOLD' : undefined);
-  appendQueryParam(url, 'stock_status', options?.stockStatus);
-  appendQueryParam(url, 'orderby', options?.orderby);
-  appendQueryParam(url, 'order', options?.order);
-  appendQueryParam(url, 'sku', options?.sku);
-  appendQueryParam(url, 'featured', options?.featured);
-  appendQueryParam(url, 'min_price', options?.minPrice ?? (options?.minPriceNumber != null ? String(options.minPriceNumber) : undefined));
-  appendQueryParam(url, 'max_price', options?.maxPrice ?? (options?.maxPriceNumber != null ? String(options.maxPriceNumber) : undefined));
-  appendQueryParam(url, 'tag', options?.tag);
-  appendQueryParam(url, 'attribute', options?.attribute);
-  appendQueryParam(url, 'attribute_term', options?.attributeTerm);
+  if (options?.perPage) url.searchParams.set('per_page', String(options.perPage));
+  if (options?.page) url.searchParams.set('page', String(options.page));
+  if (options?.search) url.searchParams.set('search', options.search);
+  if (options?.slug) url.searchParams.set('slug', options.slug);
+  if (options?.category) url.searchParams.set('category', options.category);
+  if (options?.condition) url.searchParams.set('condition', options.condition);
+  if (options?.location) url.searchParams.set('location', options.location);
+  if (options?.powerType) url.searchParams.set('power_type', options.powerType);
+  if (options?.statusFilter) {
+    url.searchParams.set(
+      'status_unit',
+      options.statusFilter === 'READY_ONLY' ? 'READY' : 'INCLUDE_SOLD'
+    );
+  }
+  if (options?.stockStatus) url.searchParams.set('stock_status', options.stockStatus);
+  if (options?.sku) url.searchParams.set('sku', options.sku);
+  if (options?.sortBy) {
+    if (options.sortBy === 'price_low') {
+      url.searchParams.set('orderby', 'price');
+      url.searchParams.set('order', 'asc');
+    } else if (options.sortBy === 'price_high') {
+      url.searchParams.set('orderby', 'price');
+      url.searchParams.set('order', 'desc');
+    }
+  }
 
   const requestUrl = url.toString().replace('http://localhost', '');
 
-  // Check client memory cache
   const cached = clientResultCache.get(requestUrl);
   if (cached && Date.now() - cached.timestamp < CLIENT_CACHE_TTL) {
     return cached.result;
   }
 
-  const requestId = ++latestProductsRequestId;
-  const requestPromise = (async (): Promise<WooCommerceProductsResult> => {
-    const response = await fetch(requestUrl, {
-      headers: { Accept: 'application/json' },
-    });
-    if (!response.ok) throw new Error(`WooCommerce proxy gagal: ${response.status} ${response.statusText}`);
-    const products = (await response.json()) as WooCommerceProduct[];
-    const total = response.headers.get('X-WP-Total') ? Number(response.headers.get('X-WP-Total')) : null;
-    const totalPages = response.headers.get('X-WP-TotalPages') ? Number(response.headers.get('X-WP-TotalPages')) : null;
-    const res: WooCommerceProductsResult = {
-      products: Array.isArray(products) ? products.map(mapProduct) : [],
-      total: Number.isFinite(total) ? total : null,
-      totalPages: Number.isFinite(totalPages) ? totalPages : null,
-    };
-    clientResultCache.set(requestUrl, { result: res, timestamp: Date.now() });
-    return res;
-  })();
+  const response = await fetch(requestUrl, {
+    headers: { Accept: 'application/json' },
+  });
 
-  latestProductsRequestPromise = requestPromise;
-  const result = await requestPromise;
-  if (requestId !== latestProductsRequestId && latestProductsRequestPromise) return latestProductsRequestPromise;
-  return result;
+  if (!response.ok) {
+    throw new Error(`Products endpoint failed: ${response.status} ${response.statusText}`);
+  }
+
+  const rawProducts = (await response.json()) as WooCommerceProduct[];
+  const totalHeader = response.headers.get('X-WP-Total');
+  const totalPagesHeader = response.headers.get('X-WP-TotalPages');
+
+  const total = totalHeader ? Number(totalHeader) : rawProducts.length;
+  const totalPages = totalPagesHeader ? Number(totalPagesHeader) : 1;
+
+  // Map WooCommerce-like objects to Product interface
+  const products: Product[] = rawProducts.map((p) => {
+    const kodeUnit = p.meta_data?.find((m) => m.key === 'kode_unit')?.value || p.sku;
+    const statusUnit = p.meta_data?.find((m) => m.key === 'status_unit')?.value || (p.stock_status === 'outofstock' ? 'SOLD' : 'READY');
+    const lokasiUnit = p.meta_data?.find((m) => m.key === 'lokasi_unit')?.value || 'Pamulang';
+    const kondisiUnit = p.meta_data?.find((m) => m.key === 'kondisi_unit')?.value || 'Bekas';
+    const linkTelegram = p.meta_data?.find((m) => m.key === 'link_telegram')?.value;
+
+    const condUpper = String(kondisiUnit).toUpperCase();
+    const condition: ProductCondition = condUpper.includes('BARU') ? 'Baru Sisa Proyek / Lelang' : 'Bekas Original';
+
+    const statUpper = String(statusUnit).toUpperCase();
+    let status: AvailabilityStatus = 'READY';
+    if (statUpper === 'SOLD') status = 'SOLD';
+    else if (statUpper === 'DP' || statUpper === 'CONFIRMING') status = 'CONFIRMING';
+    else if (statUpper === 'BOOKED') status = 'BOOKED';
+
+    return {
+      id: String(p.id || kodeUnit),
+      slug: p.slug,
+      sku: String(kodeUnit || p.sku),
+      name: p.name,
+      category: (p.categories?.[0]?.name || 'Peralatan Dapur') as EquipmentCategory,
+      brand: 'Tidak tercantum',
+      price: null, // Zero public pricing
+      originalPriceEstimate: null,
+      status,
+      condition,
+      conditionRating: 0,
+      location: String(lokasiUnit),
+      powerType: 'Manual / Tanpa Daya',
+      summary: p.short_description || p.description || '',
+      description: p.description || p.short_description || '',
+      testedFunctions: [],
+      images: (p.images || []).map((img) => img.src).filter(Boolean),
+      dateAdded: p.date_created || new Date().toISOString(),
+      previousUsage: String(kondisiUnit),
+      adminTelegramRef: linkTelegram ? String(linkTelegram) : undefined,
+      featured: false,
+    };
+  });
+
+  const res: WooCommerceProductsResult = { products, total, totalPages };
+  clientResultCache.set(requestUrl, { result: res, timestamp: Date.now() });
+  return res;
 }
 
-export async function getWooCommerceProductById(id: string | number): Promise<Product> { throw new Error(`getWooCommerceProductById belum dipindahkan ke server-side proxy: ${id}`); }
-
-export interface CatalogMetadataCategory { id: number; name: string; slug?: string; parent?: number; count?: number; }
-export interface CatalogMetadata { categories: CatalogMetadataCategory[]; conditionOptions: string[]; locationOptions: string[]; totalProducts: number | null; }
-
-let cachedMetadataClient: { data: CatalogMetadata; timestamp: number } | null = null;
+export async function getWooCommerceProductById(id: string | number): Promise<Product> {
+  const p = await getTursoProductBySlug(String(id));
+  if (!p) throw new Error(`Product not found: ${id}`);
+  return p;
+}
 
 export async function getCatalogMetadata(): Promise<CatalogMetadata> {
-  if (cachedMetadataClient && Date.now() - cachedMetadataClient.timestamp < 5 * 60 * 1000) {
-    return cachedMetadataClient.data;
+  if (typeof window === 'undefined') {
+    return getTursoCatalogMetadata();
   }
+
   try {
-    const response = await fetch('/api/products?metadata=1', { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error(`Metadata endpoint gagal: ${response.status}`);
-    const data = (await response.json()) as CatalogMetadata;
-    const cleanData: CatalogMetadata = {
-      categories: Array.isArray(data.categories) ? data.categories : [],
-      conditionOptions: Array.isArray(data.conditionOptions) ? data.conditionOptions : [],
-      locationOptions: Array.isArray(data.locationOptions) ? data.locationOptions : [],
-      totalProducts: typeof data.totalProducts === 'number' ? data.totalProducts : null,
-    };
-    cachedMetadataClient = { data: cleanData, timestamp: Date.now() };
-    return cleanData;
+    const response = await fetch('/api/products?metadata=1', {
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error(`Metadata endpoint failed: ${response.status}`);
+    return (await response.json()) as CatalogMetadata;
   } catch (error) {
     console.error('Failed to load catalog metadata:', error);
-    return { categories: [], conditionOptions: [], locationOptions: [], totalProducts: null };
+    return {
+      categories: [],
+      conditionOptions: ['Baru', 'Bekas'],
+      locationOptions: [],
+      totalProducts: null,
+    };
   }
 }
-

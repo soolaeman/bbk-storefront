@@ -3,15 +3,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
-import { getWooCommerceProductBySlug, getWooCommerceRelatedProducts } from '../../../lib/woocommerce';
+import {
+  getWooCommerceProductBySlug,
+  getWooCommerceRelatedProducts,
+  type WooCommerceProduct,
+} from '../../../lib/woocommerce';
 
 const WHATSAPP_NUMBER = '6285122001051';
 const PUBLIC_SITE_ORIGIN = 'https://bukanbarukitchen.com';
-
-interface WooCommerceMeta { key: string; value: string | number | boolean | null; }
-interface WooCommerceImage { src: string; alt?: string; }
-interface WooCommerceCategory { id?: number; name: string; slug?: string; }
-interface WooCommerceProduct { id: number; name: string; slug: string; sku: string; price: string; regular_price: string; short_description: string; description: string; permalink?: string; images: WooCommerceImage[]; categories: WooCommerceCategory[]; stock_status: string; date_created?: string; date_modified?: string; meta_data?: WooCommerceMeta[]; }
 
 function getMeta(product: WooCommerceProduct, key: string): string { const item = product.meta_data?.find((entry) => entry.key.trim().toLowerCase() === key.trim().toLowerCase()); return item?.value == null ? '' : String(item.value).trim(); }
 function stripHtml(value: string): string { return value.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&#8211;/g, '–').replace(/&#8212;/g, '—').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/\s+/g, ' ').trim(); }

@@ -14,47 +14,18 @@ interface Product {
   images: Array<{ src: string; alt?: string }>;
 }
 
-interface CatalogMetadataCategory {
-  id: number;
-  name: string;
-  slug?: string;
-  parent?: number;
-}
-
-interface CatalogMetadataResponse {
-  categories: CatalogMetadataCategory[];
-}
+import { queryTursoWooCommerceProducts } from '../../../lib/turso';
 
 async function getProducts(categorySlug: string): Promise<Product[]> {
   try {
-    const metadataResponse = await fetch(`${PUBLIC_SITE_ORIGIN}/api/products?metadata=1`, {
-      headers: { Accept: 'application/json' },
-      cache: 'no-store',
+    const res = await queryTursoWooCommerceProducts({
+      category: categorySlug,
+      perPage: 24,
+      page: 1,
     });
-    if (!metadataResponse.ok) return [];
-
-    const metadata = (await metadataResponse.json()) as CatalogMetadataResponse;
-    const category = metadata.categories?.find((item) => item.slug === categorySlug);
-    if (!category) return [];
-
-    const params = new URLSearchParams({
-      status: 'publish',
-      category: String(category.id),
-      per_page: '24',
-      page: '1',
-      orderby: 'date',
-      order: 'desc',
-    });
-
-    const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/products?${params.toString()}`, {
-      headers: { Accept: 'application/json' },
-      cache: 'no-store',
-    });
-    if (!response.ok) return [];
-
-    return (await response.json()) as Product[];
+    return res.products as unknown as Product[];
   } catch (error) {
-    console.error('Product category API lookup failed:', error);
+    console.error('Product category Turso lookup failed:', error);
     return [];
   }
 }

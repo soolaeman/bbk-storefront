@@ -1,9 +1,4 @@
-# 🗺️ BBKitchen Storefront — Architecture & Plans
+﻿# 💡 BBKitchen Storefront — Strategic Plans Pointer
+> **Catatan:** Seluruh rencana ekspansi, model margin, dan RFC strategis BBKitchen dikonsolidasikan terpusat di **`Jarvis-OS`**.
 
-> **Domain Code:** BBK  
-> **Deskripsi:** Arsip dokumen arsitektur teknis, RFC, roadmap fitur, dan perencanaan strategis unit BBKitchen Storefront.
-
----
-
-## 🧭 Standar Dokumen Rencana
-- Setiap rencana besar wajib mendokumentasikan konteks masalah, opsi arsitektur, rencana verifikasi, dan dependensi holding.
+👉 Buka bank rencana terpusat di: [`Jarvis-OS/domains/business/bbkitchen/docs/plans/`](../../Jarvis-OS/domains/business/bbkitchen/docs/plans/README.md)

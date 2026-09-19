@@ -1,12 +1,4 @@
-# 📝 BBKitchen Storefront — Notes & Meetings
+﻿# 📝 BBKitchen Storefront — Business Notes Pointer
+> **Catatan:** Seluruh notula rapat, negosiasi supplier, dan strategi bisnis BBKitchen dikonsolidasikan terpusat di **`Jarvis-OS`**.
 
-> **Domain Code:** BBK  
-> **Deskripsi:** Arsip notula rapat, briefing tim, kesepakatan operasional, dan negosiasi supplier untuk unit BBKitchen Storefront.
-
----
-
-## 🧭 Panduan Pencatatan
-- **Mulai Catat Notula:** Buka Cockpit JARVIS ➔ n_meeting BBK
-- **Tutup & Commit:** n_close_meeting
-- **Format Berkas:** YYYY-MM-DD_meeting_[stakeholder].md
-- **Auto-Task:** Seluruh Action Items otomatis disuntikkan ke database SQLite master holding (jarvis.db).
+👉 Buka bank notula terpusat di: [`Jarvis-OS/domains/business/bbkitchen/docs/notes/`](../../Jarvis-OS/domains/business/bbkitchen/docs/notes/README.md)

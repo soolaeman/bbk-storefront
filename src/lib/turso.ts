@@ -93,14 +93,10 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
   const slug = extractSlugFromLink(linkUnit, sku);
 
   // Status mapping
-  let status: AvailabilityStatus = 'READY';
-  if (statusUnit === 'SOLD') status = 'SOLD';
-  else if (statusUnit === 'DP' || statusUnit === 'CONFIRMING') status = 'CONFIRMING';
-  else if (statusUnit === 'BOOKED') status = 'BOOKED';
+  const status: AvailabilityStatus = statusUnit === 'SOLD' ? 'SOLD' : 'READY';
 
   // Condition mapping
-  let condition: ProductCondition = 'Bekas Original';
-  if (kondisiUnit === 'BARU') condition = 'Baru Sisa Proyek / Lelang';
+  const condition: ProductCondition = kondisiUnit.includes('BARU') ? 'Baru' : 'Bekas';
 
   // Category mapping
   let categoryName = 'Peralatan Dapur';

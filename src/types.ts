@@ -1,23 +1,20 @@
 export type EquipmentCategory = 
   | 'Semua'
-  | 'Kompor & Burner'
-  | 'Deep Fryer'
-  | 'Oven & Bakery'
-  | 'Chiller & Freezer'
-  | 'Showcase & Display'
-  | 'Stainless Fabrication'
-  | 'Exhaust & Blower'
-  | 'Mesin Pemroses Makanan'
-  | 'Ice Maker & Minuman'
-  | 'Washing & Sink';
+  | 'Chiller'
+  | 'Freezer'
+  | 'Kompor'
+  | 'Meja Stainless'
+  | 'Rak Stainless'
+  | 'Sink Stainless'
+  | 'Hood Stainless'
+  | 'Showcase'
+  | 'Ice System'
+  | 'Peralatan Dapur Bekas Lainnya'
+  | string;
 
-export type ProductCondition = 
-  | 'Bekas Original'
-  | 'Rekondisi Siap Pakai'
-  | 'Like New / Ex-Display'
-  | 'Baru Sisa Proyek / Lelang';
+export type ProductCondition = 'Bekas' | 'Baru';
 
-export type AvailabilityStatus = 'READY' | 'SOLD' | 'BOOKED' | 'CONFIRMING';
+export type AvailabilityStatus = 'READY' | 'SOLD';
 
 export interface Product {
   id: string;

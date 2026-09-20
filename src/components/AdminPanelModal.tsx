@@ -32,7 +32,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   const [newBrand, setNewBrand] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [newLocation, setNewLocation] = useState('');
-  const [newCondition, setNewCondition] = useState<ProductCondition>('Bekas Original');
+  const [newCondition, setNewCondition] = useState<ProductCondition>('Bekas');
   const [newConditionRating, setNewConditionRating] = useState('');
   const [newPowerType, setNewPowerType] = useState<ProductPowerType>('Gas');
   const [newWattage, setNewWattage] = useState('');
@@ -96,7 +96,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
     setNewBrand('');
     setNewPrice('');
     setNewLocation('');
-    setNewCondition('Bekas Original');
+    setNewCondition('Bekas');
     setNewConditionRating('');
     setNewPowerType('Gas');
     setNewWattage('');
@@ -209,10 +209,8 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <select value={newCondition} onChange={(event) => setNewCondition(event.target.value as ProductCondition)} className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2">
-                <option value="Bekas Original">Bekas Original</option>
-                <option value="Rekondisi Siap Pakai">Rekondisi Siap Pakai</option>
-                <option value="Like New / Ex-Display">Like New / Ex-Display</option>
-                <option value="Baru Sisa Proyek / Lelang">Baru Sisa Proyek / Lelang</option>
+                <option value="Bekas">Bekas</option>
+                <option value="Baru">Baru</option>
               </select>
               <input value={newConditionRating} onChange={(event) => setNewConditionRating(event.target.value)} placeholder="Rating kondisi" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />
               <input value={newLocation} onChange={(event) => setNewLocation(event.target.value)} placeholder="Lokasi" className="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2" />

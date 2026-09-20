@@ -75,11 +75,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const statusLabel =
     product.status === 'SOLD'
       ? 'TERJUAL / SOLD'
-      : product.status === 'BOOKED'
-        ? 'BOOKED / DIBOOKING'
-        : product.status === 'CONFIRMING'
-          ? 'SEDANG DIKONFIRMASI'
-          : 'READY SIAP KIRIM';
+      : 'READY SIAP KIRIM';
 
   const description = product.description || product.summary || 'Detail unit belum tersedia.';
 

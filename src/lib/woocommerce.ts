@@ -158,13 +158,10 @@ export async function getWooCommerceProductsResult(
     const linkTelegram = p.meta_data?.find((m) => m.key === 'link_telegram')?.value;
 
     const condUpper = String(kondisiUnit).toUpperCase();
-    const condition: ProductCondition = condUpper.includes('BARU') ? 'Baru Sisa Proyek / Lelang' : 'Bekas Original';
+    const condition: ProductCondition = condUpper.includes('BARU') ? 'Baru' : 'Bekas';
 
     const statUpper = String(statusUnit).toUpperCase();
-    let status: AvailabilityStatus = 'READY';
-    if (statUpper === 'SOLD') status = 'SOLD';
-    else if (statUpper === 'DP' || statUpper === 'CONFIRMING') status = 'CONFIRMING';
-    else if (statUpper === 'BOOKED') status = 'BOOKED';
+    const status: AvailabilityStatus = statUpper === 'SOLD' ? 'SOLD' : 'READY';
 
     return {
       id: String(p.id || kodeUnit),

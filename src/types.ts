@@ -28,6 +28,9 @@ export interface Product {
   brand: string;
   price: number | null; // null represents empty price state (Hubungi Admin / Call for Price)
   originalPriceEstimate?: number | null;
+  estimatedNewPrice?: number | null;
+  displayPriceLow?: number | null;
+  displayPriceHigh?: number | null;
   status: AvailabilityStatus;
   condition: ProductCondition;
   conditionRating: number; // e.g. 8.5 / 10

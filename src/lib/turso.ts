@@ -139,6 +139,10 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
   const adminPrice = row.harga_buka_wa ? Number(row.harga_buka_wa) : null;
   const price = isAdmin ? adminPrice : null;
 
+  const estimatedNewPrice = row.estimasi_harga_baru ? Number(row.estimasi_harga_baru) : null;
+  const displayPriceLow = row.harga_display_low ? Number(row.harga_display_low) : null;
+  const displayPriceHigh = row.harga_display_high ? Number(row.harga_display_high) : null;
+
   return {
     id: sku,
     slug,
@@ -147,7 +151,10 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
     category: categoryName as EquipmentCategory,
     brand: 'Tidak tercantum',
     price,
-    originalPriceEstimate: null,
+    originalPriceEstimate: estimatedNewPrice,
+    estimatedNewPrice,
+    displayPriceLow,
+    displayPriceHigh,
     status,
     condition,
     conditionRating: 0,
@@ -252,6 +259,9 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
       { key: 'lokasi_unit', value: lokasiUnit },
       { key: 'kondisi_unit', value: kondisiUnit },
       { key: 'link_telegram', value: linkTelegram },
+      { key: 'estimasi_harga_baru', value: String(row.estimasi_harga_baru || '') },
+      { key: 'harga_display_low', value: String(row.harga_display_low || '') },
+      { key: 'harga_display_high', value: String(row.harga_display_high || '') },
     ],
   };
 }
@@ -546,6 +556,7 @@ export async function getTursoWooCommerceProductBySlug(slugOrSku: string): Promi
       p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
+      p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug

@@ -31,7 +31,7 @@ export interface Product {
   status: AvailabilityStatus;
   condition: ProductCondition;
   conditionRating: number; // e.g. 8.5 / 10
-  location: string; // e.g. 'Jakarta Barat', 'Tangerang', 'Bekasi'
+  location: string; // e.g. 'Pamulang 2, Tangsel', 'Sawangan, Depok', 'Pamulang Barat, Tangsel', 'Kedaung, Tangsel', 'Setu, Tangsel', 'BBKitchen (HQ)'
   powerType: 'Gas' | 'Listrik' | 'Manual / Tanpa Daya' | 'Gas & Listrik';
   powerWattage?: string; // e.g. "1.500 W" or "LPG High Pressure"
   dimensions?: string; // e.g. "120 x 80 x 85 cm"

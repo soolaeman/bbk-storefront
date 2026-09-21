@@ -31,6 +31,7 @@ Buka [http://localhost:3000](http://localhost:3000) pada browser Anda.
 
 | Sesi | File Ledger | Tanggal / Waktu | Durasi | Fokus Utama | Commits | Status |
 | :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| **BBK-2.11** | [`BBK-2.11.md`](BBK-2.11.md) | 2026-09-21 12:44 WIB | **1h 05m** | Master Architecture Plan for Invoicing, Logistics Dispatch, Finance Ledger & QR Warranty Engine | 1 | 🔒 Sealed |
 | **BBK-2.10** | [`BBK-2.10.md`](BBK-2.10.md) | 2026-09-21 08:02 WIB | **1h 25m** | Unifikasi 1 SSOT Kategori & Gudang BBKitchen, Eliminasi Total Unit HQ Fiktif dari 3.091 Produk, Konsolidasi core/ Pipeline & README, dan Cetak Biru Arsitektur End-to-End | 1 | 🔒 Sealed |
 | **BBK 2.8** | [`BBK 2.8`](`BBK-2.8.md`) | 2026-08-30 01:57 WIB | 5h 20m | Sales Quote preserved, Sales Helper proxy to BTC & deployment recovery | 1 | 🔒 Sealed |
 | **BBK-2.9** | [`BBK-2.9.md`](BBK-2.9.md) | 2026-09-20 16:53 WIB | **3h 00m** | Pemulihan 300 katalog unit cacat, arsitektur Multi-Provider AI Ingestion Pipeline, strategic price anchoring, dan refactor types frontend | 1 | 🔒 Sealed |

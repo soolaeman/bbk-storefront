@@ -204,6 +204,37 @@ export interface WooCommerceProduct {
   meta_data?: WooCommerceMeta[];
 }
 
+export function formatCleanSeoTitle(rawSeoTitle: string | null | undefined, title: string, condition?: string): string {
+  if (rawSeoTitle && !rawSeoTitle.includes('%%title%%') && rawSeoTitle.trim().length > 5) {
+    return rawSeoTitle.trim();
+  }
+  const lower = title.toLowerCase();
+  const isBaru = (condition && condition.toUpperCase().includes('BARU')) || lower.includes('baru');
+
+  if (isBaru) {
+    if (lower.includes('baru')) {
+      return `${title} Gress Siap Pakai | BBKitchen`;
+    }
+    return `${title} Baru Gress Siap Pakai | BBKitchen`;
+  }
+
+  if (lower.includes('second') || lower.includes('ex-resto') || lower.includes('ex resto')) {
+    return `${title} Ex-Resto Siap Pakai | BBKitchen`;
+  }
+  return `${title} Second Ex-Resto Siap Pakai | BBKitchen`;
+}
+
+export function formatCleanMetaDescription(rawDesc: string | null | undefined, title: string, location?: string): string {
+  let clean = String(rawDesc || '').trim();
+  if (clean.includes('Jelaskan efisiensi')) {
+    clean = '';
+  }
+  if (!clean || clean.length < 30) {
+    clean = `Sedia ${title} second ex-resto berkualitas siap pakai di Gudang BBKitchen ${location || 'Jabodetabek'}. Lolos uji fungsi teknisi & siap kirim bergaransi se-Jabodetabek. Hubungi kami sekarang!`;
+  }
+  return stripHtml(clean).slice(0, 160);
+}
+
 export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerceProduct {
   const sku = String(row.sku || '').trim();
   const title = String(row.title || '').trim();
@@ -214,7 +245,7 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
   const fullDesc = String(row.full_description || '').trim();
   const linkUnit = String(row.link_unit || '');
   const linkTelegram = String(row.link_telegram || '');
-  const slug = extractSlugFromLink(linkUnit, sku);
+  const slug = String(row.slug || extractSlugFromLink(linkUnit, sku)).trim();
 
   let categoryName = 'Peralatan Dapur';
   if (row.child_name) categoryName = toTitleCase(String(row.child_name));
@@ -258,6 +289,9 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
       { key: 'estimasi_harga_baru', value: String(row.estimasi_harga_baru || '') },
       { key: 'harga_display_low', value: String(row.harga_display_low || '') },
       { key: 'harga_display_high', value: String(row.harga_display_high || '') },
+      { key: 'seo_title', value: formatCleanSeoTitle(row.seo_title, title, kondisiUnit) },
+      { key: 'yoast_description', value: formatCleanMetaDescription(row.yoast_description || shortDesc || fullDesc, title, lokasiUnit) },
+      { key: 'image_alt', value: String(row.image_alt || `${title} Second Ex-Resto - BBKitchen`) },
     ],
   };
 }
@@ -516,13 +550,15 @@ export async function getTursoProductBySlug(slugOrSku: string): Promise<Product 
 
   const sql = `
     SELECT 
-      p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
+      p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug
-    WHERE p.sku = ? 
+    WHERE p.slug = ?
+       OR p.sku = ? 
        OR p.link_unit LIKE '%' || ? || '/'
        OR p.link_unit LIKE '%' || ?
     LIMIT 1
@@ -531,7 +567,7 @@ export async function getTursoProductBySlug(slugOrSku: string): Promise<Product 
   try {
     const res = await client.execute({
       sql,
-      args: [clean.toUpperCase(), clean.toLowerCase(), clean.toLowerCase()],
+      args: [clean.toLowerCase(), clean.toUpperCase(), clean.toLowerCase(), clean.toLowerCase()],
     });
 
     if (res.rows.length === 0) return null;
@@ -549,14 +585,16 @@ export async function getTursoWooCommerceProductBySlug(slugOrSku: string): Promi
 
   const sql = `
     SELECT 
-      p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
+      p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
       p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug
-    WHERE p.sku = ? 
+    WHERE p.slug = ?
+       OR p.sku = ? 
        OR p.link_unit LIKE '%' || ? || '/'
        OR p.link_unit LIKE '%' || ?
     LIMIT 1
@@ -565,7 +603,7 @@ export async function getTursoWooCommerceProductBySlug(slugOrSku: string): Promi
   try {
     const res = await client.execute({
       sql,
-      args: [clean.toUpperCase(), clean.toLowerCase(), clean.toLowerCase()],
+      args: [clean.toLowerCase(), clean.toUpperCase(), clean.toLowerCase(), clean.toLowerCase()],
     });
 
     if (res.rows.length === 0) return null;

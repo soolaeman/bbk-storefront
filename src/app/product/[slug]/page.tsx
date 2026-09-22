@@ -8,6 +8,12 @@ import {
   getWooCommerceRelatedProducts,
   type WooCommerceProduct,
 } from '../../../lib/woocommerce';
+import {
+  getTursoWooCommerceProductBySlug,
+  getTursoWooCommerceRelatedProducts,
+  formatCleanSeoTitle,
+  formatCleanMetaDescription,
+} from '../../../lib/turso';
 
 const WHATSAPP_NUMBER = '6285122001051';
 const PUBLIC_SITE_ORIGIN = 'https://bukanbarukitchen.com';
@@ -17,18 +23,70 @@ function stripHtml(value: string): string { return value.replace(/<[^>]*>/g, ' '
 function normalizeCondition(value: string): string { const normalized = value.trim().toUpperCase(); if (normalized.includes('BEKAS')) return 'Bekas'; if (normalized.includes('BARU')) return 'Baru'; return value || 'Belum tercantum'; }
 function normalizeStatus(value: string, stockStatus: string): string { if (value === 'SOLD') return 'SOLD'; if (value === 'DP') return 'DP'; if (value === 'READY') return 'READY'; return stockStatus === 'outofstock' ? 'SOLD' : 'READY'; }
 
-async function getProduct(slug: string): Promise<WooCommerceProduct | null> { return getWooCommerceProductBySlug(slug); }
+async function getProduct(slug: string): Promise<WooCommerceProduct | null> {
+  const tursoProduct = await getTursoWooCommerceProductBySlug(slug);
+  if (tursoProduct) return tursoProduct;
+  return getWooCommerceProductBySlug(slug);
+}
 
 async function getRelatedProducts(product: WooCommerceProduct): Promise<WooCommerceProduct[]> {
   const categoryId = product.categories[0]?.id;
-  if (!categoryId) return [];
-  return getWooCommerceRelatedProducts(categoryId, product.id, 4);
+  const categorySlug = product.categories[0]?.slug;
+  if (!categoryId && !categorySlug) return [];
+  const tursoRelated = await getTursoWooCommerceRelatedProducts(categorySlug || categoryId || '', product.sku, 4);
+  if (tursoRelated.length > 0) return tursoRelated;
+  return getWooCommerceRelatedProducts(categoryId || 0, product.id, 4);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params; const product = await getProduct(slug); if (!product) return { title: 'Unit Tidak Ditemukan | BBKitchen' };
-  const description = stripHtml(product.short_description || product.description || '').slice(0, 160); const canonical = `${PUBLIC_SITE_ORIGIN}/shop/${product.slug}`;
-  return { title: product.name, description, alternates: { canonical }, openGraph: { title: product.name, description, url: canonical, type: 'website', images: product.images[0]?.src ? [{ url: product.images[0].src }] : undefined } };
+  const { slug } = await params;
+  const product = await getProduct(slug);
+  if (!product) return { title: 'Unit Tidak Ditemukan | BBKitchen' };
+
+  const condition = getMeta(product, 'kondisi_unit');
+  const rawSeoTitle = getMeta(product, 'seo_title');
+  const seoTitle = formatCleanSeoTitle(rawSeoTitle, product.name, condition);
+
+  const rawDesc = getMeta(product, 'yoast_description');
+  const location = getMeta(product, 'lokasi_unit');
+  const description = formatCleanMetaDescription(
+    rawDesc || product.short_description || product.description,
+    product.name,
+    location
+  );
+
+  const canonical = `${PUBLIC_SITE_ORIGIN}/shop/${product.slug}`;
+  const firstImage = product.images[0]?.src;
+
+  return {
+    title: seoTitle,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: seoTitle,
+      description,
+      url: canonical,
+      siteName: 'BBKitchen (Bukan Baru Kitchen)',
+      locale: 'id_ID',
+      type: 'website',
+      images: firstImage
+        ? [
+            {
+              url: firstImage,
+              width: 800,
+              height: 800,
+              alt: seoTitle,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description,
+      images: firstImage ? [firstImage] : undefined,
+    },
+  };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {

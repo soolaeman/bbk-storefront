@@ -8,7 +8,7 @@ const TURSO_AUTH_TOKEN =
 
 export const R2_PHOTO_BASE_URL = (
   process.env.NEXT_PUBLIC_R2_PHOTO_BASE_URL ||
-  'https://pub-946d1fe1a1b1461eb2cca6be4462ba11.r2.dev'
+  '/api/cdn'
 ).replace(/\/$/, '');
 
 let clientInstance: ReturnType<typeof createClient> | null = null;

@@ -38,7 +38,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail,
     >
       <div>
         <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden cursor-pointer" onClick={() => onOpenDetail(product)}>
-          <img src={product.images[0] || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80'} alt={product.name} referrerPolicy="no-referrer" className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSold ? 'grayscale contrast-125' : ''}`} loading="lazy" />
+          <img
+            src={product.images[0] || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80'}
+            alt={product.name}
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80';
+            }}
+            className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSold ? 'grayscale contrast-125' : ''}`}
+            loading="lazy"
+          />
 
           <div className="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">

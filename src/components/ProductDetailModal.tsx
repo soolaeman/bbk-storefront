@@ -57,16 +57,19 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setSelectedImageIndex(0);
     setCopied(false);
+    setFailedImages({});
   }, [product?.id]);
 
   if (!product) return null;
 
   const images = product.images.length > 0 ? product.images : [];
   const selectedImage = images[selectedImageIndex] || images[0];
+  const isSelectedFailed = !selectedImage || failedImages[selectedImage];
   const isSold = product.status === 'SOLD';
   const isReady = product.status === 'READY';
   const hasPrice = product.price !== null && product.price !== undefined;
@@ -80,10 +83,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const description = product.description || product.summary || 'Detail unit belum tersedia.';
 
   const handleCopyLink = async () => {
-    const slug = slugifyProductName(product.name);
-    const productUrl = slug
-      ? `${window.location.origin}/product/${encodeURIComponent(slug)}`
-      : window.location.href;
+    const canonicalSlug = product.slug || slugifyProductName(product.name) || product.sku.toLowerCase();
+    const productUrl = `${window.location.origin}/shop/${encodeURIComponent(canonicalSlug)}`;
 
     try {
       await navigator.clipboard.writeText(productUrl);
@@ -92,6 +93,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     } catch {
       setCopied(false);
     }
+  };
+
+  const handleImageError = (url: string) => {
+    setFailedImages((prev) => ({ ...prev, [url]: true }));
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -151,17 +156,25 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         <div className="p-5 overflow-y-auto space-y-6 flex-1 text-slate-800">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="md:col-span-6 space-y-3">
-              <div className="relative aspect-[4/3] bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-xs">
-                {selectedImage ? (
+              <div className="relative aspect-[4/3] bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-xs flex items-center justify-center">
+                {selectedImage && !isSelectedFailed ? (
                   <img
                     src={selectedImage}
                     alt={`${product.name} - foto unit BBKitchen`}
                     referrerPolicy="no-referrer"
+                    onError={() => handleImageError(selectedImage)}
                     className={`w-full h-full object-cover ${isSold ? 'grayscale contrast-125' : ''}`}
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-500 text-sm font-semibold">
-                    Foto unit belum tersedia
+                  <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-slate-400 bg-slate-900">
+                    <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-amber-400 font-bold text-base mb-2 border border-slate-700 shadow-inner">
+                      BBK
+                    </div>
+                    <p className="text-xs font-bold text-slate-200">Foto Unit {product.sku}</p>
+                    <p className="text-[11px] text-slate-400 line-clamp-2 max-w-xs mt-1">{product.name}</p>
+                    <span className="text-[10px] text-emerald-400 font-medium bg-slate-800 px-2.5 py-1 rounded-full mt-2 border border-slate-700">
+                      Hubungi WA untuk Foto / Video Live
+                    </span>
                   </div>
                 )}
 
@@ -180,7 +193,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   </span>
                 </div>
 
-                {selectedImage && (
+                {selectedImage && !isSelectedFailed && (
                   <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-slate-950/80 text-amber-300 text-xs font-semibold backdrop-blur-xs">
                     Foto Unit BBKitchen
                   </div>
@@ -189,26 +202,36 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
               {images.length > 1 && (
                 <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                  {images.map((image, index) => (
-                    <button
-                      key={`${image}-${index}`}
-                      type="button"
-                      onClick={() => setSelectedImageIndex(index)}
-                      aria-label={`Lihat foto ${index + 1}`}
-                      className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                        selectedImageIndex === index
-                          ? 'border-amber-500 ring-2 ring-amber-400/40'
-                          : 'border-slate-200 opacity-70 hover:opacity-100'
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`${product.name} - thumbnail ${index + 1}`}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
+                  {images.map((image, index) => {
+                    const isThumbFailed = failedImages[image];
+                    return (
+                      <button
+                        key={`${image}-${index}`}
+                        type="button"
+                        onClick={() => setSelectedImageIndex(index)}
+                        aria-label={`Lihat foto ${index + 1}`}
+                        className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                          selectedImageIndex === index
+                            ? 'border-amber-500 ring-2 ring-amber-400/40'
+                            : 'border-slate-200 opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        {!isThumbFailed ? (
+                          <img
+                            src={image}
+                            alt={`${product.name} - thumbnail ${index + 1}`}
+                            referrerPolicy="no-referrer"
+                            onError={() => handleImageError(image)}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-400">
+                            {index + 1}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
 

@@ -52,7 +52,17 @@ export function getR2PhotoUrl(sku: string, index = 1): string {
 
 export function parsePhotoUrls(photoUrlsStr: string | null | undefined, sku: string): string[] {
   if (!photoUrlsStr) return [getR2PhotoUrl(sku, 1)];
-  const rawParts = String(photoUrlsStr)
+  const rawStr = String(photoUrlsStr).trim();
+  if (
+    !rawStr ||
+    rawStr.toLowerCase() === 'null' ||
+    rawStr.toLowerCase() === 'none' ||
+    rawStr.toLowerCase() === 'undefined'
+  ) {
+    return [getR2PhotoUrl(sku, 1)];
+  }
+
+  const rawParts = rawStr
     .split(/[,|]/)
     .map((p) => p.trim())
     .filter(Boolean);
@@ -60,10 +70,14 @@ export function parsePhotoUrls(photoUrlsStr: string | null | undefined, sku: str
   if (rawParts.length === 0) return [getR2PhotoUrl(sku, 1)];
 
   return rawParts.map((part, idx) => {
+    // Detect legacy Google Drive links that return 404/CORS and route them to canonical R2 CDN
+    if (part.includes('drive.google.com') || part.includes('googleusercontent.com')) {
+      return getR2PhotoUrl(sku, idx + 1);
+    }
     if (part.startsWith('http://') || part.startsWith('https://')) {
       return part;
     }
-    if (part.endsWith('.webp') || part.endsWith('.jpg') || part.endsWith('.png')) {
+    if (part.endsWith('.webp') || part.endsWith('.jpg') || part.endsWith('.jpeg') || part.endsWith('.png')) {
       return `${R2_PHOTO_BASE_URL}/${part}`;
     }
     return getR2PhotoUrl(sku, idx + 1);
@@ -90,7 +104,7 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
   const fullDesc = String(row.full_description || '').trim();
   const linkUnit = String(row.link_unit || '');
   const linkTelegram = String(row.link_telegram || '');
-  const slug = extractSlugFromLink(linkUnit, sku);
+  const slug = String(row.slug || extractSlugFromLink(linkUnit, sku)).trim();
 
   // Status mapping
   const status: AvailabilityStatus = statusUnit === 'SOLD' ? 'SOLD' : 'READY';
@@ -415,9 +429,11 @@ export async function queryTursoProducts(options?: TursoProductsQuery): Promise<
   // Select items query
   const selectSql = `
     SELECT 
-      p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
+      p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
+      p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug
@@ -463,8 +479,8 @@ export async function queryTursoWooCommerceProducts(
 
   if (options?.slug) {
     const s = options.slug.trim().toLowerCase();
-    whereClauses.push("(p.sku = ? OR p.link_unit LIKE '%' || ? || '/' OR p.link_unit LIKE '%' || ?)");
-    args.push(s.toUpperCase(), s, s);
+    whereClauses.push("(p.slug = ? OR p.sku = ? OR p.link_unit LIKE '%' || ? || '/' OR p.link_unit LIKE '%' || ?)");
+    args.push(s, s.toUpperCase(), s, s);
   }
 
   if (options?.search) {
@@ -513,9 +529,11 @@ export async function queryTursoWooCommerceProducts(
   const countSql = `SELECT COUNT(*) as total FROM products p LEFT JOIN categories c ON p.category_slug = c.child_slug WHERE ${whereSql}`;
   const selectSql = `
     SELECT 
-      p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
+      p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
+      p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug
@@ -554,6 +572,7 @@ export async function getTursoProductBySlug(slugOrSku: string): Promise<Product 
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
+      p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug
@@ -622,9 +641,11 @@ export async function getTursoRelatedProducts(
   const client = getTursoClient();
   const sql = `
     SELECT 
-      p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
+      p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
+      p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug
@@ -654,9 +675,11 @@ export async function getTursoWooCommerceRelatedProducts(
   const client = getTursoClient();
   const sql = `
     SELECT 
-      p.sku, p.title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
+      p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
+      p.estimasi_harga_baru, p.harga_display_low, p.harga_display_high,
       c.id as cat_id, c.parent_name, c.parent_slug, c.child_name, c.child_slug
     FROM products p
     LEFT JOIN categories c ON p.category_slug = c.child_slug

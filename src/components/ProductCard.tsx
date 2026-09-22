@@ -27,6 +27,7 @@ function formatAdminPrice(price: number | null | undefined): string {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail, isAdminMode, onToggleStatus }) => {
   const isSold = product.status === 'SOLD';
   const conditionLabel = getConditionLabel(product.condition);
+  const [imgError, setImgError] = React.useState(false);
 
   return (
     <motion.div
@@ -37,17 +38,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail,
       className={`group bg-white rounded-2xl border transition-colors duration-200 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-lg ${isSold ? 'border-slate-300 bg-slate-50/70' : 'border-slate-200 hover:border-amber-400/60'}`}
     >
       <div>
-        <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden cursor-pointer" onClick={() => onOpenDetail(product)}>
-          <img
-            src={product.images[0] || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80'}
-            alt={product.name}
-            referrerPolicy="no-referrer"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80';
-            }}
-            className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSold ? 'grayscale contrast-125' : ''}`}
-            loading="lazy"
-          />
+        <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden cursor-pointer flex items-center justify-center" onClick={() => onOpenDetail(product)}>
+          {product.images[0] && !imgError ? (
+            <img
+              src={product.images[0]}
+              alt={product.name}
+              referrerPolicy="no-referrer"
+              onError={() => setImgError(true)}
+              className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSold ? 'grayscale contrast-125' : ''}`}
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-slate-900 select-none">
+              <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-amber-400 font-black text-xs mb-1 border border-slate-700 shadow-inner">
+                BBK
+              </div>
+              <p className="text-[11px] font-bold text-slate-200 line-clamp-1">{product.sku}</p>
+              <p className="text-[10px] text-slate-400 line-clamp-1">{product.category}</p>
+            </div>
+          )}
 
           <div className="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">

@@ -31,6 +31,7 @@ Buka [http://localhost:3000](http://localhost:3000) pada browser Anda.
 
 | Sesi | File Ledger | Tanggal / Waktu | Durasi | Fokus Utama | Commits | Status |
 | :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| **BBK-2.17b** | [`BBK-2.17b.md`](BBK-2.17b.md) | 2026-09-24 10:46 WIB | **10m 00s** | Export Dataset Katalog BBKitchen Bersih untuk RAB Google AI Studio | 1 | 🔒 Sealed |
 | **BBK-2.15** | [`BBK-2.15.md`](BBK-2.15.md) | 2026-09-22 18:14 WIB | **3h 45m** | Sovereign Overhaul Control Tower: Pruning, SQLite Aggregation, Sold Radar 4-Pola, Customer CRM, PDF Engine & Smart Link | 1 | 🔒 Sealed |
 | **BBK-2.14** | [`BBK-2.14.md`](BBK-2.14.md) | 2026-09-21 21:21 WIB | **2h 33m** | Dynamic RBAC & Granular 18-Key PBAC | 1 | 🔒 Sealed |
 | **BBK-2.13** | [`BBK-2.13.md`](BBK-2.13.md) | 2026-09-21 18:48 WIB | **4h 36m** | Shipper PO Commercial Documents & Full Turso SQLite SSOT Migration | 1 | 🔒 Sealed |

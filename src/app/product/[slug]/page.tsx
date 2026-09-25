@@ -56,16 +56,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     location
   );
 
+  const sku = (product.sku || '').trim();
+  const hasSkuInTitle = sku && seoTitle.toLowerCase().includes(sku.toLowerCase());
+  const shareTitle = sku && !hasSkuInTitle ? `[${sku}] ${seoTitle}` : seoTitle;
+
+  const hasSkuInDesc = sku && description.toLowerCase().includes(sku.toLowerCase());
+  const shareDescription = sku && !hasSkuInDesc ? `[SKU: ${sku}] ${description}` : description;
+
   const canonical = `${PUBLIC_SITE_ORIGIN}/shop/${product.slug}`;
   const firstImage = product.images[0]?.src;
 
   return {
-    title: seoTitle,
-    description,
+    title: shareTitle,
+    description: shareDescription,
     alternates: { canonical },
     openGraph: {
-      title: seoTitle,
-      description,
+      title: shareTitle,
+      description: shareDescription,
       url: canonical,
       siteName: 'BBKitchen (Bukan Baru Kitchen)',
       locale: 'id_ID',
@@ -76,15 +83,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
               url: firstImage,
               width: 800,
               height: 800,
-              alt: seoTitle,
+              alt: shareTitle,
             },
           ]
         : undefined,
     },
     twitter: {
-      card: 'summary_large_image',
-      title: seoTitle,
-      description,
+      card: 'summary',
+      title: shareTitle,
+      description: shareDescription,
       images: firstImage ? [firstImage] : undefined,
     },
   };

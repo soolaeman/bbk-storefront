@@ -12,6 +12,7 @@ import {
   Calendar,
   Info,
   Link,
+  ExternalLink,
   Check,
 } from 'lucide-react';
 
@@ -49,6 +50,32 @@ const slugifyProductName = (value: string): string => {
     .replace(/^-+|-+$/g, '');
 };
 
+const cleanModalDescription = (product: Product): string => {
+  // 1. Prefer summary if clean
+  if (product.summary && !product.summary.includes('<div') && !product.summary.includes('<h3>')) {
+    return product.summary.trim();
+  }
+  const raw = product.summary || product.description || '';
+  if (!raw) return 'Detail unit siap pakai dan telah lolos uji fungsi di BBKitchen.';
+
+  // 2. Strip all HTML tags, clean duplicates & entities
+  const clean = raw
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<div class="panduan-anggaran"[\s\S]*?<\/div>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return clean || 'Detail unit siap pakai dan telah lolos uji fungsi di BBKitchen.';
+};
+
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   product,
   onClose,
@@ -80,14 +107,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       ? 'TERJUAL / SOLD'
       : 'READY SIAP KIRIM';
 
-  const description = product.description || product.summary || 'Detail unit belum tersedia.';
+  const description = cleanModalDescription(product);
+  const canonicalSlug = product.slug || slugifyProductName(product.name) || product.sku.toLowerCase();
+  const productUrl = `/shop/${encodeURIComponent(canonicalSlug)}`;
 
   const handleCopyLink = async () => {
-    const canonicalSlug = product.slug || slugifyProductName(product.name) || product.sku.toLowerCase();
-    const productUrl = `${window.location.origin}/shop/${encodeURIComponent(canonicalSlug)}`;
+    const fullUrl = `${window.location.origin}${productUrl}`;
 
     try {
-      await navigator.clipboard.writeText(productUrl);
+      await navigator.clipboard.writeText(fullUrl);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -115,55 +143,67 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         id="product-detail-modal"
         className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col"
       >
-        <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800 shrink-0">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="bg-slate-900 text-white px-4 sm:px-5 py-3.5 flex items-center justify-between border-b border-slate-800 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <span className="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-500/30 shrink-0">
               {product.sku}
             </span>
-            <span className="text-xs text-slate-400 hidden sm:inline truncate">
+            <span className="text-xs text-slate-400 hidden sm:inline truncate max-w-[200px]">
               {product.category}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               id="detail-copy-link-btn"
               onClick={handleCopyLink}
-              className="px-2.5 py-1 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center gap-1.5 transition-colors"
+              className="px-2.5 py-1 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-700"
               title="Salin link produk"
             >
               {copied ? (
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
               ) : (
-                <Link className="w-3.5 h-3.5" />
+                <Link className="w-3.5 h-3.5 text-slate-400" />
               )}
-              <span>{copied ? 'Link Tersalin!' : 'Salin Link'}</span>
+              <span className="hidden xs:inline">{copied ? 'Tersalin!' : 'Salin Link'}</span>
             </button>
+
+            <a
+              href={productUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              id="detail-open-page-btn"
+              className="px-2.5 py-1 text-xs font-medium text-emerald-300 hover:text-white bg-emerald-950/70 hover:bg-emerald-800 border border-emerald-500/40 rounded-lg flex items-center gap-1.5 transition-colors"
+              title="Buka halaman produk lengkap"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden sm:inline">Buka Halaman</span>
+            </a>
 
             <button
               type="button"
               id="detail-close-btn"
               onClick={onClose}
               aria-label="Tutup detail produk"
-              className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700 ml-1"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        <div className="p-5 overflow-y-auto space-y-6 flex-1 text-slate-800">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div className="p-4 sm:p-5 overflow-y-auto space-y-6 flex-1 text-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6">
             <div className="md:col-span-6 space-y-3">
-              <div className="relative aspect-[4/3] bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-xs flex items-center justify-center">
+              <div className="relative aspect-[4/3] bg-slate-950 rounded-xl overflow-hidden border border-slate-200 shadow-xs flex items-center justify-center">
                 {selectedImage && !isSelectedFailed ? (
                   <img
                     src={selectedImage}
                     alt={`${product.name} - foto unit BBKitchen`}
                     referrerPolicy="no-referrer"
                     onError={() => handleImageError(selectedImage)}
-                    className={`w-full h-full object-cover ${isSold ? 'grayscale contrast-125' : ''}`}
+                    className={`w-full h-full object-contain p-2 transition-all ${isSold ? 'grayscale contrast-125' : ''}`}
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-slate-400 bg-slate-900">

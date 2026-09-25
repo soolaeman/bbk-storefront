@@ -45,54 +45,57 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!product) return { title: 'Unit Tidak Ditemukan | BBKitchen' };
 
   const condition = getMeta(product, 'kondisi_unit');
+  const status = normalizeStatus(getMeta(product, 'status_unit'), product.stock_status);
+  const location = getMeta(product, 'lokasi_unit');
   const rawSeoTitle = getMeta(product, 'seo_title');
   const seoTitle = formatCleanSeoTitle(rawSeoTitle, product.name, condition);
 
   const rawDesc = getMeta(product, 'yoast_description');
-  const location = getMeta(product, 'lokasi_unit');
   const description = formatCleanMetaDescription(
     rawDesc || product.short_description || product.description,
     product.name,
-    location
+    location,
+    condition,
+    status
   );
 
   const sku = (product.sku || '').trim();
   const hasSkuInTitle = sku && seoTitle.toLowerCase().includes(sku.toLowerCase());
   const shareTitle = sku && !hasSkuInTitle ? `[${sku}] ${seoTitle}` : seoTitle;
 
-  const hasSkuInDesc = sku && description.toLowerCase().includes(sku.toLowerCase());
-  const shareDescription = sku && !hasSkuInDesc ? `[SKU: ${sku}] ${description}` : description;
-
   const canonical = `${PUBLIC_SITE_ORIGIN}/shop/${product.slug}`;
-  const firstImage = product.images[0]?.src;
+  const rawFirstImage = product.images[0]?.src;
+  const absoluteImageUrl = rawFirstImage
+    ? (rawFirstImage.startsWith('http://') || rawFirstImage.startsWith('https://')
+        ? rawFirstImage
+        : `${PUBLIC_SITE_ORIGIN}${rawFirstImage.startsWith('/') ? '' : '/'}${rawFirstImage}`)
+    : `${PUBLIC_SITE_ORIGIN}/api/cdn/${sku}_1.webp`;
 
   return {
     title: shareTitle,
-    description: shareDescription,
+    description: description,
     alternates: { canonical },
     openGraph: {
       title: shareTitle,
-      description: shareDescription,
+      description: description,
       url: canonical,
       siteName: 'BBKitchen (Bukan Baru Kitchen)',
       locale: 'id_ID',
       type: 'website',
-      images: firstImage
-        ? [
-            {
-              url: firstImage,
-              width: 800,
-              height: 800,
-              alt: shareTitle,
-            },
-          ]
-        : undefined,
+      images: [
+        {
+          url: absoluteImageUrl,
+          width: 800,
+          height: 800,
+          alt: shareTitle,
+        },
+      ],
     },
     twitter: {
       card: 'summary',
       title: shareTitle,
-      description: shareDescription,
-      images: firstImage ? [firstImage] : undefined,
+      description: description,
+      images: [absoluteImageUrl],
     },
   };
 }

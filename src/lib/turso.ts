@@ -238,15 +238,22 @@ export function formatCleanSeoTitle(rawSeoTitle: string | null | undefined, titl
   return `${title} Second Ex-Resto Siap Pakai | BBKitchen`;
 }
 
-export function formatCleanMetaDescription(rawDesc: string | null | undefined, title: string, location?: string): string {
-  let clean = String(rawDesc || '').trim();
-  if (clean.includes('Jelaskan efisiensi')) {
-    clean = '';
+export function formatCleanMetaDescription(
+  rawDesc: string | null | undefined,
+  title: string,
+  location?: string,
+  condition?: string,
+  status?: string
+): string {
+  if (status === 'SOLD') {
+    return `Unit ${title} telah TERJUAL. Hubungi tim BBKitchen via WhatsApp untuk titip cari unit serupa bergaransi.`;
   }
-  if (!clean || clean.length < 30) {
-    clean = `Sedia ${title} second ex-resto berkualitas siap pakai di Gudang BBKitchen ${location || 'Jabodetabek'}. Lolos uji fungsi teknisi & siap kirim bergaransi se-Jabodetabek. Hubungi kami sekarang!`;
-  }
-  return stripHtml(clean).slice(0, 160);
+
+  const loc = location && location.trim() ? location.trim() : 'Jabodetabek';
+  const isBaru = condition && condition.toUpperCase().includes('BARU');
+  const condText = isBaru ? 'Baru Gress' : 'Bekas Siap Pakai';
+
+  return `Ready di Gudang ${loc} • Kondisi ${condText} • Lolos uji fungsi teknisi & garansi 7 hari siap kirim se-Jabodetabek. Hubungi BBKitchen via WhatsApp!`;
 }
 
 export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerceProduct {

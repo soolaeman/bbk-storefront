@@ -3,6 +3,10 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
+  serverExternalPackages: ['@libsql/client'],
+  outputFileTracingIncludes: {
+    '/**': ['./data/bbk.db'],
+  },
   images: {
     remotePatterns: [
       {

@@ -76,20 +76,68 @@ export default function App() {
   const liveLocationOptions = useMemo(() => Array.from(new Set(catalogMetadata.locationOptions.map(value => value.trim()).filter(Boolean))), [catalogMetadata.locationOptions]);
   const livePowerTypeOptions = useMemo(() => Array.from(new Set(products.map(product => product.powerType.trim()).filter(Boolean))), [products]);
   const liveRequestCategoryOptions = useMemo(() => liveCategoryOptions.map(category => category.name), [liveCategoryOptions]);
-  const goToCatalogPage = (page: number) => { if (page < 1 || isLoadingProducts) return; if (totalPages !== null && page > totalPages) return; if (totalPages === null && page > catalogPage && !hasNextPage) return; window.scrollTo({ top: 380, behavior: 'smooth' }); void loadProducts(page); };
+  const goToCatalogPage = (page: number) => { if (page < 1 || isLoadingProducts) return; if (totalPages !== null && page > totalPages) return; if (totalPages === null && page > catalogPage && !hasNextPage) return; window.scrollTo({ top: 180, behavior: 'smooth' }); void loadProducts(page); };
   const handleCatalogPageSubmit = (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); const requestedPage = Number.parseInt(catalogPageInput, 10); if (!Number.isFinite(requestedPage)) { setCatalogPageInput(String(catalogPage)); return; } const maxPage = totalPages ?? (hasNextPage ? requestedPage : catalogPage); const targetPage = Math.min(Math.max(requestedPage, 1), maxPage); setCatalogPageInput(String(targetPage)); goToCatalogPage(targetPage); };
   const displayedCount = products.length; const totalCountLabel = totalResults ?? catalogMetadata.totalProducts ?? displayedCount; const totalPageLabel = totalPages ?? (hasNextPage ? '…' : catalogPage);
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
       <Header searchQuery={filterState.searchQuery} onSearchChange={(q) => handleFilterChange({ searchQuery: q })} onRequestUnitClick={() => setIsRequestModalOpen(true)} isAdminMode={isAdminMode} onToggleAdminMode={() => setIsAdminMode(!isAdminMode)} onOpenAdminPanel={() => setIsAdminPanelOpen(true)} />
-      <HeroSection onSelectCategory={(cat) => { handleFilterChange({ category: cat }); window.scrollTo({ top: 380, behavior: 'smooth' }); }} onRequestUnitClick={() => setIsRequestModalOpen(true)} />
+      <HeroSection onSelectCategory={(cat) => { handleFilterChange({ category: cat }); window.scrollTo({ top: 120, behavior: 'smooth' }); }} onRequestUnitClick={() => setIsRequestModalOpen(true)} />
       <CategoryFilter filterState={filterState} onFilterChange={handleFilterChange} onResetFilters={handleResetFilters} totalResultsCount={totalCountLabel} categoryCounts={categoryCounts} categories={liveCategoryOptions} conditionOptions={liveConditionOptions} locationOptions={liveLocationOptions} powerTypeOptions={livePowerTypeOptions} />
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-slate-200"><div><h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2"><span>Katalog Unit Dapur</span>{filterState.category !== 'Semua' && <span className="text-amber-700 font-semibold">• {filterState.category}</span>}</h2><p className="text-xs text-slate-500">Halaman {catalogPage} • Menampilkan {displayedCount} dari {totalCountLabel} unit BBKitchen{isLoadingMetadata ? ' • Menyiapkan filter metadata live...' : ''}</p></div><button type="button" onClick={() => setIsRequestModalOpen(true)} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold transition-colors"><Sparkles className="w-3.5 h-3.5 text-amber-600" /><span>Alat belum ada? Titip Sourcing</span></button></div>
-        {isLoadingProducts ? <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center shadow-xs my-8"><Loader2 className="w-8 h-8 animate-spin text-amber-600 mx-auto mb-3" /><p className="text-sm font-bold text-slate-900">Memuat katalog unit BBKitchen...</p><p className="text-xs text-slate-500 mt-1">Mengambil 8 unit per halaman dari WooCommerce.</p></div> : productLoadError ? <div className="bg-white rounded-2xl border border-red-200 p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 shadow-xs my-8"><div className="space-y-1"><h3 className="text-base font-bold text-slate-900">Katalog belum dapat dimuat</h3><p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{productLoadError}</p></div><button type="button" onClick={() => void loadProducts(catalogPage)} className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl inline-flex items-center gap-1.5 transition-colors"><RotateCcw className="w-3.5 h-3.5" /><span>Coba Lagi</span></button></div> : products.length > 0 ? <><div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">{products.map(product => <ProductCard key={product.id} product={product} onOpenDetail={p => setSelectedProduct(p)} isAdminMode={isAdminMode} onToggleStatus={handleToggleStatus} />)}</div><div className="mt-8 flex flex-wrap items-center justify-center gap-2.5" aria-label="Pagination katalog"><button type="button" onClick={() => goToCatalogPage(catalogPage - 1)} disabled={catalogPage === 1 || isLoadingProducts} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"><ChevronLeft className="w-4 h-4" />Sebelumnya</button><form onSubmit={handleCatalogPageSubmit} className="flex items-center gap-2"><label htmlFor="catalog-page-input" className="text-xs font-semibold text-slate-500">Halaman</label><input id="catalog-page-input" type="number" min={1} max={totalPages ?? undefined} value={catalogPageInput} onChange={event => setCatalogPageInput(event.target.value)} disabled={isLoadingProducts} className="w-16 px-2.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs font-black text-center outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:opacity-50" aria-label="Masukkan nomor halaman" /></form><span className="text-xs text-slate-500 font-semibold">dari {totalPageLabel}</span><button type="button" onClick={() => goToCatalogPage(catalogPage + 1)} disabled={isLoadingProducts || (totalPages !== null ? catalogPage >= totalPages : !hasNextPage)} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors">Berikutnya<ChevronRight className="w-4 h-4" /></button></div></> : <div className="bg-white rounded-2xl border border-slate-200 p-10 sm:p-16 text-center shadow-xs my-8"><PackageOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" /><h3 className="text-base font-bold text-slate-900">Belum ada unit yang cocok</h3><p className="text-xs text-slate-500 max-w-md mx-auto mt-1 leading-relaxed">Coba ubah kata kunci atau filter. Jika belum menemukan unit yang sesuai, hubungi Tim BBKitchen.</p><button type="button" onClick={handleResetFilters} className="mt-5 px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl transition-colors">Reset Filter</button></div>}
+      
+      {/* Main Catalog Grid: 1-View Above the Fold */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-4 sm:py-6">
+        {isLoadingProducts ? (
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center shadow-xs my-4">
+            <Loader2 className="w-7 h-7 animate-spin text-amber-600 mx-auto mb-2" />
+            <p className="text-xs font-bold text-slate-900">Memuat stok unit ready BBKitchen...</p>
+          </div>
+        ) : productLoadError ? (
+          <div className="bg-white rounded-2xl border border-red-200 p-8 text-center max-w-xl mx-auto space-y-3 shadow-xs my-4">
+            <h3 className="text-sm font-bold text-slate-900">Katalog belum dapat dimuat</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">{productLoadError}</p>
+            <button type="button" onClick={() => void loadProducts(catalogPage)} className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl inline-flex items-center gap-1.5 transition-colors">
+              <RotateCcw className="w-3.5 h-3.5" /><span>Coba Lagi</span>
+            </button>
+          </div>
+        ) : products.length > 0 ? (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+              {products.map(product => (
+                <ProductCard key={product.id} product={product} onOpenDetail={p => setSelectedProduct(p)} isAdminMode={isAdminMode} onToggleStatus={handleToggleStatus} />
+              ))}
+            </div>
+
+            {/* Pagination Toolbar */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="Pagination katalog">
+              <button type="button" onClick={() => goToCatalogPage(catalogPage - 1)} disabled={catalogPage === 1 || isLoadingProducts} className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors">
+                <ChevronLeft className="w-3.5 h-3.5" />Sebelumnya
+              </button>
+              <form onSubmit={handleCatalogPageSubmit} className="flex items-center gap-1.5">
+                <label htmlFor="catalog-page-input" className="text-xs font-semibold text-slate-500">Hal.</label>
+                <input id="catalog-page-input" type="number" min={1} max={totalPages ?? undefined} value={catalogPageInput} onChange={event => setCatalogPageInput(event.target.value)} disabled={isLoadingProducts} className="w-12 px-2 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-black text-center outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:opacity-50" aria-label="Masukkan nomor halaman" />
+              </form>
+              <span className="text-xs text-slate-500 font-semibold">dari {totalPageLabel}</span>
+              <button type="button" onClick={() => goToCatalogPage(catalogPage + 1)} disabled={isLoadingProducts || (totalPages !== null ? catalogPage >= totalPages : !hasNextPage)} className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors">
+                Berikutnya<ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center shadow-xs my-4">
+            <PackageOpen className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-sm font-bold text-slate-900">Belum ada unit yang cocok</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">Coba ubah kata kunci pencarian atau reset filter kategori.</p>
+            <button type="button" onClick={handleResetFilters} className="mt-4 px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl transition-colors">
+              Reset Filter
+            </button>
+          </div>
+        )}
+
         <div className="mt-8"><KitchenConsultationBanner /></div>
       </main>
+
       <TestimonialsSection />
       <GallerySection />
       <LocationSection />

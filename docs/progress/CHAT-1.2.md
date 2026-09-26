@@ -1,4 +1,4 @@
-[🧭 NAVIGATOR](NAVIGATOR.md)
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
 # Chat 1.2 — API / Metadata / Catalog / Product / SEO
 
 > **Forensic progress archive.** This archive preserves the engineering history that is most useful for future sessions. Some Chat 1.2 messages were skipped, so facts not supported by the available source are explicitly marked **Tidak ditemukan di conversation**. Short SHA values are preserved as recorded; full SHA values are not invented.

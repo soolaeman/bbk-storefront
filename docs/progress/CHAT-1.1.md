@@ -1,4 +1,4 @@
-[🧭 NAVIGATOR](NAVIGATOR.md)
+[🧭 NAVIGATOR](../../NAVIGATOR.md)
 # Chat 1.1 — Foundation / WooCommerce Migration
 
 > Forensic progress archive. This file preserves the high-value engineering history from Chat 1.1. Facts unavailable because of skipped conversation content are explicitly marked **Tidak ditemukan di conversation.**

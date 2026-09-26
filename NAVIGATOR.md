@@ -13,9 +13,9 @@
 | Tahu **project sekarang ada di mana** | [`README.md`](README.md) | Dashboard kondisi terbaru, prioritas Pareto, architecture, bottleneck, technical debt, dan handoff. |
 | Tahu **apa yang terjadi di tiap chat** | [`docs/progress/README.md`](docs/progress/README.md) | Index sejarah migration dan ringkasan progress lintas session. |
 | Tahu **file mana yang harus diedit** | [`docs/guides/README.md`](docs/guides/README.md) | Peta guide untuk memahami lokasi file dan perubahan yang aman. |
-| **Mulai session baru** | [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Canonical session-bootstrap workflow sebelum coding, termasuk `CHAT-X.Y.md` + timestamp evidence. |
-| **Menutup session** | [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Canonical forensic close, documentation audit, verification, dan handoff. |
-| Sinkronisasi dokumentasi saja | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + README + Navigator + START SESSION SOP terhadap repository terkini. |
+| **Mulai session baru** | [`docs/prompts/START-SESSION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Canonical session-bootstrap workflow sebelum coding, termasuk `CHAT-X.Y.md` + timestamp evidence. |
+| **Menutup session** | [`docs/prompts/END-SESSION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Canonical forensic close, documentation audit, verification, dan handoff. |
+| Sinkronisasi dokumentasi saja | [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Sinkronisasi guides + README + Navigator + START SESSION SOP terhadap repository terkini. |
 
 ---
 
@@ -27,7 +27,7 @@
 |---|---|---|
 | [`README.md`](README.md) | **Current project dashboard** | Setiap mulai chat baru atau sebelum mengambil keputusan besar. |
 | [`NAVIGATOR.md`](NAVIGATOR.md) | **Peta dokumentasi** | Saat bingung mencari file dokumentasi. |
-| [`end-session-prompt.md`](end-session-prompt.md) | **Shortcut ke canonical end-session prompt** | Kalau ingin cepat membuka prompt penutupan session dari root. |
+| [`end-session-prompt.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | **Shortcut ke canonical end-session prompt** | Kalau ingin cepat membuka prompt penutupan session dari root. |
 
 ---
 
@@ -79,10 +79,10 @@ Sales Helper reference:
 
 | File | Dipakai untuk | Kapan buka? |
 |---|---|---|
-| [`docs/prompts/START-SESSION-PROMPT.md`](docs/prompts/START-SESSION-PROMPT.md) | Bootstrap session baru: nomor session, timestamp evidence, `CHAT-X.Y.md`, repository context, Pareto, verification, Git checkpoint. | **Awal setiap migration chat/session baru.** |
-| [`docs/prompts/END-SESSION-PROMPT.md`](docs/prompts/END-SESSION-PROMPT.md) | Menutup session: forensic extraction, repository audit, documentation audit, verification, dan handoff. | **Akhir setiap migration chat/session normal.** |
-| [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md) | Sinkronisasi guides + root README + Navigator + START SESSION SOP terhadap repository terkini. | Saat dokumentasi perlu diselaraskan tanpa forensic session close. |
-| [`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`](docs/prompts/FORENSIC-EXTRACTION-PROMPT.md) | Mengekstrak history dari chat lama / transcript yang tidak lengkap. | Saat mengarsipkan atau memperbaiki history session lama. |
+| [`docs/prompts/START-SESSION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Bootstrap session baru: nomor session, timestamp evidence, `CHAT-X.Y.md`, repository context, Pareto, verification, Git checkpoint. | **Awal setiap migration chat/session baru.** |
+| [`docs/prompts/END-SESSION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Menutup session: forensic extraction, repository audit, documentation audit, verification, dan handoff. | **Akhir setiap migration chat/session normal.** |
+| [`docs/prompts/UPDATE-DOCUMENTATION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Sinkronisasi guides + root README + Navigator + START SESSION SOP terhadap repository terkini. | Saat dokumentasi perlu diselaraskan tanpa forensic session close. |
+| [`docs/prompts/FORENSIC-EXTRACTION-PROMPT.md`](../Jarvis-OS/docs/prompts/SOVEREIGN_UNIVERSAL_INSTRUCTION.md) | Mengekstrak history dari chat lama / transcript yang tidak lengkap. | Saat mengarsipkan atau memperbaiki history session lama. |
 
 > **Prompt = instruksi untuk AI.** Source of truth project tetap berada di code, root `README.md`, dan progress archive sesuai konteksnya.
 

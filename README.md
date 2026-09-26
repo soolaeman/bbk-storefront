@@ -31,16 +31,16 @@ Buka [http://localhost:3000](http://localhost:3000) pada browser Anda.
 
 | Sesi | File Ledger | Tanggal / Waktu | Durasi | Fokus Utama | Commits | Status |
 | :--- | :--- | :--- | :--- | :--- | :---: | :---: |
-| **BBK-2.18** | [`BBK-2.18.md`](BBK-2.18.md) | 2026-09-25 22:05 WIB | **1h 05m** | SSOT Regex MVP Harvester, 24 Human Decisions Gate, Master Plan Modularization & Single Database Consolidation | 1 | 🔒 Sealed |
-| **BBK-2.17b** | [`BBK-2.17b.md`](BBK-2.17b.md) | 2026-09-24 10:46 WIB | **10m 00s** | Export Dataset Katalog BBKitchen Bersih untuk RAB Google AI Studio | 1 | 🔒 Sealed |
-| **BBK-2.15** | [`BBK-2.15.md`](BBK-2.15.md) | 2026-09-22 18:14 WIB | **3h 45m** | Sovereign Overhaul Control Tower: Pruning, SQLite Aggregation, Sold Radar 4-Pola, Customer CRM, PDF Engine & Smart Link | 1 | 🔒 Sealed |
-| **BBK-2.14** | [`BBK-2.14.md`](BBK-2.14.md) | 2026-09-21 21:21 WIB | **2h 33m** | Dynamic RBAC & Granular 18-Key PBAC | 1 | 🔒 Sealed |
-| **BBK-2.13** | [`BBK-2.13.md`](BBK-2.13.md) | 2026-09-21 18:48 WIB | **4h 36m** | Shipper PO Commercial Documents & Full Turso SQLite SSOT Migration | 1 | 🔒 Sealed |
-| **BBK-2.12** | [`BBK-2.12.md`](BBK-2.12.md) | 2026-09-21 14:09 WIB | **36m 00s** | Formulasi Kebijakan Komersial & Fiqh Ihsan PLAN-BBK-04, DP Min 30%, Holding Fee Cap 1 Jt, SSOT Rekening Bank Jago Omset BBKitchen | 1 | 🔒 Sealed |
-| **BBK-2.11** | [`BBK-2.11.md`](BBK-2.11.md) | 2026-09-21 12:44 WIB | **1h 05m** | Master Architecture Plan for Invoicing, Logistics Dispatch, Finance Ledger & QR Warranty Engine | 1 | 🔒 Sealed |
-| **BBK-2.10** | [`BBK-2.10.md`](BBK-2.10.md) | 2026-09-21 08:02 WIB | **1h 25m** | Unifikasi 1 SSOT Kategori & Gudang BBKitchen, Eliminasi Total Unit HQ Fiktif dari 3.091 Produk, Konsolidasi core/ Pipeline & README, dan Cetak Biru Arsitektur End-to-End | 1 | 🔒 Sealed |
-| **BBK 2.8** | [`BBK 2.8`](`BBK-2.8.md`) | 2026-08-30 01:57 WIB | 5h 20m | Sales Quote preserved, Sales Helper proxy to BTC & deployment recovery | 1 | 🔒 Sealed |
-| **BBK-2.9** | [`BBK-2.9.md`](BBK-2.9.md) | 2026-09-20 16:53 WIB | **3h 00m** | Pemulihan 300 katalog unit cacat, arsitektur Multi-Provider AI Ingestion Pipeline, strategic price anchoring, dan refactor types frontend | 1 | 🔒 Sealed |
+| **BBK-2.18** | [`BBK-2.18.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.18.md) | 2026-09-25 22:05 WIB | **1h 05m** | SSOT Regex MVP Harvester, 24 Human Decisions Gate, Master Plan Modularization & Single Database Consolidation | 1 | 🔒 Sealed |
+| **BBK-2.17b** | [`BBK-2.17b.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.17b.md) | 2026-09-24 10:46 WIB | **10m 00s** | Export Dataset Katalog BBKitchen Bersih untuk RAB Google AI Studio | 1 | 🔒 Sealed |
+| **BBK-2.15** | [`BBK-2.15.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.15.md) | 2026-09-22 18:14 WIB | **3h 45m** | Sovereign Overhaul Control Tower: Pruning, SQLite Aggregation, Sold Radar 4-Pola, Customer CRM, PDF Engine & Smart Link | 1 | 🔒 Sealed |
+| **BBK-2.14** | [`BBK-2.14.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.14.md) | 2026-09-21 21:21 WIB | **2h 33m** | Dynamic RBAC & Granular 18-Key PBAC | 1 | 🔒 Sealed |
+| **BBK-2.13** | [`BBK-2.13.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.13.md) | 2026-09-21 18:48 WIB | **4h 36m** | Shipper PO Commercial Documents & Full Turso SQLite SSOT Migration | 1 | 🔒 Sealed |
+| **BBK-2.12** | [`BBK-2.12.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.12.md) | 2026-09-21 14:09 WIB | **36m 00s** | Formulasi Kebijakan Komersial & Fiqh Ihsan PLAN-BBK-04, DP Min 30%, Holding Fee Cap 1 Jt, SSOT Rekening Bank Jago Omset BBKitchen | 1 | 🔒 Sealed |
+| **BBK-2.11** | [`BBK-2.11.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.11.md) | 2026-09-21 12:44 WIB | **1h 05m** | Master Architecture Plan for Invoicing, Logistics Dispatch, Finance Ledger & QR Warranty Engine | 1 | 🔒 Sealed |
+| **BBK-2.10** | [`BBK-2.10.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.10.md) | 2026-09-21 08:02 WIB | **1h 25m** | Unifikasi 1 SSOT Kategori & Gudang BBKitchen, Eliminasi Total Unit HQ Fiktif dari 3.091 Produk, Konsolidasi core/ Pipeline & README, dan Cetak Biru Arsitektur End-to-End | 1 | 🔒 Sealed |
+| **BBK 2.8** | [`BBK 2.8`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.8.md) | 2026-08-30 01:57 WIB | 5h 20m | Sales Quote preserved, Sales Helper proxy to BTC & deployment recovery | 1 | 🔒 Sealed |
+| **BBK-2.9** | [`BBK-2.9.md`](../Jarvis-OS/domains/business/bbkitchen/docs/progress/BBK-2.9.md) | 2026-09-20 16:53 WIB | **3h 00m** | Pemulihan 300 katalog unit cacat, arsitektur Multi-Provider AI Ingestion Pipeline, strategic price anchoring, dan refactor types frontend | 1 | 🔒 Sealed |
 
 ---
 

@@ -55,4 +55,4 @@ PROMPT
 → execution protocol
 ```
 
-For AI session workflows, use [`../prompts/`](../prompts/).
+For AI session workflows, use [`../prompts/`](../../../Jarvis-OS/docs/prompts/).

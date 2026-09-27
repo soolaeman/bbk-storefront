@@ -44,20 +44,59 @@ interface CategoryFilterProps {
   powerTypeOptions?: string[];
 }
 
-const getCategoryIcon = (iconName?: string) => {
-  switch (iconName) {
-    case 'Flame': return <Flame className="w-3.5 h-3.5" />;
-    case 'Utensils': return <Utensils className="w-3.5 h-3.5" />;
-    case 'Layers': return <Layers className="w-3.5 h-3.5" />;
-    case 'Snowflake': return <Snowflake className="w-3.5 h-3.5 text-sky-500" />;
-    case 'Maximize2': return <Maximize2 className="w-3.5 h-3.5" />;
-    case 'Table': return <Table className="w-3.5 h-3.5" />;
-    case 'Wind': return <Wind className="w-3.5 h-3.5" />;
-    case 'Cpu': return <Cpu className="w-3.5 h-3.5" />;
-    case 'Coffee': return <Coffee className="w-3.5 h-3.5" />;
-    case 'Droplets': return <Droplets className="w-3.5 h-3.5 text-blue-500" />;
-    default: return <LayoutGrid className="w-3.5 h-3.5" />;
+const CATEGORY_PRIORITY_ORDER = [
+  'MEJA STAINLESS',
+  'SINK STAINLESS',
+  'RAK STAINLESS',
+  'HOOD STAINLESS',
+  'KOMPOR',
+  'ICE SYSTEM',
+  'CHILLER',
+  'FREEZER',
+  'SHOWCASE',
+  'PERALATAN DAPUR LAINNYA',
+  'PERALATAN DAPUR BEKAS LAINNYA',
+];
+
+const getCategoryPriority = (name: string): number => {
+  const upper = name.trim().toUpperCase();
+  for (let i = 0; i < CATEGORY_PRIORITY_ORDER.length; i++) {
+    const target = CATEGORY_PRIORITY_ORDER[i];
+    if (upper === target || upper.includes(target) || target.includes(upper)) {
+      return i;
+    }
   }
+  return 999;
+};
+
+const getCategoryIcon = (iconName?: string, categoryName?: string) => {
+  if (iconName) {
+    switch (iconName) {
+      case 'Flame': return <Flame className="w-3.5 h-3.5" />;
+      case 'Utensils': return <Utensils className="w-3.5 h-3.5" />;
+      case 'Layers': return <Layers className="w-3.5 h-3.5" />;
+      case 'Snowflake': return <Snowflake className="w-3.5 h-3.5 text-sky-500" />;
+      case 'Maximize2': return <Maximize2 className="w-3.5 h-3.5" />;
+      case 'Table': return <Table className="w-3.5 h-3.5" />;
+      case 'Wind': return <Wind className="w-3.5 h-3.5" />;
+      case 'Cpu': return <Cpu className="w-3.5 h-3.5" />;
+      case 'Coffee': return <Coffee className="w-3.5 h-3.5" />;
+      case 'Droplets': return <Droplets className="w-3.5 h-3.5 text-blue-500" />;
+      default: return <LayoutGrid className="w-3.5 h-3.5" />;
+    }
+  }
+
+  const norm = (categoryName || '').toLowerCase();
+  if (norm.includes('meja')) return <Table className="w-3.5 h-3.5" />;
+  if (norm.includes('sink') || norm.includes('cuci')) return <Droplets className="w-3.5 h-3.5 text-blue-500" />;
+  if (norm.includes('rak') || norm.includes('wallshelf')) return <Layers className="w-3.5 h-3.5 text-amber-500" />;
+  if (norm.includes('hood') || norm.includes('blower') || norm.includes('ducting')) return <Wind className="w-3.5 h-3.5 text-cyan-500" />;
+  if (norm.includes('kompor') || norm.includes('fryer') || norm.includes('oven') || norm.includes('burner') || norm.includes('boiler') || norm.includes('kwali')) return <Flame className="w-3.5 h-3.5 text-amber-500" />;
+  if (norm.includes('ice') || norm.includes('es')) return <Snowflake className="w-3.5 h-3.5 text-sky-400" />;
+  if (norm.includes('chiller') || norm.includes('freezer')) return <Snowflake className="w-3.5 h-3.5 text-sky-500" />;
+  if (norm.includes('showcase')) return <Maximize2 className="w-3.5 h-3.5 text-emerald-500" />;
+  if (norm.includes('peralatan dapur')) return <Utensils className="w-3.5 h-3.5 text-slate-500" />;
+  return <LayoutGrid className="w-3.5 h-3.5" />;
 };
 
 const normalizeOptions = (options: string[] | undefined, currentValue: string) => {
@@ -80,11 +119,14 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const visibleCategories = useMemo(() => (
-    categories.filter((category) => (
-      category.parentId === undefined || category.parentId === 0
-    )).filter((category) => (
-      category.name === 'Semua' || category.count !== undefined || (categoryCounts[category.name] || 0) > 0
-    ))
+    categories
+      .filter((category) => (
+        category.parentId === undefined || category.parentId === 0
+      ))
+      .filter((category) => (
+        category.name === 'Semua' || category.count !== undefined || (categoryCounts[category.name] || 0) > 0
+      ))
+      .sort((a, b) => getCategoryPriority(a.name) - getCategoryPriority(b.name))
   ), [categories, categoryCounts]);
 
   const selectedCategory = categories.find((category) => category.name === filterState.category);
@@ -207,7 +249,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                     }`}
                   >
                     <span className={isActive ? 'text-amber-400' : 'text-slate-500'}>
-                      {getCategoryIcon(category.icon)}
+                      {getCategoryIcon(category.icon, category.name)}
                     </span>
                     <span className="whitespace-nowrap">{category.name}</span>
                     {isActive && subcategories.length > 0 && <ChevronDown className="w-3 h-3 text-amber-400" />}

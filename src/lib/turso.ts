@@ -400,25 +400,35 @@ export async function queryTursoProducts(options?: TursoProductsQuery): Promise<
   // Category filter
   if (options?.category && options.category.trim() && options.category !== 'Semua') {
     const cat = options.category.trim();
-    const catPattern = `%${cat}%`;
-    const catSlug = cat.toLowerCase().replace(/[\s&]+/g, '-');
-    whereClauses.push(`(
-      p.category_slug = ? OR
-      c.child_slug = ? OR
-      c.parent_slug = ? OR
-      c.child_name LIKE ? OR
-      c.parent_name LIKE ?
-    )`);
-    args.push(catSlug, catSlug, catSlug, catPattern, catPattern);
+    if (cat.toUpperCase().includes('PERALATAN DAPUR')) {
+      whereClauses.push(`(
+        p.category_slug = 'peralatan-dapur-bekas-lainnya' OR
+        c.child_slug = 'peralatan-dapur-bekas-lainnya' OR
+        c.parent_slug = 'peralatan-dapur-bekas-lainnya' OR
+        c.child_name LIKE '%PERALATAN DAPUR%' OR
+        c.parent_name LIKE '%PERALATAN DAPUR%'
+      )`);
+    } else {
+      const catPattern = `%${cat}%`;
+      const catSlug = cat.toLowerCase().replace(/[\s&]+/g, '-');
+      whereClauses.push(`(
+        p.category_slug = ? OR
+        c.child_slug = ? OR
+        c.parent_slug = ? OR
+        c.child_name LIKE ? OR
+        c.parent_name LIKE ?
+      )`);
+      args.push(catSlug, catSlug, catSlug, catPattern, catPattern);
+    }
   }
 
   // Condition filter
   if (options?.condition && options.condition !== 'Semua Kondisi') {
     const cond = options.condition.trim().toUpperCase();
     if (cond.includes('BARU')) {
-      whereClauses.push("p.kondisi_unit = 'BARU'");
+      whereClauses.push("(UPPER(p.kondisi_unit) LIKE '%BARU%' OR UPPER(p.kondisi_unit) LIKE '%GRESS%')");
     } else if (cond.includes('BEKAS') || cond.includes('REKONDISI')) {
-      whereClauses.push("p.kondisi_unit = 'BEKAS'");
+      whereClauses.push("(UPPER(p.kondisi_unit) LIKE '%BEKAS%' OR UPPER(p.kondisi_unit) LIKE '%SECOND%')");
     }
   }
 
@@ -524,22 +534,35 @@ export async function queryTursoWooCommerceProducts(
 
   if (options?.category && options.category.trim() && options.category !== 'Semua') {
     const cat = options.category.trim();
-    const catPattern = `%${cat}%`;
-    const catSlug = cat.toLowerCase().replace(/[\s&]+/g, '-');
-    whereClauses.push(`(
-      p.category_slug = ? OR
-      c.child_slug = ? OR
-      c.parent_slug = ? OR
-      c.child_name LIKE ? OR
-      c.parent_name LIKE ?
-    )`);
-    args.push(catSlug, catSlug, catSlug, catPattern, catPattern);
+    if (cat.toUpperCase().includes('PERALATAN DAPUR')) {
+      whereClauses.push(`(
+        p.category_slug = 'peralatan-dapur-bekas-lainnya' OR
+        c.child_slug = 'peralatan-dapur-bekas-lainnya' OR
+        c.parent_slug = 'peralatan-dapur-bekas-lainnya' OR
+        c.child_name LIKE '%PERALATAN DAPUR%' OR
+        c.parent_name LIKE '%PERALATAN DAPUR%'
+      )`);
+    } else {
+      const catPattern = `%${cat}%`;
+      const catSlug = cat.toLowerCase().replace(/[\s&]+/g, '-');
+      whereClauses.push(`(
+        p.category_slug = ? OR
+        c.child_slug = ? OR
+        c.parent_slug = ? OR
+        c.child_name LIKE ? OR
+        c.parent_name LIKE ?
+      )`);
+      args.push(catSlug, catSlug, catSlug, catPattern, catPattern);
+    }
   }
 
   if (options?.condition && options.condition !== 'Semua Kondisi') {
     const cond = options.condition.trim().toUpperCase();
-    if (cond.includes('BARU')) whereClauses.push("p.kondisi_unit = 'BARU'");
-    else if (cond.includes('BEKAS') || cond.includes('REKONDISI')) whereClauses.push("p.kondisi_unit = 'BEKAS'");
+    if (cond.includes('BARU')) {
+      whereClauses.push("(UPPER(p.kondisi_unit) LIKE '%BARU%' OR UPPER(p.kondisi_unit) LIKE '%GRESS%')");
+    } else if (cond.includes('BEKAS') || cond.includes('REKONDISI')) {
+      whereClauses.push("(UPPER(p.kondisi_unit) LIKE '%BEKAS%' OR UPPER(p.kondisi_unit) LIKE '%SECOND%')");
+    }
   }
 
   if (options?.location && options.location !== 'Semua Lokasi') {
@@ -749,6 +772,31 @@ export interface CatalogMetadata {
   totalProducts: number | null;
 }
 
+export const CATEGORY_PRIORITY_ORDER: string[] = [
+  'MEJA STAINLESS',
+  'SINK STAINLESS',
+  'RAK STAINLESS',
+  'HOOD STAINLESS',
+  'KOMPOR',
+  'ICE SYSTEM',
+  'CHILLER',
+  'FREEZER',
+  'SHOWCASE',
+  'PERALATAN DAPUR LAINNYA',
+  'PERALATAN DAPUR BEKAS LAINNYA',
+];
+
+export function getCategoryPriority(name: string): number {
+  const upper = name.trim().toUpperCase();
+  for (let i = 0; i < CATEGORY_PRIORITY_ORDER.length; i++) {
+    const target = CATEGORY_PRIORITY_ORDER[i];
+    if (upper === target || upper.includes(target) || target.includes(upper)) {
+      return i;
+    }
+  }
+  return 999;
+}
+
 let cachedMetadata: { data: CatalogMetadata; timestamp: number } | null = null;
 const METADATA_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -803,10 +851,14 @@ export async function getTursoCatalogMetadata(): Promise<CatalogMetadata> {
       });
     }
 
+    const sortedParents = Array.from(parentMap.values()).sort(
+      (a, b) => getCategoryPriority(a.name) - getCategoryPriority(b.name)
+    );
+
     const categories: CatalogMetadataCategory[] = [
-      ...Array.from(parentMap.values()).map((p) => ({
+      ...sortedParents.map((p) => ({
         id: p.id,
-        name: p.name,
+        name: p.name.toUpperCase().includes('PERALATAN DAPUR') ? 'Peralatan Dapur Lainnya' : p.name,
         slug: p.slug,
         parent: 0,
         count: p.count,

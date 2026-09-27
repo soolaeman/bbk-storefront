@@ -166,7 +166,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
             <div
               ref={scrollContainerRef}
-              className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5 w-full"
+              className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth py-0.5 w-full"
             >
               {/* Pill 'Semua' */}
               <button
@@ -220,7 +220,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
           </div>
 
           {/* Right: Compact Filter Controls */}
-          <div className="flex items-center gap-2 shrink-0 overflow-x-auto">
+          <div className="flex items-center gap-2 shrink-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {/* Condition Toggle */}
             <div className="flex items-center rounded-lg border border-slate-300 bg-white overflow-hidden shrink-0">
               {['Semua', 'Bekas', 'Baru'].map((condLabel) => {
@@ -287,7 +287,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
         {/* Subcategories Micro-Strip (If Selected Category Has Children) */}
         {subcategories.length > 0 && activeTopLevelCategory && filterState.category !== 'Semua' && (
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 border-t border-slate-100">
+          <div className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pt-1 border-t border-slate-100">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0 mr-1">
               {activeTopLevelCategory.name}:
             </span>

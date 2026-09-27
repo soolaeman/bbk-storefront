@@ -46,8 +46,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onRe
       />
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/25 md:via-slate-950/65 md:to-slate-950/10" />
 
-      <div className="relative max-w-7xl mx-auto px-4 py-8 sm:py-10 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center min-h-[620px] md:min-h-[660px] lg:min-h-[600px]">
+      <div className="relative max-w-7xl mx-auto px-4 py-5 sm:py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center min-h-0 md:min-h-[580px] lg:min-h-[600px]">
           <div className="lg:col-span-8 space-y-4 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/15 border border-amber-500/30 rounded-full text-xs font-semibold text-amber-300 backdrop-blur-sm">
               <ShieldCheck className="w-4 h-4 text-amber-400" />

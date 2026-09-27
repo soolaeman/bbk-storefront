@@ -99,8 +99,8 @@ export async function getWooCommerceProductsResult(
     }
   }
 
-  // Client-side fetch through /api/products
-  const url = new URL('/api/products', 'http://localhost');
+  // Client-side fetch through /api/products/ (trailing slash prevents 308 redirects)
+  const url = new URL('/api/products/', 'http://localhost');
   if (options?.perPage) url.searchParams.set('per_page', String(options.perPage));
   if (options?.page) url.searchParams.set('page', String(options.page));
   if (options?.search) url.searchParams.set('search', options.search);
@@ -205,7 +205,7 @@ export async function getCatalogMetadata(): Promise<CatalogMetadata> {
   }
 
   try {
-    const response = await fetch('/api/products?metadata=1', {
+    const response = await fetch('/api/products/?metadata=1', {
       headers: { Accept: 'application/json' },
     });
     if (!response.ok) throw new Error(`Metadata endpoint failed: ${response.status}`);

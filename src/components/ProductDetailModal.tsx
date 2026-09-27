@@ -291,7 +291,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     ['kompor', 'chiller', 'freezer', 'showcase', 'burner', 'oven', 'fryer', 'blower'].some(
                       (kw) => product.name.toLowerCase().includes(kw) || String(product.category).toLowerCase().includes(kw)
                     )
-                      ? 'Perlindungan garansi servis teknisi BBKitchen selama 14 hari (Non-Refundable).'
+                      ? 'Perlindungan garansi servis teknisi BBKitchen selama 14 hari.'
                       : 'Unit lolos uji fungsi, ketebalan bodi, dan inspeksi serah terima standar dapur resto.'}
                   </p>
                 </div>

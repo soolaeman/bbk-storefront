@@ -82,12 +82,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const seoTitle = formatCleanSeoTitle(rawSeoTitle, product.name, condition);
 
   const rawDesc = getMeta(product, 'yoast_description');
+  const rawGaransi = getMeta(product, 'garansi');
   const description = formatCleanMetaDescription(
     rawDesc || product.short_description || product.description,
     product.name,
     location,
     condition,
-    status
+    status,
+    rawGaransi
   );
 
   const sku = (product.sku || '').trim();
@@ -162,7 +164,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     'kompor', 'chiller', 'freezer', 'showcase', 'burner', 'oven', 'fryer', 'blower', 'griddle', 'steamer', 'mixer', 'ice'
   ].some((kw) => product.name.toLowerCase().includes(kw) || category.toLowerCase().includes(kw));
   const garansiLabel = isMachinery
-    ? '🛡️ Garansi Servis 14 Hari (Non-Refundable)'
+    ? '🛡️ Garansi Servis 14 Hari'
     : '✅ QC Serah Terima Food Grade Horeca';
 
   // Sanitized description without duplicate HTML boxes

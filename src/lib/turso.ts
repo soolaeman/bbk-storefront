@@ -281,7 +281,8 @@ export function formatCleanMetaDescription(
   title: string,
   location?: string,
   condition?: string,
-  status?: string
+  status?: string,
+  garansi?: string
 ): string {
   if (status === 'SOLD') {
     return `Unit ${title} telah TERJUAL. Hubungi tim BBKitchen via WhatsApp untuk titip cari unit serupa bergaransi.`;
@@ -291,7 +292,13 @@ export function formatCleanMetaDescription(
   const isBaru = condition && condition.toUpperCase().includes('BARU');
   const condText = isBaru ? 'Baru' : 'Bekas';
 
-  return `Ready di Gudang ${loc} • Kondisi ${condText} • Lolos uji fungsi teknisi & garansi 7 hari siap kirim se-Jabodetabek. Hubungi BBKitchen via WhatsApp!`;
+  const isMachinery = (garansi && garansi.includes('14')) || [
+    'kompor', 'chiller', 'freezer', 'showcase', 'burner', 'oven', 'fryer', 'blower', 'griddle', 'steamer', 'mixer', 'ice'
+  ].some((kw) => title.toLowerCase().includes(kw));
+
+  const warrantyText = isMachinery ? 'garansi servis 14 hari' : 'jaminan QC food grade';
+
+  return `Ready di Gudang ${loc} • Kondisi ${condText} • Lolos uji fungsi teknisi & ${warrantyText} siap kirim se-Jabodetabek. Hubungi BBKitchen via WhatsApp!`;
 }
 
 export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerceProduct {
@@ -350,7 +357,7 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
       { key: 'harga_display_low', value: String(row.harga_display_low || '') },
       { key: 'harga_display_high', value: String(row.harga_display_high || '') },
       { key: 'seo_title', value: formatCleanSeoTitle(row.seo_title, title, kondisiUnit) },
-      { key: 'yoast_description', value: formatCleanMetaDescription(row.yoast_description || shortDesc || fullDesc, title, lokasiUnit) },
+      { key: 'yoast_description', value: formatCleanMetaDescription(row.yoast_description || shortDesc || fullDesc, title, lokasiUnit, kondisiUnit, statusUnit, String(row.garansi || '')) },
       { key: 'image_alt', value: String(row.image_alt || `${title} Second Ex-Resto - BBKitchen`) },
     ],
   };

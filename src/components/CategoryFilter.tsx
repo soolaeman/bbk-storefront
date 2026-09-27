@@ -21,6 +21,7 @@ import {
   Filter,
 } from 'lucide-react';
 import { EquipmentCategory, FilterState } from '../types';
+import { useHeaderScroll } from '../hooks/useHeaderScroll';
 
 export interface CategoryFilterOption {
   id: number | string;
@@ -75,6 +76,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   conditionOptions = [],
   locationOptions = [],
 }) => {
+  const { isVisible, isScrolled } = useHeaderScroll();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const visibleCategories = useMemo(() => (
@@ -124,7 +126,13 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <section className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 py-2.5 px-4 shadow-xs">
+    <section
+      className={`sticky z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-2 sm:py-2.5 px-4 shadow-xs transition-all duration-300 ease-in-out ${
+        isScrolled && !isVisible
+          ? 'top-0'
+          : 'top-[56px] sm:top-[60px] md:top-[128px]'
+      }`}
+    >
       <div className="max-w-7xl mx-auto space-y-2">
         {/* Main 1-View Compact Row */}
         <div className="flex flex-col lg:flex-row lg:items-center gap-2.5 justify-between">

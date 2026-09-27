@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader2, Menu, Search, X, MessageCircle } from 'lucide-react';
+import { useHeaderScroll } from '../hooks/useHeaderScroll';
 
 interface HeaderSearchProduct {
   id: number;
@@ -33,6 +34,7 @@ const GAS_INSTALLATION_WA_URL = 'https://wa.me/6285122001051?text=Halo%20BBKitch
 const GENERAL_WA_URL = 'https://wa.me/6285122001051?text=Halo%20BBKitchen%2C%20saya%20ingin%20tanya%20ketersediaan%20unit%20peralatan%20dapur.';
 
 export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
+  const { isVisible, isScrolled } = useHeaderScroll();
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState<HeaderSearchProduct[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -113,7 +115,11 @@ export const Header: React.FC<HeaderProps> = ({ simple = false }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 text-slate-900 shadow-xs backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 text-slate-900 backdrop-blur-md transition-transform duration-300 ease-in-out ${
+        isScrolled ? 'shadow-xs' : ''
+      } ${!isVisible && isScrolled ? '-translate-y-full' : 'translate-y-0'}`}
+    >
       {/* Top micro bar for desktop */}
       <div className="hidden border-b border-slate-100 bg-slate-50 md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-1.5 text-[11px] text-slate-500 lg:px-6">

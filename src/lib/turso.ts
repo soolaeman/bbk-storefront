@@ -275,7 +275,7 @@ export function formatCleanMetaDescription(
 
   const loc = location && location.trim() ? location.trim() : 'Jabodetabek';
   const isBaru = condition && condition.toUpperCase().includes('BARU');
-  const condText = isBaru ? 'Baru Gress' : 'Bekas Siap Pakai';
+  const condText = isBaru ? 'Baru' : 'Bekas';
 
   return `Ready di Gudang ${loc} • Kondisi ${condText} • Lolos uji fungsi teknisi & garansi 7 hari siap kirim se-Jabodetabek. Hubungi BBKitchen via WhatsApp!`;
 }

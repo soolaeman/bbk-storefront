@@ -278,9 +278,21 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-start gap-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="text-xs text-emerald-900 space-y-0.5">
-                  <strong className="font-bold">Garansi Uji Fungsi 7 Hari</strong>
+                  <strong className="font-bold">
+                    {product.garansi?.includes('14') ||
+                    ['kompor', 'chiller', 'freezer', 'showcase', 'burner', 'oven', 'fryer', 'blower'].some(
+                      (kw) => product.name.toLowerCase().includes(kw) || String(product.category).toLowerCase().includes(kw)
+                    )
+                      ? 'Garansi Servis 14 Hari BBKitchen'
+                      : 'Jaminan QC & Food Grade Horeca'}
+                  </strong>
                   <p className="text-emerald-800 leading-snug">
-                    Setiap unit READY mengikuti proses pengecekan fungsi dasar sebelum ditawarkan.
+                    {product.garansi?.includes('14') ||
+                    ['kompor', 'chiller', 'freezer', 'showcase', 'burner', 'oven', 'fryer', 'blower'].some(
+                      (kw) => product.name.toLowerCase().includes(kw) || String(product.category).toLowerCase().includes(kw)
+                    )
+                      ? 'Perlindungan garansi servis teknisi BBKitchen selama 14 hari (Non-Refundable).'
+                      : 'Unit lolos uji fungsi, ketebalan bodi, dan inspeksi serah terima standar dapur resto.'}
                   </p>
                 </div>
               </div>

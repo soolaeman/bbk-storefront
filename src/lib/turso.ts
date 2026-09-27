@@ -177,6 +177,19 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
   const displayPriceLow = row.harga_display_low ? Number(row.harga_display_low) : null;
   const displayPriceHigh = row.harga_display_high ? Number(row.harga_display_high) : null;
 
+  const garansi = row.garansi || (
+    lowerTitle.includes('kompor') ||
+    lowerTitle.includes('chiller') ||
+    lowerTitle.includes('freezer') ||
+    lowerTitle.includes('showcase') ||
+    lowerTitle.includes('burner') ||
+    lowerTitle.includes('oven') ||
+    lowerTitle.includes('fryer') ||
+    lowerTitle.includes('blower')
+      ? '14 Hari Servis'
+      : 'QC Serah Terima'
+  );
+
   return {
     id: sku,
     slug,
@@ -199,6 +212,7 @@ export function mapRowToProduct(row: Record<string, any>, isAdmin = false): Prod
     material: lowerTitle.includes('stainless') ? 'Stainless Steel' : undefined,
     summary: stripHtml(shortDesc) || stripHtml(fullDesc),
     description: fullDesc || shortDesc,
+    garansi,
     testedFunctions: [],
     images,
     dateAdded: row.tanggal_masuk || new Date().toISOString(),
@@ -331,6 +345,7 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
       { key: 'lokasi_unit', value: lokasiUnit },
       { key: 'kondisi_unit', value: kondisiUnit },
       { key: 'link_telegram', value: linkTelegram },
+      { key: 'garansi', value: String(row.garansi || '') },
       { key: 'estimasi_harga_baru', value: String(row.estimasi_harga_baru || '') },
       { key: 'harga_display_low', value: String(row.harga_display_low || '') },
       { key: 'harga_display_high', value: String(row.harga_display_high || '') },
@@ -470,7 +485,7 @@ export async function queryTursoProducts(options?: TursoProductsQuery): Promise<
   // Select items query
   const selectSql = `
     SELECT 
-      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.garansi, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
@@ -583,7 +598,7 @@ export async function queryTursoWooCommerceProducts(
   const countSql = `SELECT COUNT(*) as total FROM products p LEFT JOIN categories c ON p.category_slug = c.child_slug WHERE ${whereSql}`;
   const selectSql = `
     SELECT 
-      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.garansi, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
@@ -622,7 +637,7 @@ export async function getTursoProductBySlug(slugOrSku: string): Promise<Product 
 
   const sql = `
     SELECT 
-      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.garansi, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
@@ -658,7 +673,7 @@ export async function getTursoWooCommerceProductBySlug(slugOrSku: string): Promi
 
   const sql = `
     SELECT 
-      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.garansi, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
@@ -695,7 +710,7 @@ export async function getTursoRelatedProducts(
   const client = getTursoClient();
   const sql = `
     SELECT 
-      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.garansi, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
@@ -729,7 +744,7 @@ export async function getTursoWooCommerceRelatedProducts(
   const client = getTursoClient();
   const sql = `
     SELECT 
-      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.status_unit, p.status_pipeline,
+      p.sku, p.slug, p.title, p.seo_title, p.category_slug, p.garansi, p.status_unit, p.status_pipeline,
       p.lokasi_unit, p.kondisi_unit, p.short_description, p.full_description,
       p.yoast_keyword, p.yoast_description, p.image_alt, p.image_title, p.image_caption, p.image_description,
       p.photo_urls, p.link_unit, p.link_telegram, p.tanggal_masuk, p.harga_buka_wa,
@@ -892,3 +907,79 @@ export async function getTursoCatalogMetadata(): Promise<CatalogMetadata> {
     };
   }
 }
+
+export interface SubcategoryPriceBenchmark {
+  benchmarkLow: number;
+  benchmarkHigh: number;
+  avgNewPrice: number;
+  sampleCount: number;
+}
+
+export async function getSubcategoryPriceBenchmark(categorySlug: string): Promise<SubcategoryPriceBenchmark | null> {
+  if (!categorySlug) return null;
+  const client = getTursoClient();
+  const cleanSlug = categorySlug.trim().toLowerCase();
+
+  try {
+    const res = await client.execute({
+      sql: `
+        SELECT 
+          COUNT(*) as sample_count,
+          ROUND(AVG(harga_display_low) / 50000) * 50000 AS benchmark_low,
+          ROUND(AVG(harga_display_high) / 50000) * 50000 AS benchmark_high,
+          ROUND(AVG(estimasi_harga_baru) / 100000) * 100000 AS avg_new_price
+        FROM products
+        WHERE category_slug = ?
+          AND status_unit = 'READY'
+          AND harga_display_low > 0
+      `,
+      args: [cleanSlug],
+    });
+
+    const row = res.rows[0];
+    const sampleCount = Number(row?.sample_count || 0);
+
+    if (sampleCount > 0 && row?.benchmark_low && row?.benchmark_high) {
+      return {
+        benchmarkLow: Number(row.benchmark_low),
+        benchmarkHigh: Number(row.benchmark_high),
+        avgNewPrice: Number(row.avg_new_price || 0),
+        sampleCount,
+      };
+    }
+
+    // Fallback across entire parent cluster
+    const fallbackRes = await client.execute({
+      sql: `
+        SELECT 
+          COUNT(*) as sample_count,
+          ROUND(AVG(p.harga_display_low) / 50000) * 50000 AS benchmark_low,
+          ROUND(AVG(p.harga_display_high) / 50000) * 50000 AS benchmark_high,
+          ROUND(AVG(p.estimasi_harga_baru) / 100000) * 100000 AS avg_new_price
+        FROM products p
+        LEFT JOIN categories c ON p.category_slug = c.child_slug
+        WHERE (p.category_slug = ? OR c.parent_slug = ?)
+          AND p.harga_display_low > 0
+      `,
+      args: [cleanSlug, cleanSlug],
+    });
+
+    const fbRow = fallbackRes.rows[0];
+    const fbCount = Number(fbRow?.sample_count || 0);
+
+    if (fbCount > 0 && fbRow?.benchmark_low && fbRow?.benchmark_high) {
+      return {
+        benchmarkLow: Number(fbRow.benchmark_low),
+        benchmarkHigh: Number(fbRow.benchmark_high),
+        avgNewPrice: Number(fbRow.avg_new_price || 0),
+        sampleCount: fbCount,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching subcategory price benchmark:', error);
+    return null;
+  }
+}
+

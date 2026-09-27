@@ -41,6 +41,7 @@ export interface Product {
   testedFunctions: string[];
   images: string[];
   dateAdded: string;
+  garansi?: string; // e.g. "14 Hari Servis" or "QC Serah Terima"
   previousUsage?: string; // e.g. "Ex-resto Jepang 1 tahun operasional"
   adminInternalNotes?: string; // Admin only note
   adminTelegramRef?: string; // Admin only reference (never exposed to public)

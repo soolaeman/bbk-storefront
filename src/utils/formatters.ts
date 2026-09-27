@@ -23,52 +23,18 @@ export function generateWhatsAppProductLink(
   product: Product,
   customAction?: 'video' | 'visit' | 'shipping' | 'quote',
 ): string {
-  let message = '';
-  const conditionLabel = getWhatsAppConditionLabel(product.condition);
+  const slug = product.slug || product.sku.toLowerCase();
+  const productUrl = `https://www.bukanbarukitchen.com/shop/${slug}/`;
 
-  if (product.price === null || customAction === 'quote') {
-    message =
-      `Halo Tim BBKitchen, saya tertarik dan ingin menanyakan penawaran harga dan ketersediaan untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n\n` +
-      `SKU/ID: ${product.sku}\n\n` +
-      `Lokasi Unit: ${product.location}\n\n` +
-      `Kondisi: ${conditionLabel}\n\n` +
-      `Apakah unit ini masih tersedia? Mohon info harga penawaran dan spesifikasi detailnya. Terima kasih.`;
-  } else if (customAction === 'video') {
-    message =
-      `Halo Tim BBKitchen, saya ingin meminta Video Tes Fungsi / Detail Fisik untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n\n` +
-      `SKU/ID: ${product.sku}\n\n` +
-      `Harga Katalog: ${formatRupiah(product.price)}\n\n` +
-      `Lokasi: ${product.location}\n\n` +
-      `Kondisi: ${conditionLabel}\n\n` +
-      `Bisa dibantu kirimkan video kondisi unit dan tes nyalanya? Terima kasih.`;
+  let message = '';
+  if (customAction === 'video') {
+    message = `Halo BBKitchen, saya ingin meminta Video Tes Fungsi untuk unit ${product.name} (${product.sku}).\n\n${productUrl}\n\nBisa dibantu kirimkan video kondisi unit dan tes nyalanya? Terima kasih.`;
   } else if (customAction === 'visit') {
-    message =
-      `Halo Tim BBKitchen, saya berminat cek fisik langsung ke lokasi untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n\n` +
-      `SKU/ID: ${product.sku}\n\n` +
-      `Lokasi: ${product.location}\n\n` +
-      `Kondisi: ${conditionLabel}\n\n` +
-      `Kira-kira kapan jadwal yang memungkinkan untuk survei atau cek fisik unit ini? Terima kasih.`;
+    message = `Halo BBKitchen, saya berminat cek fisik langsung ke lokasi untuk unit ${product.name} (${product.sku}).\n\n${productUrl}\n\nKapan jadwal yang memungkinkan untuk survei lokasi (${product.location || 'Gudang'})? Terima kasih.`;
   } else if (customAction === 'shipping') {
-    message =
-      `Halo Tim BBKitchen, saya ingin konsultasi ongkos kirim dan pengantaran untuk unit:\n\n` +
-      `Nama Unit: ${product.name}\n\n` +
-      `SKU/ID: ${product.sku}\n\n` +
-      `Lokasi Asal Unit: ${product.location}\n\n` +
-      `Kondisi: ${conditionLabel}\n\n` +
-      `Tujuan pengiriman saya ke kota: [Sebutkan Kota / Kecamatan Anda].\n` +
-      `Bisa dibantu rekomendasi armada (Deliveree / Lalamove / Cargo)? Terima kasih.`;
+    message = `Halo BBKitchen, saya ingin konsultasi ongkos kirim untuk unit ${product.name} (${product.sku}).\n\n${productUrl}\n\nTujuan pengiriman ke: [Sebutkan Kota/Kecamatan]. Bisa dibantu rekomendasi armada? Terima kasih.`;
   } else {
-    message =
-      `Halo Tim BBKitchen, saya tertarik dengan unit katalog:\n\n` +
-      `Nama Unit: ${product.name}\n\n` +
-      `SKU: ${product.sku}\n\n` +
-      `Harga: ${product.price ? formatRupiah(product.price) : 'Tanyakan Harga'}\n\n` +
-      `Lokasi: ${product.location}\n\n` +
-      `Kondisi: ${conditionLabel}\n\n` +
-      `Apakah unit ini masih READY dan siap kirim? Mohon info selengkapnya. Terima kasih.`;
+    message = `Halo BBKitchen, saya tertarik dengan unit ${product.name} (${product.sku}).\n\n${productUrl}\n\nApakah unit masih ready?`;
   }
 
   return generateWhatsAppCustomLink(message);

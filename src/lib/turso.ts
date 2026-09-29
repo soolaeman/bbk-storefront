@@ -22,30 +22,45 @@ function getDatabaseUrl(): string {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const fs = require('fs');
 
-    // 1. Holding Master SSOT (Local Dev)
-    const holdingDbPath = path.resolve('..', 'Jarvis-OS', 'domains', 'business', 'bbkitchen', 'data', 'bbk.db');
-    if (fs.existsSync(holdingDbPath)) {
-      return `file:${holdingDbPath.replace(/\\/g, '/')}`;
+    const tmpDbPath = '/tmp/bbk.db';
+    if (fs.existsSync(tmpDbPath)) {
+      try {
+        if (fs.statSync(tmpDbPath).size > 100000) {
+          return `file:${tmpDbPath}`;
+        }
+      } catch {}
     }
 
-    // 2. Bundled DB in repo (for Vercel Serverless / Lambda / Production)
-    const localDbPath = path.join(process.cwd(), 'data', 'bbk.db');
-    if (fs.existsSync(localDbPath)) {
-      if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.platform === 'linux') {
-        const tmpDbPath = '/tmp/bbk.db';
+    const candidates = [
+      path.resolve('..', 'Jarvis-OS', 'domains', 'business', 'bbkitchen', 'data', 'bbk.db'),
+      path.join(process.cwd(), 'data', 'bbk.db'),
+      path.join(process.cwd(), 'bbk-storefront', 'data', 'bbk.db'),
+      typeof __dirname !== 'undefined' ? path.join(__dirname, 'data', 'bbk.db') : '',
+      typeof __dirname !== 'undefined' ? path.join(__dirname, '..', 'data', 'bbk.db') : '',
+      typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..', 'data', 'bbk.db') : '',
+      typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..', '..', 'data', 'bbk.db') : '',
+      typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..', '..', '..', 'data', 'bbk.db') : '',
+    ].filter(Boolean);
+
+    for (const cand of candidates) {
+      if (fs.existsSync(cand)) {
         try {
-          if (!fs.existsSync(tmpDbPath) || fs.statSync(localDbPath).mtimeMs > fs.statSync(tmpDbPath).mtimeMs) {
-            fs.copyFileSync(localDbPath, tmpDbPath);
+          if (fs.statSync(cand).size > 100000) {
+            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.platform === 'linux') {
+              try {
+                fs.copyFileSync(cand, tmpDbPath);
+                return `file:${tmpDbPath}`;
+              } catch (err) {
+                console.error('Error copying db to /tmp:', err);
+              }
+            }
+            return `file:${cand.replace(/\\/g, '/')}`;
           }
-          return `file:${tmpDbPath}`;
-        } catch {
-          // Fallback
-        }
+        } catch {}
       }
-      return `file:${localDbPath.replace(/\\/g, '/')}`;
     }
-  } catch {
-    // Fallback
+  } catch (err) {
+    console.error('getDatabaseUrl resolution error:', err);
   }
   return 'file:data/bbk.db';
 }

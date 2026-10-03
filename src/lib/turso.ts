@@ -2,8 +2,10 @@ import { createClient } from '@libsql/client';
 import type { AvailabilityStatus, EquipmentCategory, Product, ProductCondition } from '../types';
 
 export const R2_PHOTO_BASE_URL = (
-  process.env.NEXT_PUBLIC_R2_PHOTO_BASE_URL ||
-  '/api/cdn'
+  process.env.NEXT_PUBLIC_R2_PHOTO_BASE_URL &&
+  !process.env.NEXT_PUBLIC_R2_PHOTO_BASE_URL.includes('r2.dev')
+    ? process.env.NEXT_PUBLIC_R2_PHOTO_BASE_URL
+    : '/api/cdn'
 ).replace(/\/$/, '');
 
 const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN || undefined;
@@ -127,6 +129,11 @@ export function parsePhotoUrls(photoUrlsStr: string | null | undefined, sku: str
     // Detect legacy Google Drive links that return 404/CORS and route them to canonical R2 CDN
     if (part.includes('drive.google.com') || part.includes('googleusercontent.com')) {
       return getR2PhotoUrl(sku, idx + 1);
+    }
+    // Convert direct r2.dev links to /api/cdn (ISP-safe edge proxy)
+    if (part.includes('r2.dev')) {
+      const filename = part.split('/').pop() || `${sku}_${idx + 1}.webp`;
+      return `/api/cdn/${filename}`;
     }
     if (part.startsWith('http://') || part.startsWith('https://')) {
       return part;
@@ -508,7 +515,7 @@ export async function queryTursoProducts(options?: TursoProductsQuery): Promise<
   } else if (options?.sortBy === 'price_high') {
     orderSql += ', p.harga_buka_wa DESC';
   } else {
-    orderSql += ', p.tanggal_masuk DESC, p.sku DESC';
+    orderSql += ', CAST(SUBSTR(p.sku, 4) AS INTEGER) DESC';
   }
 
   // Count total query
@@ -630,7 +637,14 @@ export async function queryTursoWooCommerceProducts(
 
   const whereSql = whereClauses.join(' AND ');
 
-  let orderSql = 'CASE WHEN p.status_unit = \'SOLD\' THEN 1 ELSE 0 END ASC, p.tanggal_masuk DESC, p.sku DESC';
+  let orderSql = 'CASE WHEN p.status_unit = \'SOLD\' THEN 1 ELSE 0 END ASC';
+  if (options?.sortBy === 'price_low') {
+    orderSql += ', p.harga_buka_wa ASC';
+  } else if (options?.sortBy === 'price_high') {
+    orderSql += ', p.harga_buka_wa DESC';
+  } else {
+    orderSql += ', CAST(SUBSTR(p.sku, 4) AS INTEGER) DESC';
+  }
 
   const countSql = `SELECT COUNT(*) as total FROM products p LEFT JOIN categories c ON p.category_slug = c.child_slug WHERE ${whereSql}`;
   const selectSql = `
@@ -757,7 +771,7 @@ export async function getTursoRelatedProducts(
     LEFT JOIN categories c ON p.category_slug = c.child_slug
     WHERE (p.category_slug = ? OR c.parent_slug = ?)
       AND p.sku != ?
-    ORDER BY CASE WHEN p.status_unit = 'SOLD' THEN 1 ELSE 0 END ASC, p.tanggal_masuk DESC
+    ORDER BY CASE WHEN p.status_unit = 'SOLD' THEN 1 ELSE 0 END ASC, CAST(SUBSTR(p.sku, 4) AS INTEGER) DESC
     LIMIT ?
   `;
 
@@ -791,7 +805,7 @@ export async function getTursoWooCommerceRelatedProducts(
     LEFT JOIN categories c ON p.category_slug = c.child_slug
     WHERE (p.category_slug = ? OR c.parent_slug = ? OR c.id = ?)
       AND p.sku != ?
-    ORDER BY CASE WHEN p.status_unit = 'SOLD' THEN 1 ELSE 0 END ASC, p.tanggal_masuk DESC
+    ORDER BY CASE WHEN p.status_unit = 'SOLD' THEN 1 ELSE 0 END ASC, CAST(SUBSTR(p.sku, 4) AS INTEGER) DESC
     LIMIT ?
   `;
 

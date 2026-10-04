@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  getTursoCatalogMetadata,
-  queryTursoWooCommerceProducts,
-  TursoProductsQuery,
-} from '../../../lib/turso';
+  getCatalogMetadata,
+  queryWooCommerceProducts,
+  ProductsQuery,
+} from '../../../lib/sqlite';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -11,17 +11,17 @@ export async function GET(request: NextRequest) {
   try {
     // 1. Metadata Request for live filters
     if (searchParams.get('metadata') === '1') {
-      const metadata = await getTursoCatalogMetadata();
+      const metadata = await getCatalogMetadata();
       return NextResponse.json(metadata, {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-          'X-BBK-Engine': 'Turso-Edge',
+          'X-BBK-Engine': 'Sovereign-SQLite',
         },
       });
     }
 
-    // 2. Query Products from Turso Edge Database
+    // 2. Query Products from Sovereign SQLite Database
     const perPage = Number(searchParams.get('per_page') || '8');
     const page = Number(searchParams.get('page') || '1');
     const search = searchParams.get('search')?.trim() || undefined;
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     let statusFilter: 'ALL' | 'READY_ONLY' | 'INCLUDE_SOLD' = 'INCLUDE_SOLD';
     if (statusUnit === 'READY') statusFilter = 'READY_ONLY';
 
-    const result = await queryTursoWooCommerceProducts({
+    const result = await queryWooCommerceProducts({
       perPage,
       page,
       search,
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
         'X-WP-Total': String(result.total),
         'X-WP-TotalPages': String(result.totalPages),
-        'X-BBK-Engine': 'Turso-Edge',
+        'X-BBK-Engine': 'Sovereign-SQLite',
       },
     });
   } catch (error) {

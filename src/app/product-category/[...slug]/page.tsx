@@ -14,18 +14,18 @@ interface Product {
   images: Array<{ src: string; alt?: string }>;
 }
 
-import { queryTursoWooCommerceProducts } from '../../../lib/turso';
+import { queryWooCommerceProducts } from '../../../lib/sqlite';
 
 async function getProducts(categorySlug: string): Promise<Product[]> {
   try {
-    const res = await queryTursoWooCommerceProducts({
+    const res = await queryWooCommerceProducts({
       category: categorySlug,
       perPage: 24,
       page: 1,
     });
     return res.products as unknown as Product[];
   } catch (error) {
-    console.error('Product category Turso lookup failed:', error);
+    console.error('Product category SQLite lookup failed:', error);
     return [];
   }
 }

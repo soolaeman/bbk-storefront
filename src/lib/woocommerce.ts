@@ -1,15 +1,14 @@
 import type { AvailabilityStatus, EquipmentCategory, Product, ProductCondition } from '../types';
 import {
-  getTursoProductBySlug,
-  getTursoRelatedProducts,
-  getTursoWooCommerceProductBySlug,
-  getTursoWooCommerceRelatedProducts,
-  getTursoCatalogMetadata,
-  queryTursoProducts,
+  getProductBySlug,
+  getWooCommerceProductBySlug as getSqliteWooCommerceProductBySlug,
+  getWooCommerceRelatedProducts as getSqliteWooCommerceRelatedProducts,
+  getCatalogMetadata as getSqliteCatalogMetadata,
+  queryProducts,
   type CatalogMetadata,
   type CatalogMetadataCategory,
   type WooCommerceProduct,
-} from './turso';
+} from './sqlite';
 
 export type {
   CatalogMetadata,
@@ -50,7 +49,7 @@ export interface WooCommerceProductsResult {
 
 export async function getWooCommerceProductBySlug(slug: string): Promise<WooCommerceProduct | null> {
   if (!slug) return null;
-  return getTursoWooCommerceProductBySlug(slug);
+  return getSqliteWooCommerceProductBySlug(slug);
 }
 
 export async function getWooCommerceRelatedProducts(
@@ -58,7 +57,7 @@ export async function getWooCommerceRelatedProducts(
   currentProductId: number | string,
   limit = 4
 ): Promise<WooCommerceProduct[]> {
-  return getTursoWooCommerceRelatedProducts(categoryId, currentProductId, limit);
+  return getSqliteWooCommerceRelatedProducts(categoryId, currentProductId, limit);
 }
 
 export async function getWooCommerceProducts(options?: WooCommerceProductsQuery): Promise<Product[]> {
@@ -71,10 +70,10 @@ const CLIENT_CACHE_TTL = 30 * 1000; // 30 seconds client-side memory cache
 export async function getWooCommerceProductsResult(
   options?: WooCommerceProductsQuery
 ): Promise<WooCommerceProductsResult> {
-  // If running on server, query Turso directly for zero latency
+// If running on server, query SQLite directly for zero latency
   if (typeof window === 'undefined') {
     try {
-      const res = await queryTursoProducts({
+      const res = await queryProducts({
         perPage: options?.perPage ?? 8,
         page: options?.page ?? 1,
         search: options?.search,
@@ -95,7 +94,7 @@ export async function getWooCommerceProductsResult(
         totalPages: res.totalPages,
       };
     } catch (e) {
-      console.error('Server-side Turso query error in getWooCommerceProductsResult:', e);
+      console.error('Server-side SQLite query error in getWooCommerceProductsResult:', e);
     }
   }
 
@@ -194,14 +193,14 @@ export async function getWooCommerceProductsResult(
 }
 
 export async function getWooCommerceProductById(id: string | number): Promise<Product> {
-  const p = await getTursoProductBySlug(String(id));
+  const p = await getProductBySlug(String(id));
   if (!p) throw new Error(`Product not found: ${id}`);
   return p;
 }
 
 export async function getCatalogMetadata(): Promise<CatalogMetadata> {
   if (typeof window === 'undefined') {
-    return getTursoCatalogMetadata();
+    return getSqliteCatalogMetadata();
   }
 
   try {

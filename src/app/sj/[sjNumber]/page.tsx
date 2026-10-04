@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { getTursoClient } from '../../../lib/turso';
+import { getSqliteClient } from '../../../lib/sqlite';
 import {
   Truck,
   CheckCircle2,
@@ -24,7 +24,7 @@ export default async function DeliveryDispatchSmartLinkPage({ params }: Props) {
   const resolvedParams = await params;
   const sjNumber = decodeURIComponent(resolvedParams.sjNumber).trim().toUpperCase();
 
-  const client = getTursoClient();
+  const client = getSqliteClient();
   let dispatch: any = null;
   let invoice: any = null;
   let invoiceItems: any[] = [];
@@ -54,7 +54,7 @@ export default async function DeliveryDispatchSmartLinkPage({ params }: Props) {
       }
     }
   } catch (err) {
-    console.error('Error querying dispatch in Turso:', err);
+    console.error('Error querying dispatch in SQLite:', err);
   }
 
   if (!dispatch) {

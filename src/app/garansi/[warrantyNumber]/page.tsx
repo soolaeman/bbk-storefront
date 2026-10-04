@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { getTursoClient } from '../../../lib/turso';
+import { getSqliteClient } from '../../../lib/sqlite';
 import { ShieldCheck, AlertTriangle, Clock, Phone, CheckCircle2, Lock, ArrowLeft } from 'lucide-react';
 
 interface Props {
@@ -13,7 +13,7 @@ export default async function WarrantyVerificationPage({ params }: Props) {
   const resolvedParams = await params;
   const warrantyNumber = decodeURIComponent(resolvedParams.warrantyNumber).trim().toUpperCase();
 
-  const client = getTursoClient();
+  const client = getSqliteClient();
   let warranty: any = null;
   let warrantyItems: any[] = [];
 
@@ -32,7 +32,7 @@ export default async function WarrantyVerificationPage({ params }: Props) {
       warrantyItems = itemsRes.rows;
     }
   } catch (err) {
-    console.error('Error querying warranty in Turso:', err);
+    console.error('Error querying warranty in SQLite:', err);
   }
 
   if (!warranty) {

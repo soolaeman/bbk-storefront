@@ -10,12 +10,12 @@ import {
   type WooCommerceProduct,
 } from '../../../lib/woocommerce';
 import {
-  getTursoWooCommerceProductBySlug,
-  getTursoWooCommerceRelatedProducts,
+  getWooCommerceProductBySlug as getSqliteWooCommerceProductBySlug,
+  getWooCommerceRelatedProducts as getSqliteWooCommerceRelatedProducts,
   getSubcategoryPriceBenchmark,
   formatCleanSeoTitle,
   formatCleanMetaDescription,
-} from '../../../lib/turso';
+} from '../../../lib/sqlite';
 import { MessageCircle, CheckCircle2, ShieldCheck, MapPin, Tag } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '6285122001051';
@@ -56,8 +56,8 @@ function normalizeStatus(value: string, stockStatus: string): string {
 }
 
 async function getProduct(slug: string): Promise<WooCommerceProduct | null> {
-  const tursoProduct = await getTursoWooCommerceProductBySlug(slug);
-  if (tursoProduct) return tursoProduct;
+  const sqliteProduct = await getSqliteWooCommerceProductBySlug(slug);
+  if (sqliteProduct) return sqliteProduct;
   return getWooCommerceProductBySlug(slug);
 }
 
@@ -65,8 +65,8 @@ async function getRelatedProducts(product: WooCommerceProduct): Promise<WooComme
   const categoryId = product.categories[0]?.id;
   const categorySlug = product.categories[0]?.slug;
   if (!categoryId && !categorySlug) return [];
-  const tursoRelated = await getTursoWooCommerceRelatedProducts(categorySlug || categoryId || '', product.sku, 4);
-  if (tursoRelated.length > 0) return tursoRelated;
+  const sqliteRelated = await getSqliteWooCommerceRelatedProducts(categorySlug || categoryId || '', product.sku, 4);
+  if (sqliteRelated.length > 0) return sqliteRelated;
   return getWooCommerceRelatedProducts(categoryId || 0, product.id, 4);
 }
 

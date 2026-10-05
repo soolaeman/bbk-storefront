@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   getCatalogMetadata,
   queryWooCommerceProducts,
-  ProductsQuery,
+  CatalogProductsQuery,
 } from '../../../lib/sqlite';
 
 export async function GET(request: NextRequest) {
@@ -16,12 +16,12 @@ export async function GET(request: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-          'X-BBK-Engine': 'Sovereign-SQLite',
+          'X-BBK-Engine': 'SQLite-Engine',
         },
       });
     }
 
-    // 2. Query Products from Sovereign SQLite Database
+    // 2. Query Products from SQLite SSOT Database
     const perPage = Number(searchParams.get('per_page') || '8');
     const page = Number(searchParams.get('page') || '1');
     const search = searchParams.get('search')?.trim() || undefined;
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
         'X-WP-Total': String(result.total),
         'X-WP-TotalPages': String(result.totalPages),
-        'X-BBK-Engine': 'Sovereign-SQLite',
+        'X-BBK-Engine': 'SQLite-Engine',
       },
     });
   } catch (error) {

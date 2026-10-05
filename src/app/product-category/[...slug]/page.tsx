@@ -25,7 +25,7 @@ async function getProducts(categorySlug: string): Promise<Product[]> {
     });
     return res.products as unknown as Product[];
   } catch (error) {
-    console.error('Product category SQLite lookup failed:', error);
+    console.error('Product category catalog lookup failed:', error);
     return [];
   }
 }

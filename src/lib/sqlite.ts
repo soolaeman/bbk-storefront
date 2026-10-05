@@ -8,11 +8,9 @@ export const R2_PHOTO_BASE_URL = (
     : '/api/cdn'
 ).replace(/\/$/, '');
 
-const SQLITE_AUTH_TOKEN = process.env.SQLITE_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || undefined;
-
 function getDatabaseUrl(): string {
-  const envUrl = process.env.SQLITE_DATABASE_URL || process.env.TURSO_DATABASE_URL;
-  if (envUrl && !envUrl.includes('.turso.io')) {
+  const envUrl = process.env.DATABASE_URL;
+  if (envUrl) {
     return envUrl;
   }
   if (typeof window !== 'undefined') {
@@ -73,14 +71,10 @@ export function getSqliteClient() {
   if (!clientInstance) {
     clientInstance = createClient({
       url: getDatabaseUrl(),
-      authToken: SQLITE_AUTH_TOKEN,
     });
   }
   return clientInstance;
 }
-
-// Canonical backward-compatibility alias
-export const getTursoClient = getSqliteClient;
 
 export function stripHtml(value: string): string {
   if (!value) return '';
@@ -403,7 +397,7 @@ export function mapRowToWooCommerceProduct(row: Record<string, any>): WooCommerc
   };
 }
 
-export interface ProductsQuery {
+export interface CatalogProductsQuery {
   perPage?: number;
   page?: number;
   search?: string;
@@ -422,13 +416,13 @@ export interface ProductsQuery {
   isAdmin?: boolean;
 }
 
-export interface ProductsResult {
+export interface CatalogProductsResult {
   products: Product[];
   total: number;
   totalPages: number;
 }
 
-export async function queryProducts(options?: ProductsQuery): Promise<ProductsResult> {
+export async function queryCatalogProducts(options?: CatalogProductsQuery): Promise<CatalogProductsResult> {
   const client = getSqliteClient();
   const perPage = Math.max(1, Math.min(100, options?.perPage ?? 8));
   const page = Math.max(1, options?.page ?? 1);
@@ -559,13 +553,13 @@ export async function queryProducts(options?: ProductsQuery): Promise<ProductsRe
 
     return { products, total, totalPages };
   } catch (error) {
-    console.error('Error querying SQLite products:', error);
+    console.error('Error querying catalog products:', error);
     return { products: [], total: 0, totalPages: 1 };
   }
 }
 
 export async function queryWooCommerceProducts(
-  options?: ProductsQuery
+  options?: CatalogProductsQuery
 ): Promise<{ products: WooCommerceProduct[]; total: number; totalPages: number }> {
   const client = getSqliteClient();
   const perPage = Math.max(1, Math.min(100, options?.perPage ?? 8));
@@ -679,7 +673,7 @@ export async function queryWooCommerceProducts(
 
     return { products, total, totalPages };
   } catch (error) {
-    console.error('Error querying SQLite WooCommerce products:', error);
+    console.error('Error querying WooCommerce products:', error);
     return { products: [], total: 0, totalPages: 1 };
   }
 }
@@ -715,7 +709,7 @@ export async function getProductBySlug(slugOrSku: string): Promise<Product | nul
     if (res.rows.length === 0) return null;
     return mapRowToProduct(res.rows[0] as unknown as Record<string, any>);
   } catch (error) {
-    console.error('Error fetching product by slug from SQLite:', error);
+    console.error('Error fetching product by slug:', error);
     return null;
   }
 }
@@ -751,7 +745,7 @@ export async function getWooCommerceProductBySlug(slugOrSku: string): Promise<Wo
     if (res.rows.length === 0) return null;
     return mapRowToWooCommerceProduct(res.rows[0] as unknown as Record<string, any>);
   } catch (error) {
-    console.error('Error fetching WooCommerce product by slug from SQLite:', error);
+    console.error('Error fetching WooCommerce product by slug:', error);
     return null;
   }
 }
@@ -785,7 +779,7 @@ export async function getRelatedProducts(
     });
     return res.rows.map((row) => mapRowToProduct(row as unknown as Record<string, any>));
   } catch (error) {
-    console.error('Error fetching related products from SQLite:', error);
+    console.error('Error fetching related products:', error);
     return [];
   }
 }
@@ -821,7 +815,7 @@ export async function getWooCommerceRelatedProducts(
     });
     return res.rows.map((row) => mapRowToWooCommerceProduct(row as unknown as Record<string, any>));
   } catch (error) {
-    console.error('Error fetching WooCommerce related products from SQLite:', error);
+    console.error('Error fetching WooCommerce related products:', error);
     return [];
   }
 }
@@ -1035,17 +1029,4 @@ export async function getSubcategoryPriceBenchmark(categorySlug: string): Promis
     return null;
   }
 }
-
-// ==============================================================================
-// BACKWARD COMPATIBILITY ALIASES (Zero-Breaking Support)
-// ==============================================================================
-export const queryTursoProducts = queryProducts;
-export const queryTursoWooCommerceProducts = queryWooCommerceProducts;
-export const getTursoProductBySlug = getProductBySlug;
-export const getTursoWooCommerceProductBySlug = getWooCommerceProductBySlug;
-export const getTursoRelatedProducts = getRelatedProducts;
-export const getTursoWooCommerceRelatedProducts = getWooCommerceRelatedProducts;
-export const getTursoCatalogMetadata = getCatalogMetadata;
-export type TursoProductsQuery = ProductsQuery;
-export type TursoProductsResult = ProductsResult;
 

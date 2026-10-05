@@ -7,14 +7,10 @@ import { ProductGallery } from '../../../components/ProductGallery';
 import {
   getWooCommerceProductBySlug,
   getWooCommerceRelatedProducts,
-  type WooCommerceProduct,
-} from '../../../lib/woocommerce';
-import {
-  getWooCommerceProductBySlug as getSqliteWooCommerceProductBySlug,
-  getWooCommerceRelatedProducts as getSqliteWooCommerceRelatedProducts,
   getSubcategoryPriceBenchmark,
   formatCleanSeoTitle,
   formatCleanMetaDescription,
+  type WooCommerceProduct,
 } from '../../../lib/sqlite';
 import { MessageCircle, CheckCircle2, ShieldCheck, MapPin, Tag } from 'lucide-react';
 
@@ -56,8 +52,6 @@ function normalizeStatus(value: string, stockStatus: string): string {
 }
 
 async function getProduct(slug: string): Promise<WooCommerceProduct | null> {
-  const sqliteProduct = await getSqliteWooCommerceProductBySlug(slug);
-  if (sqliteProduct) return sqliteProduct;
   return getWooCommerceProductBySlug(slug);
 }
 
@@ -65,9 +59,7 @@ async function getRelatedProducts(product: WooCommerceProduct): Promise<WooComme
   const categoryId = product.categories[0]?.id;
   const categorySlug = product.categories[0]?.slug;
   if (!categoryId && !categorySlug) return [];
-  const sqliteRelated = await getSqliteWooCommerceRelatedProducts(categorySlug || categoryId || '', product.sku, 4);
-  if (sqliteRelated.length > 0) return sqliteRelated;
-  return getWooCommerceRelatedProducts(categoryId || 0, product.id, 4);
+  return getWooCommerceRelatedProducts(categorySlug || categoryId || '', product.sku, 4);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

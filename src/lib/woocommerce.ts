@@ -1,10 +1,11 @@
 import type { AvailabilityStatus, EquipmentCategory, Product, ProductCondition } from '../types';
 import {
   getProductBySlug,
+  getRelatedProducts,
   getWooCommerceProductBySlug as getSqliteWooCommerceProductBySlug,
   getWooCommerceRelatedProducts as getSqliteWooCommerceRelatedProducts,
   getCatalogMetadata as getSqliteCatalogMetadata,
-  queryProducts,
+  queryCatalogProducts,
   type CatalogMetadata,
   type CatalogMetadataCategory,
   type WooCommerceProduct,
@@ -70,10 +71,10 @@ const CLIENT_CACHE_TTL = 30 * 1000; // 30 seconds client-side memory cache
 export async function getWooCommerceProductsResult(
   options?: WooCommerceProductsQuery
 ): Promise<WooCommerceProductsResult> {
-// If running on server, query SQLite directly for zero latency
+  // If running on server, query SQLite directly for zero latency
   if (typeof window === 'undefined') {
     try {
-      const res = await queryProducts({
+      const res = await queryCatalogProducts({
         perPage: options?.perPage ?? 8,
         page: options?.page ?? 1,
         search: options?.search,
